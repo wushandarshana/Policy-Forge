@@ -1,5 +1,6 @@
 package com.horizon.policyforge.web;
 
+import com.horizon.policyforge.service.ConflictException;
 import com.horizon.policyforge.service.ResourceNotFoundException;
 import com.horizon.policyforge.service.ValidationFailedException;
 import com.horizon.policyforge.service.ValidationFailedException.FieldViolation;
@@ -120,7 +121,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         List<ApiFieldError> errors = ex.violations().stream()
                 .map((FieldViolation v) -> new ApiFieldError(v.field(), v.message()))
                 .toList();
-        return withInstance(validationProblem(errors), request);
+        ProblemDetail problem = validationProblem(errors);
+        if (ex.code() != null) {
+            problem.setProperty("code", ex.code());
+        }
+        return withInstance(problem, request);
+    }
+
+    /** 409 with the named business {@code code} and a fixed detail per code, never echoing input (contract C3). */
+    @ExceptionHandler(ConflictException.class)
+    public ProblemDetail handleConflict(ConflictException ex, HttpServletRequest request) {
+        ProblemDetail problem = problem(HttpStatus.CONFLICT, "Conflict", "/problems/conflict",
+                conflictDetail(ex.code()));
+        problem.setProperty("code", ex.code());
+        return withInstance(problem, request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -153,6 +167,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOG.error("Unhandled error method={} path={}", request.getMethod(), request.getRequestURI(), ex);
         return withInstance(problem(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error",
                 "/problems/internal-error", "An unexpected error occurred."), request);
+    }
+
+    private static String conflictDetail(String code) {
+        return switch (code) {
+            case ConflictException.QUOTE_ALREADY_APPLIED -> "An application already exists for this quote.";
+            case ConflictException.INVALID_APPLICATION_STATE ->
+                    "The application is not in a state that allows this action.";
+            default -> "The request conflicts with the current state of the resource.";
+        };
     }
 
     private static ProblemDetail validationProblem(List<ApiFieldError> errors) {

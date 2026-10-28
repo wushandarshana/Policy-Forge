@@ -26,6 +26,12 @@ public class QuoteController {
 
     /** Request body of {@code POST /api/quotes}. Missing parts are reported by the service as 400 with errors[]. */
     public record CreateQuoteRequest(String productCode, Map<String, Object> riskInputs) {
+
+        /** The risk inputs can hold BMI and health declarations, so a framework debug line must not print them (NFR-03). */
+        @Override
+        public String toString() {
+            return "CreateQuoteRequest[redacted]";
+        }
     }
 
     /** One applied factor. The value is a decimal string (NFR-01). */

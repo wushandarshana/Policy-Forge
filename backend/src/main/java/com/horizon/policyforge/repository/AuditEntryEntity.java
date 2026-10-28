@@ -40,6 +40,12 @@ public class AuditEntryEntity {
     @Column(name = "comment_text", updatable = false)
     private String comment;
 
+    @Column(name = "previous_status", updatable = false)
+    private String previousStatus;
+
+    @Column(name = "new_status", updatable = false)
+    private String newStatus;
+
     @Column(name = "occurred_at", nullable = false, updatable = false)
     private Instant occurredAt;
 
@@ -48,19 +54,30 @@ public class AuditEntryEntity {
     }
 
     private AuditEntryEntity(String actorId, String action, String entityType, String entityId, String reasonCode,
-            String comment, Instant occurredAt) {
+            String comment, String previousStatus, String newStatus, Instant occurredAt) {
         this.actorId = actorId;
         this.action = action;
         this.entityType = entityType;
         this.entityId = entityId;
         this.reasonCode = reasonCode;
         this.comment = comment;
+        this.previousStatus = previousStatus;
+        this.newStatus = newStatus;
         this.occurredAt = occurredAt;
     }
 
+    /** An entry that is not a status change: both status columns stay empty. */
     public static AuditEntryEntity of(String actorId, String action, String entityType, String entityId,
             String reasonCode, String comment, Instant occurredAt) {
-        return new AuditEntryEntity(actorId, action, entityType, entityId, reasonCode, comment, occurredAt);
+        return new AuditEntryEntity(actorId, action, entityType, entityId, reasonCode, comment, null, null,
+                occurredAt);
+    }
+
+    /** A status change (U-12): the status before and after the action. */
+    public static AuditEntryEntity of(String actorId, String action, String entityType, String entityId,
+            String reasonCode, String comment, String previousStatus, String newStatus, Instant occurredAt) {
+        return new AuditEntryEntity(actorId, action, entityType, entityId, reasonCode, comment, previousStatus,
+                newStatus, occurredAt);
     }
 
     public Long getId() {
@@ -89,6 +106,14 @@ public class AuditEntryEntity {
 
     public String getComment() {
         return comment;
+    }
+
+    public String getPreviousStatus() {
+        return previousStatus;
+    }
+
+    public String getNewStatus() {
+        return newStatus;
     }
 
     public Instant getOccurredAt() {

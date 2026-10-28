@@ -1,8 +1,11 @@
 package com.horizon.policyforge.config;
 
+import com.horizon.policyforge.domain.application.KycValidator;
 import com.horizon.policyforge.domain.rating.PremiumCalculator;
+import com.horizon.policyforge.domain.rating.RiskInputValidator;
 import com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolver;
 import com.horizon.policyforge.domain.ruleset.RuleSetValidator;
+import com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,5 +26,20 @@ public class DomainConfig {
     @Bean
     public PremiumCalculator premiumCalculator() {
         return new PremiumCalculator();
+    }
+
+    @Bean
+    public RiskInputValidator riskInputValidator() {
+        return new RiskInputValidator();
+    }
+
+    @Bean
+    public KycValidator kycValidator() {
+        return new KycValidator();
+    }
+
+    @Bean
+    public UnderwritingRuleEvaluator underwritingRuleEvaluator() {
+        return new UnderwritingRuleEvaluator();
     }
 }
