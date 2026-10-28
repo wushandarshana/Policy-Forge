@@ -132,6 +132,13 @@ try:
                 "git merge --no-ff -m feat/x random-branch"]:
         expect(f"on dev: block `{cmd}`", P, bash(cmd), 2)
     subprocess.run(git[:3] + ["checkout", "-q", "main"], check=True)
+    # KD-012: separators inside quoted messages must not split the command into fake segments
+    for cmd in ['git merge --no-ff dev -m "Release v0.1.0" -m "QA: verify green; Vitest 11/11; a && b | c"',
+                "git merge --no-ff dev -m 'one; two' -m \"three\"", 'git log --format="%h; %s" -3']:
+        expect(f"on main: allow quoted separators `{cmd}`", P, bash(cmd), 0)
+    for cmd in ['git status -s; git commit -m "x"', 'git log -1 && git commit -m "a; b"',
+                'echo "release"\ngit commit -m x', 'git merge --no-ff dev -m "ok; fine" && git commit -m y']:
+        expect(f"on main: still block real separators `{cmd!r}`", P, bash(cmd), 2)
     for cmd in ['git merge --no-ff dev -m "Release: S1"', "git merge --no-ff hotfix/h"]:
         expect(f"on main: allow `{cmd}`", P, bash(cmd), 0)
     for cmd in ["git merge --no-ff feat/x", "git merge --no-ff chore/z", "git merge dev"]:
