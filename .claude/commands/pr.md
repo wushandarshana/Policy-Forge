@@ -1,5 +1,5 @@
 ---
-description: Run the PolicyForge PR gate on the current feature branch (tests, reviewer agents, AC coverage), write docs/prs/PR-NNN.md, and merge it into dev with --no-ff (feature → dev; /release promotes dev → main).
+description: Run the PolicyForge PR gate on the current feature branch (tests, reviewer agents, AC coverage), write docs/prs/PR-NNN.md, and open a GitHub PR into dev with gh, merged with a merge commit (feature → dev; /release promotes dev → main).
 argument-hint: "[title]"
 allowed-tools: Read, Write, Grep, Glob, Bash, Agent
 ---

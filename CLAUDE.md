@@ -16,9 +16,8 @@ This file holds the rules for the whole repository. More specific rules live in 
    then regenerate the code. Never change behaviour that a spec AC pins without updating the spec.
 3. **PR-only merge, branching strategy `feature → dev → main`.** `main` is production-ready and `dev` is the
    integration branch. Both are protected: never commit, rebase or force-push them. All work happens on `feat/*`,
-   `fix/*` or `chore/*` branches cut from `dev`. When a feature is done and the review agents pass, `/pr` merges it
-   into **`dev`** with `--no-ff`. After QA and all testing pass on `dev`, `/release` merges `dev` into **`main`** with
-   `--no-ff`. Remote: `origin` = https://github.com/wushandarshana/Policy-Forge. GitHub rulesets require **pull
+   `fix/*` or `chore/*` branches cut from `dev`. When a feature is done and the review agents pass, `/pr` opens a
+   GitHub PR into **`dev`**. After QA and all testing pass on `dev`, `/release` opens a PR from `dev` into **`main`**. Remote: `origin` = https://github.com/wushandarshana/Policy-Forge. GitHub rulesets require **pull
    requests** into `dev` and `main`. `/pr` and `/release` open them with `gh pr create`, and they are merged with
    "Create a merge commit" only (no squash or rebase). The `no-direct-main-commit.sh` hook guards the local side.
 4. **Synthetic data only.** Use dummy names, IDs, Aadhaar/PAN-shaped values (e.g. `XXXX-XXXX-1234`, `ABCDE1234F`).
