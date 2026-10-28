@@ -80,7 +80,21 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   endpoint, then the response is 403.
 - **NFR-04.2** Given a stored TERM_LIFE quote with BMI and health declarations, when `GET /api/quotes/{id}` is called
   without authentication, then the response contains the premium, breakdown and rule version but no `bmi`,
-  `healthDeclarations` or other health inputs, and the quote ID is an unguessable `Q-<UUIDv4>`.
+  `healthDeclarations` or other health inputs, and the quote ID is an unguessable `Q-<UUIDv4>`. The response is built
+  from an **allow-list**: only the risk inputs that the product's rating model declares, minus health inputs. No
+  submitted key outside that list is ever returned.
+- **NFR-04.3** Given any state-changing `/api/**` endpoint (POST/PUT/PATCH/DELETE), when it is called with a
+  `Content-Type` other than `application/json` (for example a cross-site `<form enctype="text/plain">`), then the
+  response is **415** and nothing is changed. CORS stays unconfigured, so cross-origin JSON requests fail preflight.
+  This is the CSRF defence for browser-cached HTTP Basic credentials.
+- **NFR-04.4** Every request body (all paths, including `/api/**`) is size-limited **by default**: 16 KB, with or
+  without a `Content-Length`. The limit is enforced **before** authentication. The only exception is
+  `POST /api/products/{code}/versions` carrying an `Authorization` header, which allows 64 KB. Credentials can't be
+  verified at that point, so a request with an invalid header may send up to 64 KB before Spring Security rejects it
+  with 401, and nothing is stored. Anonymous requests always get the 16 KB cap. Oversized requests get **413** and
+  nothing is stored. The route is chosen on the **decoded, normalized** path that
+  Spring Security and MVC route on, so encoded variants such as `/api/%71uotes` are capped like `/api/quotes`. Any
+  path that doesn't match an allowance gets the 16 KB default. (Security re-review R-1.)
 
 ## 6. Domain model (summary)
 

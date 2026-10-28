@@ -29,4 +29,5 @@ contracts and evaluator outputs to be **committed** under `sprint-contracts/` an
    - the number of ratchet iterations;
    - links to the reviewer reports in `specs/reviews/` for this branch (security-, tests-, design-, rules-,
      migrations-).
-6. `git add sprint-contracts specs/reviews` and commit `docs(sprint): archive <S> contract and evaluation`.
+6. Run `python scripts/redact_evidence.py sprint-contracts specs/reviews`, then confirm `--check` exits 0 (KD-011).
+7. `git add sprint-contracts specs/reviews` and commit `docs(sprint): archive <S> contract and evaluation`.

@@ -14,3 +14,16 @@ boundary** (NFR-04).
 - Map errors with `ProblemDetail`: validation 400 (with `errors[]`), not found 404, `InvalidPolicyStateException` 409
   (`type=/problems/invalid-policy-state`), forbidden 403.
 - Controller classes end in `Controller` and live only in this package.
+- **Every state-changing endpoint declares `consumes = MediaType.APPLICATION_JSON_VALUE`** (NFR-04.3). Browsers cache
+  HTTP Basic credentials and attach them to cross-site requests, and a `text/plain` form POST needs no CORS preflight.
+  Requiring JSON forces the preflight, and with CORS left unconfigured the preflight fails. Never take
+  `@RequestBody String` without `consumes`. (KD-007)
+- **Public responses are built from allow-lists, never deny-lists** (NFR-04.2). Return only the fields the spec
+  declares. Removing "known bad" keys from a client-supplied map leaks every key you didn't think of. Reject unknown
+  input keys at the boundary. (KD-008)
+- Security matchers list public paths explicitly (no `/**` wildcards on public rules), so new endpoints default to
+  authenticated.
+- Problem `detail` text is fixed per error type and never echoes request input.
+- **Limits and checks default-deny and match on the routed path** (NFR-04.4). Path-based security logic must use the
+  decoded, normalized path that Spring routes on (e.g. `UrlPathHelper#getLookupPathForRequest` / `ServletRequestPathUtils`),
+  never the raw `getRequestURI()`. Apply limits to everything and relax them explicitly, not the other way round. (KD-010)

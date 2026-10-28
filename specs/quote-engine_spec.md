@@ -86,7 +86,22 @@ buildingRate 0.0015 · contentsRate 0.0035 · construction BRICK 1.00, CONCRETE 
   response is 400 naming each invalid field.
 - **AC-01.8** Given any quote, when the breakdown is returned, then it lists every applied factor, and recomputing the
   formula from the breakdown gives the same premium.
+- **AC-01.9** Given a quote request whose `riskInputs` contains a key the product's rating model doesn't declare (for
+  example `BMI`, `medicalHistory` or `aadhaar`), when quoted, then the response is 400 naming each unknown key and no
+  quote is stored. Only declared inputs are ever persisted (security review F-2). Given an anonymous
+  `POST /api/quotes` whose body is larger than 16 KB, then the response is 413 and nothing is stored (F-3, and
+  NFR-04.4 for encoded path variants).
+- **AC-01.10** Given a TERM_LIFE quote whose `healthDeclarations` is not a list of at most 10 codes, each matching
+  `^[A-Z][A-Z0-9_]{0,63}$` (for example `["DIABETES"]`), such as a list containing objects, numbers, lower-case or
+  over-long strings, or more than 10 items, when quoted, then the response is 400 naming `healthDeclarations` and no
+  quote is stored. (Security re-review R-2.)
 
 ## UI
 A **Quote** page: choose a product, see a dynamic form for that product's risk inputs, submit, then see the premium,
 breakdown and rule version, with an "Apply" call to action.
+
+- **AC-01.11** Given the TERM_LIFE health declarations field holds `diabetes, high blood pressure,  asthma-mild , `,
+  when the quote is submitted, then the request sends `healthDeclarations: ["DIABETES","HIGH_BLOOD_PRESSURE","ASTHMA_MILD"]`.
+  The browser trims, upper-cases, turns runs of spaces and hyphens into `_` and drops empty entries, so normal typing
+  meets AC-01.10. The field hint names the format: upper-case codes such as `DIABETES`, at most 10. Anything still
+  invalid (for example `É`) is sent unchanged, and the API's 400 is shown next to the field.
