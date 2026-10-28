@@ -1,0 +1,30 @@
+{
+  "description": "PolicyForge guardrails when installed as a plugin (same hooks as .claude/settings.json, plugin-root relative).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/premium-precision-check.sh\"", "timeout": 10 },
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/policy-immutability-check.sh\"", "timeout": 10 },
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/pii-redaction-check.sh\"", "timeout": 10 }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/no-direct-main-commit.sh\"", "timeout": 10 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/ac-tag-check.sh\"", "timeout": 10 },
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/.claude/hooks/spec-drift-reminder.sh\"", "timeout": 10 }
+        ]
+      }
+    ]
+  }
+}

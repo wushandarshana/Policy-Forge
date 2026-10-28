@@ -1,0 +1,41 @@
+{
+  "name": "policyforge-substrate",
+  "version": "0.1.0",
+  "description": "AI-native engineering substrate for policy administration (quote → underwriting → issuance → endorsement → renewal/cancellation): domain agents, insurance-specific skills, guardrail hooks (BigDecimal money, append-only records, PII-free logs, PR-only merge), traceability commands and Playwright MCP.",
+  "author": { "name": "wushandarshana", "email": "info@capricon.lk" },
+  "license": "MIT",
+  "keywords": ["insurance", "policy-administration", "underwriting", "ai-native", "harness", "tdd", "archunit"],
+  "requires": {
+    "plugins": ["agent-harness@agent-harness"]
+  },
+  "commands": "./.claude/commands/",
+  "agents": [
+    "./.claude/agents/security-reviewer.md",
+    "./.claude/agents/test-engineer.md",
+    "./.claude/agents/design-critic.md",
+    "./.claude/agents/ui-designer.md",
+    "./.claude/agents/quote-engine-agent.md",
+    "./.claude/agents/endorsement-agent.md",
+    "./.claude/agents/renewal-orchestrator-agent.md",
+    "./.claude/agents/policy-version-validator-agent.md",
+    "./.claude/agents/archtest-author-agent.md",
+    "./.claude/agents/migration-coherence-agent.md",
+    "./.claude/agents/janitor.md",
+    "./.claude/agents/doc-writer.md"
+  ],
+  "skills": "./.claude/skills/",
+  "hooks": "./.claude/hooks/hooks.json",
+  "mcpServers": "./.mcp.json",
+  "substrate": {
+    "specs": "./specs/",
+    "claudeMdHierarchy": [
+      "./CLAUDE.md",
+      "./backend/CLAUDE.md",
+      "./frontend/CLAUDE.md",
+      "./specs/CLAUDE.md",
+      "./scripts/CLAUDE.md"
+    ],
+    "agentSdkScripts": ["./scripts/ac_audit.py"],
+    "evidence": ["./sprint-contracts/", "./specs/reviews/", "./docs/prs/", "./docs/fix-loops/", "./docs/post-mortems/"]
+  }
+}
