@@ -47,6 +47,14 @@ public record RiskInputSchema(List<String> declared, Set<String> health) {
         return violations;
     }
 
+    /**
+     * What an underwriter reviews (U-7): every declared input that is present, health inputs included, in declared
+     * order. Undeclared keys never appear. Stub: the real rule arrives in the green commit.
+     */
+    public Map<String, Object> reviewView(Map<String, ?> riskInputs) {
+        return Map.of();
+    }
+
     /** Only the declared, non-health inputs that are present, in declared order. Undeclared keys never appear. */
     public Map<String, Object> publicView(Map<String, ?> riskInputs) {
         Map<String, Object> view = new LinkedHashMap<>();
