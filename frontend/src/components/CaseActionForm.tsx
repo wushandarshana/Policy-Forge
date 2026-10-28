@@ -105,15 +105,15 @@ export function CaseActionForm({ kind, applicationId, onDone }: Props) {
     if (reasonCode === '') missing.reasonCode = REQUIRED_MESSAGE;
     if (comment.trim() === '') missing.comment = REQUIRED_MESSAGE;
     setErrors(missing);
-    if (Object.keys(missing).length > 0 || (kind === 'decision' && decision === '')) return;
+    if (Object.keys(missing).length > 0) return;
 
     setSubmitting(true);
     try {
-      const result =
-        kind === 'override' || decision === ''
-          ? await submitOverride(credentials, applicationId, { reasonCode, comment })
-          : await submitDecision(credentials, applicationId, { decision, reasonCode, comment });
-      onDone(result);
+      if (kind === 'override') {
+        onDone(await submitOverride(credentials, applicationId, { reasonCode, comment }));
+      } else if (decision !== '') {
+        onDone(await submitDecision(credentials, applicationId, { decision, reasonCode, comment }));
+      }
     } catch (error) {
       showFailure(error);
     } finally {
