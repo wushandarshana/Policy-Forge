@@ -1,0 +1,36 @@
+# Capstone brief (course material - not part of the deliverable)
+*.pdf
+
+# Java / Maven
+backend/target/
+*.class
+*.log
+hs_err_pid*
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+frontend/coverage/
+!frontend/coverage/lcov.info
+
+# H2 file databases
+*.mv.db
+*.trace.db
+
+# Harness working dirs (archived into sprint-contracts/ and specs/reviews/ via /sprint-archive)
+.sprint/
+.claude/agent-harness.local.json
+.claude/settings.local.json
+
+# Python
+__pycache__/
+.venv/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
