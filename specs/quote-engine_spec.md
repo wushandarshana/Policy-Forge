@@ -1,6 +1,7 @@
 # Feature Spec — Quote Engine
 
-**Parent:** [`app_spec.md`](app_spec.md) · **ACs:** AC-01 · **NFR:** NFR-01
+**Parent:** [`app_spec.md`](app_spec.md) · **ACs:** AC-01 · **NFR:** NFR-01, NFR-04.2 (public quote read omits
+health inputs)
 **Domain classes:** `PremiumCalculator` (facade), `TermLifeRatingModel`, `MotorRatingModel`, `HouseholdRatingModel`,
 `PremiumBreakdown`
 
