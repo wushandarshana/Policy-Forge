@@ -11,7 +11,10 @@ Project guardrail hooks, wired in `.claude/settings.json`. They run under bash (
   the hooks still apply after `cd backend`.
 - **Fail closed:** if no working Python exists, the wrappers exit 2, so Write, Edit and git calls are blocked
   until Python is fixed. This is deliberate; a silently disabled guardrail is worse.
-- **Known limits:** file edits made through shell commands (sed, redirection) aren't inspected. ArchUnit, Flyway
+- **Known limits:** the commit guard doesn't parse wrapped commands (`bash -c`, subshells, `env`/`xargs`) or
+  plumbing that moves main without a commit (`branch -f`, `update-ref`, `fetch . X:main`, `push --all/--mirror`).
+  These require deliberate evasion. The backstop is a protected `main` on the GitLab remote. File edits made
+  through shell commands (sed, redirection) aren't inspected. ArchUnit, Flyway
   `validateOnMigrate` and CI are the backstop. Inside this repo, don't also enable the packaged plugin hooks
   (`hooks.json`), or every hook runs twice.
 - **Regression tests:** `python .claude/hooks/tests/test_hooks.py` must pass after any hook change.

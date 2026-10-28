@@ -29,6 +29,14 @@ if hookio.path_matches(path, MAIN_JAVA):
     if re.search(rf"new\s+BigDecimal\(\s*{FLOAT_LITERAL}\s*\)|BigDecimal\.valueOf\(\s*{FLOAT_LITERAL}\s*\)", code):
         hookio.block("NFR-01", f"{path} builds a BigDecimal from a floating-point literal. "
                      "Use the String constructor, e.g. new BigDecimal(\"0.025\").")
+    conv = re.search(r"\.(doubleValue|floatValue)\s*\(|\bMath\.(pow|round|floor|ceil|sqrt)\s*\(", code)
+    if conv:
+        hookio.block("NFR-01", f"{path} converts to or computes in floating point (`{conv.group(0).strip()}`). "
+                     "Use BigDecimal arithmetic (multiply/divide/setScale) instead.")
+    lit = re.search(rf"(?<![\w.]){FLOAT_LITERAL}", code)
+    if lit:
+        hookio.block("NFR-01", f"{path} contains a floating-point literal `{lit.group(0)}`. "
+                     "Rates and factors come from rule files as decimal strings; use new BigDecimal(\"…\").")
 elif hookio.path_matches(path, MIGRATION):
     sql = re.sub(r"--[^\n]*", "", text)
     if re.search(r"\b(DOUBLE|FLOAT|REAL)\b", sql, flags=re.I):

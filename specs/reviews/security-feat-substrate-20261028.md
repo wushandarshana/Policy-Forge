@@ -69,3 +69,33 @@ synthetic test file: exact tag counted COVERED, parent-only counted as a gap, NF
 
 **Implementer self-assessment (not a reviewer verdict):** no BLOCKER or MAJOR finding remains open. The verdict above
 stays CHANGES_REQUESTED for the reviewed revision, and the fixes need a re-review before merge.
+
+---
+
+## Re-review (reviewer, 2026-10-28)
+
+**Scope:** `git diff aac48a7..HEAD` (bd8a2d1, 7a42ee5, f7bf316). `test_hooks.py`: ALL PASSED. `premium_check.py spec-examples`: 9/9 PASS.
+I also ran about 45 adversarial cases that the suite does not cover, all exercised against the live hooks.
+
+**Closed:**
+- F1, F10, F11, F12, F13, F14: the spec edits agree with each other. NFR-04.1 and NFR-04.2, the §8 table, and quote-engine_spec all say the same thing. The new `calculate` signature appears nowhere else. `PolicyNumberFormat` (domain) and `PolicyNumberGenerator` (service) now match domain/CLAUDE.md:15.
+- F2 and F3: the bypasses and false blocks I reported are fixed.
+- F4: `project_root` gives the right root with `$CLAUDE_PROJECT_DIR` set, without it when `cwd=backend`, and for non-normalised (`..`) paths.
+- F5 scope, F7, F8, F9, F15: fixed as described in the Resolution table.
+
+**New or still open:**
+
+| ID | Sev | File:line | Issue | Suggested fix |
+|---|---|---|---|---|
+| R1 | MAJOR | .claude/hooks/lib/hookio.py:43-45 (used by precision, PII and immutability) | Comments are stripped **before** strings. Any string containing `/*` opens a fake comment that runs to the next `*/`, for example `"/api/products/**"` in SecurityConfig or `produces = "*/*"`. Everything up to the next Javadoc close is then removed. Verified: `requestMatchers("/api/products/**") … double premium = 1; … /** doc */` exits 0, and `"*/*"` hides `log.info(…, a.aadhaar())`. | Use a single-pass tokenizer that skips string and char literals while it removes comments, or blank strings first and then strip comments. Add both cases to test_hooks.py. |
+| R2 | MAJOR | .claude/hooks/lib/pii_redaction_check.py:23-24 | Regression from the earlier substring match. With `\b…\b` word matching, JavaBean getters on a non-`kyc` object pass: `log.info("{}", applicant.getAadhaar())`, `applicant.getPanNumber()` and `e.getDob()` all exit 0. These are the normal JPA entity accessors. | Match PII stems inside identifiers, e.g. `(?i)(aadhaar\|healthdeclaration\|dateofbirth\|fullname\|\bkyc)` as substrings, plus `(?<![a-z])(get)?(pan\|dob)(number)?(?![a-z])`. |
+| R3 | MINOR | no_direct_main_commit.py:21, :106 | False blocks on main: `git pull --ff-only`, `git reset HEAD <file>`, `git rebase --abort`. `merge --ff-only` is also blocked, so main can't be brought up to date from the remote after a GitLab MR. | Allow `pull --ff-only`, `merge --ff-only origin/main`, `reset` with paths or without `--hard`, and the `--abort`/`--continue`/`--quit` forms of rebase, cherry-pick, revert and am. |
+| R4 | MINOR | no_direct_main_commit.py:58-71 | `git checkout main -- README.md && git commit` on a feature branch is falsely blocked: a path checkout is read as a branch switch. `git checkout -` is not tracked. | Treat it as a switch only when there is no `--` and no extra positional argument. Resolve `-` with `git rev-parse --symbolic-full-name @{-1}`. |
+| R5 | MINOR | no_direct_main_commit.py:41-55, :74-83 | Not covered (all exit 0): <br>• Wrapped commands: `bash -c "git commit"`, `(git commit)`, `{ git commit; }`, `$(…)`, `env/command/time/xargs git …`, and an unquoted `C:\…\git.exe` (shlex removes the backslashes). <br>• Commands that move main without a commit: `git branch -f main X`, `git update-ref refs/heads/main`, `git fetch . X:main`, `git push --all/--mirror`, and glob refspecs. <br>These would mostly be deliberate evasion, and the hook is a guardrail, not a boundary. | Also block a write to `refs/heads/main` via `branch -f`, `update-ref` or `fetch …:main`, and `push --all/--mirror`. Search for the `git` token after the wrapper prefixes `env\|command\|time\|xargs\|bash -c\|sh -c\|(\|{`. Document what remains. |
+| R6 | MINOR | premium_precision_check.py:25-29 | `premium.doubleValue() * 1.05`, `BigDecimal.valueOf(Math.pow(1.1, 2))` and `var rate = 0.025; BigDecimal.valueOf(rate)` all pass. | Flag `\.(double\|float)Value\s*\(`, `Math\.(pow\|sqrt\|exp\|log)` and `var x = <FLOAT_LITERAL>`. Make `MoneyPrecisionArchTest` forbid calls to `BigDecimal.doubleValue/floatValue` in production code. |
+| R7 | MINOR | policy_immutability_check.py:24-25 with hookio.py:5-7 | In a git worktree under `.claude/worktrees/<n>/`, with `$CLAUDE_PROJECT_DIR` set to the main checkout, `rel_path` keeps the `.claude/worktrees/<n>/` prefix. `tracked_on_main` then never finds the file on main, so the published-migration and rule-file protection is silently skipped. | Compute the git top-level from the file's own directory (`git -C <dir> rev-parse --show-toplevel`) for the immutability path, and check `main:<path relative to that worktree>`. |
+| R8 | MINOR | specs/quote-engine_spec.md:3 | The header lists only NFR-01, although the spec now carries an NFR-04.2 rule. | Add NFR-03 and NFR-04 to the header. |
+
+**Not a finding:** every case listed under "Closed" behaves correctly against the live hooks, not only in the suite. None of R1–R8 affects production code in this PR, since there is none. R1 and R2 are silent bypasses of non-negotiables 5 and 7 that ordinary generated code (Spring Security config, JPA getters) will hit, and each is a small fix.
+
+VERDICT: CHANGES_REQUESTED

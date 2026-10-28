@@ -5,8 +5,15 @@ command (`git checkout main && git commit`) are tracked, so the rule applies to 
 git segment actually runs on. Only segments whose program is `git` are inspected, so text such as
 `echo "git commit"` is ignored.
 
-On main: commit / cherry-pick / revert / am / rebase / reset / pull are blocked; merge is allowed
-only with --no-ff (the sanctioned PR merge). From any branch: pushing to main is blocked.
+On main: commit / cherry-pick / revert / am / rebase / history-moving reset / non-ff-only pull are
+blocked; merge is allowed with --no-ff (the sanctioned PR merge) or --ff-only from a remote-tracking
+ref (syncing after a GitLab MR). --abort/--continue and `reset HEAD <file>` are allowed. From any
+branch: pushing to main is blocked.
+
+Known limits (deliberate evasion, not accidental use): commands wrapped in `bash -c`, subshells,
+`env`/`xargs`, and plumbing that moves main without a commit (`branch -f`, `update-ref`,
+`fetch . X:main`, `push --all/--mirror`). The backstop is the protected `main` branch on the GitLab
+remote plus CI; see .claude/hooks/CLAUDE.md.
 """
 import re
 import shlex
@@ -55,9 +62,22 @@ def git_call(tok):
     return tok[i], tok[i + 1:]
 
 
-def switched_branch(sub, args):
+def previous_branch(cwd):
+    try:
+        out = subprocess.run(["git", "rev-parse", "--abbrev-ref", "@{-1}"], cwd=cwd or None,
+                             capture_output=True, text=True, timeout=5)
+        return out.stdout.strip() or None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def switched_branch(sub, args, cwd=None):
     if sub not in ("checkout", "switch"):
         return None
+    if "--" in args:  # `git checkout main -- file` restores a path; the branch does not change
+        return None
+    if args[:1] == ["-"]:
+        return previous_branch(cwd)
     positional, i = [], 0
     while i < len(args):
         a = args[i]
@@ -69,6 +89,28 @@ def switched_branch(sub, args):
             positional.append(a)
         i += 1
     return positional[0] if positional else None
+
+
+CONTROL_FLAGS = {"--abort", "--continue", "--quit", "--skip"}
+REMOTE_REF = re.compile(r"^(origin|upstream)/|^refs/remotes/|^@\{u(pstream)?\}$|^FETCH_HEAD$")
+
+
+def rewrites_main(sub, args):
+    """True if this git subcommand, run on main, would create or move commits on main."""
+    if CONTROL_FLAGS & set(args):
+        return False  # finishing/aborting an operation never adds new history
+    positional = [a for a in args if not a.startswith("-")]
+    if sub == "pull":
+        return "--ff-only" not in args  # fast-forward from the remote after an MR merge is a sync, not a change
+    if sub == "reset":
+        if "--" in args or not positional:
+            return any(a in args for a in ("--hard", "--soft", "--keep", "--merge"))
+        return not (positional[0] == "HEAD" and len(positional) > 1)  # `reset HEAD <file>` only unstages
+    if sub == "merge":
+        if "--no-ff" in args:
+            return False
+        return not ("--ff-only" in args and positional and all(REMOTE_REF.search(p) for p in positional))
+    return sub in REWRITES_MAIN
 
 
 def pushes_to_main(args, branch):
@@ -99,16 +141,16 @@ def main():
         if call is None:
             continue
         sub, args = call
-        new_branch = switched_branch(sub, args)
+        new_branch = switched_branch(sub, args, data.get("cwd"))
         if new_branch:
             branch = new_branch
             continue
-        if branch == "main" and sub in REWRITES_MAIN:
+        if branch == "main" and sub == "merge" and rewrites_main(sub, args):
+            hookio.block("PR-only merge", "merges into main must use --no-ff to preserve PR history "
+                         "(--ff-only is allowed only from a remote-tracking ref such as origin/main).")
+        if branch == "main" and rewrites_main(sub, args):
             hookio.block("PR-only merge", f"`git {sub}` on main is forbidden. Create a feature branch "
                          "(git checkout -b feat/<name>) and merge via /pr (git merge --no-ff).")
-        if branch == "main" and sub == "merge" and "--no-ff" not in args \
-                and not {"--abort", "--continue", "--quit"} & set(args):
-            hookio.block("PR-only merge", "merges into main must use --no-ff to preserve PR history.")
         if sub == "push" and pushes_to_main(args, branch):
             hookio.block("PR-only merge", "pushing to main bypasses review. Push the feature branch and merge via /pr.")
     return 0

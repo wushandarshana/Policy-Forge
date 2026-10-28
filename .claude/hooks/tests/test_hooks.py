@@ -52,6 +52,15 @@ expect("BigDecimal from string ok", P, write(f"{J}/domain/X.java", 'var a = new 
 expect("BigDecimal.valueOf(long) ok", P, write(f"{J}/domain/X.java", "var a = BigDecimal.valueOf(1000);"), 0)
 expect("'float' inside string ok", P, write(f"{J}/web/X.java", 'String m = "no float allowed";'), 0)
 expect("DOUBLE column in migration", P, write("backend/src/main/resources/db/migration/V9__x.sql", "premium DOUBLE"), 2)
+expect("R1: double after '/**' string not hidden", P, write(f"{J}/web/SecurityConfig.java",
+       'String p = "/api/products/**";\nclass C { double premium; }\n/** doc */'), 2)
+expect("R1: '*/*' string does not end a fake comment", P, write(f"{J}/web/C.java",
+       '/* c */ String t = "*/*"; double x;'), 2)
+expect("R1: double inside a real comment ok", P, write(f"{J}/domain/X.java", "/* never use double here */ class X {}"), 0)
+expect("R6: doubleValue()", P, write(f"{J}/service/S.java", "var d = premium.doubleValue();"), 2)
+expect("R6: Math.pow", P, write(f"{J}/domain/X.java", "var p = Math.pow(base, n);"), 2)
+expect("R6: bare float literal", P, write(f"{J}/domain/X.java", "var rate = 0.025;"), 2)
+expect("R6: int and hex literals ok", P, write(f"{J}/domain/X.java", "int a = 365; int m = 0x1F; long b = 10L;"), 0)
 expect("violation detected when session cwd is backend/", P,
        write(f"{J}/domain/X.java", "class X { double r; }", cwd=ROOT / "backend"), 2, env_root=False)
 
@@ -65,6 +74,13 @@ expect("whole KYC dto", P, write(f"{J}/service/A.java", 'log.debug("kyc {}", app
 expect("'KYC' in message text ok", P, write(f"{J}/service/A.java", 'log.info("KYC submitted for {}", applicationId);'), 0)
 expect("maskedFullName ok", P, write(f"{J}/service/A.java", 'log.info("name {}", maskedFullName);'), 0)
 expect("ids only ok", P, write(f"{J}/service/A.java", 'log.info("issued {} for {}", policyNumber, applicationId);'), 0)
+expect("R2: getAadhaar() getter", P, write(f"{J}/service/A.java", 'log.info("x {}", applicant.getAadhaar());'), 2)
+expect("R2: getPanNumber() getter", P, write(f"{J}/service/A.java", 'log.info("x {}", applicant.getPanNumber());'), 2)
+expect("R2: getDob() getter", P, write(f"{J}/service/A.java", 'log.warn("x {}", e.getDob());'), 2)
+expect("R2: applicantPan variable", P, write(f"{J}/service/A.java", 'log.info("x {}", applicantPan);'), 2)
+expect("R2: company/expand identifiers ok", P, write(f"{J}/service/A.java", 'log.info("x {} {}", company, expandedId);'), 0)
+expect("R1: PII after '*/*' string not hidden", P, write(f"{J}/web/A.java",
+       '/* c */ String t = "*/*"; log.info("x {}", a.aadhaar());'), 2)
 
 # --- policy_immutability_check (NFR-02/05) ---
 P = "policy_immutability_check.py"
@@ -87,17 +103,38 @@ try:
 
     for cmd in ["git commit -m x", "git -C . commit -m x", "git --no-pager commit -m x", "git cherry-pick abc",
                 "git revert HEAD", "git reset --hard HEAD~1", "git pull", "git rebase feat/x", "git merge feat/x",
-                "git push origin main", "git push"]:
+                "git push origin main", "git push", "git reset HEAD~1", "git reset --hard",
+                "git merge --ff-only feat/x"]:
         expect(f"on main: block `{cmd}`", P, bash(cmd), 2)
     for cmd in ["git merge --no-ff feat/x -m m", "git merge --abort", "git status", "echo \"git commit\"",
-                "git checkout -b feat/x && git commit -m x", "git log --oneline main"]:
+                "git checkout -b feat/x && git commit -m x", "git log --oneline main",
+                "git pull --ff-only", "git merge --ff-only origin/main", "git reset HEAD README.md",
+                "git reset", "git rebase --abort", "git cherry-pick --abort"]:
         expect(f"on main: allow `{cmd}`", P, bash(cmd), 0)
     subprocess.run(git + ["checkout", "-q", "-b", "feat/domain-main"], check=True)
-    for cmd in ["git commit -m x", "git push -u origin feat/domain-main", "git push origin HEAD"]:
+    for cmd in ["git commit -m x", "git push -u origin feat/domain-main", "git push origin HEAD",
+                "git checkout main -- README.md && git commit -m x"]:
         expect(f"on feature: allow `{cmd}`", P, bash(cmd), 0)
     for cmd in ["git checkout main && git commit -m x", "git push origin HEAD:main", "git push origin +feat/x:main"]:
         expect(f"on feature: block `{cmd}`", P, bash(cmd), 2)
+    # R7: published migration edited inside a git worktree under .claude/worktrees/<n>/
+    mig = "backend/src/main/resources/db/migration/V1__init.sql"
+    subprocess.run(git[:3] + ["checkout", "-q", "main"], check=True)
+    (repo / mig).parent.mkdir(parents=True)
+    (repo / mig).write_text("create table t(id int);\n")
+    subprocess.run(git[:3] + ["add", mig], check=True)
+    subprocess.run(git + ["commit", "-q", "-m", "v1"], check=True)
+    wt = repo / ".claude" / "worktrees" / "w1"
+    subprocess.run(git[:3] + ["worktree", "add", "-q", "-b", "feat/w1", str(wt)], check=True)
+    payload = {"cwd": str(wt), "tool_input": {"file_path": str(wt / mig), "content": "create table t(id bigint);"}}
+    env = dict(os.environ, CLAUDE_PROJECT_DIR=str(repo))
+    rc = subprocess.run([sys.executable, str(LIB / "policy_immutability_check.py")], input=json.dumps(payload),
+                        capture_output=True, text=True, env=env).returncode
+    ok = rc == 2
+    failures.extend([] if ok else ["R7 worktree migration edit"])
+    print(f"{'ok  ' if ok else 'FAIL'} R7: published migration edited in a worktree is blocked (exit {rc}, want 2)")
 finally:
+    subprocess.run(["git", "-C", str(repo), "worktree", "prune"], capture_output=True)
     shutil.rmtree(repo, ignore_errors=True)
 
 print(f"\n{'ALL PASSED' if not failures else f'{len(failures)} FAILED: ' + ', '.join(failures)}")

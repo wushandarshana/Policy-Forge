@@ -23,11 +23,12 @@ def file_path(data):
 
 
 def project_root(data):
-    """Repository root, independent of the session cwd (which may be a subfolder, e.g. after `cd backend`)."""
-    env = os.environ.get("CLAUDE_PROJECT_DIR")
-    if env:
-        return env
-    start = Path(file_path(data) or data.get("cwd") or ".")
+    """Root of the work tree that contains the file being written.
+
+    Resolved from the file's own location first, so the session cwd (e.g. after `cd backend`) does not matter and a
+    git worktree under .claude/worktrees/<n>/ resolves to that worktree, not the main checkout.
+    """
+    start = Path(file_path(data) or data.get("cwd") or os.environ.get("CLAUDE_PROJECT_DIR") or ".")
     while not start.exists() and start != start.parent:
         start = start.parent
     if start.is_file():
@@ -39,13 +40,15 @@ def project_root(data):
             return out.stdout.strip()
     except (OSError, subprocess.SubprocessError):
         pass
-    return data.get("cwd") or ""
+    return os.environ.get("CLAUDE_PROJECT_DIR") or data.get("cwd") or ""
 
 
 def rel_path(data):
     """Repo-relative, forward-slash path of the file being written."""
-    p = file_path(data).replace("\\", "/")
-    root = project_root(data).replace("\\", "/").rstrip("/")
+    # resolve() expands Windows 8.3 short names (C:\Users\ABCDEF~1) so both sides use the same form
+    p = str(Path(file_path(data)).resolve()).replace("\\", "/") if file_path(data) else ""
+    root = project_root(data)
+    root = str(Path(root).resolve()).replace("\\", "/").rstrip("/") if root else ""
     if root and p.lower().startswith(root.lower() + "/"):
         return p[len(root) + 1:]
     return p
@@ -61,17 +64,26 @@ def new_text(data):
     return "\n".join(e.get("new_string", "") for e in ti.get("edits") or [])
 
 
-def strip_comments(java_or_ts):
-    text = re.sub(r"/\*.*?\*/", "", java_or_ts, flags=re.S)
-    return re.sub(r"//[^\n]*", "", text)
+# One alternation scanned left to right: whichever token starts first wins, so a "/*" inside a string literal
+# (e.g. "/api/products/**") cannot open a fake comment, and quotes inside comments cannot open fake strings.
+_TOKENS = re.compile(r'"""[\s\S]*?"""|"(?:\\.|[^"\\\n])*"|\'(?:\\.|[^\'\\\n])*\'|`(?:\\.|[^`\\])*`'
+                     r'|/\*[\s\S]*?(?:\*/|$)|//[^\n]*')
 
 
-def strip_strings(code):
-    """Blank out string/char/template literals so words inside messages are not mistaken for code."""
-    code = re.sub(r'"""[\s\S]*?"""', '""', code)
-    code = re.sub(r'"(?:\\.|[^"\\\n])*"', '""', code)
-    code = re.sub(r"'(?:\\.|[^'\\\n])*'", "''", code)
-    return re.sub(r"`(?:\\.|[^`\\])*`", "``", code)
+def strip_code(text):
+    """Blank comments and string/char/template literals in a single pass; keeps line structure."""
+    def repl(m):
+        tok = m.group(0)
+        if tok.startswith("/"):
+            return "\n" * tok.count("\n") or " "
+        quote = tok[:3] if tok.startswith('"""') else tok[0]
+        return quote + quote
+    return _TOKENS.sub(repl, text)
+
+
+# Kept for callers; both now use the single-pass scanner.
+strip_comments = strip_code
+strip_strings = strip_code
 
 
 def tracked_on_main(path, cwd):
