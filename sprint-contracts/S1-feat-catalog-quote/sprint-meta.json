@@ -1,0 +1,8 @@
+{
+  "iteration": 2,
+  "max_iterations": 3,
+  "status": "done",
+  "started_at": "2026-10-28T05:27:16Z",
+  "spec": "specs/product-catalog_spec.md specs/quote-engine_spec.md — PolicyForge Sprint 1 (branch feat/catalog-quote). Scope: Spring Boot 3 / Java 21 backend scaffold with Maven wrapper (backend/), Flyway + H2, health endpoint (NFR-07.1), JSON logs with correlation id (NFR-06.1/06.2), product catalog with versioned JSON rule files for TERM_LIFE/MOTOR/HOUSEHOLD (AC-02.1–02.7), deterministic quote engine (AC-01.1–01.8, NFR-01), public quote read without health inputs (NFR-04.2), ArchUnit architecture tests (NFR-08), JaCoCo, seed rule files; minimal React+Vite frontend Quote page + Playwright smoke. Constraints: follow root CLAUDE.md non-negotiables and folder CLAUDE.md files; strict TDD with separate `test(red)` / `feat(green)` / `refactor` commits per AC; every test named AC-NN.M; worked examples must equal premium_check.py oracle. Environment: `java` is not on PATH in this session — prefix Maven commands with `export JAVA_HOME=\"/c/Program Files/Eclipse Adoptium/jdk-21.0.12.101-hotspot\"; export PATH=\"$JAVA_HOME/bin:$PATH\"`. Use project agents where they fit (test-engineer for red, quote-engine-agent for rating, archtest-author-agent for ArchUnit, ui-designer for the page; evaluator uses Playwright MCP).",
+  "workspace": ".sprint/20261028-052716"
+}

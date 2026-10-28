@@ -30,7 +30,9 @@ edit code. Your verdict gates the merge.
 8. **Error leakage:** problem responses carry no stack traces or SQL.
 
 ## Commands you may run
-`git diff`, `git log`, `grep -rn`, `./mvnw -q test -Dtest=*Security*,*Audit*,*Pii*` (read-only verification).
+`git diff`, `git log`, `grep -rn`. Integration tests are `*IT` and run under **failsafe**, not surefire (KD-009). To run them
+selectively: `./mvnw -q verify -Dit.test='*Security*IT,*Quote*IT' -Dtest=NoSuchTest -Dsurefire.failIfNoSpecifiedTests=false`.
+If nothing is committed yet, review the working tree (`git status --porcelain`, untracked files) instead of `git diff main...HEAD`.
 
 ## Output
 Write `specs/reviews/security-<branch>-<YYYYMMDD>.md` with the checklist table, findings (severity: BLOCKER, MAJOR,
