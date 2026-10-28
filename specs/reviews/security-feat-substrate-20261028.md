@@ -99,3 +99,30 @@ I also ran about 45 adversarial cases that the suite does not cover, all exercis
 **Not a finding:** every case listed under "Closed" behaves correctly against the live hooks, not only in the suite. None of R1–R8 affects production code in this PR, since there is none. R1 and R2 are silent bypasses of non-negotiables 5 and 7 that ordinary generated code (Spring Security config, JPA getters) will hit, and each is a small fix.
 
 VERDICT: CHANGES_REQUESTED
+
+---
+
+## Third pass (reviewer, 2026-10-28)
+
+**Scope:** 2ea0a31, 21cd2ab. `test_hooks.py`: ALL PASSED (69 cases). I ran about 45 additional cases the suite does not cover, against the live hooks.
+
+**Closed:**
+- **R1.** `strip_code` handles the following correctly: a `"/api/**"` string followed by Javadoc, escaped `\"` and `'\''`, text blocks, and literals inside Javadoc or annotations. I found no new bypass caused by the scanner.
+- **R6.** `doubleValue`/`floatValue`, `Math.pow`, `3D` and bare float literals are caught. There are no false positives on hex, `1_000L`, `floorMod`/`ceilDiv`, `v2` package names, or decimal strings.
+- **R7.** Resolved; R3 and R4 are fixed as reported.
+- **R8.** The quote-engine header lists NFR-04.2.
+- **R5.** Accepted as documented known limits; the backstop is a protected `main` on the remote.
+
+**New or still open:**
+
+| ID | Sev | File:line | Issue | Suggested fix |
+|---|---|---|---|---|
+| T1 | MAJOR | .claude/hooks/lib/no_direct_main_commit.py:95, :112, :104-105 | The R3 fix opened a bypass: `merge --ff-only` and `pull --ff-only` accept **any** remote ref. On main, `git merge --ff-only origin/feat/x`, `git pull --ff-only origin feat/x` and `git merge --ff-only FETCH_HEAD` all exit 0, which fast-forwards main to an unreviewed branch. The block message itself points the agent at "a remote-tracking ref". | Allow `merge --ff-only` only for `origin/main`, `refs/remotes/origin/main` or `@{u}`. Allow `pull --ff-only` only with no refspec or with refspec `main`. Drop FETCH_HEAD. |
+| T2 | MAJOR | .claude/hooks/lib/pii_redaction_check.py:43, :37 | False blocks on idiomatic service code. The text inspected is everything since the previous `;`, so identifiers **before** the log call count. Exit 2 on `submit(String customerId, KycDto kyc) {\n log.info("… {}", customerId);` and on `if (kyc == null) { log.warn("… {}", applicationId); }`. `Locale.JAPAN` (`PAN` suffix) is also blocked. This will hit `ApplicationService` on its first log line. | Inspect only the log call's argument list: from the `LOG_CALL` match to its balanced closing parenthesis. Require `PII_SUFFIX` to come after a lowercase letter, so all-caps constants are not matched. |
+| T3 | MINOR | pii_redaction_check.py:26-29 | Still not caught; the NFR-03.1 log-capture test is the backstop: <br>• `getPanNo()`, `getHealthDecl()` and `"…" + kycRecord`. <br>• A message pre-built from `kyc.aadhaar()` and then logged. <br>• TS template interpolation `` console.log(`${form.aadhaar}`) ``, because the whole template is blanked. | Add the `panno`/`healthdecl` stems and a `kyc` prefix. Keep `${…}` expressions when blanking template literals. |
+| T4 | MINOR | premium_precision_check.py:32, :36 | Still not caught: `StrictMath.pow`, `Math.random/exp/log`, and a statically imported `pow(…)`. A false positive: non-money doubles anywhere in `backend/src/main/java` (e.g. Micrometer `publishPercentiles(0.5, 0.95)`) are blocked, with no opt-out. | Use `\b(Strict)?Math\.\w+\(` minus the int-only helpers, and add `import static java.lang.(Strict)?Math`. Exempt a `config/metrics` package, or document the rule. |
+| T5 | MINOR | no_direct_main_commit.py:74-92, :98-110 | Remaining false blocks: `git reset --hard` on main with no target, `git reset HEAD~3 <file>`, and `git checkout main README.md` (path given without `--`). `git checkout -` inside the same command chain resolves against the branch before the command ran, so `git checkout main && git checkout - && git commit` is blocked. A minor bypass: `git checkout --track origin/main && git commit` is not treated as switching to main. | `reset --hard` with no commit-ish never moves HEAD, so allow it. Treat a second positional argument as a path. Track `-` within the chain. |
+
+There is still no production code in this PR. T1 reopens the PR-only-merge bypass that F2 closed, and T2 will block the KYC service's ordinary logging. Both are fixes of a few lines.
+
+VERDICT: CHANGES_REQUESTED

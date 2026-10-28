@@ -79,6 +79,11 @@ expect("R2: getPanNumber() getter", P, write(f"{J}/service/A.java", 'log.info("x
 expect("R2: getDob() getter", P, write(f"{J}/service/A.java", 'log.warn("x {}", e.getDob());'), 2)
 expect("R2: applicantPan variable", P, write(f"{J}/service/A.java", 'log.info("x {}", applicantPan);'), 2)
 expect("R2: company/expand identifiers ok", P, write(f"{J}/service/A.java", 'log.info("x {} {}", company, expandedId);'), 0)
+expect("T2: KYC param in signature, log of id ok", P, write(f"{J}/service/A.java",
+       'void submit(KycDto kyc, String customerId) {\n log.info("submitted {}", customerId);\n}'), 0)
+expect("T2: kyc null-check before log ok", P, write(f"{J}/service/A.java",
+       'if (kyc == null) { log.warn("missing kyc for {}", applicationId); }'), 0)
+expect("T2: Locale.JAPAN ok", P, write(f"{J}/service/A.java", 'log.info("locale {}", Locale.JAPAN);'), 0)
 expect("R1: PII after '*/*' string not hidden", P, write(f"{J}/web/A.java",
        '/* c */ String t = "*/*"; log.info("x {}", a.aadhaar());'), 2)
 
@@ -104,11 +109,13 @@ try:
     for cmd in ["git commit -m x", "git -C . commit -m x", "git --no-pager commit -m x", "git cherry-pick abc",
                 "git revert HEAD", "git reset --hard HEAD~1", "git pull", "git rebase feat/x", "git merge feat/x",
                 "git push origin main", "git push", "git reset HEAD~1", "git reset --hard",
-                "git merge --ff-only feat/x"]:
+                "git merge --ff-only feat/x", "git merge --ff-only origin/feat/x",
+                "git pull --ff-only origin feat/x", "git merge --ff-only FETCH_HEAD"]:
         expect(f"on main: block `{cmd}`", P, bash(cmd), 2)
     for cmd in ["git merge --no-ff feat/x -m m", "git merge --abort", "git status", "echo \"git commit\"",
                 "git checkout -b feat/x && git commit -m x", "git log --oneline main",
-                "git pull --ff-only", "git merge --ff-only origin/main", "git reset HEAD README.md",
+                "git pull --ff-only", "git pull --ff-only origin main", "git merge --ff-only origin/main",
+                "git merge --ff-only @{u}", "git reset HEAD README.md",
                 "git reset", "git rebase --abort", "git cherry-pick --abort"]:
         expect(f"on main: allow `{cmd}`", P, bash(cmd), 0)
     subprocess.run(git + ["checkout", "-q", "-b", "feat/domain-main"], check=True)

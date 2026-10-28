@@ -92,7 +92,9 @@ def switched_branch(sub, args, cwd=None):
 
 
 CONTROL_FLAGS = {"--abort", "--continue", "--quit", "--skip"}
-REMOTE_REF = re.compile(r"^(origin|upstream)/|^refs/remotes/|^@\{u(pstream)?\}$|^FETCH_HEAD$")
+# Only main's own upstream may be fast-forwarded into main; any other remote ref would land unreviewed work.
+MAIN_UPSTREAM = {"origin/main", "upstream/main", "refs/remotes/origin/main", "refs/remotes/upstream/main",
+                 "@{u}", "@{upstream}"}
 
 
 def rewrites_main(sub, args):
@@ -101,7 +103,10 @@ def rewrites_main(sub, args):
         return False  # finishing/aborting an operation never adds new history
     positional = [a for a in args if not a.startswith("-")]
     if sub == "pull":
-        return "--ff-only" not in args  # fast-forward from the remote after an MR merge is a sync, not a change
+        # fast-forwarding main from its own upstream after an MR merge is a sync, not a change;
+        # `pull --ff-only origin feat/x` would land an unreviewed branch, so only main (or no refspec) is allowed
+        refspecs = positional[1:]
+        return "--ff-only" not in args or any(r not in MAIN for r in refspecs)
     if sub == "reset":
         if "--" in args or not positional:
             return any(a in args for a in ("--hard", "--soft", "--keep", "--merge"))
@@ -109,7 +114,7 @@ def rewrites_main(sub, args):
     if sub == "merge":
         if "--no-ff" in args:
             return False
-        return not ("--ff-only" in args and positional and all(REMOTE_REF.search(p) for p in positional))
+        return not ("--ff-only" in args and positional and all(p in MAIN_UPSTREAM for p in positional))
     return sub in REWRITES_MAIN
 
 
@@ -147,7 +152,7 @@ def main():
             continue
         if branch == "main" and sub == "merge" and rewrites_main(sub, args):
             hookio.block("PR-only merge", "merges into main must use --no-ff to preserve PR history "
-                         "(--ff-only is allowed only from a remote-tracking ref such as origin/main).")
+                         "(--ff-only is allowed only from main's own upstream: origin/main or @{u}).")
         if branch == "main" and rewrites_main(sub, args):
             hookio.block("PR-only merge", f"`git {sub}` on main is forbidden. Create a feature branch "
                          "(git checkout -b feat/<name>) and merge via /pr (git merge --no-ff).")
