@@ -14,10 +14,14 @@
 |---|---|---|---|
 | [PR-002](../prs/PR-002.md) | `feat/catalog-quote` | Feature: Sprint 1 | Harness evaluator PASS (2 iterations); `security-reviewer` **APPROVE** (3 rounds); `test-engineer` **APPROVE** |
 | [PR-003](../prs/PR-003.md) | `chore/branching-strategy` | Substrate chore | No reviewer-agent run. See the note below. |
+| [PR-004](../prs/PR-004.md) | `chore/release-v0.1.0` | Release record | Docs and coverage artifact only |
+| [PR-005](../prs/PR-005.md) | `fix/hook-quoted-separators` | Substrate fix | Hook regression suite 145/145. Red confirmed on the old hook. |
 
-**Note on PR-003.** `/release` requires security and test-engineer approvals for every *feature* merged since the last
+**Note on PR-003 and PR-005.** `/release` requires security and test-engineer approvals for every *feature* merged since the last
 release. PR-003 changes only guardrails (the commit hook, commands and docs), with no application code or data path.
-Its behaviour is covered by the 138-case hook regression suite, which passed in this QA run. It was treated as out of
+Its behaviour is covered by the hook regression suite (138 cases at QA, 145 after PR-005). PR-005 was found *during*
+this release: the live hook falsely blocked the `dev` → `main` merge because its `-m` message contained `;`. It was fixed
+on a `fix/` branch and merged through the normal path, and the release resumed (KD-012). It was treated as out of
 scope for the reviewer-agent requirement, and that is recorded here rather than left implicit.
 
 ## Delivered
@@ -62,12 +66,15 @@ scope for the reviewer-agent requirement, and that is recorded here rather than 
 | `npm run build` | OK |
 | `npx playwright test` | 2/2 passed (desktop-chromium, mobile-chromium) |
 | `premium_check.py spec-examples` | 9/9 PASS (6850.00, 15150.00, 11350.00, 18150.00, 9490.00, 1330.85, 4473.29, 6850.00, 0.00) |
-| Hook regression suite | 138 cases, ALL PASSED |
+| Hook regression suite | 138 cases, ALL PASSED at QA. 145 after PR-005, ALL PASSED. |
 | `ac_audit.py --offline` | 25/72 covered. Every Sprint 1 ID is covered. The 47 uncovered IDs are AC-03 to AC-11 and NFR-03.1, all planned for Sprints 2–5. |
 | `redact_evidence.py --check` | 0 findings |
 
 Coverage artifacts: [`coverage/backend/jacoco.xml`](../../coverage/backend/jacoco.xml), refreshed from this QA build,
 and [`frontend/coverage/lcov.info`](../../frontend/coverage/lcov.info).
+
+**Delta after QA.** Between the QA'd revision `d9e5379` and the promoted `dev` tip, only `docs/`, `coverage/` and
+`.claude/` (hook) files changed. No application code changed, so the QA results above still apply.
 
 ## Known residuals and open items
 - **NFR-04.4 residual.** The 64 KB publish allowance is decided before authentication. A request with bogus
