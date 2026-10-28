@@ -1,0 +1,25 @@
+{
+  "name": "policyforge-substrate",
+  "version": "0.1.0",
+  "description": "PolicyForge policy-administration substrate: domain agents, insurance skills, guardrail hooks and traceability commands. Canonical manifest is /plugin.json at the repository root.",
+  "author": { "name": "wushandarshana", "email": "info@capricon.lk" },
+  "license": "MIT",
+  "commands": "./.claude/commands/",
+  "agents": [
+    "./.claude/agents/security-reviewer.md",
+    "./.claude/agents/test-engineer.md",
+    "./.claude/agents/design-critic.md",
+    "./.claude/agents/ui-designer.md",
+    "./.claude/agents/quote-engine-agent.md",
+    "./.claude/agents/endorsement-agent.md",
+    "./.claude/agents/renewal-orchestrator-agent.md",
+    "./.claude/agents/policy-version-validator-agent.md",
+    "./.claude/agents/archtest-author-agent.md",
+    "./.claude/agents/migration-coherence-agent.md",
+    "./.claude/agents/janitor.md",
+    "./.claude/agents/doc-writer.md"
+  ],
+  "skills": "./.claude/skills/",
+  "hooks": "./.claude/hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
+}
