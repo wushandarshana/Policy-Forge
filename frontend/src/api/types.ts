@@ -79,5 +79,90 @@ export interface ProblemDetail {
   status?: number;
   detail?: string;
   instance?: string;
+  /** Named business error (C3): QUOTE_NOT_FOUND, QUOTE_EXPIRED, KYC_AGE_MISMATCH, QUOTE_ALREADY_APPLIED, ... */
+  code?: string;
   errors?: FieldError[];
+}
+
+// ---- Application, KYC and underwriting (contracts C1-C5, specs/underwriting_spec.md) ----
+
+/** HTTP Basic credentials, held in memory only (spec UI "Sign-in"). */
+export interface Credentials {
+  username: string;
+  password: string;
+}
+
+export type ApplicationStatus = 'SUBMITTED' | 'UNDERWRITING' | 'APPROVED' | 'REFERRED' | 'DECLINED' | 'ISSUED';
+export type UnderwritingOutcome = 'AUTO_BIND' | 'MANUAL_REVIEW' | 'DECLINE';
+
+/** U-8: one fired rule, with its description. */
+export interface Reason {
+  code: string;
+  description: string;
+}
+
+/** C1 request: exactly `{quoteId, kyc}` (U-1). */
+export interface ApplicationRequest {
+  quoteId: string;
+  kyc: {
+    fullName: string;
+    dateOfBirth: string;
+    aadhaar: string;
+    pan: string;
+    address: { line1: string; city: string; postcode: string };
+  };
+}
+
+/** C1 response (201) and each item of C2. It carries no KYC field (U-7). */
+export interface ApplicationSummary {
+  applicationId: string;
+  quoteId: string;
+  productCode: string;
+  status: ApplicationStatus;
+  decision: UnderwritingOutcome;
+  reasonCodes: string[];
+  reasons: Reason[];
+  ruleVersion: number;
+  /** ISO instant. */
+  submittedAt: string;
+}
+
+/** One declared risk input as the queue returns it. Money stays a decimal string. */
+export type RiskInputValue = string | number | boolean | string[];
+
+/** C4: one queue item, built from the U-7 allow-list. Aadhaar and PAN arrive masked. */
+export interface QueueItem {
+  applicationId: string;
+  quoteId: string;
+  productCode: string;
+  status: ApplicationStatus;
+  submittedAt: string;
+  ruleVersion: number;
+  decision: UnderwritingOutcome;
+  reasonCodes: string[];
+  reasons: Reason[];
+  kyc: { fullName: string; aadhaar: string; pan: string };
+  riskInputs: Record<string, RiskInputValue>;
+}
+
+export type ManualDecision = 'APPROVE' | 'DECLINE';
+
+/** C5 decision body. */
+export interface DecisionRequest {
+  decision: ManualDecision;
+  reasonCode: string;
+  comment: string;
+}
+
+/** C5 override body. */
+export interface OverrideRequest {
+  reasonCode: string;
+  comment: string;
+}
+
+/** C5 response (200) of both decision and override. */
+export interface DecisionResult {
+  applicationId: string;
+  previousStatus: ApplicationStatus;
+  status: ApplicationStatus;
 }
