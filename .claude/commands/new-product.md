@@ -10,7 +10,7 @@ Arguments: `$ARGUMENTS`
 
 Publishing a product or version is a **data change, not a code change** (AC-02, specs/product-catalog_spec.md).
 
-1. **Branch check.** You must be on a `feat/` branch. If on `main`, stop and ask for a branch name.
+1. **Branch check.** You must be on a `feat/` branch. If on `main` or `dev`, stop and ask for a branch name (cut it from `dev`).
 2. **Resolve the target.**
    - If `PRODUCT_CODE` exists under `backend/src/main/resources/rules/<slug>/`, this is a **new version**:
      N = max(vK) + 1. Copy `v(N-1).json` as the starting point.

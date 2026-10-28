@@ -106,23 +106,50 @@ try:
     def bash(cmd):
         return {"cwd": str(repo), "tool_input": {"command": cmd}}
 
-    for cmd in ["git commit -m x", "git -C . commit -m x", "git --no-pager commit -m x", "git cherry-pick abc",
-                "git revert HEAD", "git reset --hard HEAD~1", "git pull", "git rebase feat/x", "git merge feat/x",
-                "git push origin main", "git push", "git reset HEAD~1", "git reset --hard",
-                "git merge --ff-only feat/x", "git merge --ff-only origin/feat/x",
-                "git pull --ff-only origin feat/x", "git merge --ff-only FETCH_HEAD"]:
-        expect(f"on main: block `{cmd}`", P, bash(cmd), 2)
-    for cmd in ["git merge --no-ff feat/x -m m", "git merge --abort", "git status", "echo \"git commit\"",
-                "git checkout -b feat/x && git commit -m x", "git log --oneline main",
-                "git pull --ff-only", "git pull --ff-only origin main", "git merge --ff-only origin/main",
-                "git merge --ff-only @{u}", "git reset HEAD README.md",
-                "git reset", "git rebase --abort", "git cherry-pick --abort"]:
+    # Branching strategy: feature -> dev -> main. Both main and dev are protected.
+    for prot in ("main", "dev"):
+        subprocess.run(git[:3] + ["checkout", "-q", "-B", prot], check=True)
+        for cmd in ["git commit -m x", "git -C . commit -m x", "git --no-pager commit -m x", "git cherry-pick abc",
+                    "git revert HEAD", "git reset --hard HEAD~1", "git pull", "git rebase feat/x",
+                    "git reset HEAD~1", "git reset --hard", "git merge --ff-only FETCH_HEAD",
+                    f"git merge feat/x", "git merge --ff-only feat/x", "git merge --ff-only origin/feat/x",
+                    "git pull --ff-only origin feat/x", f"git push --force origin {prot}", f"git push origin +{prot}",
+                    f"git push -f", f"git push origin --delete {prot}", f"git push origin :{prot}",
+                    "git push --mirror origin", f"git push --force-with-lease origin {prot}"]:
+            expect(f"on {prot}: block `{cmd}`", P, bash(cmd), 2)
+        for cmd in ["git merge --abort", "git status", "echo \"git commit\"",
+                    "git checkout -b feat/x && git commit -m x", f"git log --oneline {prot}",
+                    "git pull --ff-only", f"git pull --ff-only origin {prot}", f"git merge --ff-only origin/{prot}",
+                    "git merge --ff-only @{u}", "git reset HEAD README.md", "git reset", "git rebase --abort",
+                    "git cherry-pick --abort", f"git push origin {prot}", "git push", f"git push -u origin {prot}"]:
+            expect(f"on {prot}: allow `{cmd}`", P, bash(cmd), 0)
+    # merge sources: dev <- feat/fix/chore ; main <- dev or hotfix/* (always --no-ff)
+    subprocess.run(git[:3] + ["checkout", "-q", "dev"], check=True)
+    for cmd in ['git merge --no-ff feat/x -m "Merge PR-003: thing (feat/x)" -m "Reviewed-by: a"',
+                "git merge --no-ff fix/y", "git merge --no-ff chore/z --no-edit"]:
+        expect(f"on dev: allow `{cmd}`", P, bash(cmd), 0)
+    for cmd in ["git merge --no-ff main", "git merge --no-ff hotfix/h", "git merge --no-ff experiment",
+                "git merge --no-ff -m feat/x random-branch"]:
+        expect(f"on dev: block `{cmd}`", P, bash(cmd), 2)
+    subprocess.run(git[:3] + ["checkout", "-q", "main"], check=True)
+    # KD-012: separators inside quoted messages must not split the command into fake segments
+    for cmd in ['git merge --no-ff dev -m "Release v0.1.0" -m "QA: verify green; Vitest 11/11; a && b | c"',
+                "git merge --no-ff dev -m 'one; two' -m \"three\"", 'git log --format="%h; %s" -3']:
+        expect(f"on main: allow quoted separators `{cmd}`", P, bash(cmd), 0)
+    for cmd in ['git status -s; git commit -m "x"', 'git log -1 && git commit -m "a; b"',
+                'echo "release"\ngit commit -m x', 'git merge --no-ff dev -m "ok; fine" && git commit -m y']:
+        expect(f"on main: still block real separators `{cmd!r}`", P, bash(cmd), 2)
+    for cmd in ['git merge --no-ff dev -m "Release: S1"', "git merge --no-ff hotfix/h"]:
         expect(f"on main: allow `{cmd}`", P, bash(cmd), 0)
+    for cmd in ["git merge --no-ff feat/x", "git merge --no-ff chore/z", "git merge dev"]:
+        expect(f"on main: block `{cmd}`", P, bash(cmd), 2)
     subprocess.run(git + ["checkout", "-q", "-b", "feat/domain-main"], check=True)
     for cmd in ["git commit -m x", "git push -u origin feat/domain-main", "git push origin HEAD",
-                "git checkout main -- README.md && git commit -m x"]:
+                "git checkout main -- README.md && git commit -m x", "git push --force origin feat/domain-main"]:
         expect(f"on feature: allow `{cmd}`", P, bash(cmd), 0)
-    for cmd in ["git checkout main && git commit -m x", "git push origin HEAD:main", "git push origin +feat/x:main"]:
+    for cmd in ["git checkout main && git commit -m x", "git checkout dev && git commit -m x",
+                "git push origin HEAD:main", "git push origin +feat/x:main", "git push origin HEAD:dev",
+                "git push origin feat/domain-main:dev"]:
         expect(f"on feature: block `{cmd}`", P, bash(cmd), 2)
     # R7: published migration edited inside a git worktree under .claude/worktrees/<n>/
     mig = "backend/src/main/resources/db/migration/V1__init.sql"

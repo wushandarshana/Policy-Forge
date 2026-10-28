@@ -12,7 +12,8 @@ node_modules/
 frontend/dist/
 frontend/test-results/
 frontend/playwright-report/
-frontend/coverage/
+# ignore everything in coverage/ except the committed lcov report (a dir-level ignore would block the exception)
+frontend/coverage/*
 !frontend/coverage/lcov.info
 
 # H2 file databases
@@ -34,3 +35,6 @@ __pycache__/
 *.iml
 .DS_Store
 Thumbs.db
+
+# Playwright MCP page snapshots (evaluator scratch output)
+.playwright-mcp/
