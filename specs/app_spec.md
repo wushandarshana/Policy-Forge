@@ -29,7 +29,7 @@ Customers see only their own applications and policies.
 |---|---|
 | [`product-catalog_spec.md`](product-catalog_spec.md) | AC-02 |
 | [`quote-engine_spec.md`](quote-engine_spec.md) | AC-01 |
-| [`underwriting_spec.md`](underwriting_spec.md) | AC-03, AC-04, AC-09 |
+| [`underwriting_spec.md`](underwriting_spec.md) | AC-03 (03.1–03.8), AC-04, AC-09 (09.1–09.7) |
 | [`policy-issuance_spec.md`](policy-issuance_spec.md) | AC-05, AC-10 |
 | [`endorsement_spec.md`](endorsement_spec.md) | AC-06 |
 | [`renewal-cancellation_spec.md`](renewal-cancellation_spec.md) | AC-07, AC-08 |
@@ -146,3 +146,5 @@ Errors use `application/problem+json` (RFC 7807). `InvalidPolicyStateException` 
 - Rule files `rules/term-life/v1.json`, `rules/motor/v1.json`, `rules/household/v1.json`.
 - Sample policies: at least 2 per product for `customer1`/`customer2`, plus 1 MANUAL_REVIEW application in the queue,
   1 policy near renewal and 1 policy past expiry within grace.
+- Delivery is staged with the features it depends on. The MANUAL_REVIEW application ships with underwriting (Sprint 2,
+  underwriting spec U-14). The sample policies ship with issuance and renewal (Sprints 3–4).
