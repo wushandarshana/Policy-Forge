@@ -1,0 +1,46 @@
+{
+  "productCode": "MOTOR",
+  "productName": "Horizon Motor Cover",
+  "version": 1,
+  "effectiveFrom": "2026-01-01",
+  "ratingModel": "MOTOR",
+  "currency": "INR",
+  "sumInsured": { "min": "100000.00", "max": "10000000.00" },
+  "rating": {
+    "baseRate": "0.025",
+    "vehicleAgeFactor": [
+      { "min": 0, "max": 3, "factor": "1.00" },
+      { "min": 4, "max": 7, "factor": "1.10" },
+      { "min": 8, "max": 15, "factor": "1.25" }
+    ],
+    "driverAgeFactor": [
+      { "min": 18, "max": 24, "factor": "1.30" },
+      { "min": 25, "max": 65, "factor": "1.00" },
+      { "min": 66, "max": 99, "factor": "1.15" }
+    ],
+    "claimLoading": "0.20",
+    "ncbDiscount": { "0": "0.00", "1": "0.20", "2": "0.25", "3": "0.35", "4": "0.45", "5": "0.50" },
+    "useFactor": { "PRIVATE": "1.00", "COMMERCIAL": "1.40" },
+    "policyFee": "150.00"
+  },
+  "underwriting": {
+    "rules": [
+      { "code": "UW-MO-001", "outcome": "DECLINE", "description": "Three or more claims in the last 3 years",
+        "all": [ { "field": "claimsLast3Years", "op": "GTE", "value": "3" } ] },
+      { "code": "UW-MO-002", "outcome": "DECLINE", "description": "Vehicle older than 15 years",
+        "all": [ { "field": "vehicleAgeYears", "op": "GT", "value": "15" } ] },
+      { "code": "UW-MO-003", "outcome": "REFER", "description": "Driver under 21",
+        "all": [ { "field": "driverAge", "op": "LT", "value": "21" } ] },
+      { "code": "UW-MO-004", "outcome": "REFER", "description": "Commercial use with vehicle value above 5,000,000",
+        "all": [ { "field": "vehicleUse", "op": "EQ", "value": "COMMERCIAL" }, { "field": "vehicleValue", "op": "GT", "value": "5000000" } ] }
+    ]
+  },
+  "lifecycle": {
+    "termMonths": 12,
+    "gracePeriodDays": 15,
+    "coolingOffDays": 7,
+    "cancellationFee": "250.00",
+    "renewalOfferDaysBeforeExpiry": 30,
+    "quoteValidityDays": 30
+  }
+}

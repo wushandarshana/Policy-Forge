@@ -1,0 +1,37 @@
+{
+  "productCode": "HOUSEHOLD",
+  "productName": "Horizon Household Cover",
+  "version": 1,
+  "effectiveFrom": "2026-01-01",
+  "ratingModel": "HOUSEHOLD",
+  "currency": "INR",
+  "sumInsured": { "min": "200000.00", "max": "50000000.00" },
+  "rating": {
+    "buildingRate": "0.0015",
+    "contentsRate": "0.0035",
+    "constructionFactor": { "BRICK": "1.00", "CONCRETE": "0.95", "TIMBER": "1.30" },
+    "floodFactor": { "LOW": "1.00", "MEDIUM": "1.15", "HIGH": "1.40" },
+    "securityFactor": { "true": "0.90", "false": "1.00" },
+    "policyFee": "100.00"
+  },
+  "underwriting": {
+    "rules": [
+      { "code": "UW-HH-001", "outcome": "DECLINE", "description": "Property older than 100 years",
+        "all": [ { "field": "propertyAgeYears", "op": "GT", "value": "100" } ] },
+      { "code": "UW-HH-002", "outcome": "REFER", "description": "High flood zone without flood defences",
+        "all": [ { "field": "floodZone", "op": "EQ", "value": "HIGH" }, { "field": "hasFloodDefences", "op": "EQ", "value": "false" } ] },
+      { "code": "UW-HH-003", "outcome": "REFER", "description": "Timber construction",
+        "all": [ { "field": "constructionType", "op": "EQ", "value": "TIMBER" } ] },
+      { "code": "UW-HH-004", "outcome": "REFER", "description": "Sum insured above 30,000,000",
+        "all": [ { "field": "sumInsured", "op": "GT", "value": "30000000" } ] }
+    ]
+  },
+  "lifecycle": {
+    "termMonths": 12,
+    "gracePeriodDays": 15,
+    "coolingOffDays": 14,
+    "cancellationFee": "200.00",
+    "renewalOfferDaysBeforeExpiry": 30,
+    "quoteValidityDays": 30
+  }
+}
