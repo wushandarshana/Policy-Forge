@@ -35,3 +35,6 @@ __pycache__/
 *.iml
 .DS_Store
 Thumbs.db
+
+# Playwright MCP page snapshots (evaluator scratch output)
+.playwright-mcp/

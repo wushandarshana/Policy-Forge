@@ -42,4 +42,5 @@ Playwright MCP.
 4. Ratchet: failed criteria are retried, up to 3 iterations. Anything still failing is recorded and fixed in a
    follow-up.
 5. `security-reviewer` and `test-engineer` agents review the diff.
-6. `/sprint-archive` → `/pr` (`--no-ff` merge into `main`).
+6. `/sprint-archive` → `/pr` (`--no-ff` merge of the feature branch into `dev`). After QA, `/release` promotes
+   `dev` → `main`.
