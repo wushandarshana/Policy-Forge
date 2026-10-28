@@ -126,3 +126,28 @@ VERDICT: CHANGES_REQUESTED
 There is still no production code in this PR. T1 reopens the PR-only-merge bypass that F2 closed, and T2 will block the KYC service's ordinary logging. Both are fixes of a few lines.
 
 VERDICT: CHANGES_REQUESTED
+
+---
+
+## Merge-gate verification (reviewer, 2026-10-28)
+
+**Scope:** ae6eb32, limited to T1, T2 and regressions. `test_hooks.py` passes all 77 cases. I ran 43 more spot checks against the live hooks; all gave the expected result.
+
+**T1: closed.**
+- On main, `--ff-only` from main's own upstream is allowed: `origin/main`, `upstream/main`, `refs/remotes/origin/main`, `@{u}`, `pull --ff-only` with no remote or refspec, and `pull --ff-only origin main` (exit 0).
+- Everything else is blocked (exit 2):
+  - merge: `origin/feat/x`, `FETCH_HEAD`, `feat/x`, `origin/mainline`, and `origin/main origin/feat/x` (octopus);
+  - pull: `origin feat/x`, `origin feat/x:main`, `. feat/x`, `origin main feat/x`, and `--depth 1 origin feat/x`;
+  - the same `ff-only origin/feat/x` merge reached via `checkout main &&` from a feature branch.
+
+**T2: closed.**
+- Only the log call's own text is inspected (no_direct_main_commit is unaffected). These now pass (exit 0): a `KycDto kyc` parameter followed by a log of an id, `if (kyc == null) { log.warn(…, applicationId); }`, `var p = kyc.pan();` followed by a log of an id, and `Locale.JAPAN`.
+- Detection is intact (exit 2): `applicant.getAadhaar()`, `applicantPan`, `getDob()`, a multi-line call, fluent `atInfo().addKeyValue`, a lambda argument, a whole `request`, and PII inside the call when an `if` sits on the same line.
+
+**No regressions:** the R1 `"*/*"` case is still blocked; `merge --no-ff`, `reset HEAD <file>`, `rebase --abort`, `checkout -b … && commit` and `checkout main -- file` are still allowed; `push origin HEAD:main` and `checkout main && commit` are still blocked.
+
+**Note, not a finding (MINOR, follow-up with T3–T5):** `git pull --ff-only <other-local-repo> main` is not checked, because only the refspec is inspected, not the repository argument. Exploiting it requires deliberate evasion.
+
+T3–T5 stay accepted as follow-ups for a chore/ branch. There are no open BLOCKER or MAJOR findings.
+
+VERDICT: APPROVE
