@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: policyforge
+  # No datasource URL by default: Spring Boot starts an embedded in-memory H2 with a unique name.
+  # Use the `file` profile (application-file.yml) for a file-based H2 that survives restarts.
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate          # Hibernate validates only; schema changes go through Flyway (NFR-05)
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    validate-on-migrate: true
+  jackson:
+    deserialization:
+      # Fractional JSON numbers reach the domain as BigDecimal, never double (NFR-01).
+      use-big-decimal-for-floats: true
+  mvc:
+    servlet:
+      load-on-startup: 0          # initialise DispatcherServlet at startup so the first request is fast (NFR-07.1)
+
+server:
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never         # body is exactly {"status":"UP"}
+
+policyforge:
+  time-zone: Asia/Kolkata         # zone of the single injectable java.time.Clock
