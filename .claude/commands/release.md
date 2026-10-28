@@ -31,14 +31,18 @@ Write `docs/releases/RELEASE-<version>.md` on a `chore/release-<version>` branch
 - the QA command results, with counts and coverage;
 - known residuals and open items.
 
-## 4. Promote
+## 4. Promote (through a GitHub PR `dev` → `main`)
 ```bash
-git checkout main
-git merge --no-ff dev -m "Release <version>: <title>" -m "QA: <summary>"
-git tag -a <version> -m "<title>"
-git push origin main
-git push origin <version>
-git checkout dev
+git push origin dev   # only if dev is ahead of origin/dev, which shouldn't happen when features land via GitHub PRs
+gh pr create --base main --head dev --title "Release <version>: <title>" --body-file docs/releases/RELEASE-<version>.md
 ```
-Print `git log --first-parent --oneline -5 main`. Never force-push `main`. If anything fails after the merge and before
-the push, stop and report. Don't rewrite history.
+- The user merges it on GitHub with **"Create a merge commit"**. If the user asks, run `gh pr merge <number> --merge`
+  (never `--squash`, `--rebase` or `--admin`).
+- Then tag the **merge commit on `main`**, never a local-only commit:
+  ```bash
+  git checkout main && git pull --ff-only
+  git tag -a <version> -m "<title>" && git push origin <version>
+  git checkout dev && git pull --ff-only
+  ```
+- Check that `git merge-base --is-ancestor <version> origin/main` succeeds. Never force-push `main` and never move a
+  pushed tag. If anything fails after the PR is merged, stop and report.

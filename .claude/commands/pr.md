@@ -1,5 +1,5 @@
 ---
-description: Run the PolicyForge PR gate on the current feature branch (tests, reviewer agents, AC coverage), write docs/prs/PR-NNN.md, and merge it into dev with --no-ff (feature → dev; /release promotes dev → main).
+description: Run the PolicyForge PR gate on the current feature branch (tests, reviewer agents, AC coverage), write docs/prs/PR-NNN.md, and open a GitHub PR into dev with gh, merged with a merge commit (feature → dev; /release promotes dev → main).
 argument-hint: "[title]"
 allowed-tools: Read, Write, Grep, Glob, Bash, Agent
 ---
@@ -41,14 +41,18 @@ NNN = (highest existing `docs/prs/PR-*.md`) + 1, zero-padded to 3 digits. Have `
 
 Commit it on the branch: `docs(pr): PR-NNN record`.
 
-## 5. Merge
+## 5. Open the GitHub PR (the remote rules require PRs into `dev` and `main`)
+The local `--no-ff` merge into `dev` is **not** used any more, because GitHub rejects direct pushes to protected
+branches.
 ```bash
-git checkout dev
-git merge --no-ff <branch> -m "Merge PR-NNN: <title> (<branch>)" -m "Reviewed-by: security-reviewer, test-engineer[, …]"
+git push -u origin <branch>
+gh pr create --base dev --head <branch> --title "PR-NNN: <title>" --body-file docs/prs/PR-NNN.md
 ```
-Then append the merge SHA to the PR record. This needs a follow-up branch commit, so note it in the next PR instead.
-Never amend on dev or main. Print `git log --first-parent --oneline -5 dev`. Then push: `git push -u origin <branch>` and `git push origin dev`.
-Don't touch `main`; that's `/release`.
-
-When a GitLab remote exists, push the branch and open an MR with the PR record as its description, instead of merging
-locally.
+- Print the PR URL. The user reviews it and merges it on GitHub with **"Create a merge commit"**, which keeps the
+  `--no-ff` history. Don't use squash or rebase merges.
+- If the user asks you to merge it: `gh pr merge <number> --merge` (never `--squash`, `--rebase` or `--admin`).
+- After the merge, sync locally: `git checkout dev && git pull --ff-only`. The merge commit's SHA is recorded in the
+  next PR record.
+- Don't touch `main`; that's `/release`.
+- If `gh` is missing or not authenticated (`gh auth status`), stop. Print the compare link
+  `https://github.com/wushandarshana/Policy-Forge/compare/dev...<branch>?expand=1` for the user to open the PR.
