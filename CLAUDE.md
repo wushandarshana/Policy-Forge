@@ -14,8 +14,12 @@ This file holds the rules for the whole repository. More specific rules live in 
    Humans edit only substrate: `specs/`, `docs/`, `CLAUDE.md`, `AGENTS.md`, `.claude/**`, `plugin.json`, `.mcp.json`.
 2. **Spec is truth.** If code and a spec disagree, the spec wins. Change the spec deliberately first (separate commit),
    then regenerate the code. Never change behaviour that a spec AC pins without updating the spec.
-3. **PR-only merge.** Never commit on `main`. Work on `feat/*`, `fix/*` or `chore/*` branches. Merge with
-   `git merge --no-ff` only after the review agents pass (`/pr`). The `no-direct-main-commit.sh` hook enforces this.
+3. **PR-only merge, branching strategy `feature → dev → main`.** `main` is production-ready and `dev` is the
+   integration branch. Both are protected: never commit, rebase or force-push them. All work happens on `feat/*`,
+   `fix/*` or `chore/*` branches cut from `dev`. When a feature is done and the review agents pass, `/pr` merges it
+   into **`dev`** with `--no-ff`. After QA and all testing pass on `dev`, `/release` merges `dev` into **`main`** with
+   `--no-ff`. Remote: `origin` = https://github.com/wushandarshana/Policy-Forge. The `no-direct-main-commit.sh` hook
+   enforces all of this.
 4. **Synthetic data only.** Use dummy names, IDs, Aadhaar/PAN-shaped values (e.g. `XXXX-XXXX-1234`, `ABCDE1234F`).
    Never use real customer or Virtusa data.
 5. **Money is fixed-point (NFR-01).** Use `BigDecimal` for premium, refund, sum insured, rates and fees, with scale 2
