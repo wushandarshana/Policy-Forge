@@ -1,0 +1,104 @@
+"""Regression tests for PolicyForge guardrail hooks.
+
+Run: python .claude/hooks/tests/test_hooks.py   (exit 1 on any failure)
+Cases include every bypass / false-block reported in specs/reviews/security-feat-substrate-20261028.md.
+"""
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+HOOKS = Path(__file__).resolve().parents[1]
+LIB = HOOKS / "lib"
+ROOT = HOOKS.parents[1]
+J = "backend/src/main/java/com/horizon/policyforge"
+failures = []
+
+
+def run(script, payload, env_root=True, cwd=None):
+    env = dict(os.environ)
+    if env_root:
+        env["CLAUDE_PROJECT_DIR"] = str(ROOT)
+    else:
+        env.pop("CLAUDE_PROJECT_DIR", None)
+    p = subprocess.run([sys.executable, str(LIB / script)], input=json.dumps(payload), capture_output=True,
+                       text=True, env=env, cwd=cwd)
+    return p.returncode
+
+
+def expect(name, script, payload, code, **kw):
+    got = run(script, payload, **kw)
+    status = "ok  " if got == code else "FAIL"
+    if got != code:
+        failures.append(name)
+    print(f"{status} {name} (exit {got}, want {code})")
+
+
+def write(rel, content, cwd=None):
+    return {"cwd": str(cwd or ROOT), "tool_input": {"file_path": str(ROOT / rel), "content": content}}
+
+
+# --- premium_precision_check (NFR-01) ---
+P = "premium_precision_check.py"
+expect("double field in domain", P, write(f"{J}/domain/X.java", "class X { double r; }"), 2)
+expect("double in repository entity", P, write(f"{J}/repository/QuoteEntity.java", "class Q { Double premium; }"), 2)
+expect("float in web DTO", P, write(f"{J}/web/QuoteResponse.java", "record R(float premium) {}"), 2)
+expect("BigDecimal.valueOf(0.1d)", P, write(f"{J}/domain/X.java", "var a = BigDecimal.valueOf(0.1d);"), 2)
+expect("new BigDecimal(1e-3)", P, write(f"{J}/domain/X.java", "var a = new BigDecimal(1e-3);"), 2)
+expect("BigDecimal from string ok", P, write(f"{J}/domain/X.java", 'var a = new BigDecimal("0.025");'), 0)
+expect("BigDecimal.valueOf(long) ok", P, write(f"{J}/domain/X.java", "var a = BigDecimal.valueOf(1000);"), 0)
+expect("'float' inside string ok", P, write(f"{J}/web/X.java", 'String m = "no float allowed";'), 0)
+expect("DOUBLE column in migration", P, write("backend/src/main/resources/db/migration/V9__x.sql", "premium DOUBLE"), 2)
+expect("violation detected when session cwd is backend/", P,
+       write(f"{J}/domain/X.java", "class X { double r; }", cwd=ROOT / "backend"), 2, env_root=False)
+
+# --- pii_redaction_check (NFR-03) ---
+P = "pii_redaction_check.py"
+expect("aadhaar in log.info", P, write(f"{J}/service/A.java", 'log.info("x {}", kyc.aadhaar());'), 2)
+expect("multi-line log with pan", P, write(f"{J}/service/A.java", 'log.warn("x {} {}",\n id,\n k.pan());'), 2)
+expect("fluent atInfo with dob", P, write(f"{J}/service/A.java", 'log.atInfo().addArgument(dateOfBirth).log("x");'), 2)
+expect("whole request object", P, write(f"{J}/web/A.java", 'log.info("got {}", request);'), 2)
+expect("whole KYC dto", P, write(f"{J}/service/A.java", 'log.debug("kyc {}", applicantKyc);'), 2)
+expect("'KYC' in message text ok", P, write(f"{J}/service/A.java", 'log.info("KYC submitted for {}", applicationId);'), 0)
+expect("maskedFullName ok", P, write(f"{J}/service/A.java", 'log.info("name {}", maskedFullName);'), 0)
+expect("ids only ok", P, write(f"{J}/service/A.java", 'log.info("issued {} for {}", policyNumber, applicationId);'), 0)
+
+# --- policy_immutability_check (NFR-02/05) ---
+P = "policy_immutability_check.py"
+expect("setter on append-only entity", P, write(f"{J}/repository/EndorsementEntity.java", "public void setType(T t){}"), 2)
+expect("Lombok @Data on append-only entity", P, write(f"{J}/repository/RefundRecordEntity.java", "@Data class R {}"), 2)
+expect("JpaRepository for append-only repo", P,
+       write(f"{J}/repository/AuditEntryRepository.java", "interface A extends JpaRepository<A, Long> {}"), 2)
+expect("mutable aggregate method ok", P, write(f"{J}/repository/PolicyEntity.java", "public void applyTransition(S s){}"), 0)
+
+# --- no_direct_main_commit (PR-only merge) ---
+P = "no_direct_main_commit.py"
+repo = Path(tempfile.mkdtemp(prefix="pf-hooktest-"))
+try:
+    git = ["git", "-C", str(repo), "-c", "user.email=t@example.invalid", "-c", "user.name=t"]
+    subprocess.run(git[:3] + ["init", "-q", "-b", "main"], check=True)
+    subprocess.run(git + ["commit", "-q", "--allow-empty", "-m", "init"], check=True)
+
+    def bash(cmd):
+        return {"cwd": str(repo), "tool_input": {"command": cmd}}
+
+    for cmd in ["git commit -m x", "git -C . commit -m x", "git --no-pager commit -m x", "git cherry-pick abc",
+                "git revert HEAD", "git reset --hard HEAD~1", "git pull", "git rebase feat/x", "git merge feat/x",
+                "git push origin main", "git push"]:
+        expect(f"on main: block `{cmd}`", P, bash(cmd), 2)
+    for cmd in ["git merge --no-ff feat/x -m m", "git merge --abort", "git status", "echo \"git commit\"",
+                "git checkout -b feat/x && git commit -m x", "git log --oneline main"]:
+        expect(f"on main: allow `{cmd}`", P, bash(cmd), 0)
+    subprocess.run(git + ["checkout", "-q", "-b", "feat/domain-main"], check=True)
+    for cmd in ["git commit -m x", "git push -u origin feat/domain-main", "git push origin HEAD"]:
+        expect(f"on feature: allow `{cmd}`", P, bash(cmd), 0)
+    for cmd in ["git checkout main && git commit -m x", "git push origin HEAD:main", "git push origin +feat/x:main"]:
+        expect(f"on feature: block `{cmd}`", P, bash(cmd), 2)
+finally:
+    shutil.rmtree(repo, ignore_errors=True)
+
+print(f"\n{'ALL PASSED' if not failures else f'{len(failures)} FAILED: ' + ', '.join(failures)}")
+sys.exit(1 if failures else 0)

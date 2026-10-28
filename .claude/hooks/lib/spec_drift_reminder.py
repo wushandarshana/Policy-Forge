@@ -12,7 +12,7 @@ if not hookio.path_matches(path, r"^specs/[^/]+_spec\.md$"):
     sys.exit(0)
 
 text = hookio.new_text(data)
-acs = sorted(set(re.findall(r"AC-\d{2}(?:\.\d+)?", text)))
+acs = sorted(set(re.findall(r"(?:AC|NFR)-\d{2}(?:\.\d+)?", text)))
 touched = ", ".join(acs) if acs else "no AC ids in the changed text"
 hookio.context("PostToolUse",
                f"Spec changed: {path} ({touched}). Spec is truth: commit this spec change separately (`spec: ...`), "

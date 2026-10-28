@@ -56,9 +56,15 @@ def collect_criteria(spec_paths):
     return criteria
 
 
+def nfr_parents():
+    """NFR-NN ids declared in the app_spec NFR table (tests may tag e.g. NFR-01 for architecture rules)."""
+    app = ROOT / "specs" / "app_spec.md"
+    return set(re.findall(r"^\|\s*(NFR-\d{2})\s*\|", app.read_text(encoding="utf-8"), flags=re.M)) if app.exists() else set()
+
+
 def collect_references(criteria):
     orphans = []
-    known_parents = {c.ac_id.split(".")[0] for c in criteria.values()}
+    known_parents = {c.ac_id.split(".")[0] for c in criteria.values()} | nfr_parents()
     for pattern in TEST_GLOBS:
         for path in ROOT.glob(pattern):
             if "/fixtures/" in path.as_posix():
@@ -119,7 +125,8 @@ def render(criteria, orphans, review):
     rows = sorted(criteria.values(), key=lambda c: [int(x) for x in re.findall(r"\d+", c.ac_id)] + [c.ac_id[:2]])
     total = len(rows)
     covered = sum(c.status == "COVERED" for c in rows)
-    missing = [c.ac_id for c in rows if c.status == "MISSING"]
+    # PARENT-ONLY is a gap too: a test tagged only AC-NN does not prove any specific AC-NN.M
+    missing = [c.ac_id for c in rows if c.status != "COVERED"]
     out = [
         f"# AC audit — {datetime.now():%Y-%m-%d %H:%M}",
         "",
@@ -143,6 +150,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--spec", action="append", help="limit to these spec files")
     parser.add_argument("--offline", action="store_true", help="skip the Claude agent review")
+    parser.add_argument("--no-write", action="store_true", help="print only; do not write specs/reviews/ (CI)")
+    parser.add_argument("--report-only", action="store_true",
+                        help="always exit 0 (use in CI while sprints are still in progress)")
     args = parser.parse_args()
 
     specs = [ROOT / s for s in args.spec] if args.spec else sorted((ROOT / "specs").glob("*_spec.md"))
@@ -156,17 +166,20 @@ def main():
             review = asyncio.run(agent_review(criteria))
         except ImportError:
             review = "_Skipped: `claude-agent-sdk` not installed (pip install -r scripts/requirements.txt)._"
+        except Exception as exc:  # auth, network, CLI missing: the deterministic matrix is still valid
+            review = f"_Agent review failed: {type(exc).__name__}: {exc}_"
 
     report, missing = render(criteria, orphans, review)
-    out_dir = ROOT / "specs" / "reviews"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_file = out_dir / f"ac-audit-{datetime.now():%Y%m%d-%H%M}.md"
-    out_file.write_text(report, encoding="utf-8")
     print(report.split("\n\n")[1])
-    print(f"Report: {out_file.relative_to(ROOT).as_posix()}")
+    if not args.no_write:
+        out_dir = ROOT / "specs" / "reviews"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_file = out_dir / f"ac-audit-{datetime.now():%Y%m%d-%H%M}.md"
+        out_file.write_text(report, encoding="utf-8")
+        print(f"Report: {out_file.relative_to(ROOT).as_posix()}")
     if missing:
-        print("MISSING: " + ", ".join(missing), file=sys.stderr)
-        return 1
+        print("NOT COVERED: " + ", ".join(missing), file=sys.stderr)
+        return 0 if args.report_only else 1
     return 0
 
 
