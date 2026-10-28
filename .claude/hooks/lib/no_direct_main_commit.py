@@ -33,18 +33,33 @@ GLOBAL_WITH_ARG = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exe
 ENV_ASSIGN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 
 
-def segments(command):
-    for part in re.split(r"&&|\|\||;|\||\n", command):
-        part = part.strip()
-        if part:
-            yield part
+SEPARATORS = ";&|\n"
 
 
-def tokens(segment):
+def command_segments(command):
+    """Token lists, one per command, split on ;, &&, ||, |, & and newlines that are OUTSIDE quotes.
+
+    Tokenizing first matters: a quoted commit message such as `-m "a; b && c"` must stay one argument instead of
+    being cut into fake commands (KD-012). Unbalanced quotes fall back to a naive split, which is conservative
+    (it can only produce extra segments to inspect).
+    """
     try:
-        return shlex.split(segment, posix=True)
+        lex = shlex.shlex(command, posix=True, punctuation_chars=SEPARATORS)
+        lex.whitespace = " \t\r"
+        lex.whitespace_split = True
+        out, cur = [], []
+        for tok in lex:
+            if tok and set(tok) <= set(SEPARATORS):
+                if cur:
+                    out.append(cur)
+                cur = []
+            else:
+                cur.append(tok)
+        if cur:
+            out.append(cur)
+        return out
     except ValueError:
-        return segment.split()
+        return [p.split() for p in re.split(r"&&|\|\||;|\||\n", command) if p.strip()]
 
 
 def git_call(tok):
@@ -208,8 +223,8 @@ def main():
     except (OSError, subprocess.SubprocessError):
         return 0
 
-    for seg in segments(command):
-        call = git_call(tokens(seg))
+    for seg in command_segments(command):
+        call = git_call(seg)
         if call is None:
             continue
         sub, args = call
