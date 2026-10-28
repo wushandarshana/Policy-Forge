@@ -44,7 +44,7 @@ fields (`sumInsured`, `age`).
 | UW-TL-004 | TERM_LIFE | REFER | bmi > 35 |
 | UW-TL-005 | TERM_LIFE | DECLINE | bmi > 45 |
 | UW-MO-001 | MOTOR | DECLINE | claimsLast3Years ≥ 3 |
-| UW-MO-002 | MOTOR | DECLINE | vehicleAgeYears > 15 |
+| UW-MO-002 | MOTOR | DECLINE | vehicleAgeYears > 15 (defence in depth: v1 quotes already reject > 15 with 400, so this is tested at domain level only; see quote spec, J8) |
 | UW-MO-003 | MOTOR | REFER | driverAge < 21 |
 | UW-MO-004 | MOTOR | REFER | vehicleUse = COMMERCIAL AND vehicleValue > 5,000,000 |
 | UW-HH-001 | HOUSEHOLD | DECLINE | propertyAgeYears > 100 |
