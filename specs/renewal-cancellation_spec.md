@@ -27,12 +27,12 @@ lapsed ⇔ `!paid && runDate.isAfter(termEnd.plusDays(graceDays))`.
 `POST /api/policies/{number}/cancel` (owner), body `{ "cancellationDate": "2027-02-09", "reason": "NO_LONGER_NEEDED" }`.
 The date is optional and defaults to today, and must be within the current paid term.
 
-`ProRataRefundCalculator.calculate(premium, termStart, termEnd, cancellationDate, coolingOffDays, cancellationFee)`:
+`ProRataRefundCalculator.calculate(premium, termStart, termEnd, cancellationDate, policyEffectiveDate, firstTerm, coolingOffDays, cancellationFee)`:
 
 - `termDays = DAYS.between(termStart, termEnd + 1)`
 - `unexpiredDays = DAYS.between(cancellationDate, termEnd + 1)`
-- If `DAYS.between(policyEffectiveDate, cancellationDate) < coolingOffDays` (first term only): `refund = premium` (full,
-  no fee).
+- If `firstTerm && DAYS.between(policyEffectiveDate, cancellationDate) < coolingOffDays`: `refund = premium` (full,
+  no fee). Renewal terms never get cooling-off.
 - Otherwise: `refund = max(0, premium × unexpiredDays / termDays − cancellationFee)`, intermediate scale 10, final
   HALF_UP 2 dp.
 - `premium` is the current term's annual premium plus any endorsement adjustments in that term.

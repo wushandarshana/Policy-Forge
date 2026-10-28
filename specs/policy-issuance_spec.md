@@ -1,7 +1,9 @@
 # Feature Spec — Policy Issuance & Policy State Machine
 
 **Parent:** [`app_spec.md`](app_spec.md) · **ACs:** AC-05, AC-10 · **NFR:** NFR-02
-**Domain classes:** `PolicyNumberGenerator`, `PolicyStateMachine`, `PolicyStatus`, `InvalidPolicyStateException`
+**Domain classes:** `PolicyNumberFormat` (pure formatting of product, year and sequence), `PolicyStateMachine`,
+`PolicyStatus`, `InvalidPolicyStateException`. **Service:** `PolicyNumberGenerator` (reads the DB sequence, calls
+`PolicyNumberFormat`).
 
 ## Issuance (AC-05)
 
@@ -49,8 +51,8 @@ optional and defaults to today. It must be between today and today + 60 days.
 - **AC-05.1** Given an APPROVED TERM_LIFE application, when it is issued on 2026-11-01, then the policy has a number
   matching `^PF-TL-2026-\d{6}$`, effective date 2026-11-01, expiry 2027-10-31, sum insured and premium equal to the
   quote's, and status `ACTIVE`.
-- **AC-05.2** Given 50 applications issued concurrently or in sequence, then all 50 policy numbers are unique and the
-  sequences per product are contiguous.
+- **AC-05.2** Given 50 applications issued concurrently (thread pool of 8), then all 50 policy numbers are unique.
+  Given 5 applications issued one after another, then their sequence numbers are contiguous (n, n+1, …, n+4).
 - **AC-05.3** Given a REFERRED or DECLINED application, when issue is called, then the response is 409. Given an
   application already issued, then 409.
 - **AC-05.4** Given an issued policy, then exactly one `PolicyStatusTransition (null → ACTIVE)` and one `PolicyVersion`

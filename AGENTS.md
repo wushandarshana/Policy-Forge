@@ -46,4 +46,5 @@ Index only. Rules live in the linked files.
 - MCP: [`.mcp.json`](.mcp.json) (Playwright)
 
 ## CI
-- [`.gitlab-ci.yml`](.gitlab-ci.yml)
+- [`.gitlab-ci.yml`](.gitlab-ci.yml) (added in Sprint 5)
+- Hook regression tests: [`.claude/hooks/tests/test_hooks.py`](.claude/hooks/tests/test_hooks.py)

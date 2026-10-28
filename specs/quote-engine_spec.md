@@ -22,8 +22,10 @@ Response `201`:
   "validUntil": "2026-11-27" }
 ```
 
-Quotes are stored and immutable. `GET /api/quotes/{id}` returns the stored quote. A quote is valid for
-`lifecycle.quoteValidityDays` days.
+Quotes are stored and immutable. The quote ID is `Q-<UUIDv4>` (unguessable, never sequential).
+`GET /api/quotes/{id}` is public and returns the premium, breakdown, rule version and validity, but **omits health
+inputs** (`bmi`, `healthDeclarations`) from `riskInputs` (NFR-04.2). The full inputs are only read server-side when
+an application references the quote. A quote is valid for `lifecycle.quoteValidityDays` days.
 
 ## Arithmetic rules (NFR-01)
 - All inputs and factors are parsed as `BigDecimal` from strings.

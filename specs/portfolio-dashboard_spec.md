@@ -19,8 +19,8 @@ lapse.
 
 Definitions:
 - **Active:** status in {ACTIVE, ENDORSED, RENEWED}.
-- **Premium collected:** the sum of paid term premiums plus positive endorsement adjustments, minus negative
-  adjustments and refunds, for each product. All `BigDecimal`.
+- **Premium collected:** per product, `Σ paid term premiums + Σ endorsement adjustments (signed: charges are
+  positive, credits negative) − Σ refunds`. All `BigDecimal`.
 - **Renewal pipeline:** in-force policies whose current term ends within the next 60 days of `asOf`, with renewal
   offer status.
 - **Lapse forecast:** in-force policies whose renewal is unpaid and whose `termEnd < asOf`. They are in grace now and

@@ -26,8 +26,9 @@ This file holds the rules for the whole repository. More specific rules live in 
    (`V*__*.sql`) or published rule file (`rules/<product>/v<N>.json`); add a new one instead.
 7. **No PII in logs (NFR-03).** Never log Aadhaar, PAN, health declarations, date of birth or full name. Log IDs only.
    `pii-redaction-check.sh` enforces this.
-8. **Every AC has a test.** Tests reference their AC as `@Tag("AC-NN")` plus `@DisplayName("AC-NN: …")` (JUnit) or
-   `test('AC-NN: …')` (Vitest/Playwright).
+8. **Every AC has a test.** Each test names the **full sub-criterion**: `@Tag("AC-NN")` plus
+   `@DisplayName("AC-NN.M: …")` (JUnit), or `test('AC-NN.M: …')` (Vitest/Playwright). A test that names only `AC-NN`
+   doesn't cover any `AC-NN.M` (`/ac-coverage` reports it as PARENT-ONLY, which counts as a gap).
 
 ## Stack
 
@@ -37,7 +38,7 @@ This file holds the rules for the whole repository. More specific rules live in 
 | Persistence | H2 (file/in-memory), Spring Data JPA, Flyway migrations |
 | Frontend | React 18 + Vite + TypeScript, served by Spring Boot in the packaged app |
 | Tests | JUnit 5, AssertJ, Spring Boot Test, ArchUnit, JaCoCo; Vitest; Playwright |
-| CI | GitLab CI (`.gitlab-ci.yml`) with a Claude Code review stage |
+| CI | GitLab CI (`.gitlab-ci.yml`, added in Sprint 5) with a Claude Code review stage |
 | MCP | Playwright MCP (`.mcp.json`), used by the evaluator for live UI checks |
 
 ## Architecture (see `docs/architecture.md`)

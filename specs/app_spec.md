@@ -75,8 +75,12 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   `{"status":"UP"}` in under 1000 ms.
 - **NFR-03.1** Given an application with Aadhaar `XXXX-XXXX-1234` and PAN `ABCDE1234F`, when it is submitted and
   underwritten, then no captured log line contains either value or any health declaration text.
-- **NFR-04.1** Given an unauthenticated request to any `/api/**` endpoint except `GET /api/products**` and
-  `POST /api/quotes`, then the response is 401. Given a CUSTOMER calls an underwriter endpoint, then the response is 403.
+- **NFR-04.1** Given an unauthenticated request to any `/api/**` endpoint except `GET /api/products**`,
+  `POST /api/quotes` and `GET /api/quotes/{id}`, then the response is 401. Given a CUSTOMER calls an underwriter
+  endpoint, then the response is 403.
+- **NFR-04.2** Given a stored TERM_LIFE quote with BMI and health declarations, when `GET /api/quotes/{id}` is called
+  without authentication, then the response contains the premium, breakdown and rule version but no `bmi`,
+  `healthDeclarations` or other health inputs, and the quote ID is an unguessable `Q-<UUIDv4>`.
 
 ## 6. Domain model (summary)
 
@@ -103,7 +107,7 @@ AuditEntry (append-only: actorId, action, entityType, entityId, reasonCode, comm
 | GET | `/api/products/{code}/versions` | public | catalog |
 | POST | `/api/products/{code}/versions` | PRODUCT_MANAGER | catalog |
 | POST | `/api/quotes` | public | quote |
-| GET | `/api/quotes/{id}` | public | quote |
+| GET | `/api/quotes/{id}` | public (UUID id; health inputs omitted, NFR-04.2) | quote |
 | POST | `/api/applications` | CUSTOMER | underwriting |
 | GET | `/api/applications/mine` | CUSTOMER | underwriting |
 | GET | `/api/underwriting/queue` | UNDERWRITER | underwriting |
@@ -114,6 +118,7 @@ AuditEntry (append-only: actorId, action, entityType, entityId, reasonCode, comm
 | GET | `/api/policies/{number}` | owner / ADMIN | issuance |
 | POST | `/api/policies/{number}/endorsements` | owner | endorsement |
 | POST | `/api/policies/{number}/renewal/pay` | owner | renewal |
+| GET | `/api/policies/{number}/cancel/preview?date=` | owner | cancellation |
 | POST | `/api/policies/{number}/cancel` | owner | cancellation |
 | POST | `/api/admin/jobs/renewal-cycle?date=` | ADMIN | renewal |
 | GET | `/api/admin/dashboard` | ADMIN | dashboard |
