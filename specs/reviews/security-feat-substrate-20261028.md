@@ -40,3 +40,32 @@
 - The wrappers are safe: LF line endings are enforced (.gitattributes), stdin is parsed only as JSON, and no input reaches a shell.
 
 VERDICT: CHANGES_REQUESTED
+
+---
+
+## Resolution (implementer, same branch, before merge)
+
+| Finding | Status | Change |
+|---|---|---|
+| F1 BLOCKER | Fixed | `GET /api/quotes/{id}` stays public but uses `Q-<UUIDv4>` ids and omits `bmi`/`healthDeclarations`. Added NFR-04.2 and listed the endpoint in the NFR-04.1 exceptions (`specs/app_spec.md`, `specs/quote-engine_spec.md`) |
+| F2 MAJOR | Fixed | `no_direct_main_commit.py` rewritten: per-segment parsing, git global options skipped, in-command branch switches tracked; cherry-pick, revert, am, rebase, reset and pull also blocked on main; refspec-aware push check |
+| F3 MAJOR | Fixed | Only segments whose program is git are inspected (`echo "git commit"` allowed); `checkout -b … && commit` allowed; `push` blocked only when the destination ref is main |
+| F4 MAJOR | Fixed | `hookio.project_root` uses `$CLAUDE_PROJECT_DIR`, then `git rev-parse --show-toplevel`; the session cwd is no longer used |
+| F5 MAJOR | Fixed | Precision check covers all of `backend/src/main/java`; floating literals with exponent or d/f suffix caught in `new BigDecimal`/`valueOf`; string literals stripped first |
+| F8 MAJOR | Fixed | Root CLAUDE.md rule 8 requires `AC-NN.M` in names. `ac_audit.py` treats PARENT-ONLY as not covered |
+| F6 MINOR | Fixed | `log.atInfo()` fluent API and whole request/KYC/DTO arguments are now caught; string literals stripped; identifiers matched on word boundaries |
+| F7 MINOR | Fixed / documented | Lombok `@Setter`/`@Data` blocked on append-only entities. Shell-made edits documented as a known limit, with ArchUnit and Flyway as the backstop |
+| F9 MINOR | Fixed | Broad exception handling around the agent call; `--no-write` and `--report-only` flags; NFR table ids are known parents |
+| F10 MINOR | Fixed | `ProRataRefundCalculator.calculate` signature now has `policyEffectiveDate` and `firstTerm` |
+| F11 MINOR | Fixed | `GET /api/policies/{number}/cancel/preview` added to the §8 role table |
+| F12 MINOR | Fixed | Dashboard formula: signed adjustments, no double negation |
+| F13 MINOR | Fixed | AC-05.2 split: uniqueness under concurrency, contiguity for sequential issue |
+| F14 MINOR | Fixed | `PolicyNumberFormat` (domain) vs `PolicyNumberGenerator` (service) clarified; `.gitlab-ci.yml` marked "added in Sprint 5" |
+| F15 MINOR | Documented | Failing closed without Python is deliberate; warning added against double-enabling plugin hooks (`.claude/hooks/CLAUDE.md`) |
+
+**Verification:** `python .claude/hooks/tests/test_hooks.py` covers 45 cases, including every reproduced bypass and false
+block from this review: ALL PASSED. `premium_check.py spec-examples`: 9/9 PASS. `ac_audit.py` was probed with a
+synthetic test file: exact tag counted COVERED, parent-only counted as a gap, NFR-08 not orphaned, report-only exits 0.
+
+**Implementer self-assessment (not a reviewer verdict):** no BLOCKER or MAJOR finding remains open. The verdict above
+stays CHANGES_REQUESTED for the reviewed revision, and the fixes need a re-review before merge.

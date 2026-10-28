@@ -131,7 +131,7 @@ def render(criteria, orphans, review):
         f"# AC audit — {datetime.now():%Y-%m-%d %H:%M}",
         "",
         f"**Covered {covered} / {total} ACs ({(100 * covered // total) if total else 0}%)**"
-        f" · parent-only {sum(c.status == 'PARENT-ONLY' for c in rows)} · missing {len(missing)}",
+        f" · parent-only {sum(c.status == 'PARENT-ONLY' for c in rows)} · not covered (incl. parent-only) {len(missing)}",
         "",
         "| AC | Spec | Status | Tests |",
         "|---|---|---|---|",
