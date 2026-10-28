@@ -3,9 +3,12 @@ package com.horizon.policyforge.architecture;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.fields;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noMethods;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
+import com.tngtech.archunit.core.domain.JavaMethod;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -176,6 +179,43 @@ class AppendOnlyArchTest {
     void auditEntryRepositoryHasNoDelete() {
         repositoryIsNotCrud("AuditEntryRepository", "NFR-02").check(ArchSupport.production());
         repositoryHasNoDeleteOrUpdate("AuditEntryRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the underwriting decision entity exists, is an immutable JPA entity and has no public setters")
+    void underwritingDecisionEntityIsImmutable() {
+        entityIsImmutable("UnderwritingDecisionEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("UnderwritingDecisionEntity", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the underwriting decision repository exists and has no delete or update methods")
+    void underwritingDecisionRepositoryHasNoDelete() {
+        repositoryIsNotCrud("UnderwritingDecisionRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("UnderwritingDecisionRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the application entity has no public setters and its status changes only through applyTransition")
+    void applicationEntityChangesStatusOnlyThroughApplyTransition() {
+        entityHasNoPublicSetters("ApplicationEntity", "NFR-02").check(ArchSupport.production());
+
+        JavaClass entity = ArchSupport.production().get("com.horizon.policyforge.repository.ApplicationEntity");
+        List<String> mutators = entity.getMethods().stream()
+                .filter(method -> method.getModifiers().contains(JavaModifier.PUBLIC))
+                .map(JavaMethod::getName)
+                .filter(name -> !name.startsWith("get") && !name.equals("toString"))
+                .sorted()
+                .toList();
+        assertThat(mutators).as("public methods other than getters: one factory and one status transition")
+                .containsExactly("applyTransition", "submit");
+    }
+
+    @Test
+    @DisplayName("NFR-02: the application repository exists and has no delete or update methods")
+    void applicationRepositoryHasNoDelete() {
+        repositoryIsNotCrud("ApplicationRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("ApplicationRepository", "NFR-02").check(ArchSupport.production());
     }
 
     // ---- Negative fixtures: every rule must reject a deliberately violating class ----
