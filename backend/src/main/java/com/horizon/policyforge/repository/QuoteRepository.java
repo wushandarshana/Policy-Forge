@@ -1,5 +1,7 @@
 package com.horizon.policyforge.repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
 
@@ -9,4 +11,7 @@ public interface QuoteRepository extends Repository<QuoteEntity, Long> {
     QuoteEntity save(QuoteEntity entity);
 
     Optional<QuoteEntity> findByQuoteId(String quoteId);
+
+    /** The quotes with any of the given IDs, in no particular order. */
+    List<QuoteEntity> findByQuoteIdIn(Collection<String> quoteIds);
 }

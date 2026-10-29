@@ -1,5 +1,6 @@
 package com.horizon.policyforge.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
@@ -10,7 +11,10 @@ import org.springframework.data.repository.Repository;
  */
 public interface ApplicationRepository extends Repository<ApplicationEntity, Long> {
 
-    /** Inserts and flushes, so a duplicate quote surfaces here as a constraint violation (U-3). */
+    /**
+     * Saves and flushes, so a duplicate quote (U-3) or a lost optimistic-lock race (U-9) surfaces here, inside the
+     * caller's transaction, as an exception it can translate.
+     */
     ApplicationEntity saveAndFlush(ApplicationEntity entity);
 
     Optional<ApplicationEntity> findByApplicationId(String applicationId);
@@ -21,4 +25,7 @@ public interface ApplicationRepository extends Repository<ApplicationEntity, Lon
 
     /** The customer's applications, newest first. The ID breaks ties between applications at the same instant. */
     List<ApplicationEntity> findByCustomerIdOrderBySubmittedAtDescIdDesc(String customerId);
+
+    /** The applications in any of the given statuses (names), oldest first. The ID breaks ties (the underwriter queue). */
+    List<ApplicationEntity> findByStatusInOrderBySubmittedAtAscIdAsc(Collection<String> statuses);
 }
