@@ -10,6 +10,9 @@ const { defaultBrowserType: _ignored, ...iphone13 } = devices['iPhone 13'];
 
 export default defineConfig({
   testDir: './e2e',
+  // Visual baselines are committed under e2e/__snapshots__/ and are platform-suffixed (spec UI section): Windows
+  // baselines now, Linux CI baselines in Sprint 5.
+  snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}-{projectName}-{platform}{ext}',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
