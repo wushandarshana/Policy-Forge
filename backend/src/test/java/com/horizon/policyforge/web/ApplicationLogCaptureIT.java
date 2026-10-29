@@ -146,7 +146,7 @@ class ApplicationLogCaptureIT {
         int offset = output.getAll().length();
 
         MvcResult shortComment = api.decide("underwriter1", referred,
-                decisionBody("APPROVE", "UW-MAN-001", "SYNTHETIC_SHORT"));
+                decisionBody("APPROVE", "UW-MAN-001", "SYN_SHORT"));
         Map<String, Object> forged = decisionBody("APPROVE", "UW-MAN-001", "A long enough SYNTHETIC_FORGED comment");
         forged.put("forgedActor", "SYNTHETIC_ACTOR_NAME");
         MvcResult unknownKey = api.decide("underwriter1", referred, forged);
@@ -160,7 +160,7 @@ class ApplicationLogCaptureIT {
         assertThat(wrongRole.getResponse().getStatus()).isEqualTo(403);
         assertThat(nested.getResponse().getStatus()).isEqualTo(400);
         String logged = output.getAll().substring(offset);
-        assertNoPii(logged, "SYNTHETIC_SHORT", "SYNTHETIC_FORGED", "SYNTHETIC_ACTOR_NAME", "SYNTHETIC_WRONG_ROLE",
+        assertNoPii(logged, "SYN_SHORT", "SYNTHETIC_FORGED", "SYNTHETIC_ACTOR_NAME", "SYNTHETIC_WRONG_ROLE",
                 "SYNTHETIC_NESTED", ApplicationFixtures.AADHAAR, ApplicationFixtures.PAN,
                 ApplicationFixtures.FULL_NAME);
     }
