@@ -80,5 +80,6 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 ## Debugging: environment first
 
 When something fails, check the environment before changing code: JDK version and `JAVA_HOME`, `PATH`,
-line endings on `.sh` hooks (must be LF), ports in use, stale `target/`, and Node version. Record the resolution in
+line endings on `.sh` hooks (must be LF), ports in use, stale `target/`, Node version, and corporate TLS inspection
+(an API `UNABLE_TO_VERIFY_LEAF_SIGNATURE` error means a proxy CA must go in `NODE_EXTRA_CA_CERTS`; see KD-015). Record the resolution in
 `docs/post-mortems/`.
