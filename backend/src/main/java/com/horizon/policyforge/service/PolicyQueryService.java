@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.horizon.policyforge.domain.endorsement.Nominee;
 import com.horizon.policyforge.domain.rating.RiskInputSchema;
+import com.horizon.policyforge.repository.EndorsementEntity;
+import com.horizon.policyforge.repository.EndorsementRepository;
 import com.horizon.policyforge.repository.PolicyEntity;
 import com.horizon.policyforge.repository.PolicyRepository;
 import com.horizon.policyforge.repository.PolicyStatusTransitionRepository;
@@ -33,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PolicyQueryService {
 
     /** The shape of a number this application issues. Anything else is not found, without a lookup. */
-    private static final Pattern POLICY_NUMBER = Pattern.compile("PF-(TL|MO|HH)-[0-9]{4}-[0-9]{6}");
+    static final Pattern POLICY_NUMBER = Pattern.compile("PF-(TL|MO|HH)-[0-9]{4}-[0-9]{6}");
 
     private static final TypeReference<LinkedHashMap<String, Object>> INPUTS = new TypeReference<>() {
     };
@@ -44,15 +46,20 @@ public class PolicyQueryService {
     private final PolicyVersionRepository versions;
     private final PolicyTermRepository terms;
     private final PolicyStatusTransitionRepository transitions;
+    private final EndorsementRepository endorsements;
+    private final EndorsementViews endorsementViews;
     private final RuleSetService ruleSets;
     private final ObjectMapper mapper;
 
     public PolicyQueryService(PolicyRepository policies, PolicyVersionRepository versions, PolicyTermRepository terms,
-            PolicyStatusTransitionRepository transitions, RuleSetService ruleSets, ObjectMapper mapper) {
+            PolicyStatusTransitionRepository transitions, EndorsementRepository endorsements,
+            EndorsementViews endorsementViews, RuleSetService ruleSets, ObjectMapper mapper) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
         this.transitions = transitions;
+        this.endorsements = endorsements;
+        this.endorsementViews = endorsementViews;
         this.ruleSets = ruleSets;
         this.mapper = mapper;
     }
@@ -69,9 +76,12 @@ public class PolicyQueryService {
                 .collect(Collectors.groupingBy(PolicyVersionEntity::getPolicyNumber));
         Map<String, List<PolicyTermEntity>> termsByPolicy = terms.findByPolicyNumberIn(numbers).stream()
                 .collect(Collectors.groupingBy(PolicyTermEntity::getPolicyNumber));
+        Map<String, Long> endorsementCounts = endorsements.findByPolicyNumberIn(numbers).stream()
+                .collect(Collectors.groupingBy(EndorsementEntity::getPolicyNumber, Collectors.counting()));
         return own.stream()
                 .map(policy -> PolicySummary.from(header(policy, versionsByPolicy.get(policy.getPolicyNumber()),
-                        termsByPolicy.get(policy.getPolicyNumber()))))
+                        termsByPolicy.get(policy.getPolicyNumber()),
+                        endorsementCounts.getOrDefault(policy.getPolicyNumber(), 0L).intValue())))
                 .toList();
     }
 
@@ -94,6 +104,8 @@ public class PolicyQueryService {
 
         List<PolicyVersionEntity> allVersions = versions.findByPolicyNumberOrderByVersionNoAsc(policyNumber);
         List<PolicyTermEntity> allTerms = terms.findByPolicyNumberOrderByTermNoAsc(policyNumber);
+        List<EndorsementEntity> endorsementEntities =
+                endorsements.findByPolicyNumberOrderBySequenceNoAsc(policyNumber);
         Map<Integer, RiskInputSchema> schemas = new HashMap<>();
         List<PolicyDetail.VersionView> versionViews = allVersions.stream()
                 .map(version -> versionView(policy, version, schemas))
@@ -107,12 +119,16 @@ public class PolicyQueryService {
                 .map(t -> new PolicyDetail.TermView(t.getTermNo(), t.getStartDate(), t.getEndDate(), t.getPremium(),
                         t.isPaid()))
                 .toList();
-        return new PolicyDetail(header(policy, allVersions, allTerms), versionViews, transitionViews, termViews);
+        List<PolicyDetail.EndorsementView> endorsementViewList = endorsementEntities.stream()
+                .map(endorsementViews::view)
+                .toList();
+        return new PolicyDetail(header(policy, allVersions, allTerms, endorsementEntities.size()), versionViews,
+                endorsementViewList, transitionViews, termViews);
     }
 
-    /** The header from the policy's current version and its latest term. */
+    /** The header from the policy's current version and its latest term, with its endorsement count. */
     private static PolicyHeader header(PolicyEntity policy, Collection<PolicyVersionEntity> policyVersions,
-            Collection<PolicyTermEntity> policyTerms) {
+            Collection<PolicyTermEntity> policyTerms, int endorsementCount) {
         PolicyVersionEntity current = policyVersions.stream()
                 .filter(version -> version.getVersionNo() == policy.getCurrentVersionNo())
                 .findFirst()
@@ -122,8 +138,7 @@ public class PolicyQueryService {
                 .max(Comparator.comparingInt(PolicyTermEntity::getTermNo))
                 .orElseThrow(() -> new IllegalStateException("Policy has no term: policyNumber="
                         + policy.getPolicyNumber()));
-        // No endorsement is stored yet: the endorsement table arrives with the endorsement API.
-        return PolicyHeader.of(policy, current, term, 0);
+        return PolicyHeader.of(policy, current, term, endorsementCount);
     }
 
     private PolicyDetail.VersionView versionView(PolicyEntity policy, PolicyVersionEntity version,

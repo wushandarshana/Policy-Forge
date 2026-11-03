@@ -17,11 +17,13 @@ import java.util.Map;
 public record PolicyDetail(
         PolicyHeader policy,
         List<VersionView> versions,
+        List<EndorsementView> endorsements,
         List<TransitionView> transitions,
         List<TermView> terms) {
 
     public PolicyDetail {
         versions = List.copyOf(versions);
+        endorsements = List.copyOf(endorsements);
         transitions = List.copyOf(transitions);
         terms = List.copyOf(terms);
     }
@@ -42,6 +44,29 @@ public record PolicyDetail(
         @Override
         public String toString() {
             return "VersionView[versionNo=" + versionNo + "]";
+        }
+    }
+
+    /**
+     * One endorsement, ascending by sequence number. {@code changes} is built from an allow-list per type: {@code
+     * address}, {@code nominee}, {@code newSumInsured} or the building and contents keys. It is personal data for the
+     * first two, so the string form hides it.
+     */
+    public record EndorsementView(
+            int sequenceNo,
+            String type,
+            Map<String, Object> changes,
+            int beforeVersionNo,
+            int afterVersionNo,
+            BigDecimal newAnnualPremium,
+            BigDecimal adjustment,
+            LocalDate effectiveDate,
+            String actorId,
+            Instant createdAt) {
+
+        @Override
+        public String toString() {
+            return "EndorsementView[sequenceNo=" + sequenceNo + "]";
         }
     }
 

@@ -156,13 +156,13 @@ class EndorsementIT extends EndorsementTestSupport {
         String number = issued("TERM_LIFE");
         EndorsementRows.Snapshot before = snapshot(number);
 
-        MvcResult result = endorsements.endorse("customer1", number, addressBody("9 Hill Lane", "Nagpur", "4400", null));
+        MvcResult result = endorsements.endorse("customer1", number, addressBody("9 Hill Lane", "Nagpur", "SYN440", null));
 
         JsonNode problem = problem(result, 400);
         assertThat(problem.get("code").asText()).isEqualTo("POSTCODE_INVALID");
         assertThat(errorFields(problem)).containsExactly("address.postcode");
         assertThat(result.getResponse().getContentAsString()).as("the submitted value is never echoed")
-                .doesNotContain("9 Hill Lane").doesNotContain("4400");
+                .doesNotContain("9 Hill Lane").doesNotContain("SYN440");
         assertThat(snapshot(number)).as("nothing written").isEqualTo(before);
     }
 

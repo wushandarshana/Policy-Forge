@@ -13,6 +13,9 @@ public class ConflictException extends RuntimeException {
     /** The application is not in a state that allows the action (U-10). */
     public static final String INVALID_APPLICATION_STATE = "INVALID_APPLICATION_STATE";
 
+    /** Another endorsement of the same policy was written first (AC-06.6): nothing of this request was written. */
+    public static final String POLICY_UPDATE_CONFLICT = "POLICY_UPDATE_CONFLICT";
+
     private final String code;
 
     public ConflictException(String code) {

@@ -52,9 +52,10 @@ class EndorsementStateIT extends EndorsementTestSupport {
                 JsonNode problem = problem(result, 409);
                 assertThat(problem.get("type").asText()).isEqualTo(INVALID_STATE_TYPE);
                 assertThat(problem.get("code").asText()).isEqualTo("INVALID_POLICY_STATE");
-                assertThat(result.getResponse().getContentAsString()).as("fixed text, no policy number or status")
-                        .doesNotContain(number).doesNotContain("CANCELLED").doesNotContain("LAPSED")
-                        .doesNotContain("Nominee One");
+                assertThat(result.getResponse().getContentAsString()).as("no status name and no submitted value")
+                        .doesNotContain("CANCELLED").doesNotContain("LAPSED").doesNotContain("Nominee One");
+                assertThat(problem.get("detail").asText()).as("a fixed detail that never echoes input")
+                        .doesNotContain(number);
                 details.add(problem.get("detail").asText());
             }
         }

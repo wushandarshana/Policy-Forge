@@ -5,6 +5,7 @@ import static com.horizon.policyforge.support.EndorsementApi.newAddressBody;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.horizon.policyforge.repository.EndorsementRepository;
 import com.horizon.policyforge.support.EndorsementRows;
 import com.horizon.policyforge.support.PolicyRows;
 import java.lang.reflect.InvocationTargetException;
@@ -60,7 +61,8 @@ class EndorsementConflictIT extends EndorsementTestSupport {
             return new BeanPostProcessor() {
                 @Override
                 public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-                    if (!"endorsementRepository".equals(beanName)) {
+                    // The factory bean of the repository passes through here too: only the repository itself is wrapped.
+                    if (!"endorsementRepository".equals(beanName) || !(bean instanceof EndorsementRepository)) {
                         return bean;
                     }
                     return Proxy.newProxyInstance(bean.getClass().getClassLoader(), bean.getClass().getInterfaces(),

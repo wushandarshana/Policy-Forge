@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Policy issuance and viewing (AC-05): issue an APPROVED application (C1), list the caller's policies (C2) and read one
- * policy's detail (C3). Issuing and listing are CUSTOMER only; the detail is for the owning CUSTOMER or an ADMIN. Each
+ * Policy issuance and viewing (AC-05, AC-06): issue an APPROVED application (C1), list the caller's policies (C2) and
+ * read one policy's detail (C3), which includes its endorsement history. Issuing and listing are CUSTOMER only; the detail is for the owning CUSTOMER or an ADMIN. Each
  * handler declares its role with {@code @PreAuthorize} and takes the actor from the authenticated principal. It maps
  * requests to {@link PolicyIssuanceService} and {@link PolicyQueryService} and results to DTOs built from allow-lists
  * (KD-008). No business logic lives here.
@@ -162,6 +162,42 @@ public class PolicyController {
         }
     }
 
+    /**
+     * Contract C3, an endorsement. {@code changes} is built from an allow-list per type (P-9) and carries an address or
+     * a nominee, so the string form hides it (NFR-03).
+     */
+    public record EndorsementResponse(
+            int sequenceNo,
+            String type,
+            Map<String, Object> changes,
+            int beforeVersionNo,
+            int afterVersionNo,
+            String newAnnualPremium,
+            String adjustment,
+            LocalDate effectiveDate,
+            String actorId,
+            Instant createdAt) {
+
+        static EndorsementResponse from(PolicyDetail.EndorsementView endorsement) {
+            return new EndorsementResponse(
+                    endorsement.sequenceNo(),
+                    endorsement.type(),
+                    endorsement.changes(),
+                    endorsement.beforeVersionNo(),
+                    endorsement.afterVersionNo(),
+                    endorsement.newAnnualPremium().toPlainString(),
+                    endorsement.adjustment().toPlainString(),
+                    endorsement.effectiveDate(),
+                    endorsement.actorId(),
+                    endorsement.createdAt());
+        }
+
+        @Override
+        public String toString() {
+            return "EndorsementResponse[sequenceNo=" + sequenceNo + "]";
+        }
+    }
+
     /** Contract C3, a status transition; {@code fromStatus} is null for the move that created the policy. */
     public record TransitionResponse(String fromStatus, String toStatus, String reason, String actorId, Instant at) {
 
@@ -184,14 +220,11 @@ public class PolicyController {
         }
     }
 
-    /**
-     * Contract C3. The endorsement history is empty until endorsements exist, and refunds are always empty until
-     * cancellation arrives (P-9).
-     */
+    /** Contract C3. Refunds are always empty until cancellation arrives (P-9). */
     public record PolicyDetailResponse(
             PolicyHeaderResponse policy,
             List<VersionResponse> versions,
-            List<Object> endorsements,
+            List<EndorsementResponse> endorsements,
             List<TransitionResponse> transitions,
             List<TermResponse> terms,
             List<Object> refunds) {
@@ -200,7 +233,7 @@ public class PolicyController {
             return new PolicyDetailResponse(
                     PolicyHeaderResponse.from(detail.policy()),
                     detail.versions().stream().map(VersionResponse::from).toList(),
-                    List.of(),
+                    detail.endorsements().stream().map(EndorsementResponse::from).toList(),
                     detail.transitions().stream().map(TransitionResponse::from).toList(),
                     detail.terms().stream().map(TermResponse::from).toList(),
                     List.of());

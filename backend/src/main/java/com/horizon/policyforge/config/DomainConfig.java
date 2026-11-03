@@ -1,6 +1,9 @@
 package com.horizon.policyforge.config;
 
 import com.horizon.policyforge.domain.application.KycValidator;
+import com.horizon.policyforge.domain.endorsement.EndorsementPremiumAdjuster;
+import com.horizon.policyforge.domain.endorsement.EndorsementRequestParser;
+import com.horizon.policyforge.domain.endorsement.EndorsementValidator;
 import com.horizon.policyforge.domain.rating.PremiumCalculator;
 import com.horizon.policyforge.domain.rating.RiskInputValidator;
 import com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolver;
@@ -41,5 +44,20 @@ public class DomainConfig {
     @Bean
     public UnderwritingRuleEvaluator underwritingRuleEvaluator() {
         return new UnderwritingRuleEvaluator();
+    }
+
+    @Bean
+    public EndorsementValidator endorsementValidator() {
+        return new EndorsementValidator();
+    }
+
+    @Bean
+    public EndorsementPremiumAdjuster endorsementPremiumAdjuster() {
+        return new EndorsementPremiumAdjuster();
+    }
+
+    @Bean
+    public EndorsementRequestParser endorsementRequestParser() {
+        return new EndorsementRequestParser();
     }
 }
