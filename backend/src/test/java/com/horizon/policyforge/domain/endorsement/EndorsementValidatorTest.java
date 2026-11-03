@@ -297,7 +297,7 @@ class EndorsementValidatorTest {
         EndorsementValidation tooLow = validator.validate(household(),
                 EndorsementRequest.changeHouseholdSumInsured(null, money("100000.00"), money("50000.00")), TODAY);
         EndorsementValidation tooHigh = validator.validate(household(),
-                EndorsementRequest.changeHouseholdSumInsured(null, money("49000000.00"), null), TODAY);
+                EndorsementRequest.changeHouseholdSumInsured(null, money("49500000.00"), null), TODAY);
 
         assertThat(ok.isValid()).isTrue();
         assertThat(ok.command().newSumInsured()).containsOnlyKeys("buildingSumInsured");
