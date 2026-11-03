@@ -19,6 +19,12 @@ policy version**, written atomically.
 Optional `effectiveDate`, default today. It must be within the current term and not before the latest endorsement's
 effective date.
 
+**Preview.** `POST /api/policies/{number}/endorsements/preview` (owner) takes the same body as the endorsement request
+and runs the same checks in the same order, but writes nothing. It returns 200 with `type`, `effectiveDate`,
+`currentAnnualPremium`, `newAnnualPremium`, `adjustment`, `unexpiredDays` and `termDays`. For a type that does not
+re-rate, `newAnnualPremium` equals the current premium and `adjustment` is `0.00`. The Endorse page calls it before
+confirming a sum-insured change.
+
 ## Validation rules (`EndorsementValidator`)
 - The policy status must be in force (ACTIVE, ENDORSED or RENEWED). Otherwise `InvalidPolicyStateException` (409).
 - `ADD_NOMINEE`: `TERM_LIFE` only (400 `NOMINEE_NOT_SUPPORTED` for other products). There can be at most 3 nominees.
