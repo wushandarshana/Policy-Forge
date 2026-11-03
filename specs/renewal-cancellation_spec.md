@@ -19,6 +19,14 @@ Paying: `POST /api/policies/{number}/renewal/pay` (owner) marks the pending term
 transitions the policy to **RENEWED**. Payment is allowed from offer creation until `termEnd + gracePeriodDays`
 inclusive. After that, 409.
 
+**Payment request (G-3).** The body is empty or `{}`. Any key gives 400 naming it. The amount paid is the pending
+term's premium, never a client value. In one transaction the pending term is marked paid, policy version n+1 is
+appended, and the policy moves to **RENEWED** (reason `RENEWAL_PAID`, actor the owner). Version n+1 has the current
+version's risk inputs, sum insured, address and nominees, with the renewal term's premium, rule version, start and end
+dates. The paid term, its version and its transition are the simulated payment record. A paid term never becomes
+unpaid. With no pending term the response is 409 `NO_PENDING_RENEWAL`. After `termEnd + gracePeriodDays` it is 409
+`RENEWAL_PAYMENT_WINDOW_CLOSED`.
+
 `GracePeriodPolicy.isLapsed(termEnd, graceDays, runDate, paid)` is a pure function:
 lapsed ⇔ `!paid && runDate.isAfter(termEnd.plusDays(graceDays))`.
 
@@ -26,6 +34,13 @@ lapsed ⇔ `!paid && runDate.isAfter(termEnd.plusDays(graceDays))`.
 
 `POST /api/policies/{number}/cancel` (owner), body `{ "cancellationDate": "2027-02-09", "reason": "NO_LONGER_NEEDED" }`.
 The date is optional and defaults to today, and must be within the current paid term.
+
+**Current paid term (G-5).** The current paid term is the paid term with the highest term number: term 1 until a
+renewal is paid, and the renewal term from the moment it is paid, even before it starts. The endorsement spec's
+'current term', the policy header and the renewal cycle use the same term. A cancellation date outside it gives 400
+`CANCELLATION_DATE_OUT_OF_TERM`. **Reason (G-4).** `reason` is required and is one of `NO_LONGER_NEEDED`,
+`REPLACED_BY_OTHER_COVER`, `AFFORDABILITY` or `OTHER`. Anything else gives 400 naming `reason`. The transition
+→ CANCELLED records it as its reason.
 
 `ProRataRefundCalculator.calculate(premium, termStart, termEnd, cancellationDate, policyEffectiveDate, firstTerm, coolingOffDays, cancellationFee)`:
 

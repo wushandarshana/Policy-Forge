@@ -33,6 +33,7 @@ confirming a sum-insured change.
   MOTOR it replaces `vehicleValue`. For HOUSEHOLD the payload uses `newBuildingSumInsured` and/or
   `newContentsSumInsured`.
 - `CHANGE_ADDRESS`: the postcode must be 6 digits.
+- A sum-insured change does not re-run underwriting. This is an accepted v1 limitation (G-6, SG-1).
 
 ## Premium adjustment (CHANGE_SUM_INSURED)
 - `newAnnualPremium` = re-quote with the modified risk inputs using the **policy's own rule version** (not the latest).
