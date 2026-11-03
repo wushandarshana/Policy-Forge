@@ -192,6 +192,25 @@ class PolicyIssuanceIT {
     }
 
     @Test
+    @DisplayName("AC-05.1: an unknown key of 5000 characters gets 400 naming the key cut to its first 100 characters, the full key is never echoed, and nothing is stored")
+    void aLongUnknownKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
+        String applicationId = approvedTermLife();
+        PolicyRows.Snapshot before = PolicyRows.snapshot(jdbc, applicationId);
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(longKey, "x");
+
+        MvcResult result = policies.issue("customer1", applicationId, body);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+        assertThat(errorFields(policies.bodyOf(result))).containsExactly(longKey.substring(0, 100));
+        assertThat(result.getResponse().getContentAsString())
+                .as("the key is never reflected beyond 100 characters")
+                .doesNotContain(longKey.substring(0, 101));
+        assertThat(PolicyRows.snapshot(jdbc, applicationId)).as("nothing stored").isEqualTo(before);
+    }
+
+    @Test
     @DisplayName("AC-05.1: MOTOR and HOUSEHOLD applications get PF-MO- and PF-HH- policy numbers")
     void otherProductsGetTheirOwnPrefix() throws Exception {
         String motor = api.applyAs("customer1", "MOTOR", motorInputs(30, 0), 30, TODAY);
