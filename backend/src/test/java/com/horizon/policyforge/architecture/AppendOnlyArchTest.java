@@ -283,13 +283,13 @@ class AppendOnlyArchTest {
         repositoryHasNoDeleteOrUpdate("PolicyTermRepository", "NFR-02").check(ArchSupport.production());
     }
 
-    /** The public methods of a production class that are neither getters nor toString, sorted. */
+    /** The public methods of a production class that are neither getters ({@code get*}, {@code is*}) nor toString. */
     private static List<String> publicMutators(String className) {
         JavaClass entity = ArchSupport.production().get(className);
         return entity.getMethods().stream()
                 .filter(method -> method.getModifiers().contains(JavaModifier.PUBLIC))
                 .map(JavaMethod::getName)
-                .filter(name -> !name.startsWith("get") && !name.equals("toString"))
+                .filter(name -> !name.matches("(get|is)[A-Z].*") && !name.equals("toString"))
                 .sorted()
                 .toList();
     }
