@@ -39,3 +39,34 @@ export const ENDORSEMENT_CODE_MESSAGES: Readonly<Record<string, string>> = {
   INVALID_POLICY_STATE: 'This policy is not in force, so it cannot be endorsed.',
   POLICY_UPDATE_CONFLICT: 'The policy was changed by another request. Reload the policy and try again.',
 };
+
+/** Fixed messages for the renewal-pay endpoint (sprint 4 C2, C7). They never echo anything the server sent. */
+export const RENEWAL_CODE_MESSAGES: Readonly<Record<string, string>> = {
+  NO_PENDING_RENEWAL: 'There is no renewal offer to pay.',
+  RENEWAL_PAYMENT_WINDOW_CLOSED: 'The payment window for this renewal has closed.',
+  INVALID_POLICY_STATE: 'This policy is not in force, so the renewal cannot be paid.',
+  POLICY_UPDATE_CONFLICT: 'The policy was changed by another request. Reload the policy and try again.',
+};
+
+/** Fixed messages for the cancel and cancel-preview endpoints (sprint 4 C3, C4, C7). */
+export const CANCELLATION_CODE_MESSAGES: Readonly<Record<string, string>> = {
+  CANCELLATION_DATE_OUT_OF_TERM: 'The cancellation date must fall within the current paid term.',
+  INVALID_POLICY_STATE: 'This policy is not in force, so it cannot be cancelled.',
+  POLICY_UPDATE_CONFLICT: 'The policy was changed by another request. Reload the policy and try again.',
+};
+
+/** A 409 with no recognised code on cancel. */
+export const CANCEL_CONFLICT_MESSAGE = 'The policy could not be cancelled in its current state.';
+
+export const RENEWAL_PAID_NOTICE = 'Renewal paid. The policy is renewed.';
+export const CANCELLED_NOTICE = 'Policy cancelled. The refund is recorded under Refunds.';
+
+export const DASHBOARD_FORBIDDEN_MESSAGE = 'You are not authorised to view the portfolio dashboard.';
+
+/** The cancellation reasons the SPA offers (G-4). */
+export const CANCELLATION_REASON_LABELS = [
+  { value: 'NO_LONGER_NEEDED', label: 'No longer needed' },
+  { value: 'REPLACED_BY_OTHER_COVER', label: 'Replaced by other cover' },
+  { value: 'AFFORDABILITY', label: 'Affordability' },
+  { value: 'OTHER', label: 'Other' },
+] as const;
