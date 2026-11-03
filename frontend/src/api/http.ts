@@ -1,4 +1,4 @@
-import type { FieldError, ProblemDetail } from './types';
+import type { Credentials, FieldError, ProblemDetail } from './types';
 
 /** Thrown for any non-2xx response. Carries the parsed problem+json body when there is one (C3). */
 export class ApiError extends Error {
@@ -36,4 +36,33 @@ export async function requestJson<T>(path: string, init?: RequestInit): Promise<
     throw new ApiError(response.status, await readProblem(response));
   }
   return (await response.json()) as T;
+}
+
+/** The `Authorization: Basic ...` value for the signed-in user. Credentials only ever travel in this header. */
+export function basicAuthHeader(credentials: Credentials): string {
+  const bytes = new TextEncoder().encode(`${credentials.username}:${credentials.password}`);
+  let binary = '';
+  bytes.forEach((byte) => {
+    binary = binary.concat(String.fromCharCode(byte));
+  });
+  return `Basic ${btoa(binary)}`;
+}
+
+/**
+ * Request to a protected endpoint. This is the only helper that attaches the Authorization header, so the public
+ * quote and product calls (which use requestJson directly) never carry credentials.
+ */
+export function requestProtected<T>(path: string, credentials: Credentials | null, init: RequestInit = {}): Promise<T> {
+  const headers: Record<string, string> = { ...(init.headers as Record<string, string> | undefined) };
+  if (credentials) headers.Authorization = basicAuthHeader(credentials);
+  return requestJson<T>(path, { ...init, headers });
+}
+
+/** JSON POST to a protected endpoint. */
+export function postProtected<T>(path: string, credentials: Credentials | null, body: unknown): Promise<T> {
+  return requestProtected<T>(path, credentials, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 }

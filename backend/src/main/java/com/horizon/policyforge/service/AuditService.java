@@ -34,4 +34,12 @@ public class AuditService {
         entries.save(AuditEntryEntity.of(actorId, action, entityType, entityId, reasonCode, comment,
                 Instant.now(clock)));
     }
+
+    /** Records a status change (U-12): the same entry plus the status before and after the action. */
+    @Transactional
+    public void recordStatusChange(String actorId, String action, String entityType, String entityId,
+            String reasonCode, String comment, String previousStatus, String newStatus) {
+        entries.save(AuditEntryEntity.of(actorId, action, entityType, entityId, reasonCode, comment, previousStatus,
+                newStatus, Instant.now(clock)));
+    }
 }

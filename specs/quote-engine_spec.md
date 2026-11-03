@@ -53,7 +53,10 @@ Inputs: `vehicleValue` (= sum insured), `vehicleAgeYears`, `driverAge`, `claimsL
 
 `premium = vehicleValue × baseRate × vehicleAgeFactor × driverAgeFactor × (1 + claimLoading × claimsLast3Years) × (1 − ncbDiscount[ncbYears]) × useFactor + policyFee`
 
-baseRate 0.025 · vehicleAgeFactor 0–3→1.00, 4–7→1.10, 8–15→1.25 (above 15 is rejected by underwriting)
+baseRate 0.025 · vehicleAgeFactor 0–3→1.00, 4–7→1.10, 8–15→1.25. A vehicle age above 15 has no rating band, so the quote is rejected with 400 naming
+`vehicleAgeYears` (AC-01.7). UW-MO-002 stays in the rule set as defence in depth for a future rule version with wider
+bands. In v1 it can't be reached through quote → application, and it is verified at domain level by the AC-04.6
+matrix. (Resolves Sprint 1 open item J8.)
 · driverAgeFactor 18–24→1.30, 25–65→1.00, 66–99→1.15 · claimLoading 0.20
 · ncbDiscount 0→0.00, 1→0.20, 2→0.25, 3→0.35, 4→0.45, 5→0.50 · useFactor PRIVATE 1.00, COMMERCIAL 1.40
 · policyFee 150.00 · sumInsured 100,000–10,000,000.

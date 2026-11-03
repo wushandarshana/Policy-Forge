@@ -53,6 +53,20 @@ public final class RuleSetFixtures {
         return render(tree);
     }
 
+    /**
+     * TERM_LIFE v1 edited so that UW-TL-001 declines above age 65 (AC-04.5, U-15). It is a test fixture, never a shipped
+     * rule file, and every test that publishes it does so in its own application context.
+     */
+    public static String termLifeV2AgeThreshold65(String effectiveFrom) {
+        ObjectNode tree = seedTree("term-life", 1);
+        tree.put("version", 2);
+        tree.put("effectiveFrom", effectiveFrom);
+        ObjectNode ageRule = (ObjectNode) rules(tree).get(0);
+        ageRule.put("description", "Entry age above 65");
+        ((ObjectNode) ageRule.get("all").get(0)).put("value", "65");
+        return render(tree);
+    }
+
     /** The {@code underwriting.rules} array of a rule-set tree. */
     public static ArrayNode rules(ObjectNode tree) {
         return (ArrayNode) tree.get("underwriting").get("rules");
