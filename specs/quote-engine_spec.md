@@ -28,6 +28,14 @@ Quotes are stored and immutable. The quote ID is `Q-<UUIDv4>` (unguessable, neve
 inputs** (`bmi`, `healthDeclarations`) from `riskInputs` (NFR-04.2). The full inputs are only read server-side when
 an application references the quote. A quote is valid for `lifecycle.quoteValidityDays` days.
 
+**Quote ownership (user decision, 2026-11-03; Sprint 2 security minor #4).** `POST /api/quotes` stays public.
+- When the request carries valid customer credentials, the stored quote records that customer as its **owner**.
+  Only the owner can apply for it ([`underwriting_spec.md`](underwriting_spec.md) U-2).
+- An anonymous quote has no owner, and the first customer who applies for it claims it. Its unguessable `Q-<UUIDv4>`
+  ID is the control.
+- The owner is never returned by `GET /api/quotes/{id}`, which remains allow-listed (NFR-04.2).
+- Invalid credentials on `POST /api/quotes` get 401 as on any endpoint. They never produce an anonymous quote.
+
 ## Arithmetic rules (NFR-01)
 - All inputs and factors are parsed as `BigDecimal` from strings.
 - Multiply in the order shown below. Intermediate results use scale 10 with HALF_UP. The final premium is rounded to
@@ -98,6 +106,9 @@ buildingRate 0.0015 · contentsRate 0.0035 · construction BRICK 1.00, CONCRETE 
   `^[A-Z][A-Z0-9_]{0,63}$` (for example `["DIABETES"]`), such as a list containing objects, numbers, lower-case or
   over-long strings, or more than 10 items, when quoted, then the response is 400 naming `healthDeclarations` and no
   quote is stored. (Security re-review R-2.)
+- **AC-01.12** Given `customer1` is authenticated, when a quote is created, then the stored quote's owner is
+  `customer1`. Given no credentials, then the stored quote has no owner. In both cases `GET /api/quotes/{id}` contains no
+  owner field.
 
 ## UI
 A **Quote** page: choose a product, see a dynamic form for that product's risk inputs, submit, then see the premium,
@@ -108,3 +119,7 @@ breakdown and rule version, with an "Apply" call to action.
   The browser trims, upper-cases, turns runs of spaces and hyphens into `_` and drops empty entries, so normal typing
   meets AC-01.10. The field hint names the format: upper-case codes such as `DIABETES`, at most 10. Anything still
   invalid (for example `É`) is sent unchanged, and the API's 400 is shown next to the field.
+- **AC-01.13** Given a customer is signed in to the SPA, when they request a quote, then `POST /api/quotes` carries
+  their Basic credentials, so the quote is owned (AC-01.12). Given no one is signed in, then the request carries no
+  `Authorization` header. This replaces the earlier rule that public calls never carry credentials, for this endpoint
+  only.
