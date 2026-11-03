@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import {
@@ -8,6 +9,9 @@ import {
   openPolicy,
   signIn,
 } from './support';
+
+/** Hides policy numbers and dates in the visual snapshots (see the file for why it is not `mask`). */
+const SNAPSHOT_MASK = fileURLToPath(new URL('./snapshot-mask.css', import.meta.url));
 
 /** Fills and confirms a CHANGE_ADDRESS endorsement from the detail page, then waits for the detail page again. */
 async function endorseAddress(page: Page, line1: string, city: string, postcode: string): Promise<void> {
@@ -59,7 +63,7 @@ test('AC-05.1: customer1 issues an approved application and sees an ACTIVE polic
   await expect(page.getByTestId(`policy-card-${policyNumber}-endorsements`)).toHaveText('0');
   await expectNoHorizontalScroll(page);
   await expect(card).toHaveScreenshot('my-policies-card.png', {
-    mask: [card.locator('.card-title'), page.getByTestId(`policy-card-${policyNumber}-next-due`)],
+    stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
 });
@@ -79,7 +83,7 @@ test('AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 wi
   await expect(page.getByTestId('version-2-address')).toHaveText('99 New Road, Mumbai, 400001');
   await expectNoHorizontalScroll(page);
   await expect(page.getByTestId('tabpanel-versions')).toHaveScreenshot('policy-versions-tab.png', {
-    mask: [page.getByTestId('version-1-effective-date'), page.getByTestId('version-2-effective-date')],
+    stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
 });
@@ -105,7 +109,7 @@ test('AC-06.2: a sum insured change to 7000000.00 effective on the term start pr
   await expect(page.getByTestId('preview-adjustment')).toHaveText('2640.00');
   await expectNoHorizontalScroll(page);
   await expect(page.getByTestId('endorse-form')).toHaveScreenshot('endorse-sum-insured-preview.png', {
-    mask: [page.getByTestId('input-effectiveDate'), page.getByTestId('preview-effective-date')],
+    stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
 

@@ -16,6 +16,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  expect: {
+    // Text anti-aliasing differs by a fraction of a pixel with the scroll offset and the page above the element (the
+    // nav bar wraps on mobile), which moves about 1% of the pixels of an unchanged element. Layout changes move more.
+    toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
+  },
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: 'http://localhost:8080',
