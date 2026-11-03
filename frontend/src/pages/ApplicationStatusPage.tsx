@@ -15,7 +15,7 @@ type Load =
  * Shows one application. app_spec has no read-one endpoint, so this reads the caller's own list (C2) and picks the
  * application by ID (P-6). Nothing here carries KYC.
  */
-export function ApplicationStatusPage({ applicationId }: { applicationId: string }) {
+export function ApplicationStatusPage({ applicationId }: { applicationId: string; onIssued?: (policyNumber: string) => void }) {
   const { credentials } = useSession();
   const [load, setLoad] = useState<Load>({ state: 'loading' });
 

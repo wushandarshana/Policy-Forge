@@ -1,8 +1,8 @@
 import { requestJson } from './http';
-import type { Quote, QuoteRequest } from './types';
+import type { Credentials, Quote, QuoteRequest } from './types';
 
 /** C2: public quote creation. Rejects with an ApiError (400 carries `fieldErrors`). */
-export function createQuote(request: QuoteRequest): Promise<Quote> {
+export function createQuote(request: QuoteRequest, _credentials: Credentials | null = null): Promise<Quote> {
   return requestJson<Quote>('/api/quotes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

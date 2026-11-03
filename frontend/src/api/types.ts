@@ -166,3 +166,150 @@ export interface DecisionResult {
   previousStatus: ApplicationStatus;
   status: ApplicationStatus;
 }
+
+// ---- Policy issuance and endorsement (contracts C1-C6, sprint 3 plan; specs/policy-issuance_spec.md and
+// specs/endorsement_spec.md). Money is a decimal string, dates are ISO YYYY-MM-DD, instants are ISO-8601. ----
+
+export type PolicyStatus = 'ACTIVE' | 'ENDORSED' | 'RENEWED' | 'LAPSED' | 'CANCELLED';
+export type EndorsementType = 'CHANGE_ADDRESS' | 'ADD_NOMINEE' | 'CHANGE_SUM_INSURED';
+export type NomineeRelationship = 'SPOUSE' | 'CHILD' | 'PARENT' | 'SIBLING' | 'OTHER';
+
+/** C1 request body: `{}` or `{ effectiveDate }`. Any other key is a 400. */
+export interface IssueRequest {
+  effectiveDate?: string;
+}
+
+/** C1 response (201), `policy` of C3 and C4. */
+export interface PolicyHeader {
+  policyNumber: string;
+  applicationId: string;
+  productCode: string;
+  status: PolicyStatus;
+  currentVersionNo: number;
+  ruleVersion: number;
+  effectiveDate: string;
+  expiryDate: string;
+  sumInsured: string;
+  annualPremium: string;
+  nextPremiumDueDate: string;
+  endorsementCount: number;
+}
+
+/** C2: one item of `GET /api/policies/mine`, newest first. */
+export interface PolicySummary {
+  policyNumber: string;
+  productCode: string;
+  status: PolicyStatus;
+  sumInsured: string;
+  annualPremium: string;
+  nextPremiumDueDate: string;
+  endorsementCount: number;
+}
+
+export interface PolicyAddress {
+  line1: string;
+  city: string;
+  postcode: string;
+}
+
+export interface Nominee {
+  name: string;
+  relationship: string;
+  sharePercent: number;
+}
+
+/** C3 version. `riskInputs` is the P-9 allow-list: declared inputs minus the health inputs. */
+export interface PolicyVersion {
+  versionNo: number;
+  effectiveDate: string;
+  expiryDate: string;
+  sumInsured: string;
+  annualPremium: string;
+  ruleVersion: number;
+  riskInputs: Record<string, RiskInputValue>;
+  address: PolicyAddress;
+  nominees: Nominee[];
+  createdAt: string;
+}
+
+/** C3 endorsement `changes`: `{address}`, `{nominee}`, `{newSumInsured}` or `{newBuildingSumInsured?, newContentsSumInsured?}`. */
+export interface EndorsementChanges {
+  address?: PolicyAddress;
+  nominee?: Nominee;
+  newSumInsured?: string;
+  newBuildingSumInsured?: string;
+  newContentsSumInsured?: string;
+}
+
+/** C3 endorsement, ascending by `sequenceNo`. */
+export interface Endorsement {
+  sequenceNo: number;
+  type: EndorsementType;
+  changes: EndorsementChanges;
+  beforeVersionNo: number;
+  afterVersionNo: number;
+  newAnnualPremium: string;
+  adjustment: string;
+  effectiveDate: string;
+  actorId: string;
+  createdAt: string;
+}
+
+/** C3 transition, in append order. `fromStatus` is null for issuance. */
+export interface PolicyTransition {
+  fromStatus: PolicyStatus | null;
+  toStatus: PolicyStatus;
+  reason: string;
+  actorId: string;
+  at: string;
+}
+
+export interface PolicyTerm {
+  termNo: number;
+  startDate: string;
+  endDate: string;
+  premium: string;
+  paid: boolean;
+}
+
+/** C3: `GET /api/policies/{policyNumber}`. `refunds` is always empty until Sprint 4. */
+export interface PolicyDetail {
+  policy: PolicyHeader;
+  versions: PolicyVersion[];
+  endorsements: Endorsement[];
+  transitions: PolicyTransition[];
+  terms: PolicyTerm[];
+  refunds: Record<string, unknown>[];
+}
+
+/**
+ * C4 and C5 request body: flat `{ type, effectiveDate?, ...payload }`. The payload keys are exactly the spec table's.
+ * `sharePercent` is an integer; a value that is not whole digits is sent as typed so the server rejects it.
+ */
+export type EndorseRequest = { effectiveDate?: string } & (
+  | { type: 'CHANGE_ADDRESS'; address: PolicyAddress }
+  | { type: 'ADD_NOMINEE'; nominee: { name: string; relationship: string; sharePercent: number | string } }
+  | {
+      type: 'CHANGE_SUM_INSURED';
+      newSumInsured?: string;
+      newBuildingSumInsured?: string;
+      newContentsSumInsured?: string;
+    }
+);
+
+/** C4 response (201). */
+export interface EndorsementResult {
+  endorsement: Endorsement;
+  policy: PolicyHeader;
+}
+
+/** C5 response (200). Writes nothing. */
+export interface EndorsementPreview {
+  type: EndorsementType;
+  effectiveDate: string;
+  currentAnnualPremium: string;
+  newAnnualPremium: string;
+  adjustment: string;
+  unexpiredDays: number;
+  termDays: number;
+}
