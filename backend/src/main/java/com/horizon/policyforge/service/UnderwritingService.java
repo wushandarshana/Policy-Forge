@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import com.horizon.policyforge.domain.PiiMasker;
 import com.horizon.policyforge.domain.application.ApplicationStatus;
 import com.horizon.policyforge.domain.application.DecisionSource;
@@ -199,7 +200,9 @@ public class UnderwritingService {
     /** Reports every unknown key and every domain input violation together as one 400. */
     private static void validateBody(List<String> unknownKeys, Runnable inputRules) {
         List<FieldViolation> problems = new ArrayList<>();
-        unknownKeys.forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
+        // Each unknown key goes through the shared sanitiser (P-14); keys that sanitise alike are named once.
+        unknownKeys.stream().map(EchoedKeySanitiser::sanitise).distinct()
+                .forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
         try {
             inputRules.run();
         } catch (InvalidDecisionException invalid) {

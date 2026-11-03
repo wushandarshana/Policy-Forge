@@ -1,5 +1,7 @@
 package com.horizon.policyforge.repository;
 
+import com.horizon.policyforge.domain.policy.PolicyNumberFormat;
+import com.horizon.policyforge.domain.policy.PolicyNumberSequenceExhaustedException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,9 +46,14 @@ public class PolicyNumberSequenceEntity {
         return new PolicyNumberSequenceEntity(productCode, year);
     }
 
-    /** The next sequence number of this product and year. */
+    /**
+     * The next sequence number of this product and year. The counter is left untouched when it has already handed out
+     * the last number, 999999, so an exhausted counter never moves past what the database allows (AC-05.2).
+     *
+     * @throws PolicyNumberSequenceExhaustedException when the counter is at 999999
+     */
     public int allocateNext() {
-        lastValue++;
+        lastValue = PolicyNumberFormat.nextSequence(lastValue);
         return lastValue;
     }
 

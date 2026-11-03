@@ -1,8 +1,10 @@
 package com.horizon.policyforge.domain.rating;
 
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import com.horizon.policyforge.domain.ruleset.RatingModel;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,15 +35,20 @@ public record RiskInputSchema(List<String> declared, Set<String> health) {
         return RatingAlgorithms.forModel(model).schema();
     }
 
-    /** One violation per submitted key that is not declared, in key order. The field is the key itself. */
+    /**
+     * One violation per submitted key that is not declared, in key order. The field is the key in its shared sanitised
+     * form (P-14): at most 64 characters, with anything outside {@code A-Z a-z 0-9 _ . -} replaced by an underscore. Keys
+     * that sanitise alike are named once.
+     */
     public List<RiskInputViolation> unknownKeys(Map<String, ?> riskInputs) {
         List<RiskInputViolation> violations = new ArrayList<>();
         if (riskInputs == null) {
             return violations;
         }
+        Set<String> named = new LinkedHashSet<>();
         for (String key : new TreeSet<>(riskInputs.keySet())) {
-            if (!declared.contains(key)) {
-                violations.add(new RiskInputViolation(key, UNKNOWN_INPUT_MESSAGE));
+            if (!declared.contains(key) && named.add(EchoedKeySanitiser.sanitise(key))) {
+                violations.add(new RiskInputViolation(EchoedKeySanitiser.sanitise(key), UNKNOWN_INPUT_MESSAGE));
             }
         }
         return violations;

@@ -1,5 +1,6 @@
 package com.horizon.policyforge.service;
 
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import com.horizon.policyforge.domain.application.ApplicationStatus;
 import com.horizon.policyforge.domain.application.InvalidApplicationStateException;
 import com.horizon.policyforge.domain.endorsement.Address;
@@ -56,11 +57,6 @@ public class PolicyIssuanceService {
     private static final String NO_NOMINEES_JSON = "[]";
     private static final int FIRST_VERSION = 1;
     private static final int FIRST_TERM = 1;
-    /**
-     * An unknown key is named in the 400, so it is cut to this many characters first: the same bound the endorsement
-     * parser uses, so a key of any length is never reflected in full.
-     */
-    private static final int MAX_ECHOED_KEY = 100;
 
     private final ApplicationRepository applications;
     private final QuoteRepository quotes;
@@ -154,7 +150,9 @@ public class PolicyIssuanceService {
      */
     private static LocalDate resolveEffectiveDate(IssuePolicyCommand command, LocalDate today) {
         List<FieldViolation> problems = new ArrayList<>();
-        command.unknownKeys().stream().map(PolicyIssuanceService::boundedKey).distinct()
+        // An unknown key is named in the 400, so it goes through the shared sanitiser first (P-14): bounded, with only
+        // A-Z a-z 0-9 _ . - kept. Keys that sanitise alike are named once.
+        command.unknownKeys().stream().map(EchoedKeySanitiser::sanitise).distinct()
                 .forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
         LocalDate requested = null;
         if (command.effectiveDate() != null) {
@@ -174,10 +172,6 @@ public class PolicyIssuanceService {
             throw new ValidationFailedException(outOfRange.code(), List.of(new FieldViolation(outOfRange.field(),
                     "must be between today and 60 days from today")));
         }
-    }
-
-    private static String boundedKey(String key) {
-        return key.length() > MAX_ECHOED_KEY ? key.substring(0, MAX_ECHOED_KEY) : key;
     }
 
     /** P-5 step 2: an unknown, malformed or another customer's application all look the same: 404. */

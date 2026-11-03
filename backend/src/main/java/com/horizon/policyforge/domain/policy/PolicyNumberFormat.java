@@ -22,6 +22,9 @@ public final class PolicyNumberFormat {
      * @throws PolicyNumberSequenceExhaustedException when {@code lastValue} is already {@link #MAX_SEQUENCE}
      */
     public static int nextSequence(int lastValue) {
+        if (lastValue >= MAX_SEQUENCE) {
+            throw new PolicyNumberSequenceExhaustedException();
+        }
         return lastValue + 1;
     }
 

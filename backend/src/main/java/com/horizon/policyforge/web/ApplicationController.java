@@ -1,6 +1,7 @@
 package com.horizon.policyforge.web;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import com.horizon.policyforge.domain.application.KycAddress;
 import com.horizon.policyforge.domain.application.KycInput;
 import com.horizon.policyforge.domain.underwriting.ReasonCode;
@@ -8,7 +9,7 @@ import com.horizon.policyforge.service.ApplicationResult;
 import com.horizon.policyforge.service.ApplicationService;
 import com.horizon.policyforge.service.SubmitApplicationCommand;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -187,21 +188,27 @@ public class ApplicationController {
         return applications.mine(authentication.getName()).stream().map(ApplicationResponse::from).toList();
     }
 
-    /** Maps the wire shape to the service command, turning each unknown key into its dotted path. */
+    /**
+     * Maps the wire shape to the service command, turning each unknown key into its dotted path. The key part goes
+     * through the shared sanitiser here, where the fixed prefix ({@code kyc.}, {@code kyc.address.}) is joined to it:
+     * at most 64 characters of the key, anything outside {@code A-Z a-z 0-9 _ . -} replaced by an underscore (P-14).
+     * Keys that sanitise alike are named once.
+     */
     private static SubmitApplicationCommand toCommand(String customerId, SubmitRequest request) {
-        List<String> unknown = new ArrayList<>(request.unknownKeys);
+        Set<String> unknown = new LinkedHashSet<>();
+        request.unknownKeys.forEach(key -> unknown.add(EchoedKeySanitiser.sanitise(key)));
         KycInput kyc = null;
         KycRequest body = request.kyc;
         if (body != null) {
-            body.unknownKeys.forEach(key -> unknown.add("kyc." + key));
+            body.unknownKeys.forEach(key -> unknown.add("kyc." + EchoedKeySanitiser.sanitise(key)));
             KycAddress address = null;
             AddressRequest place = body.address;
             if (place != null) {
-                place.unknownKeys.forEach(key -> unknown.add("kyc.address." + key));
+                place.unknownKeys.forEach(key -> unknown.add("kyc.address." + EchoedKeySanitiser.sanitise(key)));
                 address = new KycAddress(place.line1, place.city, place.postcode);
             }
             kyc = new KycInput(body.fullName, body.dateOfBirth, body.aadhaar, body.pan, address);
         }
-        return new SubmitApplicationCommand(customerId, request.quoteId, kyc, unknown);
+        return new SubmitApplicationCommand(customerId, request.quoteId, kyc, List.copyOf(unknown));
     }
 }

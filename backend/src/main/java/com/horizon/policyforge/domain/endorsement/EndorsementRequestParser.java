@@ -1,10 +1,12 @@
 package com.horizon.policyforge.domain.endorsement;
 
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,8 +55,6 @@ public final class EndorsementRequestParser {
     private static final int MAX_LINE1 = 200;
     private static final int MAX_CITY = 100;
     private static final int MAX_NAME = 100;
-    /** A key can be long: an unknown key is named in the answer, so it is cut here. */
-    private static final int MAX_FIELD_NAME = 100;
 
     private static final Pattern DECIMAL = Pattern.compile("-?[0-9]{1,15}(\\.[0-9]{1,2})?");
 
@@ -169,18 +169,19 @@ public final class EndorsementRequestParser {
         };
     }
 
+    /**
+     * One violation per unknown key, named with its fixed prefix and the key in its shared sanitised form (P-14): at
+     * most 64 characters, with anything outside {@code A-Z a-z 0-9 _ . -} replaced by an underscore. Keys that sanitise
+     * alike are named once.
+     */
     private static void rejectUnknownKeys(Set<String> keys, Set<String> allowed, String prefix,
             List<ShapeViolation> out) {
+        Set<String> named = new LinkedHashSet<>();
         for (String key : new TreeSet<>(keys)) {
-            if (!allowed.contains(key)) {
-                out.add(new ShapeViolation(fieldName(prefix, key), UNKNOWN_KEY));
+            if (!allowed.contains(key) && named.add(EchoedKeySanitiser.sanitise(key))) {
+                out.add(new ShapeViolation(prefix + EchoedKeySanitiser.sanitise(key), UNKNOWN_KEY));
             }
         }
-    }
-
-    private static String fieldName(String prefix, String key) {
-        String name = key.length() > MAX_FIELD_NAME ? key.substring(0, MAX_FIELD_NAME) : key;
-        return prefix + name;
     }
 
     // ---- address ----
