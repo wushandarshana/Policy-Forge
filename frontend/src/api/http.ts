@@ -49,8 +49,9 @@ export function basicAuthHeader(credentials: Credentials): string {
 }
 
 /**
- * Request to a protected endpoint. This is the only helper that attaches the Authorization header, so the public
- * quote and product calls (which use requestJson directly) never carry credentials.
+ * Request with optional credentials. This is the only helper that attaches the Authorization header, so the public
+ * product and quote-read calls (which use requestJson directly) never carry credentials. Quote creation also goes
+ * through it, and sends no header when the caller passes null.
  */
 export function requestProtected<T>(path: string, credentials: Credentials | null, init: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = { ...(init.headers as Record<string, string> | undefined) };

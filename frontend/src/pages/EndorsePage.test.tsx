@@ -84,6 +84,7 @@ async function fillNominee(user: ReturnType<typeof userEvent.setup>, share: stri
 
 describe('EndorsePage type selector and forms', () => {
   it('AC-06.1: the type selector offers all three types and each has its own form fields', async () => {
+    install();
     const { user } = await open();
 
     const options = within(screen.getByTestId('endorse-type')).getAllByRole('option');
@@ -105,6 +106,7 @@ describe('EndorsePage type selector and forms', () => {
   });
 
   it('AC-06.5: the relationship select offers exactly the five spec values', async () => {
+    install();
     const { user } = await open();
     await chooseType(user, 'ADD_NOMINEE');
 

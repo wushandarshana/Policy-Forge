@@ -443,3 +443,104 @@ input[type='password'] {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+/* ---- Policies: My Policies, Policy Detail, Endorse (Sprint 3) ---- */
+.cards,
+.rows,
+.plain-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plain-list {
+  gap: 0.25rem;
+}
+
+.card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  min-width: 0;
+}
+
+.card-title {
+  min-width: 0;
+  font-size: 1.1rem;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.back-link {
+  align-self: flex-start;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.tab {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tab[aria-selected='true'] {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.endorse-form {
+  min-width: 0;
+}
+
+.badge-active,
+.badge-renewed {
+  background: #d7f0df;
+}
+
+.badge-endorsed {
+  background: #dbe8fb;
+}
+
+.badge-lapsed {
+  background: #fdf0c8;
+}
+
+.badge-cancelled {
+  background: var(--danger-bg);
+}
+
+.badge-issued {
+  background: #d7f0df;
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
