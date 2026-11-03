@@ -56,6 +56,11 @@ public class PolicyIssuanceService {
     private static final String NO_NOMINEES_JSON = "[]";
     private static final int FIRST_VERSION = 1;
     private static final int FIRST_TERM = 1;
+    /**
+     * An unknown key is named in the 400, so it is cut to this many characters first: the same bound the endorsement
+     * parser uses, so a key of any length is never reflected in full.
+     */
+    private static final int MAX_ECHOED_KEY = 100;
 
     private final ApplicationRepository applications;
     private final QuoteRepository quotes;
@@ -149,7 +154,8 @@ public class PolicyIssuanceService {
      */
     private static LocalDate resolveEffectiveDate(IssuePolicyCommand command, LocalDate today) {
         List<FieldViolation> problems = new ArrayList<>();
-        command.unknownKeys().forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
+        command.unknownKeys().stream().map(PolicyIssuanceService::boundedKey).distinct()
+                .forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
         LocalDate requested = null;
         if (command.effectiveDate() != null) {
             try {
@@ -168,6 +174,10 @@ public class PolicyIssuanceService {
             throw new ValidationFailedException(outOfRange.code(), List.of(new FieldViolation(outOfRange.field(),
                     "must be between today and 60 days from today")));
         }
+    }
+
+    private static String boundedKey(String key) {
+        return key.length() > MAX_ECHOED_KEY ? key.substring(0, MAX_ECHOED_KEY) : key;
     }
 
     /** P-5 step 2: an unknown, malformed or another customer's application all look the same: 404. */
