@@ -264,22 +264,50 @@ export interface PolicyTransition {
   at: string;
 }
 
+/** C5 term: one row of the paid-term history. `ruleVersion` is the rule version the term was rated with. */
 export interface PolicyTerm {
   termNo: number;
   startDate: string;
   endDate: string;
   premium: string;
   paid: boolean;
+  ruleVersion: number;
 }
 
-/** C3: `GET /api/policies/{policyNumber}`. `refunds` is always empty until Sprint 4. */
+/** C5: the unpaid renewal offer, or null on the detail when there is none. `payableUntil` = current term end + grace. */
+export interface PendingRenewal {
+  termNo: number;
+  startDate: string;
+  endDate: string;
+  premium: string;
+  ruleVersion: number;
+  payableUntil: string;
+}
+
+/** C5 refund record (append-only). `formula` carries only the numbers of the calculation. */
+export interface Refund {
+  termNo: number;
+  cancellationDate: string;
+  premium: string;
+  termDays: number;
+  unexpiredDays: number;
+  coolingOff: boolean;
+  fee: string;
+  amount: string;
+  formula: string;
+  actorId: string;
+  createdAt: string;
+}
+
+/** C3 and C5: `GET /api/policies/{policyNumber}`. `refunds` is in append order. */
 export interface PolicyDetail {
   policy: PolicyHeader;
   versions: PolicyVersion[];
   endorsements: Endorsement[];
   transitions: PolicyTransition[];
   terms: PolicyTerm[];
-  refunds: Record<string, unknown>[];
+  pendingRenewal: PendingRenewal | null;
+  refunds: Refund[];
 }
 
 /**
@@ -312,4 +340,60 @@ export interface EndorsementPreview {
   adjustment: string;
   unexpiredDays: number;
   termDays: number;
+}
+
+// ---- Renewal, cancellation and the admin dashboard (contracts C2-C6 and C9, sprint 4 plan; specs/renewal-cancellation_spec.md
+// and specs/portfolio-dashboard_spec.md). Money is a decimal string, dates are ISO YYYY-MM-DD, instants are ISO-8601. ----
+
+/** C2 response (200): the policy header and the newly paid term. */
+export interface RenewalPayment {
+  policy: PolicyHeader;
+  term: PolicyTerm;
+}
+
+/** G-4: the closed set of cancellation reasons. */
+export type CancellationReason = 'NO_LONGER_NEEDED' | 'REPLACED_BY_OTHER_COVER' | 'AFFORDABILITY' | 'OTHER';
+
+/** C3 response (200): the refund the policy would get on `cancellationDate`. Writes nothing. */
+export interface RefundQuote {
+  cancellationDate: string;
+  termNo: number;
+  termStart: string;
+  termEnd: string;
+  premium: string;
+  termDays: number;
+  unexpiredDays: number;
+  coolingOff: boolean;
+  fee: string;
+  amount: string;
+  formula: string;
+}
+
+/** C4 request body: exactly `{ reason }` or `{ reason, cancellationDate }`. */
+export interface CancelRequest {
+  reason: CancellationReason;
+  cancellationDate?: string;
+}
+
+/** C4 response (201). */
+export interface CancellationResult {
+  refund: Refund;
+  policy: PolicyHeader;
+}
+
+/** C6: one renewal-pipeline row. `renewalPremium` is null when no offer exists yet. */
+export interface PipelineEntry {
+  policyNumber: string;
+  termEnd: string;
+  renewalPremium: string | null;
+  paid: boolean;
+}
+
+/** C6 response (200). `activePoliciesByProduct` always has all three products. */
+export interface Dashboard {
+  asOf: string;
+  activePoliciesByProduct: Record<ProductCode, number>;
+  premiumCollected: Record<ProductCode, string> & { total: string };
+  renewalPipeline: PipelineEntry[];
+  lapseForecast: { count: number; policies: string[] };
 }

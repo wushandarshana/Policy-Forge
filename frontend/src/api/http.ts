@@ -12,6 +12,18 @@ export class ApiError extends Error {
     this.problem = problem;
   }
 
+  /**
+   * The named business code (C7). The invalid-policy-state problem carries it as its `type`
+   * (`/problems/invalid-policy-state`) when the body has no `code`, so that case maps to INVALID_POLICY_STATE.
+   */
+  get code(): string | undefined {
+    if (typeof this.problem.code === 'string') return this.problem.code;
+    if (typeof this.problem.type === 'string' && this.problem.type.endsWith('/problems/invalid-policy-state')) {
+      return 'INVALID_POLICY_STATE';
+    }
+    return undefined;
+  }
+
   get fieldErrors(): FieldError[] {
     return Array.isArray(this.problem.errors) ? this.problem.errors : [];
   }

@@ -1,5 +1,7 @@
 import { postProtected, requestProtected } from './http';
 import type {
+  CancelRequest,
+  CancellationResult,
   Credentials,
   EndorseRequest,
   EndorsementPreview,
@@ -8,6 +10,8 @@ import type {
   PolicyDetail,
   PolicyHeader,
   PolicySummary,
+  RefundQuote,
+  RenewalPayment,
 } from './types';
 
 /** C1: issue an APPROVED application (CUSTOMER). The body is `{}` or `{ effectiveDate }`. */
@@ -53,4 +57,35 @@ export function previewEndorsement(
     credentials,
     request,
   );
+}
+
+/** C2 (sprint 4): pay the pending renewal offer (owner). The body is exactly `{}`: the amount is never client-supplied. */
+export function payRenewal(credentials: Credentials | null, policyNumber: string): Promise<RenewalPayment> {
+  return postProtected<RenewalPayment>(
+    `/api/policies/${encodeURIComponent(policyNumber)}/renewal/pay`,
+    credentials,
+    {},
+  );
+}
+
+/** C3 (sprint 4): preview the refund of a cancellation. `date` is sent only when given. Writes nothing. */
+export function previewCancellation(
+  credentials: Credentials | null,
+  policyNumber: string,
+  date?: string,
+): Promise<RefundQuote> {
+  const query = date ? `?date=${encodeURIComponent(date)}` : '';
+  return requestProtected<RefundQuote>(
+    `/api/policies/${encodeURIComponent(policyNumber)}/cancel/preview${query}`,
+    credentials,
+  );
+}
+
+/** C4 (sprint 4): cancel a policy (owner). The body is exactly `{ reason }` or `{ reason, cancellationDate }`. */
+export function cancelPolicy(
+  credentials: Credentials | null,
+  policyNumber: string,
+  request: CancelRequest,
+): Promise<CancellationResult> {
+  return postProtected<CancellationResult>(`/api/policies/${encodeURIComponent(policyNumber)}/cancel`, credentials, request);
 }

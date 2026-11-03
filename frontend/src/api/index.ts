@@ -4,4 +4,14 @@ export { listProducts } from './products';
 export { createQuote, getQuote } from './quotes';
 export { submitApplication, listMyApplications } from './applications';
 export { getUnderwritingQueue, submitDecision, submitOverride } from './underwriting';
-export { issuePolicy, listMyPolicies, getPolicy, endorsePolicy, previewEndorsement } from './policies';
+export {
+  issuePolicy,
+  listMyPolicies,
+  getPolicy,
+  endorsePolicy,
+  previewEndorsement,
+  payRenewal,
+  previewCancellation,
+  cancelPolicy,
+} from './policies';
+export { getDashboard } from './admin';
