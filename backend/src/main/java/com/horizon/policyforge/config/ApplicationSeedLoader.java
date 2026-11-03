@@ -26,7 +26,8 @@ import org.springframework.stereotype.Component;
  * <p>The seed goes through the same quote and application services as a real submission (P-5): it quotes a smoker with
  * sum insured 12,000,000.00, then applies as customer2 with synthetic KYC whose date of birth matches the quote's age on
  * the injected clock. It therefore gets a {@code RULES} decision row by {@code system} at the active rule version and
- * the two U-12 audit entries, with no special-case writes. It is idempotent: an application of customer2 carrying the
+ * the two U-12 audit entries, with no special-case writes. The quote is created as owned by customer2 (P-8). It is
+ * idempotent: an application of customer2 carrying the
  * seed's synthetic Aadhaar means it already ran, so a restart adds nothing.
  */
 @Component
@@ -67,7 +68,7 @@ public class ApplicationSeedLoader implements ApplicationRunner {
             return false;
         }
         LocalDate today = LocalDate.now(clock);
-        QuoteResult quote = quotes.create("TERM_LIFE", seedRiskInputs());
+        QuoteResult quote = quotes.create("TERM_LIFE", seedRiskInputs(), CUSTOMER);
         KycInput kyc = new KycInput("Demo Customer Two", today.minusYears(SEED_AGE).toString(), SEED_AADHAAR, SEED_PAN,
                 new KycAddress("2 Demo Street", "Mumbai", "400001"));
         ApplicationResult seeded = applications.submit(
