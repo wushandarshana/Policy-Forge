@@ -51,6 +51,8 @@ class RoleBoundaryIT {
             "{\"decision\":\"APPROVE\",\"reasonCode\":\"UW-MAN-001\",\"comment\":\"Acceptable after review\"}";
     private static final String OVERRIDE_BODY =
             "{\"reasonCode\":\"UW-OVR-001\",\"comment\":\"Commercial exception signed off\"}";
+    private static final String ENDORSE_BODY = "{\"type\":\"CHANGE_ADDRESS\",\"address\":{\"line1\":\"22 New Road\","
+            + "\"city\":\"Mumbai\",\"postcode\":\"400001\"}}";
     private static final String APPLICATION_BODY = "{\"quoteId\":\"Q-00000000-0000-4000-8000-000000000000\","
             + "\"kyc\":{\"fullName\":\"Asha Test\",\"dateOfBirth\":\"1991-04-02\",\"aadhaar\":\"XXXX-XXXX-1234\","
             + "\"pan\":\"ABCDE1234F\",\"address\":{\"line1\":\"1 Demo Street\",\"city\":\"Pune\","
@@ -85,10 +87,14 @@ class RoleBoundaryIT {
     private static final Call ISSUE = new Call("POST", "/api/applications/" + APPLICATION_ID + "/issue", "{}");
     private static final Call MINE_POLICIES = new Call("GET", "/api/policies/mine", null);
     private static final Call POLICY_DETAIL = new Call("GET", "/api/policies/PF-TL-2026-999999", null);
+    private static final Call ENDORSE =
+            new Call("POST", "/api/policies/PF-TL-2026-999999/endorsements", ENDORSE_BODY);
+    private static final Call PREVIEW =
+            new Call("POST", "/api/policies/PF-TL-2026-999999/endorsements/preview", ENDORSE_BODY);
 
     static Stream<Arguments> protectedCalls() {
         return Stream.of(SUBMIT, MINE, QUEUE, QUEUE_DECLINED, DECISION, OVERRIDE, PUBLISH, ISSUE, MINE_POLICIES,
-                POLICY_DETAIL).map(Arguments::of);
+                POLICY_DETAIL, ENDORSE, PREVIEW).map(Arguments::of);
     }
 
     static Stream<Arguments> underwriterCalls() {
@@ -96,7 +102,7 @@ class RoleBoundaryIT {
     }
 
     static Stream<Arguments> customerOnlyCalls() {
-        return Stream.of(SUBMIT, MINE, ISSUE, MINE_POLICIES).map(Arguments::of);
+        return Stream.of(SUBMIT, MINE, ISSUE, MINE_POLICIES, ENDORSE, PREVIEW).map(Arguments::of);
     }
 
     @Autowired
