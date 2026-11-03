@@ -1,0 +1,598 @@
+=== RED RESULTS BY TEST ID (mapped from the failing method names in the raw output below to their @DisplayName) ===
+[FAIL] AC-01.1  QuoteApiIT.termLifeQuoteIsPricedFromTheActiveRuleVersion  (BadSqlGrammar: no quote table)
+[FAIL] AC-01.2  QuoteApiIT.motorQuoteThroughTheApi  (404 No static resource api/quotes)
+[FAIL] AC-01.3  QuoteApiIT.householdQuoteThroughTheApi  (404 No static resource api/quotes)
+[FAIL] AC-01.6  QuoteRuleVersionIT.newRuleVersionPricesTheNextQuote  (404 No static resource api/quotes)
+[FAIL] AC-01.7  QuoteApiIT.invalidInputsAreRejectedNamingEachField  (BadSqlGrammar: no quote table)
+[FAIL] AC-01.7  QuoteApiIT.outOfRangeAndMissingRequestParts  (BadSqlGrammar: no quote table)
+[FAIL] AC-01.7  QuoteApiIT.unknownProductIsNotFound  (BadSqlGrammar: no quote table)
+[FAIL] NFR-04.2 QuoteApiIT.publicQuoteReadOmitsHealthInputs  (NullPointer: no quoteId in a response that does not exist)
+[FAIL] NFR-04.2 QuoteApiIT.quoteIdsAreRandom  (NullPointer: no quoteId)
+[FAIL] NFR-03   QuoteApiIT.quotingLogsIdsOnly  (NullPointer: no quoteId)
+[PASS] NFR-04.2 QuoteApiIT.unknownQuoteIsNotFound  (cannot fail pre-implementation: Spring already answers an unmapped path with a 404 problem+json)
+Every required ID (AC-01.1, AC-01.6, AC-01.7, NFR-04.2) has at least one failing test here (11 tests run: 3 failures, 7 errors, 1 pass).
+Matching green results are in TASK-006-green.log, Section 1.
+
+=== RAW MAVEN OUTPUT ===
+TASK-006 RED run (2026-10-28). Covers API-level AC-01.1, AC-01.6, AC-01.7 and NFR-04.2 (plus AC-01.2/01.3 through the API, NFR-03 log check).
+Staging: tests QuoteApiIT and QuoteRuleVersionIT exist; NO QuoteController, QuoteService, QuoteEntity, QuoteRepository or quote migration exists yet.
+Command: ./mvnw -B -ntp verify -Dit.test='QuoteApiIT,QuoteRuleVersionIT' -Dtest=NoSuchTest -Dsurefire.failIfNoSpecifiedTests=false -Dmaven.test.failure.ignore=true (only the two new IT classes run; jacoco checks not meaningful in this staging)
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 85 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.web.QuoteApiIT
+12:23:27.861 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.web.QuoteApiIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\wdarshana\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.7\byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"166"]
+             Body = {"productCode":"MOTOR","riskInputs":{"vehicleValue":"800000.00","vehicleAgeYears":2,"driverAge":30,"claimsLast3Years":0,"noClaimBonusYears":2,"vehicleUse":"PRIVATE"}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"236b32e2-5721-44ee-94ad-c55a6a28b51f", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"166"]
+             Body = {"productCode":"MOTOR","riskInputs":{"vehicleValue":"800000.00","vehicleAgeYears":2,"driverAge":30,"claimsLast3Years":0,"noClaimBonusYears":2,"vehicleUse":"PRIVATE"}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"98f29c1a-2936-454f-980a-c50fd04517e1", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"176"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"27.3189","healthDeclarations":["SYNTHETIC-DECLARATION-ALPHA"]}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"784f5f25-45f7-46cc-8303-d1d8d5655f84", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"227"]
+             Body = {"productCode":"HOUSEHOLD","riskInputs":{"buildingSumInsured":"6000000.00","contentsSumInsured":"1000000.00","propertyAgeYears":12,"constructionType":"BRICK","floodZone":"LOW","hasSecuritySystem":true,"hasFloodDefences":false}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"4a24d3e7-549f-444f-903a-43993e25b58a", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"176"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"27.3189","healthDeclarations":["SYNTHETIC-DECLARATION-ALPHA"]}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"2bcc4544-799a-4915-854b-e785d412aebe", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 10, Failures: 2, Errors: 7, Skipped: 0, Time elapsed: 9.537 s <<< FAILURE! -- in com.horizon.policyforge.web.QuoteApiIT
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.quoteIdsAreRandom -- Time elapsed: 0.644 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+	at com.horizon.policyforge.web.QuoteApiIT.quoteIdsAreRandom(QuoteApiIT.java:268)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.motorQuoteThroughTheApi -- Time elapsed: 0.116 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+[{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+	at com.horizon.policyforge.web.QuoteApiIT.motorQuoteThroughTheApi(QuoteApiIT.java:164)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.quotingLogsIdsOnly(CapturedOutput) -- Time elapsed: 0.021 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+	at com.horizon.policyforge.web.QuoteApiIT.quotingLogsIdsOnly(QuoteApiIT.java:290)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.termLifeQuoteIsPricedFromTheActiveRuleVersion -- Time elapsed: 0.024 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [select count(*) from quote]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:526)
+	at com.horizon.policyforge.web.QuoteApiIT.storedQuotes(QuoteApiIT.java:119)
+	at com.horizon.policyforge.web.QuoteApiIT.termLifeQuoteIsPricedFromTheActiveRuleVersion(QuoteApiIT.java:131)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "QUOTE" not found; SQL statement:
+select count(*) from quote [42102-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7945)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7916)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7895)
+	at org.h2.command.Parser.readTablePrimary(Parser.java:1769)
+	at org.h2.command.Parser.readTableReference(Parser.java:2249)
+	at org.h2.command.Parser.parseSelectFromPart(Parser.java:2702)
+	at org.h2.command.Parser.parseSelect(Parser.java:2810)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2692)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2547)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2526)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2519)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2512)
+	at org.h2.command.Parser.parseQuery(Parser.java:2479)
+	at org.h2.command.Parser.parsePrepared(Parser.java:610)
+	at org.h2.command.Parser.parse(Parser.java:581)
+	at org.h2.command.Parser.parse(Parser.java:556)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeQuery(JdbcStatement.java:94)
+	at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:111)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java)
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 9 more
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.invalidInputsAreRejectedNamingEachField -- Time elapsed: 0.005 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [select count(*) from quote]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:526)
+	at com.horizon.policyforge.web.QuoteApiIT.storedQuotes(QuoteApiIT.java:119)
+	at com.horizon.policyforge.web.QuoteApiIT.invalidInputsAreRejectedNamingEachField(QuoteApiIT.java:188)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "QUOTE" not found; SQL statement:
+select count(*) from quote [42102-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7945)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7916)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7895)
+	at org.h2.command.Parser.readTablePrimary(Parser.java:1769)
+	at org.h2.command.Parser.readTableReference(Parser.java:2249)
+	at org.h2.command.Parser.parseSelectFromPart(Parser.java:2702)
+	at org.h2.command.Parser.parseSelect(Parser.java:2810)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2692)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2547)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2526)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2519)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2512)
+	at org.h2.command.Parser.parseQuery(Parser.java:2479)
+	at org.h2.command.Parser.parsePrepared(Parser.java:610)
+	at org.h2.command.Parser.parse(Parser.java:581)
+	at org.h2.command.Parser.parse(Parser.java:556)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeQuery(JdbcStatement.java:94)
+	at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:111)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java)
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 9 more
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.householdQuoteThroughTheApi -- Time elapsed: 0.017 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+[{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+	at com.horizon.policyforge.web.QuoteApiIT.householdQuoteThroughTheApi(QuoteApiIT.java:176)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.unknownProductIsNotFound -- Time elapsed: 0.009 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [select count(*) from quote]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:526)
+	at com.horizon.policyforge.web.QuoteApiIT.storedQuotes(QuoteApiIT.java:119)
+	at com.horizon.policyforge.web.QuoteApiIT.unknownProductIsNotFound(QuoteApiIT.java:225)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "QUOTE" not found; SQL statement:
+select count(*) from quote [42102-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7945)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7916)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7895)
+	at org.h2.command.Parser.readTablePrimary(Parser.java:1769)
+	at org.h2.command.Parser.readTableReference(Parser.java:2249)
+	at org.h2.command.Parser.parseSelectFromPart(Parser.java:2702)
+	at org.h2.command.Parser.parseSelect(Parser.java:2810)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2692)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2547)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2526)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2519)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2512)
+	at org.h2.command.Parser.parseQuery(Parser.java:2479)
+	at org.h2.command.Parser.parsePrepared(Parser.java:610)
+	at org.h2.command.Parser.parse(Parser.java:581)
+	at org.h2.command.Parser.parse(Parser.java:556)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeQuery(JdbcStatement.java:94)
+	at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:111)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java)
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 9 more
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.publicQuoteReadOmitsHealthInputs -- Time elapsed: 0.008 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+	at com.horizon.policyforge.web.QuoteApiIT.publicQuoteReadOmitsHealthInputs(QuoteApiIT.java:238)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.outOfRangeAndMissingRequestParts -- Time elapsed: 0.006 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [select count(*) from quote]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:526)
+	at com.horizon.policyforge.web.QuoteApiIT.storedQuotes(QuoteApiIT.java:119)
+	at com.horizon.policyforge.web.QuoteApiIT.outOfRangeAndMissingRequestParts(QuoteApiIT.java:203)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "QUOTE" not found; SQL statement:
+select count(*) from quote [42102-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7945)
+	at org.h2.command.Parser.getTableOrViewNotFoundDbException(Parser.java:7916)
+	at org.h2.command.Parser.readTableOrView(Parser.java:7895)
+	at org.h2.command.Parser.readTablePrimary(Parser.java:1769)
+	at org.h2.command.Parser.readTableReference(Parser.java:2249)
+	at org.h2.command.Parser.parseSelectFromPart(Parser.java:2702)
+	at org.h2.command.Parser.parseSelect(Parser.java:2810)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2692)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2547)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2526)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2519)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2512)
+	at org.h2.command.Parser.parseQuery(Parser.java:2479)
+	at org.h2.command.Parser.parsePrepared(Parser.java:610)
+	at org.h2.command.Parser.parse(Parser.java:581)
+	at org.h2.command.Parser.parse(Parser.java:556)
+	at org.h2.command.Parser.prepareCommand(Parser.java:484)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcStatement.executeQuery(JdbcStatement.java:94)
+	at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:111)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java)
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 9 more
+
+[INFO] Running com.horizon.policyforge.web.QuoteRuleVersionIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"166"]
+             Body = {"productCode":"MOTOR","riskInputs":{"vehicleValue":"800000.00","vehicleAgeYears":2,"driverAge":30,"claimsLast3Years":0,"noClaimBonusYears":2,"vehicleUse":"PRIVATE"}}
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.servlet.resource.NoResourceFoundException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 404
+    Error message = null
+          Headers = [X-Correlation-Id:"5c334d84-6f93-4eeb-adc4-b249ba78fcc6", Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.972 s <<< FAILURE! -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[ERROR] com.horizon.policyforge.web.QuoteRuleVersionIT.newRuleVersionPricesTheNextQuote -- Time elapsed: 0.029 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+[{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+	at com.horizon.policyforge.web.QuoteRuleVersionIT.newRuleVersionPricesTheNextQuote(QuoteRuleVersionIT.java:75)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   QuoteApiIT.householdQuoteThroughTheApi:176 [{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+[ERROR]   QuoteApiIT.motorQuoteThroughTheApi:164 [{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+[ERROR]   QuoteRuleVersionIT.newRuleVersionPricesTheNextQuote:75 [{"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource api/quotes.","instance":"/api/quotes"}] 
+expected: 201
+ but was: 404
+[ERROR] Errors: 
+[ERROR]   QuoteApiIT.invalidInputsAreRejectedNamingEachField:188->storedQuotes:119 � BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from quote]
+[ERROR]   QuoteApiIT.outOfRangeAndMissingRequestParts:203->storedQuotes:119 � BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from quote]
+[ERROR]   QuoteApiIT.publicQuoteReadOmitsHealthInputs:238 NullPointer Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+[ERROR]   QuoteApiIT.quoteIdsAreRandom:268 NullPointer Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+[ERROR]   QuoteApiIT.quotingLogsIdsOnly:290 NullPointer Cannot invoke "com.fasterxml.jackson.databind.JsonNode.asText()" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+[ERROR]   QuoteApiIT.termLifeQuoteIsPricedFromTheActiveRuleVersion:131->storedQuotes:119 � BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from quote]
+[ERROR]   QuoteApiIT.unknownProductIsNotFound:225->storedQuotes:119 � BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from quote]
+[INFO] 
+[ERROR] Tests run: 11, Failures: 3, Errors: 7, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[ERROR] There are test failures.
+
+See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\failsafe-reports for the individual test results.
+See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'PolicyForge' with 57 classes
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 57 classes
+[INFO] All coverage checks have been met.
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 32 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  19.518 s
+[INFO] Finished at: 2026-10-28T12:23:39+05:30
+[INFO] ------------------------------------------------------------------------

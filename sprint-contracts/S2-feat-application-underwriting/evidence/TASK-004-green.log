@@ -1,0 +1,120 @@
+# TASK-004 green run: feat(green) AC-03.1-03.8 AC-04.1-04.5 AC-09.7 NFR-02 NFR-03.1 NFR-04.1 NFR-04.3 NFR-04.4
+# command: ./mvnw verify -Dskip.frontend=true   (full run, JaCoCo enabled)
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.673 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.432 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.343 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.232 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.851 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.195 s -- in com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in com.horizon.policyforge.domain.application.KycValidatorTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.537 s -- in com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.horizon.policyforge.domain.underwriting.ConditionEvaluatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.050 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingReasonCodeMatrixTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.269 s -- in com.horizon.policyforge.web.RequestBodySizeLimitFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.728 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.087 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 237, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.36 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.251 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.860 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.949 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.733 s -- in com.horizon.policyforge.web.ApplicationBodyLimitIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.461 s -- in com.horizon.policyforge.web.ApplicationLogCaptureIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.483 s -- in com.horizon.policyforge.web.ApplicationRuleVersionIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.450 s -- in com.horizon.policyforge.web.ApplicationSeedIT
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.227 s -- in com.horizon.policyforge.web.ApplicationSubmissionIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.436 s -- in com.horizon.policyforge.web.ApplicationUnderwritingIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.338 s -- in com.horizon.policyforge.web.BodySizeLimitEndToEndIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.744 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.622 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.108 s -- in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.207 s -- in com.horizon.policyforge.web.QuoteHealthDeclarationsIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.908 s -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.08 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.029 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Tests run: 111, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+
+# Test cases of the new and changed classes (display name = AC / NFR id + sub-criterion)
+PASS  ApplicationSubmissionIT :: AC-03.3: the validUntil day itself is still valid and the application is accepted (U-2)
+PASS  ApplicationSubmissionIT :: AC-03.1: customer1 applies with a valid TERM_LIFE quote and valid KYC, and the stored application is linked to that quote and customer1
+PASS  ApplicationSubmissionIT :: AC-03.3: once the clock passes the quote's validUntil, the application is a 400 QUOTE_EXPIRED and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.4: a MOTOR quote is checked against driverAge, and a HOUSEHOLD quote has no age check (U-4)
+PASS  ApplicationSubmissionIT :: AC-03.3: an expired quote that already has an application is reported as QUOTE_EXPIRED, because expiry is checked before the duplicate check (U-2 order)
+PASS  ApplicationSubmissionIT :: AC-03.1: the APPLICATION_SUBMITTED entry (SUBMITTED to UNDERWRITING, actor customer1) is recorded before UNDERWRITING_AUTO_DECISION (UNDERWRITING to APPROVED, actor system)
+PASS  ApplicationSubmissionIT :: AC-03.6: a missing quoteId is a 400 naming quoteId, as a request shape error
+PASS  ApplicationSubmissionIT :: AC-03.5: each unknown key on its own, at any of the three levels, is a 400 naming just that key
+PASS  ApplicationSubmissionIT :: AC-03.7: a second application for the same quote is a 409 QUOTE_ALREADY_APPLIED and the quote still has exactly one application
+PASS  ApplicationSubmissionIT :: AC-03.2: PAN abcde1234f, Aadhaar 1234-5678 and postcode 41100 are a 400 naming kyc.pan, kyc.aadhaar and kyc.address.postcode, no application is stored and the body repeats none of the values
+PASS  ApplicationSubmissionIT :: NFR-04.1: anonymous requests to the application endpoints are 401 and an UNDERWRITER gets 403
+PASS  ApplicationSubmissionIT :: NFR-04.3: a text/plain POST to /api/applications with a valid JSON body is a 415 and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.4: a date of birth that gives age 40 for a quote priced at age 35 is a 400 KYC_AGE_MISMATCH naming kyc.dateOfBirth and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.6: an unknown quoteId is a 400 QUOTE_NOT_FOUND naming quoteId and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.1: the 201 body is the C1 allow-list and carries no KYC field or value
+PASS  ApplicationSubmissionIT :: AC-03.5: an unknown key and an invalid PAN are reported together (U-2 step 1)
+PASS  ApplicationSubmissionIT :: AC-03.2: a blank name and address, a future date of birth and over-long text are each named and are a 400, never a 500 (U-4)
+PASS  ApplicationSubmissionIT :: AC-03.5: unknown keys at the top level, inside kyc and inside kyc.address are a 400 naming each by its dotted path and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.8: customer1 gets only its own applications from GET /api/applications/mine, newest first, in the submission shape with no KYC fields
+PASS  ApplicationSubmissionIT :: AC-03.4: an age mismatch and a KYC format error are not reported together, because the age check runs after the format checks (U-2)
+PASS  ApplicationUnderwritingIT :: AC-04.1: TERM_LIFE age 35, non-smoker, BMI 24, no declarations and sum insured 5,000,000.00 is APPROVED with AUTO_BIND and [UW-OK]
+PASS  ApplicationUnderwritingIT :: AC-04.4: a MOTOR quote with 3 claims is DECLINED with [UW-MO-001]
+PASS  ApplicationUnderwritingIT :: AC-04.4: a HOUSEHOLD quote with TIMBER construction is REFERRED with MANUAL_REVIEW and [UW-HH-003]
+PASS  ApplicationUnderwritingIT :: AC-04.1: the UW-OK reason carries the description "No underwriting rule fired" (U-8)
+PASS  ApplicationUnderwritingIT :: AC-04.3: TERM_LIFE age 62 and BMI 37 is DECLINED with DECLINE and [UW-TL-001, UW-TL-004]: decline beats refer and every fired code is listed
+PASS  ApplicationUnderwritingIT :: AC-04.4: the audit entry of the automatic decision records the outcome status, with actor system
+PASS  ApplicationUnderwritingIT :: AC-04.2: a TERM_LIFE smoker with sum insured 12,000,000.00 is REFERRED with MANUAL_REVIEW and [UW-TL-002]
+PASS  ApplicationRuleVersionIT :: AC-04.5: after a v2 rule set with the UW-TL-001 threshold at 65 is active, an age-62 application is not DECLINED and its stored decision references rule version 2
+PASS  ApplicationSeedIT :: AC-09.7: after startup customer2 has a REFERRED TERM_LIFE application with reason codes [UW-TL-002], and customer1 has none
+PASS  ApplicationSeedIT :: AC-09.7: running the seeding again adds no application, so a restart never duplicates the demo case (U-14)
+PASS  ApplicationSeedIT :: AC-09.7: the seeded application is a smoker with sum insured 12,000,000.00, with a RULES decision row by system and the two U-12 audit entries
+PASS  ApplicationLogCaptureIT :: NFR-03.1: a valid TERM_LIFE submission with Aadhaar XXXX-XXXX-1234, PAN ABCDE1234F and a health declaration is referred, and no captured log line contains any of them, the full name or the date of birth
+PASS  ApplicationLogCaptureIT :: NFR-03.1: a rejected invalid-KYC submission logs none of the submitted values, not even the invalid ones
+PASS  ApplicationBodyLimitIT :: NFR-04.4.1: a body over 16 KB to the percent-encoded path /api/%61pplications is a 413 and nothing is stored
+PASS  ApplicationBodyLimitIT :: NFR-04.4.1: a body over 16 KB to POST /api/applications is a 413 and nothing is stored, while the same body without padding is accepted
+PASS  ApplicationBodyLimitIT :: NFR-04.4.2: a chunked body (no Content-Length) over 16 KB to POST /api/applications is a 413 and nothing is stored
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: delete*, remove*, update* and @Modifying repository methods are rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a CRUD rule-set version repository is rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: CrudRepository, JpaRepository and non-Repository supertypes are rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: public setters on RuleSetVersionEntity and QuoteEntity are rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity that is not @Immutable is rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: an append-only entity without @Immutable is rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: the checks fail when the rule-set version entity and repository are absent
+PASS  AppendOnlyArchTest :: NFR-02: the underwriting decision repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: NFR-02 audit: the audit entry entity is immutable with no public setters
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: the clean fixture passes every set-wide rule
+PASS  AppendOnlyArchTest :: AC-02.6: the rule-set version entity exists, is an immutable JPA entity and has no public setters
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: a public field on an append-only entity is rejected
+PASS  AppendOnlyArchTest :: NFR-02 audit: the audit entry repository has no delete or update methods
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version repository with a delete method is rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity with a public setter is rejected
+PASS  AppendOnlyArchTest :: NFR-02: the application entity has no public setters and its status changes only through applyTransition
+PASS  AppendOnlyArchTest :: NFR-02: the application repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: AC-02.6: the rule-set version repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: NFR-02: the underwriting decision entity exists, is an immutable JPA entity and has no public setters
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesAreImmutable
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicSetters
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicFields
+PASS  AppendOnlyArchTest :: appendOnlyRepositoriesAreNotCrud
+PASS  AppendOnlyArchTest :: appendOnlyRepositoriesHaveNoDeleteOrUpdate
+PASS  RuleSetPublishIT :: AC-02.3: a PRODUCT_MANAGER publish of a new MOTOR rule set is stored as version 2 and v1 is unchanged byte for byte, with an audit entry carrying the actor ID
+PASS  RuleSetPublishIT :: AC-02 new product: publishing version 1 for an unknown productCode creates the product when its ratingModel is known
+PASS  RuleSetPublishIT :: AC-02 new product: an unknown ratingModel on a new product is a 400 and nothing is stored
+PASS  RuleSetPublishIT :: AC-02.7: a CUSTOMER who posts to /api/products/MOTOR/versions gets 403 and nothing is stored
+PASS  RuleSetPublishIT :: NFR-04.3.1: a PRODUCT_MANAGER POST of a valid rule set to /api/products/MOTOR/versions as text/plain is a 415 and MOTOR still has only version 1
+PASS  RuleSetPublishIT :: AC-02.5: publishing a rule set with min greater than max, an unknown operator and duplicate rule codes is a 400 listing each violation and nothing is stored
+PASS  RuleSetPublishIT :: AC-02.4: a MOTOR v2 effective in the future is ignored until the clock reaches its effectiveFrom, and no rule set before v1 is a 404

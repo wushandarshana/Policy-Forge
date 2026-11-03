@@ -1,0 +1,773 @@
+TASK-005 GREEN run (2026-10-28). AC-01.1 to AC-01.8 domain tests PASSING with the rating code in place; full ./mvnw clean verify green.
+Covered: PremiumCalculatorTest (AC-01.1 x2, .2, .3, .4, .5 x2, .6, .7, .8 x3) and RiskInputValidatorTest (AC-01.7 x12), 24 new tests; architecture tests (DomainPurityArchTest, MoneyPrecisionArchTest, ...) pass against the new domain.rating package.
+Totals: surefire 91 + failsafe 45 = 136 tests, 0 failures (112 before this task). JaCoCo checks met: overall 88.3%, domain 93.6% (domain.rating 96.4%); thresholds 70/80 unchanged.
+Command: ./mvnw -B -ntp clean verify  (a stack-trace log line emitted by ErrorMappingIT's deliberate 500 probe is elided below)
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ policyforge ---
+[INFO] Deleting C:\Users\wdarshana\Downloads\PolicyForge\backend\target
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 54 source files with javac [debug parameters release 21] to target\classes
+[INFO] /C:/Users/wdarshana/Downloads/PolicyForge/backend/src/main/java/com/horizon/policyforge/service/RuleSetJsonParser.java: C:\Users\wdarshana\Downloads\PolicyForge\backend\src\main\java\com\horizon\policyforge\service\RuleSetJsonParser.java uses or overrides a deprecated API.
+[INFO] /C:/Users/wdarshana/Downloads/PolicyForge/backend/src/main/java/com/horizon/policyforge/service/RuleSetJsonParser.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 83 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+12:19:25.103 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.12.1
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.755 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.302 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Running com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.345 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Running com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.709 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Running com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Running com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Running com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Running com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Running com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.542 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 91, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] Building jar: C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.config.CorrelationIdIT
+12:19:34.104 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.horizon.policyforge.config.CorrelationIdIT]: CorrelationIdIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+12:19:34.333 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.config.CorrelationIdIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\wdarshana\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.7\byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.625 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Running com.horizon.policyforge.config.HealthEndpointIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.864 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Running com.horizon.policyforge.config.PersistenceConfigIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.816 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Running com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.581 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Running com.horizon.policyforge.web.ErrorMappingIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.920 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Running com.horizon.policyforge.web.ProductCatalogReadIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.782 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Running com.horizon.policyforge.web.RuleSetPublishIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.981 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Running com.horizon.policyforge.web.SecurityBaselineIT
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[elided: deliberate ErrorMappingIT probe error JSON log line]
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.654 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'PolicyForge' with 57 classes
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 57 classes
+[INFO] All coverage checks have been met.
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 32 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  42.121 s
+[INFO] Finished at: 2026-10-28T12:19:58+05:30
+[INFO] ------------------------------------------------------------------------

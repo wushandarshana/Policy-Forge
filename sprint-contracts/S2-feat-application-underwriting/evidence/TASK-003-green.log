@@ -1,0 +1,18 @@
+TASK-003 GREEN run: AC-03.1 AC-03.2 AC-03.4 AC-09.4 AC-09.5 AC-09.6 (domain: KycValidator, ApplicationLifecycle, ManualDecisionRules)
+Command: ./mvnw verify -Dskip.frontend=true
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.207 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.507 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.221 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.208 s -- in com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in com.horizon.policyforge.domain.application.KycValidatorTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.701 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 233, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 75, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS

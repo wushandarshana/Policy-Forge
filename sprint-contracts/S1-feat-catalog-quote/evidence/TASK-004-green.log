@@ -1,0 +1,66 @@
+TASK-004 GREEN run (2026-10-28). All architecture tests pass against production code, rules unchanged, and every rule
+still rejects its negative fixture. Command: ./mvnw -B -ntp clean verify  (exit 0, BUILD SUCCESS).
+Whole suite: surefire 67 + failsafe 45 = 112 tests, 0 failures (TASK-003 baseline was 74). JaCoCo overall and domain
+checks met (thresholds unchanged, 70 percent overall, 80 percent domain). No production class violated any rule.
+
+Architecture tests (from target/surefire-reports, surefire run of the architecture package):
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: delete*, remove*, update* and @Modifying repository methods are rejected
+PASS AppendOnlyArchTest :: AC-02.6 negative fixture: a CRUD rule-set version repository is rejected
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: CrudRepository, JpaRepository and non-Repository supertypes are rejected
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: public setters on RuleSetVersionEntity and QuoteEntity are rejected
+PASS AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity that is not @Immutable is rejected
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: an append-only entity without @Immutable is rejected
+PASS AppendOnlyArchTest :: AC-02.6 negative fixture: the checks fail when the rule-set version entity and repository are absent
+PASS AppendOnlyArchTest :: NFR-02 audit: the audit entry entity is immutable with no public setters
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: the clean fixture passes every set-wide rule
+PASS AppendOnlyArchTest :: AC-02.6: the rule-set version entity exists, is an immutable JPA entity and has no public setters
+PASS AppendOnlyArchTest :: NFR-02 negative fixture: a public field on an append-only entity is rejected
+PASS AppendOnlyArchTest :: NFR-02 audit: the audit entry repository has no delete or update methods
+PASS AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version repository with a delete method is rejected
+PASS AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity with a public setter is rejected
+PASS AppendOnlyArchTest :: AC-02.6: the rule-set version repository exists and has no delete or update methods
+PASS AppendOnlyArchTest :: appendOnlyEntitiesAreImmutable
+PASS AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicSetters
+PASS AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicFields
+PASS AppendOnlyArchTest :: appendOnlyRepositoriesAreNotCrud
+PASS AppendOnlyArchTest :: appendOnlyRepositoriesHaveNoDeleteOrUpdate
+PASS ControllerPlacementArchTest :: NFR-08 negative fixture: a controller whose name does not end in Controller is rejected
+PASS ControllerPlacementArchTest :: NFR-08 negative fixture: a controller outside the web package is rejected
+PASS ControllerPlacementArchTest :: controllersResideInWeb
+PASS ControllerPlacementArchTest :: controllersAreNamedController
+PASS DomainPurityArchTest :: NFR-08 negative fixture: any non-JDK library in the domain is rejected
+PASS DomainPurityArchTest :: NFR-08 negative fixture: Spring, JPA and web dependencies in the domain are rejected
+PASS DomainPurityArchTest :: domainHasNoFrameworkOrLayerDependencies
+PASS DomainPurityArchTest :: domainDependsOnTheJdkOnly
+PASS LayeredArchitectureTest :: NFR-08 negative fixture: web to repository or config is rejected
+PASS LayeredArchitectureTest :: NFR-08 negative fixture: config may depend on any layer, so it is never reported
+PASS LayeredArchitectureTest :: NFR-08 negative fixture: domain to service, repository, web or config is rejected
+PASS LayeredArchitectureTest :: NFR-08 negative fixture: service to web or config is rejected
+PASS LayeredArchitectureTest :: NFR-08 negative fixture: repository to service or web is rejected
+PASS LayeredArchitectureTest :: layersFollowTheMatrix
+PASS MoneyPrecisionArchTest :: NFR-01 negative fixture: BigDecimal built from or converted to a double is rejected
+PASS MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float return types are rejected
+PASS MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float parameters are rejected
+PASS MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float fields are rejected
+PASS MoneyPrecisionArchTest :: noFloatingPointFields
+PASS MoneyPrecisionArchTest :: noFloatingPointReturns
+PASS MoneyPrecisionArchTest :: noFloatingPointParameters
+PASS MoneyPrecisionArchTest :: noBigDecimalFloatingPointConversion
+ARCH TOTAL 42  PASS 42  FAIL 0
+
+Maven summary lines:
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.661 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.316 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.184 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.370 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 67, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS

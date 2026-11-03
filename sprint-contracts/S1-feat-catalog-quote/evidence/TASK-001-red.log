@@ -1,0 +1,1193 @@
+TASK-001 RED run (2026-10-28). Covers NFR-07.1, NFR-06.1, NFR-06.2 (+ NFR-06 hardening, NFR-05 baseline, NFR-04 baseline).
+Staging: pom.xml with all dependencies EXCEPT spring-boot-starter-actuator (the implementation of NFR-07.1 is enabling Actuator; with the starter present Boot alone already serves /actuator/health), no application.yml, no logback-spring.xml, no CorrelationIdFilter, no SecurityConfig, no ClockConfig.
+Command: ./mvnw -B -ntp verify
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] Building jar: C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.config.CorrelationIdIT
+11:43:46.998 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.horizon.policyforge.config.CorrelationIdIT]: CorrelationIdIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:43:47.204 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.config.CorrelationIdIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-10-28T11:43:48.079+05:30  INFO 32360 --- [           main] c.h.policyforge.config.CorrelationIdIT   : Starting CorrelationIdIT using Java 21.0.12.1 with PID 32360 (started by wdarshana in C:\Users\wdarshana\Downloads\PolicyForge\backend)
+2026-10-28T11:43:48.081+05:30  INFO 32360 --- [           main] c.h.policyforge.config.CorrelationIdIT   : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T11:43:49.022+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T11:43:49.064+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 25 ms. Found 0 JPA repository interfaces.
+2026-10-28T11:43:49.952+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-28T11:43:50.311+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:8a52a2fb-6d50-4216-a631-603823ff9509 user=SA
+2026-10-28T11:43:50.313+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-28T11:43:50.395+05:30  INFO 32360 --- [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:8a52a2fb-6d50-4216-a631-603823ff9509 (H2 2.3)
+2026-10-28T11:43:50.433+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2026-10-28T11:43:50.435+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.010s)
+2026-10-28T11:43:50.435+05:30  WARN 32360 --- [           main] o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?
+2026-10-28T11:43:50.448+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2026-10-28T11:43:50.515+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2026-10-28T11:43:50.521+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Schema "PUBLIC" is up to date. No migration necessary.
+2026-10-28T11:43:50.660+05:30  INFO 32360 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T11:43:50.761+05:30  INFO 32360 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-10-28T11:43:50.809+05:30  INFO 32360 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T11:43:51.254+05:30  INFO 32360 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T11:43:51.395+05:30  INFO 32360 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T11:43:51.891+05:30  INFO 32360 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T11:43:51.907+05:30  INFO 32360 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T11:43:52.116+05:30  WARN 32360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28T11:43:52.712+05:30  WARN 32360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: <redacted-ephemeral-dev-password>
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-28T11:43:52.730+05:30  INFO 32360 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-28T11:43:53.033+05:30  INFO 32360 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-10-28T11:43:53.034+05:30  INFO 32360 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-10-28T11:43:53.035+05:30  INFO 32360 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-10-28T11:43:53.064+05:30  INFO 32360 --- [           main] c.h.policyforge.config.CorrelationIdIT   : Started CorrelationIdIT in 5.403 seconds (process running for 7.667)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\wdarshana\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.7\byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /actuator/health
+       Parameters = {}
+          Headers = [X-Correlation-Id:"bad id "<script>""]
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/actuator/health?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /actuator/health
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/actuator/health?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /actuator/health
+       Parameters = {}
+          Headers = [X-Correlation-Id:"abc-123"]
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/actuator/health?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 7.112 s <<< FAILURE! -- in com.horizon.policyforge.config.CorrelationIdIT
+[ERROR] com.horizon.policyforge.config.CorrelationIdIT.replacesUnsafeCorrelationId -- Time elapsed: 0.749 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting not blank but was: null
+	at com.horizon.policyforge.config.CorrelationIdIT.replacesUnsafeCorrelationId(CorrelationIdIT.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.config.CorrelationIdIT.generatesCorrelationIdAndLogsItInEveryLine(CapturedOutput) -- Time elapsed: 0.019 s <<< FAILURE!
+java.lang.AssertionError: 
+[generated X-Correlation-Id header] 
+Expecting not blank but was: null
+	at com.horizon.policyforge.config.CorrelationIdIT.generatesCorrelationIdAndLogsItInEveryLine(CorrelationIdIT.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.config.CorrelationIdIT.echoesSuppliedCorrelationId(CapturedOutput) -- Time elapsed: 0.021 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: "abc-123"
+ but was: null
+	at com.horizon.policyforge.config.CorrelationIdIT.echoesSuppliedCorrelationId(CorrelationIdIT.java:55)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.horizon.policyforge.config.HealthEndpointIT
+2026-10-28T11:43:53.898+05:30  INFO 32360 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.horizon.policyforge.config.HealthEndpointIT]: HealthEndpointIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T11:43:53.900+05:30  INFO 32360 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.config.HealthEndpointIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-10-28T11:43:53.956+05:30  INFO 32360 --- [           main] c.h.policyforge.config.HealthEndpointIT  : Starting HealthEndpointIT using Java 21.0.12.1 with PID 32360 (started by wdarshana in C:\Users\wdarshana\Downloads\PolicyForge\backend)
+2026-10-28T11:43:53.957+05:30  INFO 32360 --- [           main] c.h.policyforge.config.HealthEndpointIT  : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T11:43:54.143+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T11:43:54.148+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 JPA repository interfaces.
+2026-10-28T11:43:54.400+05:30  INFO 32360 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-28T11:43:54.416+05:30  INFO 32360 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-28T11:43:54.417+05:30  INFO 32360 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-10-28T11:43:54.490+05:30  INFO 32360 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-28T11:43:54.490+05:30  INFO 32360 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 529 ms
+2026-10-28T11:43:54.583+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-10-28T11:43:54.586+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:d4b97b6c-33de-45e4-be5b-f802f4b13e90 user=SA
+2026-10-28T11:43:54.586+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-10-28T11:43:54.588+05:30  INFO 32360 --- [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:d4b97b6c-33de-45e4-be5b-f802f4b13e90 (H2 2.3)
+2026-10-28T11:43:54.595+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2026-10-28T11:43:54.595+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.000s)
+2026-10-28T11:43:54.595+05:30  WARN 32360 --- [           main] o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?
+2026-10-28T11:43:54.597+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2026-10-28T11:43:54.604+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2026-10-28T11:43:54.604+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Schema "PUBLIC" is up to date. No migration necessary.
+2026-10-28T11:43:54.618+05:30  INFO 32360 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T11:43:54.620+05:30  INFO 32360 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T11:43:54.633+05:30  INFO 32360 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T11:43:54.635+05:30  INFO 32360 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T11:43:54.653+05:30  INFO 32360 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T11:43:54.654+05:30  INFO 32360 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T11:43:54.669+05:30  WARN 32360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28T11:43:54.748+05:30  WARN 32360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: <redacted-ephemeral-dev-password>
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-28T11:43:54.749+05:30  INFO 32360 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-28T11:43:54.982+05:30  INFO 32360 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 57415 (http) with context path '/'
+2026-10-28T11:43:54.986+05:30  INFO 32360 --- [           main] c.h.policyforge.config.HealthEndpointIT  : Started HealthEndpointIT in 1.082 seconds (process running for 9.588)
+2026-10-28T11:43:55.131+05:30  INFO 32360 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-28T11:43:55.131+05:30  INFO 32360 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-28T11:43:55.132+05:30  INFO 32360 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.303 s <<< FAILURE! -- in com.horizon.policyforge.config.HealthEndpointIT
+[ERROR] com.horizon.policyforge.config.HealthEndpointIT.healthIsUpWithinOneSecond -- Time elapsed: 0.207 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: 200
+ but was: 401
+	at com.horizon.policyforge.config.HealthEndpointIT.healthIsUpWithinOneSecond(HealthEndpointIT.java:38)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.horizon.policyforge.config.PersistenceConfigIT
+2026-10-28T11:43:55.204+05:30  INFO 32360 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.horizon.policyforge.config.PersistenceConfigIT]: PersistenceConfigIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T11:43:55.208+05:30  INFO 32360 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.config.PersistenceConfigIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-10-28T11:43:55.234+05:30  INFO 32360 --- [           main] c.h.p.config.PersistenceConfigIT         : Starting PersistenceConfigIT using Java 21.0.12.1 with PID 32360 (started by wdarshana in C:\Users\wdarshana\Downloads\PolicyForge\backend)
+2026-10-28T11:43:55.235+05:30  INFO 32360 --- [           main] c.h.p.config.PersistenceConfigIT         : No active profile set, falling back to 1 default profile: "default"
+2026-10-28T11:43:55.388+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T11:43:55.391+05:30  INFO 32360 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 2 ms. Found 0 JPA repository interfaces.
+2026-10-28T11:43:55.454+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-10-28T11:43:55.457+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection conn20: url=jdbc:h2:mem:2e46f406-fbba-44ab-b46e-ea58190497e7 user=SA
+2026-10-28T11:43:55.457+05:30  INFO 32360 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-10-28T11:43:55.459+05:30  INFO 32360 --- [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:2e46f406-fbba-44ab-b46e-ea58190497e7 (H2 2.3)
+2026-10-28T11:43:55.462+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2026-10-28T11:43:55.462+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.000s)
+2026-10-28T11:43:55.462+05:30  WARN 32360 --- [           main] o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?
+2026-10-28T11:43:55.464+05:30  INFO 32360 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2026-10-28T11:43:55.470+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2026-10-28T11:43:55.471+05:30  INFO 32360 --- [           main] o.f.core.internal.command.DbMigrate      : Schema "PUBLIC" is up to date. No migration necessary.
+2026-10-28T11:43:55.482+05:30  INFO 32360 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T11:43:55.484+05:30  INFO 32360 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T11:43:55.493+05:30  INFO 32360 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T11:43:55.495+05:30  INFO 32360 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T11:43:55.512+05:30  INFO 32360 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T11:43:55.512+05:30  INFO 32360 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T11:43:55.529+05:30  WARN 32360 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-28T11:43:55.585+05:30  WARN 32360 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: <redacted-ephemeral-dev-password>
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-10-28T11:43:55.585+05:30  INFO 32360 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-10-28T11:43:55.601+05:30  INFO 32360 --- [           main] c.h.p.config.PersistenceConfigIT         : Started PersistenceConfigIT in 0.388 seconds (process running for 10.203)
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.412 s <<< FAILURE! -- in com.horizon.policyforge.config.PersistenceConfigIT
+[ERROR] com.horizon.policyforge.config.PersistenceConfigIT.flywayRunsWithValidateOnMigrate -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: "true"
+ but was: null
+	at com.horizon.policyforge.config.PersistenceConfigIT.flywayRunsWithValidateOnMigrate(PersistenceConfigIT.java:39)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.config.PersistenceConfigIT.hibernateValidatesOnly -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: "validate"
+ but was: null
+	at com.horizon.policyforge.config.PersistenceConfigIT.hibernateValidatesOnly(PersistenceConfigIT.java:32)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.horizon.policyforge.web.SecurityBaselineIT
+2026-10-28T11:43:55.618+05:30  INFO 32360 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.horizon.policyforge.web.SecurityBaselineIT]: SecurityBaselineIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-28T11:43:55.625+05:30  INFO 32360 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.web.SecurityBaselineIT
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /index.html
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/index.html?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /assets/app.js
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/assets/app.js?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/anything-else
+       Parameters = {}
+          Headers = [Authorization:"Basic <redacted-synthetic-credentials>"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/anything-else
+       Parameters = {}
+          Headers = [Authorization:"Basic <redacted-synthetic-credentials>"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/anything-else
+       Parameters = {}
+          Headers = [Authorization:"Basic <redacted-synthetic-credentials>"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/anything-else
+       Parameters = {}
+          Headers = [Authorization:"Basic <redacted-synthetic-credentials>"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/products/MOTOR/versions
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"2"]
+             Body = {}
+    Session Attrs = {org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN=org.springframework.security.web.csrf.DefaultCsrfToken@778be937}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 403
+    Error message = Forbidden
+          Headers = [X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/products
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/api/products?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/products/MOTOR/versions
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/api/products/MOTOR/versions?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"2"]
+             Body = {}
+    Session Attrs = {org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN=org.springframework.security.web.csrf.DefaultCsrfToken@6250d1d3}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 403
+    Error message = Forbidden
+          Headers = [X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/quotes/Q-00000000-0000-4000-8000-000000000000
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/api/quotes/Q-00000000-0000-4000-8000-000000000000?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /actuator/health
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {SPRING_SECURITY_SAVED_REQUEST=DefaultSavedRequest [http://localhost/actuator/health?continue]}
+
+Handler:
+             Type = null
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 401
+    Error message = Unauthorized
+          Headers = [WWW-Authenticate:"Basic realm="Realm"", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 16, Failures: 8, Errors: 1, Skipped: 0, Time elapsed: 0.650 s <<< FAILURE! -- in com.horizon.policyforge.web.SecurityBaselineIT
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.staticAssetsAreNotAuthenticated -- Time elapsed: 0.017 s <<< FAILURE!
+java.lang.AssertionError: 
+[static path status] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.staticAssetsAreNotAuthenticated(SecurityBaselineIT.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(String)[1] -- Time elapsed: 0.153 s <<< FAILURE!
+java.lang.AssertionError: 
+[authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(SecurityBaselineIT.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(String)[2] -- Time elapsed: 0.071 s <<< FAILURE!
+java.lang.AssertionError: 
+[authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(SecurityBaselineIT.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(String)[3] -- Time elapsed: 0.079 s <<< FAILURE!
+java.lang.AssertionError: 
+[authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(SecurityBaselineIT.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(String)[4] -- Time elapsed: 0.081 s <<< FAILURE!
+java.lang.AssertionError: 
+[authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.syntheticUsersAuthenticate(SecurityBaselineIT.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.usersCarryTheDocumentedRoles -- Time elapsed: 0.005 s <<< ERROR!
+org.springframework.security.core.userdetails.UsernameNotFoundException: user 'customer1' not found
+	at org.springframework.security.provisioning.InMemoryUserDetailsManager.loadUserByUsername(InMemoryUserDetailsManager.java:167)
+	at com.horizon.policyforge.web.SecurityBaselineIT.rolesOf(SecurityBaselineIT.java:129)
+	at com.horizon.policyforge.web.SecurityBaselineIT.usersCarryTheDocumentedRoles(SecurityBaselineIT.java:121)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.writesOnPublicPrefixesRequireAuthentication -- Time elapsed: 0.009 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<401> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:61)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:128)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:640)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.horizon.policyforge.web.SecurityBaselineIT.writesOnPublicPrefixesRequireAuthentication(SecurityBaselineIT.java:97)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.publicApiPathsAreNotAuthenticated -- Time elapsed: 0.006 s <<< FAILURE!
+java.lang.AssertionError: 
+[public path status] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+	at com.horizon.policyforge.web.SecurityBaselineIT.publicApiPathsAreNotAuthenticated(SecurityBaselineIT.java:61)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.healthIsPublic -- Time elapsed: 0.004 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<401>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:61)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:128)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:640)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.horizon.policyforge.web.SecurityBaselineIT.healthIsPublic(SecurityBaselineIT.java:47)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   CorrelationIdIT.echoesSuppliedCorrelationId:55 
+expected: "abc-123"
+ but was: null
+[ERROR]   CorrelationIdIT.generatesCorrelationIdAndLogsItInEveryLine:42 [generated X-Correlation-Id header] 
+Expecting not blank but was: null
+[ERROR]   CorrelationIdIT.replacesUnsafeCorrelationId:70 
+Expecting not blank but was: null
+[ERROR]   HealthEndpointIT.healthIsUpWithinOneSecond:38 
+expected: 200
+ but was: 401
+[ERROR]   PersistenceConfigIT.flywayRunsWithValidateOnMigrate:39 
+expected: "true"
+ but was: null
+[ERROR]   PersistenceConfigIT.hibernateValidatesOnly:32 
+expected: "validate"
+ but was: null
+[ERROR]   SecurityBaselineIT.healthIsPublic:47 Status expected:<200> but was:<401>
+[ERROR]   SecurityBaselineIT.publicApiPathsAreNotAuthenticated:61 [public path status] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.staticAssetsAreNotAuthenticated:74 [static path status] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.syntheticUsersAuthenticate:108 [authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.syntheticUsersAuthenticate:108 [authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.syntheticUsersAuthenticate:108 [authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.syntheticUsersAuthenticate:108 [authenticated request must get past the security filter] 
+Expecting actual:
+  401
+not to be in:
+  [401, 403]
+
+[ERROR]   SecurityBaselineIT.writesOnPublicPrefixesRequireAuthentication:97 Status expected:<401> but was:<403>
+[ERROR] Errors: 
+[ERROR]   SecurityBaselineIT.usersCarryTheDocumentedRoles:121->rolesOf:129 � UsernameNotFound user 'customer1' not found
+[INFO] 
+[ERROR] Tests run: 22, Failures: 14, Errors: 1, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.272 s
+[INFO] Finished at: 2026-10-28T11:43:57+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (default) on project policyforge: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+
+===== PER-TEST RESULTS (display names from XML reports) =====
+FAIL  CorrelationIdIT :: NFR-06 hardening: an unsafe X-Correlation-Id is replaced by a generated one, never echoed
+FAIL  CorrelationIdIT :: NFR-06.1: a request without X-Correlation-Id gets a generated header and the same correlationId in every JSON log line
+FAIL  CorrelationIdIT :: NFR-06.2: a supplied X-Correlation-Id abc-123 is echoed unchanged and used in the log lines
+FAIL  HealthEndpointIT :: NFR-07.1: GET /actuator/health returns 200 with {"status":"UP"} in under 1000 ms after startup
+FAIL  PersistenceConfigIT :: NFR-05 baseline: Flyway runs on startup against H2 with validate-on-migrate enabled
+FAIL  PersistenceConfigIT :: NFR-05 baseline: Hibernate only validates the schema (no auto-DDL) and keeps no session open in views
+FAIL  SecurityBaselineIT :: NFR-04 baseline: the SPA entry point and static assets are not behind authentication
+FAIL  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: customer1 authenticates with HTTP Basic
+FAIL  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: customer2 authenticates with HTTP Basic
+FAIL  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: underwriter1 authenticates with HTTP Basic
+FAIL  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: admin1 authenticates with HTTP Basic
+ERROR SecurityBaselineIT :: NFR-04 baseline: users carry the roles from app_spec section 2
+PASS  SecurityBaselineIT :: NFR-04 baseline: wrong credentials are rejected with 401
+FAIL  SecurityBaselineIT :: NFR-04 baseline: write methods on the public prefixes still require authentication
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/quotes is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/applications/mine is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/policies/mine is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/admin/dashboard is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/underwriting/queue is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/anything-else is 401
+FAIL  SecurityBaselineIT :: NFR-04 baseline: the public API paths are not behind authentication
+FAIL  SecurityBaselineIT :: NFR-04 baseline: anonymous /actuator/health is allowed
+TOTAL 22  PASS 7  FAIL/ERROR 15

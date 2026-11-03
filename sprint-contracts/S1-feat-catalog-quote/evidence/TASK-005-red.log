@@ -1,0 +1,316 @@
+TASK-005 RED run (2026-10-28). AC-01.1, AC-01.2, AC-01.3, AC-01.4, AC-01.5, AC-01.6, AC-01.7, AC-01.8 domain tests FAILING before the rating code exists.
+State at red: value types (PremiumBreakdown, PremiumFactor, RiskInputViolation, InvalidRiskInputException, Money, PolicyForgeDomainException) and
+the RatingAlgorithm interface exist so the tests compile; PremiumCalculator, RiskInputValidator, TermLifeRatingModel, MotorRatingModel and
+HouseholdRatingModel are stubs throwing UnsupportedOperationException("red: ...").
+Test classes: PremiumCalculatorTest (AC-01.1 x2, .2, .3, .4, .5 x2, .6, .7, .8 x3 = 12 tests), RiskInputValidatorTest (AC-01.7 x12 tests).
+Mapping: termLifePremium=AC-01.1, motorPremium=AC-01.2, householdPremium=AC-01.3, quotingIsDeterministic=AC-01.4, ageBandBoundary and
+everyBandEdgeIsInclusive=AC-01.5, ratesComeFromTheRuleSet=AC-01.6, *BreakdownRecomputes=AC-01.8, invalidInputsAreNotPriced and all RiskInputValidatorTest=AC-01.7.
+(invalidInputsAreNotPriced fails with an assertion rather than an error because the stub throws UnsupportedOperationException, not InvalidRiskInputException.)
+Command: ./mvnw -B -ntp test -Dtest='PremiumCalculatorTest,RiskInputValidatorTest' -Djacoco.skip=true
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] argLine set to empty
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 50 source files with javac [debug parameters release 21] to target\classes
+[INFO] /C:/Users/wdarshana/Downloads/PolicyForge/backend/src/main/java/com/horizon/policyforge/service/RuleSetJsonParser.java: C:\Users\wdarshana\Downloads\PolicyForge\backend\src\main\java\com\horizon\policyforge\service\RuleSetJsonParser.java uses or overrides a deprecated API.
+[INFO] /C:/Users/wdarshana/Downloads/PolicyForge/backend/src/main/java/com/horizon/policyforge/service/RuleSetJsonParser.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 83 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[ERROR] Tests run: 12, Failures: 1, Errors: 11, Skipped: 0, Time elapsed: 0.335 s <<< FAILURE! -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.modelIsSelectedByRatingModel -- Time elapsed: 0.192 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.modelIsSelectedByRatingModel(PremiumCalculatorTest.java:197)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.invalidInputsAreNotPriced -- Time elapsed: 0.080 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual throwable to be an instance of:
+  com.horizon.policyforge.domain.rating.InvalidRiskInputException
+but was:
+  java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.lambda$invalidInputsAreNotPriced$2(PremiumCalculatorTest.java:208)
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:63)
+	...(79 remaining lines not displayed - this can be changed with Assertions.setMaxStackTraceElementsDisplayed)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.invalidInputsAreNotPriced(PremiumCalculatorTest.java:209)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.termLifeBreakdownRecomputes -- Time elapsed: 0.006 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.termLifeBreakdownRecomputes(PremiumCalculatorTest.java:131)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.householdBreakdownRecomputes -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.householdBreakdownRecomputes(PremiumCalculatorTest.java:177)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.everyBandEdgeIsInclusive -- Time elapsed: 0.004 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.lambda$everyBandEdgeIsInclusive$1(PremiumCalculatorTest.java:110)
+	at java.base/java.util.Map.forEach(Map.java:733)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.everyBandEdgeIsInclusive(PremiumCalculatorTest.java:109)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.ageBandBoundary -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.ageBandBoundary(PremiumCalculatorTest.java:91)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.quotingIsDeterministic -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.quotingIsDeterministic(PremiumCalculatorTest.java:79)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.householdPremium -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.householdPremium(PremiumCalculatorTest.java:66)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.termLifePremium -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.termLifePremium(PremiumCalculatorTest.java:46)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.ratesComeFromTheRuleSet -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.ratesComeFromTheRuleSet(PremiumCalculatorTest.java:119)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.motorBreakdownRecomputes -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.motorBreakdownRecomputes(PremiumCalculatorTest.java:155)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.PremiumCalculatorTest.motorPremium -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.motorPremium(PremiumCalculatorTest.java:56)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[ERROR] Tests run: 12, Failures: 0, Errors: 12, Skipped: 0, Time elapsed: 0.062 s <<< FAILURE! -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.severalViolationsAtOnce -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.severalViolationsAtOnce(RiskInputValidatorTest.java:97)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.householdComponentViolationsStandAlone -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.householdComponentViolationsStandAlone(RiskInputValidatorTest.java:155)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.termLifeSumInsuredOutOfRange -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.termLifeSumInsuredOutOfRange(RiskInputValidatorTest.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.messagesDoNotEchoValues -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.messagesDoNotEchoValues(RiskInputValidatorTest.java:142)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.sumInsuredLimitsAreInclusive -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.sumInsuredLimitsAreInclusive(RiskInputValidatorTest.java:50)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.oneMissingInput -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.oneMissingInput(RiskInputValidatorTest.java:86)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.outOfBandInputsAreViolations -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.outOfBandInputsAreViolations(RiskInputValidatorTest.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.wronglyTypedValuesAreViolations -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.wronglyTypedValuesAreViolations(RiskInputValidatorTest.java:126)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.missingInputsAreEachReported -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.missingInputsAreEachReported(RiskInputValidatorTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.validInputsHaveNoViolations -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.validInputsHaveNoViolations(RiskInputValidatorTest.java:35)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.enumerationsAreChecked -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.enumerationsAreChecked(RiskInputValidatorTest.java:115)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputValidatorTest.sumInsuredFieldNameFollowsTheProduct -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.UnsupportedOperationException: red: RiskInputValidator.validate not implemented
+	at com.horizon.policyforge.domain.rating.RiskInputValidator.validate(RiskInputValidator.java:11)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.fields(RiskInputValidatorTest.java:29)
+	at com.horizon.policyforge.domain.rating.RiskInputValidatorTest.sumInsuredFieldNameFollowsTheProduct(RiskInputValidatorTest.java:63)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   PremiumCalculatorTest.invalidInputsAreNotPriced:209 
+Expecting actual throwable to be an instance of:
+  com.horizon.policyforge.domain.rating.InvalidRiskInputException
+but was:
+  java.lang.UnsupportedOperationException: red: PremiumCalculator.calculate not implemented
+	at com.horizon.policyforge.domain.rating.PremiumCalculator.calculate(PremiumCalculator.java:10)
+	at com.horizon.policyforge.domain.rating.PremiumCalculatorTest.lambda$invalidInputsAreNotPriced$2(PremiumCalculatorTest.java:208)
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:63)
+	...(79 remaining lines not displayed - this can be changed with Assertions.setMaxStackTraceElementsDisplayed)
+[ERROR] Errors: 
+[ERROR]   PremiumCalculatorTest.ageBandBoundary:91 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.everyBandEdgeIsInclusive:109->lambda$everyBandEdgeIsInclusive$1:110 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.householdBreakdownRecomputes:177 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.householdPremium:66 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.modelIsSelectedByRatingModel:197 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.motorBreakdownRecomputes:155 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.motorPremium:56 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.quotingIsDeterministic:79 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.ratesComeFromTheRuleSet:119 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.termLifeBreakdownRecomputes:131 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   PremiumCalculatorTest.termLifePremium:46 � UnsupportedOperation red: PremiumCalculator.calculate not implemented
+[ERROR]   RiskInputValidatorTest.enumerationsAreChecked:115->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.householdComponentViolationsStandAlone:155->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.messagesDoNotEchoValues:142 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.missingInputsAreEachReported:74->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.oneMissingInput:86->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.outOfBandInputsAreViolations:103->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.severalViolationsAtOnce:97->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.sumInsuredFieldNameFollowsTheProduct:63->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.sumInsuredLimitsAreInclusive:50 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.termLifeSumInsuredOutOfRange:43->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.validInputsHaveNoViolations:35 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[ERROR]   RiskInputValidatorTest.wronglyTypedValuesAreViolations:126->fields:29 � UnsupportedOperation red: RiskInputValidator.validate not implemented
+[INFO] 
+[ERROR] Tests run: 24, Failures: 1, Errors: 23, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.176 s
+[INFO] Finished at: 2026-10-28T12:16:27+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project policyforge: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

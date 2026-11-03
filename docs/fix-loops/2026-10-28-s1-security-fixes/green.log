@@ -1,0 +1,73 @@
+================================================================================
+GREEN — 2026-10-28 — S1 security fix loop (feat/catalog-quote)
+Command (from backend/): ./mvnw verify   -> BUILD SUCCESS (surefire 99/0 fail, failsafe 63/0 fail,
+JaCoCo check-overall + check-domain met, frontend npm ci + build via frontend-maven-plugin)
+Also: python -I .claude/skills/premium-calc-evaluator/premium_check.py spec-examples -> all PASS
+      python .claude/hooks/tests/test_hooks.py -> ALL PASSED
+================================================================================
+Fix -> test(s) now passing
+- F-1 / NFR-04.3 (consumes=application/json on state-changing endpoints, CORS unconfigured)
+    RuleSetPublishIT.publishAsTextPlainIsUnsupportedMediaType      (NFR-04.3.1, was 201 -> now 415)
+    QuoteApiIT.quoteAsTextPlainIsUnsupportedMediaType               (NFR-04.3.2, 415, nothing stored)
+- F-2 / AC-01.9 (domain-declared inputs; unknown keys -> 400 errors[] per key; nothing stored)
+    QuoteApiIT.unknownRiskInputKeysAreRejectedNamingEachKey         (was 201 -> now 400 naming BMI, aadhaar)
+    RiskInputSchemaTest (5 tests: declared inputs per model, unknown keys per product, allow-list view)
+- F-2 / NFR-04.2 (public GET riskInputs built from allow-list = declared minus health)
+    QuoteApiIT.publicQuoteReadRiskInputsAreAnExactAllowList         (strengthened red: stored BMI/aadhaar/medicalHistory
+                                                                     -> now exactly {age, smoker, sumInsured, termYears})
+    QuoteApiIT.publicQuoteReadOmitsHealthInputs
+    RiskInputSchemaTest.publicViewIsAnAllowList
+- F-3 / AC-01.9 (16 KB cap on anonymous POST /api/quotes -> 413 problem+json, nothing stored, chunked too)
+    QuoteApiIT.oversizedQuoteBodyIsRejected                          (was 201 -> now 413)
+    QuoteBodySizeLimitFilterTest.chunkedOversizedBodyIsRejected      (no Content-Length)
+    QuoteBodySizeLimitFilterTest.declaredOversizedBodyIsRejected
+    QuoteBodySizeLimitFilterTest.bodyAtTheCapIsPassedOn
+- F-4 (fixed problem detail per error type; 404 never echoes code/date/path)
+    SecurityBaselineIT.notFoundDetailDoesNotEchoInput                (was "No product ZZQINJECT" -> fixed text)
+- F-5 (evidence-log credential redaction) — fixed earlier by orchestrator in the archive; no code change.
+- F-6 (explicit public matchers GET /api/products and /api/products/*/versions)
+    SecurityBaselineIT.unlistedProductsPathIsNotAnonymous            (was 404 -> now 401)
+    ProductCatalogReadIT, SecurityBaselineIT (public catalog reads still 200 anonymously)
+================================================================================
+Maven summary (per-class counts, results, coverage checks)
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.495 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.259 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.179 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.377 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.640 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.193 s -- in com.horizon.policyforge.web.QuoteBodySizeLimitFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.428 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Results:
+[INFO] Tests run: 99, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.273 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.746 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.125 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.820 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.867 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.722 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.944 s -- in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.850 s -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.523 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.611 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Results:
+[INFO] Tests run: 63, Failures: 0, Errors: 0, Skipped: 0
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] All coverage checks have been met.
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Total time:  51.808 s
+[INFO] Finished at: 2026-10-28T15:34:16+05:30

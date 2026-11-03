@@ -1,0 +1,50 @@
+
+> policyforge-frontend@0.1.0 test
+> vitest run --coverage --run
+
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90mC:/Users/wdarshana/Downloads/PolicyForge/frontend[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [31m❯[39m src/pages/QuotePage.test.tsx [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3077[2mms[22m[39m
+   [33m[2m✓[22m[39m QuotePage[2m > [22mAC-01.1: shows the premium 6850.00 verbatim with rule version 1 [33m 718[2mms[22m[39m
+[31m   [31m×[31m QuotePage[2m > [22mAC-01.11: health declarations are normalised to codes[39m[33m 612[2mms[22m[39m
+[31m     → [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /upper-case/i[31m
+Received:
+[31m  Health declarations (comma separated, may be empty)[31m[39m
+   [33m[2m✓[22m[39m QuotePage[2m > [22mAC-01.11: an empty health declarations field sends an empty array [33m 674[2mms[22m[39m
+   [33m[2m✓[22m[39m QuotePage[2m > [22mAC-01.7: shows each per-field error next to the input it names [33m 313[2mms[22m[39m
+   [32m✓[39m QuotePage[2m > [22mAC-01.7: lists an error whose field matches no input in the form summary[32m 153[2mms[22m[39m
+   [33m[2m✓[22m[39m QuotePage[2m > [22mAC-01.8: renders every breakdown factor returned, in order [33m 605[2mms[22m[39m
+ [32m✓[39m src/pages/QuotePageForm.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1067[2mms[22m[39m
+   [33m[2m✓[22m[39m QuotePage dynamic form[2m > [22mAC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected [33m 766[2mms[22m[39m
+ [32m✓[39m src/noMoneyArithmetic.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/pages/QuotePage.test.tsx[2m > [22mQuotePage[2m > [22mAC-01.11: health declarations are normalised to codes
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /upper-case/i[31m
+Received:
+[31m  Health declarations (comma separated, may be empty)[31m[39m
+[36m [2m❯[22m src/pages/QuotePage.test.tsx:[2m113:19[22m[39m
+    [90m111| [39m    [35mawait[39m [34mfillTermLife[39m(user)[33m;[39m
+    [90m112| [39m    [35mconst[39m field [33m=[39m screen[33m.[39m[34mgetByTestId[39m([32m'field-healthDeclarations'[39m)[33m;[39m
+    [90m113| [39m    [34mexpect[39m(field)[33m.[39m[34mtoHaveTextContent[39m([36m/upper-case/i[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m114| [39m    [34mexpect[39m(field)[33m.[39m[34mtoHaveTextContent[39m([36m/max 10/i[39m)[33m;[39m
+    [90m115| [39m    await user.type(screen.getByTestId('input-healthDeclarations'), 'd…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 15:55:30
+[2m   Duration [22m 5.60s[2m (transform 136ms, setup 190ms, collect 317ms, tests 4.15s, environment 495ms, prepare 82ms)[22m
+
