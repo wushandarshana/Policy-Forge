@@ -1,0 +1,109 @@
+
+> policyforge-frontend@0.1.0 test
+> vitest run --coverage --reporter=verbose
+
+
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+      Coverage enabled with v8
+
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.1: the type selector offers all three types and each has its own form fields 366ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.5: the relationship select offers exactly the five spec values 125ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.2: a HOUSEHOLD policy shows the building and contents fields instead of newSumInsured 102ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-10.4: shows a fixed not-found message when the policy does not exist 13ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an address change posts exactly the C4 body, with no effectiveDate when none was given, then navigates 592ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an optional effective date is sent as effectiveDate 794ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a blank required field is flagged at the input and nothing is posted 330ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a 400 errors[] entry shows next to the input whose dotted path matches its field 581ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.4: NOMINEE_NOT_SUPPORTED is shown as a fixed message 544ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_SHARE_EXCEEDED is shown, with the share error at the share input, and the body carries an integer share 529ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_LIMIT_REACHED is shown as a fixed message 559ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_RELATIONSHIP_INVALID is shown as a fixed message 499ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_OUT_OF_TERM is shown as a fixed message and the date error sits at the date input 812ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_BEFORE_LAST_ENDORSEMENT is shown as a fixed message and the date error sits at the date input 673ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: a lost race (409 POLICY_UPDATE_CONFLICT) shows a fixed message and does not navigate 614ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-10.2: a 409 invalid-policy-state is shown as a fixed message and does not navigate 590ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: Confirm stays disabled until a preview succeeds, then shows 9490.00 and 1330.85 exactly as received 566ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: confirming after a preview posts exactly the C4 body and navigates 642ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: editing any input clears the preview and disables Confirm again 718ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a HOUSEHOLD preview and confirm send only the components that were filled in 418ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a blank sum-insured is flagged at the input and no preview is requested 157ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a 400 SUM_INSURED_OUT_OF_RANGE on preview shows at the input and leaves Confirm disabled 421ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: SUM_INSURED_UNCHANGED is shown as a fixed message 372ms
+ ✓ src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-10.2: a 409 invalid-policy-state on preview is shown as a fixed message 356ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.1: posts exactly the C1 body with the Basic header and reports the new application ID 1456ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: shows each errors[] entry next to its PAN, Aadhaar and postcode input and does not navigate 1361ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: client-side checks cover required fields only and block the request 267ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.3: shows the fixed QUOTE_EXPIRED message 1478ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.4: shows the fixed KYC_AGE_MISMATCH message at the date of birth input 1479ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.6: shows the fixed QUOTE_NOT_FOUND message 1452ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.7: shows the fixed QUOTE_ALREADY_APPLIED message after a 409 1466ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.1: shows the premium 6850.00 verbatim with rule version 1 687ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: health declarations are normalised to codes 1445ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: an empty health declarations field sends an empty array 760ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: shows each per-field error next to the input it names 300ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: lists an error whose field matches no input in the form summary 138ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.8: renders every breakdown factor returned, in order 687ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.1: lists queue rows in API order and shows the masked values exactly as received 111ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.2: approve posts the exact decision body and shows the new status 715ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.3: the admin override posts the exact override body 757ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 comment error at the comment field 486ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 reasonCode error at the reason code field and checks only required fields locally 513ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.5: shows a fixed message after a 409 672ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: offers reason codes as U-10 pairs them and clears the code when the decision changes 302ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: the override form offers only UW-OVR-001 and UW-OVR-002 93ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: after a 403 on includeDeclined=true shows the plain queue and never renders Override 58ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: shows declined cases and the Override action when includeDeclined=true returns 200 109ms
+ ✓ src/App.test.tsx > App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate 2033ms
+ ✓ src/App.test.tsx > App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in 520ms
+ ✓ src/App.test.tsx > App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it 596ms
+ ✓ src/App.test.tsx > App shell routing > AC-01.1: the default route is the public Quote page and needs no sign-in 10ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a signed-in quote request carries the Basic Authorization header 675ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a signed-out quote request carries no Authorization header 689ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: product calls and GET /api/quotes/{id} stay credential-free even when signed in 2ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: createQuote attaches the credentials only when it is given them 2ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a 401 on quote creation shows a fixed sign-in-again message and is never retried anonymously 682ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.1: TERM_LIFE form shows exactly the six quote-spec risk inputs 90ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR form shows exactly the six quote-spec risk inputs 94ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.3: HOUSEHOLD form shows exactly the seven quote-spec risk inputs 110ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected 750ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an APPROVED application posts exactly {} when the date is blank and hands the policy number to the callback 71ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a chosen effective date is posted as { effectiveDate } 280ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a 400 effectiveDate error shows at the date field and does not navigate 266ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.3: a 409 is shown as a fixed message 62ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.3: the issue panel is offered for APPROVED applications only 18ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an ISSUED application shows the Issued state with a link to My Policies and no issue form 15ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: the sign-in form holds credentials in memory only, never in storage, cookies or the URL 510ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: protected calls carry the Basic Authorization header and public calls do not 1ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: the header shows the number, status badge, product, dates, sum insured, premium and next due date 11ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: shows a fixed not-found message on a 404 and no policy details 13ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.1: the Versions tab shows v1 with the old address and v2 with the new address 22ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.6: the Endorsements tab lists sequence 1, 2, 3 in API order, linked to versions 2, 3, 4 65ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Status tab lists the transitions in API order with a dash for the null from-status, and the badge equals the policy status 94ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Refunds tab shows an empty state 54ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ACTIVE policy 16ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ENDORSED policy 16ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force RENEWED policy 15ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a CANCELLED policy 15ms
+ ✓ src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a LAPSED policy 15ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: renders the matching application from the caller list, with no KYC fields 21ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: shows a fixed not-found message for an ID that is not in the list 5ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.1: shows APPROVED, AUTO_BIND and UW-OK with its description 8ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.3: lists DECLINE reasons UW-TL-001 then UW-TL-004 in API order 16ms
+ ✓ src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: renders every C2 field of every policy verbatim, in API order, with a link to the detail page 17ms
+ ✓ src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows an empty state when the caller has no policies 11ms
+ ✓ src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows a fixed error message when the list cannot be loaded 15ms
+ ✓ src/noMoneyArithmetic.test.ts > money handling > NFR-01: no Number(), parseFloat or unary plus in production sources 2ms
+
+ Test Files  13 passed (13)
+      Tests  87 passed (87)
+   Start at  19:18:44
+   Duration  39.50s (transform 553ms, setup 320ms, collect 1.34s, tests 36.08s, environment 726ms, prepare 114ms)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 95.9% ( 2107/2197 )
+Branches     : 86.83% ( 475/547 )
+Functions    : 96.06% ( 122/127 )
+Lines        : 95.9% ( 2107/2197 )
+================================================================================

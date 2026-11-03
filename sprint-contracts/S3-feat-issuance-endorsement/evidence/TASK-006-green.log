@@ -1,0 +1,89 @@
+=== npm test (vitest, coverage) ===
+ Test Files  13 passed (13)
+      Tests  94 passed (94)
+Statements   : 95.97% ( 2148/2238 )
+Branches     : 87.36% ( 491/562 )
+Functions    : 96.12% ( 124/129 )
+Lines        : 95.97% ( 2148/2238 )
+
+=== npm run build: tsc --noEmit + vite build passed (no TypeScript errors) ===
+
+=== Playwright full suite, run 1 (desktop-chromium + mobile-chromium, --update-snapshots=none) ===
+  28 passed 
+  ok 10 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK 
+  ok  3 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok  1 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate 
+  ok  9 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:126:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  ok  4 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:152:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  ok  8 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:171:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  ok  2 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:37:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  ok  6 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:71:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  ok  5 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:91:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  ok  7 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 11 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  ok 12 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 13 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 14 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 17 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK 
+  ok 16 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 18 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate 
+  ok 20 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:126:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  ok 21 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:152:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  ok 23 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:171:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  ok 22 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:37:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  ok 19 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:71:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  ok 15 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:91:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  ok 24 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 25 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  ok 26 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 27 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 28 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+
+=== Playwright full suite, run 2 (desktop-chromium + mobile-chromium, --update-snapshots=none) ===
+  28 passed 
+  ok  9 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK 
+  ok  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok  1 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate 
+  ok  6 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:126:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  ok  8 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:152:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  ok 11 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:171:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  ok  5 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:37:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  ok  3 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:71:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  ok  7 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:91:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  ok  4 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 10 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  ok 12 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 13 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 14 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 17 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK 
+  ok 16 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 15 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate 
+  ok 21 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:126:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  ok 22 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:152:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  ok 23 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:171:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  ok 19 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:37:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  ok 18 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:71:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  ok 20 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:91:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  ok 24 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 28 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  ok 25 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 26 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 27 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+
+=== ./mvnw -o verify (SPA packaged, frontend not skipped) ===
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Tests run: 396, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 321, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Total time:  02:01 min
+
+=== python scripts/ac_audit.py --offline --no-write ===
+NOT COVERED: AC-07.1, AC-07.2, AC-07.3, AC-07.4, AC-07.5, AC-07.6, AC-08.1, AC-08.2, AC-08.3, AC-08.4, AC-08.5, AC-11.1, AC-11.2, AC-11.3, AC-11.4, AC-11.5
+**Covered 65 / 81 ACs (80%)** � parent-only 0 � not covered (incl. parent-only) 16
+
+=== Evidence summary ===
+Green for AC-01.13, AC-05.1, AC-06.1, AC-06.2, AC-06.5, AC-06.6 (Playwright, both projects, twice) and AC-05.1, AC-06.1 (Vitest routing in App.test.tsx).
+Sprint-wide: AC-01.12, AC-03.9, AC-05.2, AC-05.3, AC-05.4, AC-06.3, AC-06.4, AC-06.7, AC-10.1, AC-10.2, AC-10.3, AC-10.4, NFR-03.1, NFR-04.1, NFR-04.3, NFR-04.4 stay green in the full verify above.

@@ -1,0 +1,91 @@
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+ ❯ src/App.test.tsx (11 tests | 7 failed) 10666ms
+     → Unable to find an element by: [data-testid="signin-form"]
+     → Unable to find an element by: [data-testid="signin-username"]
+     → Unable to find an element by: [data-testid="nav-policies"]
+     → expected '#/applications/A-0b1c2d3e-4f50-4a61-8…' to be '#/policies/PF-TL-2026-000001' // Object.is equality
+     → Unable to find an element by: [data-testid="signin-username"]
+     → Unable to find an element by: [data-testid="signin-username"]
+     → Unable to find an element by: [data-testid="signin-username"]
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-05.1: #/policies renders My Policies behind the sign-in gate
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:135:25
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-05.1: #/policies/<number> renders that policy detail
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ signInAs src/App.test.tsx:42:32
+ ❯ src/App.test.tsx:147:11
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-05.1: the My Policies nav link reaches the list and a card link opens the detail page
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:159:35
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-05.1: issuing from the Application Status page navigates to the new policy detail page
+ ❯ src/App.test.tsx:184:54
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-06.1: #/policies/<number>/endorse renders the Endorse page for that policy
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ signInAs src/App.test.tsx:42:32
+ ❯ src/App.test.tsx:194:11
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-06.1: the detail Endorse link opens the Endorse route and a confirmed endorsement returns to the detail page
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ signInAs src/App.test.tsx:42:32
+ ❯ src/App.test.tsx:213:11
+ FAIL  src/App.test.tsx > App shell routing for the policy pages (C9) > AC-06.1: an unknown policy route segment is still a gated detail page, not the Quote page
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ signInAs src/App.test.tsx:42:32
+ ❯ src/App.test.tsx:231:11
+ Test Files  1 failed | 12 passed (13)
+      Tests  7 failed | 87 passed (94)
+
+=== Playwright (policy-lifecycle.spec.ts, desktop-chromium + mobile-chromium), red run, routes not mounted ===
+    Error: expect(page).toHaveURL(expected) failed
+    Error: locator.click: Test timeout of 15000ms exceeded.
+    Error: locator.fill: Test timeout of 15000ms exceeded.
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+    [desktop-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+    [mobile-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  1) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  10) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  11) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  12 failed
+  12) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  2) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  3) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  4) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added 
+  5) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 
+  6) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not 
+  7) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page 
+  8) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one 
+  9) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment 
+  x   1 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page (7.3s)
+  x   2 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one (15.1s)
+  x   3 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 (15.1s)
+  x   4 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:33:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page (7.5s)
+  x   5 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment (15.1s)
+  x   6 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not (15.1s)
+  x   7 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:67:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one (15.1s)
+  x   8 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:87:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment (15.1s)
+  x   9 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added (15.1s)
+  x  10 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:122:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added (15.1s)
+  x  11 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:148:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 (15.1s)
+  x  12 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:167:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not (15.1s)
+
+=== Evidence summary ===
+Failing tests name AC-05.1, AC-06.1, AC-06.2, AC-06.5, AC-06.6, AC-01.13 (E2E, both projects) and AC-05.1, AC-06.1 (Vitest routing).
+Cause: App.tsx does not mount #/policies, #/policies/<number> or #/policies/<number>/endorse and has no nav-policies link.
