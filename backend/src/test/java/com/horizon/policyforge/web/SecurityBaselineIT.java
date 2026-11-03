@@ -1,7 +1,6 @@
 package com.horizon.policyforge.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -87,7 +86,7 @@ class SecurityBaselineIT {
     void otherApiPathsRequireAuthentication(String path) throws Exception {
         mvc.perform(get(path))
                 .andExpect(status().isUnauthorized())
-                .andExpect(header().string("WWW-Authenticate", startsWith("Basic")));
+                .andExpect(header().doesNotExist("WWW-Authenticate"));
     }
 
     @Test

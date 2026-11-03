@@ -17,6 +17,15 @@ public final class PolicyNumberFormat {
     }
 
     /**
+     * The sequence that follows {@code lastValue}, the last one a counter handed out.
+     *
+     * @throws PolicyNumberSequenceExhaustedException when {@code lastValue} is already {@link #MAX_SEQUENCE}
+     */
+    public static int nextSequence(int lastValue) {
+        return lastValue + 1;
+    }
+
+    /**
      * @throws InvalidPolicyNumberException for an unknown product, a year that is not 4 digits or a sequence outside
      *                                      1 to 999999
      */

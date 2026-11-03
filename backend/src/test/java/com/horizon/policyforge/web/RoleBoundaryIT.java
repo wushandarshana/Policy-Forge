@@ -133,7 +133,7 @@ class RoleBoundaryIT {
 
         assertThat(result.getResponse().getStatus()).isEqualTo(401);
         assertThat(result.getResponse().getContentType()).startsWith("application/problem+json");
-        assertThat(result.getResponse().getHeader("WWW-Authenticate")).startsWith("Basic");
+        assertThat(result.getResponse().getHeader("WWW-Authenticate")).isNull();
     }
 
     @ParameterizedTest(name = "NFR-04.1: {0} with a wrong password is 401")

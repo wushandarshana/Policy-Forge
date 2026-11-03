@@ -62,4 +62,20 @@ class PolicyNumberFormatTest {
         assertThatThrownBy(() -> PolicyNumberFormat.format("TERM_LIFE", 10_000, 1))
                 .isInstanceOf(InvalidPolicyNumberException.class);
     }
+
+    @ParameterizedTest(name = "AC-05.2: the sequence after {0} is {1}")
+    @Tag("AC-05.2")
+    @CsvSource({"0,1", "1,2", "999997,999998", "999998,999999"})
+    void nextSequenceCountsUpToTheLastNumber(int lastValue, int expected) {
+        assertThat(PolicyNumberFormat.nextSequence(lastValue)).isEqualTo(expected);
+    }
+
+    @ParameterizedTest(name = "AC-05.2: a counter at {0} is exhausted and hands out no number")
+    @Tag("AC-05.2")
+    @ValueSource(ints = {999_999, 1_000_000})
+    void nextSequenceRefusesAnExhaustedCounter(int lastValue) {
+        assertThatThrownBy(() -> PolicyNumberFormat.nextSequence(lastValue))
+                .isInstanceOf(PolicyNumberSequenceExhaustedException.class)
+                .isInstanceOf(PolicyForgeDomainException.class);
+    }
 }

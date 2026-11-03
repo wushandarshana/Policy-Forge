@@ -47,7 +47,7 @@ class EndorsementSecurityIT extends EndorsementTestSupport {
     }
 
     @Test
-    @DisplayName("NFR-04.1: an anonymous endorse or preview of a real policy is 401 with a Basic challenge, and writes nothing")
+    @DisplayName("NFR-04.1: an anonymous endorse or preview of a real policy is 401 with no Basic challenge, and writes nothing")
     void anonymousRequestsAreRefused() throws Exception {
         String number = issued("TERM_LIFE");
         EndorsementRows.Snapshot before = snapshot(number);
@@ -59,7 +59,7 @@ class EndorsementSecurityIT extends EndorsementTestSupport {
 
             assertThat(result.getResponse().getStatus()).as(path).isEqualTo(401);
             assertThat(result.getResponse().getContentType()).startsWith("application/problem+json");
-            assertThat(result.getResponse().getHeader("WWW-Authenticate")).startsWith("Basic");
+            assertThat(result.getResponse().getHeader("WWW-Authenticate")).isNull();
         }
         assertThat(snapshot(number)).as("nothing written").isEqualTo(before);
     }

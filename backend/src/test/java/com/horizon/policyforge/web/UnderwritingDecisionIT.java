@@ -295,6 +295,43 @@ class UnderwritingDecisionIT {
     }
 
     @Test
+    @DisplayName("AC-09.4: a decision body with an unknown key of 5000 characters is a 400 naming the key cut to its first 64 characters, and nothing changes")
+    void aLongUnknownKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
+        String id = referred();
+        Snapshot before = ApplicationRows.snapshot(jdbc, id);
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        Map<String, Object> body = decisionBody("APPROVE", "UW-MAN-001", GOOD_COMMENT);
+        body.put(longKey, "x");
+
+        MvcResult result = api.decide("underwriter1", id, body);
+
+        JsonNode problem = problemOf(result, 400);
+        assertThat(errorFields(problem)).containsExactly(longKey.substring(0, 64));
+        assertThat(problem.get("errors").get(0).get("message").asText()).isEqualTo("is not an accepted field");
+        assertThat(result.getResponse().getContentAsString()).doesNotContain(longKey.substring(0, 65));
+        assertUnchanged(before, id);
+    }
+
+    @Test
+    @DisplayName("AC-09.4: a decision body with unknown keys holding <, >, quotes and spaces is a 400 naming each with those characters replaced by an underscore, and nothing changes")
+    void unknownKeysAreEchoedSanitised() throws Exception {
+        String id = referred();
+        Snapshot before = ApplicationRows.snapshot(jdbc, id);
+        Map<String, Object> body = decisionBody("APPROVE", "UW-MAN-001", GOOD_COMMENT);
+        body.put("<a b=\"c\" d='e'>", "x");
+        body.put("a b", "x");
+        body.put("a<b", "x");
+
+        MvcResult result = api.decide("underwriter1", id, body);
+
+        JsonNode problem = problemOf(result, 400);
+        assertThat(errorFields(problem)).containsExactly("_a_b__c__d__e__", "a_b");
+        assertThat(result.getResponse().getContentAsString()).doesNotContain("<").doesNotContain(">")
+                .doesNotContain("'").doesNotContain("a b");
+        assertUnchanged(before, id);
+    }
+
+    @Test
     @DisplayName("AC-09.4: a missing or unrecognised decision is a 400 naming decision, and nothing changes")
     void invalidDecisionValueIsRejected() throws Exception {
         String id = referred();
