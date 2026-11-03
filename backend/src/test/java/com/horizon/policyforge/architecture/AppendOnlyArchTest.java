@@ -218,6 +218,82 @@ class AppendOnlyArchTest {
         repositoryHasNoDeleteOrUpdate("ApplicationRepository", "NFR-02").check(ArchSupport.production());
     }
 
+    // ---- Policy persistence (AC-05.4, NFR-02): versions and transitions are append-only, the policy and its terms
+    // ---- change only through one intention-revealing method each ----
+
+    @Test
+    @DisplayName("NFR-02: the policy version entity exists, is an immutable JPA entity and has no public setters")
+    void policyVersionEntityIsImmutable() {
+        entityIsImmutable("PolicyVersionEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("PolicyVersionEntity", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy version repository exists and has no delete or update methods")
+    void policyVersionRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyVersionRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyVersionRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy status transition entity exists, is an immutable JPA entity and has no public setters")
+    void policyStatusTransitionEntityIsImmutable() {
+        entityIsImmutable("PolicyStatusTransitionEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("PolicyStatusTransitionEntity", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy status transition repository exists and has no delete or update methods")
+    void policyStatusTransitionRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyStatusTransitionRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyStatusTransitionRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy entity has no public setters and its status and version change only through applyTransition")
+    void policyEntityChangesOnlyThroughApplyTransition() {
+        entityHasNoPublicSetters("PolicyEntity", "NFR-02").check(ArchSupport.production());
+
+        assertThat(publicMutators("com.horizon.policyforge.repository.PolicyEntity"))
+                .as("public methods other than getters: one factory and one transition that applies PolicyStateMachine")
+                .containsExactly("applyTransition", "issue");
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy repository exists and has no delete or update methods")
+    void policyRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy term entity has no public setters and changes only through markPaid")
+    void policyTermEntityChangesOnlyThroughMarkPaid() {
+        entityHasNoPublicSetters("PolicyTermEntity", "NFR-02").check(ArchSupport.production());
+
+        assertThat(publicMutators("com.horizon.policyforge.repository.PolicyTermEntity"))
+                .as("public methods other than getters: one factory and the paid flag")
+                .containsExactly("markPaid", "of");
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy term repository exists and has no delete or update methods")
+    void policyTermRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyTermRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyTermRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    /** The public methods of a production class that are neither getters nor toString, sorted. */
+    private static List<String> publicMutators(String className) {
+        JavaClass entity = ArchSupport.production().get(className);
+        return entity.getMethods().stream()
+                .filter(method -> method.getModifiers().contains(JavaModifier.PUBLIC))
+                .map(JavaMethod::getName)
+                .filter(name -> !name.startsWith("get") && !name.equals("toString"))
+                .sorted()
+                .toList();
+    }
+
     // ---- Negative fixtures: every rule must reject a deliberately violating class ----
 
     @Test
