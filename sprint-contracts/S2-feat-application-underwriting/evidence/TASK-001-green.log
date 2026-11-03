@@ -1,0 +1,58 @@
+# TASK-001 green: ./mvnw verify -Dskip.frontend=true (BUILD SUCCESS, ArchUnit + JaCoCo checks met)
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.115 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.550 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.360 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.216 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.713 s -- in com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.140 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.horizon.policyforge.domain.underwriting.ConditionEvaluatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingReasonCodeMatrixTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.801 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.090 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 146, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 75, Failures: 0, Errors: 0, Skipped: 0
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] All coverage checks have been met.
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+
+## AC display names executed (surefire reports)
+"AC-04.6: the matrix has one row for each of the 13 rules of the three v1 files"
+"AC-04.3: TERM_LIFE age 62 and BMI 37 is DECLINE with UW-TL-001 and UW-TL-004, decline beating refer"
+"AC-04.4: MOTOR with 3 claims is DECLINE with UW-MO-001"
+"AC-04.4: HOUSEHOLD with TIMBER construction is MANUAL_REVIEW with UW-HH-003"
+"AC-04.6: reasons come back sorted by code whatever the order of the rules in the rule set"
+"AC-04.1: TERM_LIFE age 35, non-smoker, BMI 24, no declarations, SI 5,000,000.00 is AUTO_BIND with UW-OK"
+"AC-04.5: with a TERM_LIFE v2 whose UW-TL-001 threshold is 65, age 62 is not DECLINE and the result references version 2"
+"AC-04.2: TERM_LIFE smoker with SI 12,000,000.00 is MANUAL_REVIEW with UW-TL-002"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-001 (TERM_LIFE) gives DECLINE with [UW-TL-001]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-002 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-002]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-003 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-003]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-004 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-004]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-005 (TERM_LIFE) gives DECLINE with [UW-TL-004, UW-TL-005]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-001 (MOTOR) gives DECLINE with [UW-MO-001]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-002 (MOTOR) gives DECLINE with [UW-MO-002]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-003 (MOTOR) gives MANUAL_REVIEW with [UW-MO-003]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-004 (MOTOR) gives MANUAL_REVIEW with [UW-MO-004]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-001 (HOUSEHOLD) gives DECLINE with [UW-HH-001]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-002 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-002]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-003 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-003]"
+"eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-004 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-004]"

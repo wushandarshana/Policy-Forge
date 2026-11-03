@@ -61,14 +61,22 @@ public class QuoteService {
         this.clock = clock;
     }
 
+    /** Prices and stores an anonymous quote (no owner). */
+    @Transactional
+    public QuoteResult create(String productCode, Map<String, Object> riskInputs) {
+        return create(productCode, riskInputs, null);
+    }
+
     /**
      * Prices and stores a quote.
      *
+     * @param ownerId the CUSTOMER whose valid credentials accompanied the request, or null for an anonymous quote
+     *                (P-8). The owner is recorded at insert and never changes.
      * @throws ValidationFailedException when the request is incomplete or any risk input is missing or invalid
      * @throws NoActiveRuleSetException  (404) when the product is unknown or has no version in force today
      */
     @Transactional
-    public QuoteResult create(String productCode, Map<String, Object> riskInputs) {
+    public QuoteResult create(String productCode, Map<String, Object> riskInputs, String ownerId) {
         List<FieldViolation> shape = new ArrayList<>();
         if (productCode == null || productCode.isBlank()) {
             shape.add(new FieldViolation("productCode", "is required"));
@@ -102,7 +110,8 @@ public class QuoteService {
                         .toList()),
                 write(riskInputs),
                 today.plusDays(rules.lifecycle().quoteValidityDays()),
-                Instant.now(clock)));
+                Instant.now(clock),
+                ownerId));
         LOG.info("Quote created quoteId={} productCode={} ruleVersion={}", saved.getQuoteId(), saved.getProductCode(),
                 saved.getRuleVersion());
         return toResult(saved);

@@ -67,6 +67,19 @@ public final class RuleSetFixtures {
         return render(tree);
     }
 
+    /**
+     * TERM_LIFE v1 edited to a policy fee of 1000.00 instead of 250.00, so the clean AC-04.1 profile quotes 7600.00
+     * instead of 6850.00 (AC-06.2: an endorsement keeps the rule version its policy was priced with). It is a test
+     * fixture, never a shipped rule file, and every test that publishes it does so in its own application context.
+     */
+    public static String termLifeV2PolicyFee1000(String effectiveFrom) {
+        ObjectNode tree = seedTree("term-life", 1);
+        tree.put("version", 2);
+        tree.put("effectiveFrom", effectiveFrom);
+        ((ObjectNode) tree.get("rating")).put("policyFee", "1000.00");
+        return render(tree);
+    }
+
     /** The {@code underwriting.rules} array of a rule-set tree. */
     public static ArrayNode rules(ObjectNode tree) {
         return (ArrayNode) tree.get("underwriting").get("rules");

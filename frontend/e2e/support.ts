@@ -82,6 +82,41 @@ export async function createApplication(request: APIRequestContext, profile: Ter
   return body.applicationId;
 }
 
+export interface IssuedPolicy {
+  applicationId: string;
+  policyNumber: string;
+}
+
+/**
+ * Creates an APPROVED application and issues it through the API as customer1 (effective date omitted, so today on the
+ * server's clock). Each test owns its policy and acts on it by number (P-8).
+ */
+export async function createPolicy(request: APIRequestContext, profile: TermLifeProfile): Promise<IssuedPolicy> {
+  const applicationId = await createApplication(request, profile);
+  const response = await request.post(`/api/applications/${applicationId}/issue`, {
+    headers: { Authorization: basic('customer1') },
+    data: {},
+  });
+  expect(response.status()).toBe(201);
+  const body = (await response.json()) as { policyNumber: string };
+  return { applicationId, policyNumber: body.policyNumber };
+}
+
+/** Opens a policy's detail page, signing in as customer1 on the way (the gate shows the sign-in form first). */
+export async function openPolicy(page: Page, policyNumber: string): Promise<void> {
+  await page.goto(`/#/policies/${policyNumber}`);
+  await signIn(page, 'customer1');
+  await expect(page.getByTestId('policy-number')).toHaveText(policyNumber);
+}
+
+/** The page must never scroll sideways (spec UI section: no horizontal scrolling at 375px). */
+export async function expectNoHorizontalScroll(page: Page): Promise<void> {
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+}
+
 export async function signIn(page: Page, user: User): Promise<void> {
   await page.getByTestId('signin-username').fill(user);
   await page.getByTestId('signin-password').fill(PASSWORD);

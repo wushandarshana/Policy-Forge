@@ -148,6 +148,19 @@ public class ApplicationEntity {
         return kycPan;
     }
 
+    /** The submitted insured address. Copied into policy version 1 at issuance (C7); never logged (NFR-03). */
+    public String getKycAddressLine1() {
+        return kycAddressLine1;
+    }
+
+    public String getKycAddressCity() {
+        return kycAddressCity;
+    }
+
+    public String getKycAddressPostcode() {
+        return kycAddressPostcode;
+    }
+
     public Instant getSubmittedAt() {
         return submittedAt;
     }

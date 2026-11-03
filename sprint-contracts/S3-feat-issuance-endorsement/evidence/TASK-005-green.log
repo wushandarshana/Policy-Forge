@@ -1,0 +1,239 @@
+# TASK-005 green run. Command: ./mvnw -o -Dskip.frontend=true verify (full suite, JaCoCo enabled)
+# Only the Maven [INFO]/[ERROR]/[WARNING] lines are kept (the Spring DEBUG output of the log-capture tests was dropped); credentials redacted with scripts/redact_evidence.py.
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 15 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Skipping the execution.
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.131 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.372 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.222 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Running com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.659 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Running com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.194 s -- in com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[INFO] Running com.horizon.policyforge.domain.application.KycValidatorTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.horizon.policyforge.domain.application.KycValidatorTest
+[INFO] Running com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[INFO] Running com.horizon.policyforge.domain.endorsement.EndorsementPremiumAdjusterTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.481 s -- in com.horizon.policyforge.domain.endorsement.EndorsementPremiumAdjusterTest
+[INFO] Running com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[INFO] Running com.horizon.policyforge.domain.endorsement.EndorsementValidatorTest
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in com.horizon.policyforge.domain.endorsement.EndorsementValidatorTest
+[INFO] Running com.horizon.policyforge.domain.PiiMaskerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.horizon.policyforge.domain.PiiMaskerTest
+[INFO] Running com.horizon.policyforge.domain.policy.IssuanceDatesTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.horizon.policyforge.domain.policy.IssuanceDatesTest
+[INFO] Running com.horizon.policyforge.domain.policy.PolicyNumberFormatTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.horizon.policyforge.domain.policy.PolicyNumberFormatTest
+[INFO] Running com.horizon.policyforge.domain.policy.PolicyStateMachineTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.horizon.policyforge.domain.policy.PolicyStateMachineTest
+[INFO] Running com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Running com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Running com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest
+[INFO] Running com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Running com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Running com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Running com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Running com.horizon.policyforge.domain.underwriting.ConditionEvaluatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.horizon.policyforge.domain.underwriting.ConditionEvaluatorTest
+[INFO] Running com.horizon.policyforge.domain.underwriting.UnderwritingReasonCodeMatrixTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingReasonCodeMatrixTest
+[INFO] Running com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluatorTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluatorTest
+[INFO] Running com.horizon.policyforge.repository.PolicyEntityTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.horizon.policyforge.repository.PolicyEntityTest
+[INFO] Running com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Running com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Running com.horizon.policyforge.web.RequestBodySizeLimitFilterTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 s -- in com.horizon.policyforge.web.RequestBodySizeLimitFilterTest
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.538 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 396, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.65 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Running com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.989 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Running com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.216 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Running com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.198 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Running com.horizon.policyforge.web.ApplicationBodyLimitIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.392 s -- in com.horizon.policyforge.web.ApplicationBodyLimitIT
+[INFO] Running com.horizon.policyforge.web.ApplicationLogCaptureIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.411 s -- in com.horizon.policyforge.web.ApplicationLogCaptureIT
+[INFO] Running com.horizon.policyforge.web.ApplicationRuleVersionIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.351 s -- in com.horizon.policyforge.web.ApplicationRuleVersionIT
+[INFO] Running com.horizon.policyforge.web.ApplicationSeedIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.495 s -- in com.horizon.policyforge.web.ApplicationSeedIT
+[INFO] Running com.horizon.policyforge.web.ApplicationSubmissionIT
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.711 s -- in com.horizon.policyforge.web.ApplicationSubmissionIT
+[INFO] Running com.horizon.policyforge.web.ApplicationUnderwritingIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.642 s -- in com.horizon.policyforge.web.ApplicationUnderwritingIT
+[INFO] Running com.horizon.policyforge.web.BodySizeLimitEndToEndIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.138 s -- in com.horizon.policyforge.web.BodySizeLimitEndToEndIT
+[INFO] Running com.horizon.policyforge.web.EndorsementAtomicityIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.368 s -- in com.horizon.policyforge.web.EndorsementAtomicityIT
+[INFO] Running com.horizon.policyforge.web.EndorsementConflictIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.546 s -- in com.horizon.policyforge.web.EndorsementConflictIT
+[INFO] Running com.horizon.policyforge.web.EndorsementIT
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.274 s -- in com.horizon.policyforge.web.EndorsementIT
+[INFO] Running com.horizon.policyforge.web.EndorsementLogCaptureIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.656 s -- in com.horizon.policyforge.web.EndorsementLogCaptureIT
+[INFO] Running com.horizon.policyforge.web.EndorsementPreviewIT
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.465 s -- in com.horizon.policyforge.web.EndorsementPreviewIT
+[INFO] Running com.horizon.policyforge.web.EndorsementRatingIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.407 s -- in com.horizon.policyforge.web.EndorsementRatingIT
+[INFO] Running com.horizon.policyforge.web.EndorsementRuleVersionIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.369 s -- in com.horizon.policyforge.web.EndorsementRuleVersionIT
+[INFO] Running com.horizon.policyforge.web.EndorsementSecurityIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.542 s -- in com.horizon.policyforge.web.EndorsementSecurityIT
+[INFO] Running com.horizon.policyforge.web.EndorsementStateIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.808 s -- in com.horizon.policyforge.web.EndorsementStateIT
+[INFO] Running com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.896 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Running com.horizon.policyforge.web.PolicyBodyLimitIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.866 s -- in com.horizon.policyforge.web.PolicyBodyLimitIT
+[INFO] Running com.horizon.policyforge.web.PolicyIssuanceIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.508 s -- in com.horizon.policyforge.web.PolicyIssuanceIT
+[INFO] Running com.horizon.policyforge.web.PolicyLogCaptureIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.168 s -- in com.horizon.policyforge.web.PolicyLogCaptureIT
+[INFO] Running com.horizon.policyforge.web.PolicyNumberingIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.801 s -- in com.horizon.policyforge.web.PolicyNumberingIT
+[INFO] Running com.horizon.policyforge.web.PolicyViewIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.928 s -- in com.horizon.policyforge.web.PolicyViewIT
+[INFO] Running com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.865 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Running com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.962 s -- in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Running com.horizon.policyforge.web.QuoteHealthDeclarationsIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in com.horizon.policyforge.web.QuoteHealthDeclarationsIT
+[INFO] Running com.horizon.policyforge.web.QuoteOwnershipIT
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.682 s -- in com.horizon.policyforge.web.QuoteOwnershipIT
+[INFO] Running com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.164 s -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Running com.horizon.policyforge.web.RoleBoundaryIT
+[INFO] Tests run: 48, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.489 s -- in com.horizon.policyforge.web.RoleBoundaryIT
+[INFO] Running com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.021 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Running com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.482 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Running com.horizon.policyforge.web.UnderwritingBodyLimitIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.017 s -- in com.horizon.policyforge.web.UnderwritingBodyLimitIT
+[INFO] Running com.horizon.policyforge.web.UnderwritingDecisionIT
+[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.209 s -- in com.horizon.policyforge.web.UnderwritingDecisionIT
+[INFO] Running com.horizon.policyforge.web.UnderwritingOverrideIT
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.614 s -- in com.horizon.policyforge.web.UnderwritingOverrideIT
+[INFO] Running com.horizon.policyforge.web.UnderwritingQueueIT
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.820 s -- in com.horizon.policyforge.web.UnderwritingQueueIT
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 321, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'PolicyForge' with 183 classes
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 183 classes
+[INFO] All coverage checks have been met.
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Loading execution data file C:\Users\wdarshana\Downloads\PolicyForge\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'policyforge' with 75 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:02 min
+[INFO] Finished at: 2026-11-03T20:16:02+05:30
+[INFO] ------------------------------------------------------------------------
+
+=== Evidence summary (TASK-005 green) ===
+Green run: BUILD SUCCESS. Surefire 396 tests, failsafe 321 tests, 0 failures, 0 errors. All five ArchUnit classes pass (DomainPurity, MoneyPrecision, AppendOnly, ControllerPlacement, Layered), including the AC-06.7 existence checks for EndorsementEntity and EndorsementRepository. JaCoCo check-overall (70%) and check-domain (80%) are met.
+Previously failing red tests now pass: EndorsementRequestParserTest (44), AppendOnlyArchTest (AC-06.7), EndorsementIT (13), EndorsementRatingIT (7), EndorsementRuleVersionIT (1), EndorsementAtomicityIT (1), EndorsementConflictIT (2), EndorsementStateIT (14), EndorsementPreviewIT (5), EndorsementSecurityIT (3), EndorsementLogCaptureIT (2), PolicyBodyLimitIT (6, 3 new) and RoleBoundaryIT (48, endorse and preview added).
+Covers AC-06.1 (address change, version 2, shape and check order), AC-06.2 (TERM_LIFE 9490.00 and 1330.85, -1330.85, 2640.00, 7.23, MOTOR 17025.00 and 945.21, HOUSEHOLD 12700.00 and 680.55 and 14500.00 and 1587.95, rule version isolation, preview equals confirm), AC-06.3 (atomic rollback with an injected failure after the endorsement insert), AC-06.4 (NOMINEE_NOT_SUPPORTED), AC-06.5 (NOMINEE_SHARE_EXCEEDED, NOMINEE_LIMIT_REACHED), AC-06.6 (sequence 1, 2, 3, versions 2, 3, 4, effective-date window, concurrent endorsements and POLICY_UPDATE_CONFLICT), AC-06.7 (append-only ArchUnit rules, no PUT, PATCH or DELETE), AC-10.2 (409 invalid-policy-state for CANCELLED and LAPSED, endorse and preview), AC-10.4 (status equals the last transition over eight sequences), NFR-03.1 (log capture for all three types and the preview), NFR-04.1 (role boundary), NFR-04.3 (415) and NFR-04.4 (413, encoded paths, chunked).

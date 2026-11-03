@@ -100,6 +100,19 @@ class ApplicationSeedIT {
     }
 
     @Test
+    @DisplayName("AC-09.7: the seeded quote is owned by customer2 (P-8), so only customer2 can apply for it")
+    void seedQuoteIsOwnedByCustomer2() throws Exception {
+        ApplicationApi api = new ApplicationApi(mvc, json);
+        String applicationId = api.bodyOf(api.mine("customer2")).get(0).get("applicationId").asText();
+
+        String owner = jdbc.queryForObject(
+                "select q.owner_id from quote q join application a on a.quote_id = q.quote_id"
+                        + " where a.application_id = ?", String.class, applicationId);
+
+        assertThat(owner).isEqualTo("customer2");
+    }
+
+    @Test
     @DisplayName("AC-09.7: running the seeding again adds no application, so a restart never duplicates the demo case (U-14)")
     void seedingIsIdempotent() throws Exception {
         int before = applications();

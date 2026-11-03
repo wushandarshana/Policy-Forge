@@ -1,0 +1,2337 @@
+=== TASK-006 RED: Vitest (npx vitest run) ===
+
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.1: lists queue rows in API order and shows the masked values exactly as received 197ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.2: approve posts the exact decision body and shows the new status 737ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.3: the admin override posts the exact override body 719ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 comment error at the comment field 515ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 reasonCode error at the reason code field and checks only required fields locally 498ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.5: shows a fixed message after a 409 645ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: offers reason codes as U-10 pairs them and clears the code when the decision changes 355ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: the override form offers only UW-OVR-001 and UW-OVR-002 111ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: after a 403 on includeDeclined=true shows the plain queue and never renders Override 83ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: shows declined cases and the Override action when includeDeclined=true returns 200 91ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.1: shows the premium 6850.00 verbatim with rule version 1 602ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: health declarations are normalised to codes 1309ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: an empty health declarations field sends an empty array 736ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: shows each per-field error next to the input it names 315ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: lists an error whose field matches no input in the form summary 138ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.8: renders every breakdown factor returned, in order 654ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.1: posts exactly the C1 body with the Basic header and reports the new application ID 1449ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: shows each errors[] entry next to its PAN, Aadhaar and postcode input and does not navigate 1336ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: client-side checks cover required fields only and block the request 246ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.3: shows the fixed QUOTE_EXPIRED message 1386ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.4: shows the fixed KYC_AGE_MISMATCH message at the date of birth input 1424ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.6: shows the fixed QUOTE_NOT_FOUND message 1486ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.7: shows the fixed QUOTE_ALREADY_APPLIED message after a 409 1505ms
+ × src/App.test.tsx > App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate 1031ms
+   → Unable to find an element by: [data-testid="signin-form"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ × src/App.test.tsx > App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in 1024ms
+   → Unable to find an element by: [data-testid="signin-username"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ × src/App.test.tsx > App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it 1017ms
+   → Unable to find an element by: [data-testid="nav-workbench"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ ✓ src/App.test.tsx > App shell routing > AC-01.1: the default route is the public Quote page and needs no sign-in 8ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.1: TERM_LIFE form shows exactly the six quote-spec risk inputs 99ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR form shows exactly the six quote-spec risk inputs 122ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.3: HOUSEHOLD form shows exactly the seven quote-spec risk inputs 94ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected 752ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: renders the matching application from the caller list, with no KYC fields 7ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: shows a fixed not-found message for an ID that is not in the list 2ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.1: shows APPROVED, AUTO_BIND and UW-OK with its description 18ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.3: lists DECLINE reasons UW-TL-001 then UW-TL-004 in API order 16ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: the sign-in form holds credentials in memory only, never in storage, cookies or the URL 523ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: protected calls carry the Basic Authorization header and public calls do not 2ms
+ ✓ src/noMoneyArithmetic.test.ts > money handling > NFR-01: no Number(), parseFloat or unary plus in production sources 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate
+TestingLibraryElementError: Unable to find an element by: [data-testid="signin-form"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:57:25
+     55|     );
+     56| 
+     57|     expect(await screen.findByTestId('signin-form')).toBeInTheDocument…
+       |                         ^
+     58|     expect(screen.queryByTestId('apply-form')).not.toBeInTheDocument();
+     59| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/App.test.tsx > App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in
+TestingLibraryElementError: Unable to find an element by: [data-testid="signin-username"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ signInAs src/App.test.tsx:37:32
+     35| 
+     36| async function signInAs(user: ReturnType<typeof userEvent.setup>, cred…
+     37|   await user.type(await screen.findByTestId('signin-username'), creden…
+       |                                ^
+     38|   await user.type(screen.getByTestId('signin-password'), credentials.p…
+     39|   await user.click(screen.getByTestId('signin-submit'));
+ ❯ src/App.test.tsx:87:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/App.test.tsx > App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it
+TestingLibraryElementError: Unable to find an element by: [data-testid="nav-workbench"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Get a quote
+      </h1>
+      <form
+        class="quote-form"
+        data-testid="quote-form"
+        novalidate=""
+      >
+        <div
+          class="field"
+        >
+          <label
+            for="quote-product"
+          >
+            Product
+          </label>
+          <select
+            data-testid="product-select"
+            id="quote-product"
+          >
+            <option
+              value="TERM_LIFE"
+            >
+              Term Life
+            </option>
+            <option
+              value="MOTOR"
+            >
+              Motor
+            </option>
+            <option
+              value="HOUSEHOLD"
+            >
+              Household
+            </option>
+          </select>
+        </div>
+        <div
+          class="fields"
+        >
+          <div
+            class="field"
+            data-testid="field-age"
+          >
+            <label
+              for="quote-input-age"
+            >
+              Age (18 to 65)
+            </label>
+            <input
+              data-testid="input-age"
+              id="quote-input-age"
+              inputmode="numeric"
+              max="65"
+              min="18"
+              step="1"
+              type="number"
+              value=""
+            />
+          </div>
+          <div
+            class="field field-boolean"
+            data-testid="field-smoker"
+          >
+            <label
+              for="quote-input-smoker"
+            >
+              Smoker
+            </label>
+            <input
+              data-testid="input-smoker"
+              id="quote-input-smoker"
+              type="checkbox"
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-sumInsured"
+          >
+            <label
+              for="quote-input-sumInsured"
+            >
+              Sum insured
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-sumInsured"
+              id="quote-input-sumInsured"
+              inputmode="decimal"
+              placeholder="5000000.00"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-termYears"
+          >
+            <label
+              for="quote-input-termYears"
+            >
+              Term (years)
+            </label>
+            <select
+              data-testid="input-termYears"
+              id="quote-input-termYears"
+            >
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="30"
+              >
+                30
+              </option>
+            </select>
+          </div>
+          <div
+            class="field"
+            data-testid="field-bmi"
+          >
+            <label
+              for="quote-input-bmi"
+            >
+              BMI
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-bmi"
+              id="quote-input-bmi"
+              inputmode="decimal"
+              placeholder="24.5"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="field"
+            data-testid="field-healthDeclarations"
+          >
+            <label
+              for="quote-input-healthDeclarations"
+            >
+              Health declarations — upper-case codes, comma separated, max 10 (e.g. DIABETES)
+            </label>
+            <input
+              autocomplete="off"
+              data-testid="input-healthDeclarations"
+              id="quote-input-healthDeclarations"
+              inputmode="text"
+              placeholder="e.g. DIABETES"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="button"
+          data-testid="submit-quote"
+          type="submit"
+        >
+          Get quote
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:101:35
+     99|     });
+    100| 
+    101|     await user.click(await screen.findByTestId('nav-workbench'));
+       |                                   ^
+    102|     expect(window.location.hash).toBe('#/workbench');
+    103|     await signInAs(user, UNDERWRITER);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  3 failed | 35 passed (38)
+   Start at  09:03:59
+   Duration  23.55s (transform 479ms, setup 226ms, collect 1.16s, tests 21.26s, environment 535ms, prepare 84ms)
+
+
+=== TASK-006 RED: Playwright desktop-chromium (webServer output omitted) ===
+Running 8 tests using 2 workers
+  x  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (30.1s)
+  x  1 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (30.2s)
+  ok 3 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (941ms)
+  x  4 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (30.2s)
+  x  5 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (30.1s)
+  x  7 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (30.2s)
+  x  6 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (30.2s)
+  x  8 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (30.2s)
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+  7 failed
+  1 passed (2.6m)
+
+=== TASK-006 RED: Playwright mobile-chromium (webServer output omitted) ===
+Running 8 tests using 2 workers
+  x  2 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (30.2s)
+  x  1 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (30.2s)
+  ok 4 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (811ms)
+  x  3 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (30.1s)
+  x  5 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (30.2s)
+  x  7 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (30.2s)
+  x  6 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (30.2s)
+  x  8 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (30.2s)
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+    Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+      - waiting for getByTestId('signin-username')
+  7 failed
+  1 passed (2.6m)

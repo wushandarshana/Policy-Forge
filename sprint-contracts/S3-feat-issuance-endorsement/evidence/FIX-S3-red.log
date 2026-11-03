@@ -1,0 +1,56 @@
+=== Vitest: QuotePageCredentials.test.tsx (red) ===
+   ✓ QuotePage credentials > AC-01.13: a signed-in quote request carries the Basic Authorization header  693ms
+   ✓ QuotePage credentials > AC-01.13: a signed-out quote request carries no Authorization header  641ms
+   ✓ QuotePage credentials > AC-01.13: product calls and GET /api/quotes/{id} stay credential-free even when signed in 2ms
+   ✓ QuotePage credentials > AC-01.13: createQuote attaches the credentials only when it is given them 2ms
+   ✓ QuotePage credentials > AC-01.13: a 401 on quote creation shows a fixed sign-in-again message and is never retried anonymously  645ms
+   × QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: every API request uses credentials: 'omit', so a browser-cached Basic credential is never attached 12ms
+   × QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-out quote request from the page sends credentials: 'omit' and no Authorization header 635ms
+   × QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-in quote request from the page sends credentials: 'omit' and only the app's Basic header 646ms
+   × QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on a signed-in quote request clears the session and keeps the fixed sign-in-again message 1689ms
+Expected element to have text content:
+Received:
+   × QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on an authenticated protected request signs the user out and shows the sign-in form 1010ms
+   ✓ QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on a request without the app Authorization header leaves the session alone 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: every API request uses credentials: 'omit', so a browser-cached Basic credential is never attached
+AssertionError: expected undefined to be 'omit' // Object.is equality
+- Expected: 
++ Received: 
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-out quote request from the page sends credentials: 'omit' and no Authorization header
+AssertionError: expected undefined to be 'omit' // Object.is equality
+- Expected: 
++ Received: 
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-in quote request from the page sends credentials: 'omit' and only the app's Basic header
+AssertionError: expected undefined to be 'omit' // Object.is equality
+- Expected: 
++ Received: 
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on a signed-in quote request clears the session and keeps the fixed sign-in-again message
+Expected element to have text content:
+Received:
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on an authenticated protected request signs the user out and shows the sign-in form
+ Test Files  1 failed (1)
+      Tests  5 failed | 6 passed (11)
+
+=== Failsafe: PolicyIssuanceIT (red) ===
+[ERROR] Tests run: 13, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 11.94 s <<< FAILURE! -- in com.horizon.policyforge.web.PolicyIssuanceIT
+[ERROR] com.horizon.policyforge.web.PolicyIssuanceIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm -- Time elapsed: 0.245 s <<< FAILURE!
+Expecting actual:
+and others were not expected:
+[ERROR] Failures: 
+[ERROR]   PolicyIssuanceIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm:206 
+Expecting actual:
+and others were not expected:
+[ERROR] Tests run: 13, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (default) on project policyforge: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -78,7 +78,9 @@ planner judgment.
   quote. An unknown key at any level gets 400 naming it (KD-008).
 - **U-2 Check order.** Nothing is stored on any failure. Checks run in this order:
   1. Request shape and every KYC format error, all reported together.
-  2. The quote must exist. Otherwise 400 `QUOTE_NOT_FOUND`, naming `quoteId`.
+  2. The quote must exist and, if it has an owner, the owner must be the caller. Otherwise 400 `QUOTE_NOT_FOUND`,
+     naming `quoteId`. Another customer's owned quote looks exactly like a missing one, so its existence is never
+     revealed. Quote ownership is defined in [`quote-engine_spec.md`](quote-engine_spec.md).
   3. The quote must be within `validUntil`, with that day counting as valid. Otherwise 400 `QUOTE_EXPIRED`.
   4. The quote must not already have an application. Otherwise 409 `QUOTE_ALREADY_APPLIED`.
   5. The KYC age must match. Otherwise 400 `KYC_AGE_MISMATCH`, naming `kyc.dateOfBirth`.
@@ -154,6 +156,10 @@ planner judgment.
   and nothing is stored (U-2).
 - **AC-03.7** Given a quote that already has an application, when a second application is submitted, then the response
   is 409 `QUOTE_ALREADY_APPLIED` and no second application is stored (U-3).
+- **AC-03.9** Given a quote owned by `customer1`, when `customer2` submits an application for it, then the response is
+  400 `QUOTE_NOT_FOUND` naming `quoteId`, with a body identical to the unknown-quote case (AC-03.6), and nothing is
+  stored. When `customer1` submits, it is accepted. Given an anonymous quote, the first customer to apply claims it,
+  and a later applicant gets 409 `QUOTE_ALREADY_APPLIED` (AC-03.7).
 - **AC-03.8** Given applications by `customer1` and `customer2`, when `customer1` calls `GET /api/applications/mine`,
   then only `customer1`'s applications are returned, newest first, with no KYC fields (U-7, U-13).
 - **AC-04.1** Given TERM_LIFE age 35, non-smoker, BMI 24, no declarations, SI 5,000,000, when underwritten, then the

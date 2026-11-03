@@ -1,0 +1,4699 @@
+
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+
+ × src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.1: the type selector offers all three types and each has its own form fields 1034ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.5: the relationship select offers exactly the five spec values 1008ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.2: a HOUSEHOLD policy shows the building and contents fields instead of newSumInsured 1017ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-10.4: shows a fixed not-found message when the policy does not exist 1009ms
+   → Unable to find an element by: [data-testid="endorse-not-found"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an address change posts exactly the C4 body, with no effectiveDate when none was given, then navigates 1019ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an optional effective date is sent as effectiveDate 1003ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a blank required field is flagged at the input and nothing is posted 1006ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a 400 errors[] entry shows next to the input whose dotted path matches its field 1014ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.4: NOMINEE_NOT_SUPPORTED is shown as a fixed message 1012ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_SHARE_EXCEEDED is shown, with the share error at the share input, and the body carries an integer share 1017ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_LIMIT_REACHED is shown as a fixed message 1015ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_RELATIONSHIP_INVALID is shown as a fixed message 1015ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_OUT_OF_TERM is shown as a fixed message and the date error sits at the date input 1004ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_BEFORE_LAST_ENDORSEMENT is shown as a fixed message and the date error sits at the date input 1013ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: a lost race (409 POLICY_UPDATE_CONFLICT) shows a fixed message and does not navigate 1015ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-10.2: a 409 invalid-policy-state is shown as a fixed message and does not navigate 1022ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: Confirm stays disabled until a preview succeeds, then shows 9490.00 and 1330.85 exactly as received 1013ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: confirming after a preview posts exactly the C4 body and navigates 1002ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: editing any input clears the preview and disables Confirm again 1005ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a HOUSEHOLD preview and confirm send only the components that were filled in 1017ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a blank sum-insured is flagged at the input and no preview is requested 1007ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a 400 SUM_INSURED_OUT_OF_RANGE on preview shows at the input and leaves Confirm disabled 1009ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: SUM_INSURED_UNCHANGED is shown as a fixed message 1003ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ × src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-10.2: a 409 invalid-policy-state on preview is shown as a fixed message 1018ms
+   → Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.1: lists queue rows in API order and shows the masked values exactly as received 109ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.2: approve posts the exact decision body and shows the new status 691ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.3: the admin override posts the exact override body 722ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 comment error at the comment field 443ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 reasonCode error at the reason code field and checks only required fields locally 403ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.5: shows a fixed message after a 409 562ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: offers reason codes as U-10 pairs them and clears the code when the decision changes 306ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: the override form offers only UW-OVR-001 and UW-OVR-002 93ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: after a 403 on includeDeclined=true shows the plain queue and never renders Override 88ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: shows declined cases and the Override action when includeDeclined=true returns 200 92ms
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: the header shows the number, status badge, product, dates, sum insured, premium and next due date 1016ms
+   → Unable to find an element by: [data-testid="policy-number"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: shows a fixed not-found message on a 404 and no policy details 1006ms
+   → Unable to find an element by: [data-testid="policy-not-found"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.1: the Versions tab shows v1 with the old address and v2 with the new address 1008ms
+   → Unable to find an element by: [data-testid="policy-number"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.6: the Endorsements tab lists sequence 1, 2, 3 in API order, linked to versions 2, 3, 4 1005ms
+   → Unable to find an element by: [data-testid="tab-endorsements"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Status tab lists the transitions in API order with a dash for the null from-status, and the badge equals the policy status 1006ms
+   → Unable to find an element by: [data-testid="tab-status"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Refunds tab shows an empty state 1001ms
+   → Unable to find an element by: [data-testid="tab-refunds"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ACTIVE policy 1004ms
+   → Unable to find an element by: [data-testid="policy-endorse-link"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ENDORSED policy 1011ms
+   → Unable to find an element by: [data-testid="policy-endorse-link"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force RENEWED policy 1006ms
+   → Unable to find an element by: [data-testid="policy-endorse-link"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a CANCELLED policy 1009ms
+   → Unable to find an element by: [data-testid="policy-status-badge"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ × src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a LAPSED policy 1007ms
+   → Unable to find an element by: [data-testid="policy-status-badge"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.1: shows the premium 6850.00 verbatim with rule version 1 678ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: health declarations are normalised to codes 1370ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: an empty health declarations field sends an empty array 744ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: shows each per-field error next to the input it names 286ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: lists an error whose field matches no input in the form summary 140ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.8: renders every breakdown factor returned, in order 620ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.1: posts exactly the C1 body with the Basic header and reports the new application ID 1479ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: shows each errors[] entry next to its PAN, Aadhaar and postcode input and does not navigate 1308ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: client-side checks cover required fields only and block the request 251ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.3: shows the fixed QUOTE_EXPIRED message 1532ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.4: shows the fixed KYC_AGE_MISMATCH message at the date of birth input 1454ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.6: shows the fixed QUOTE_NOT_FOUND message 1470ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.7: shows the fixed QUOTE_ALREADY_APPLIED message after a 409 1439ms
+ × src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an APPROVED application posts exactly {} when the date is blank and hands the policy number to the callback 1009ms
+   → Unable to find an element by: [data-testid="issue-submit"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ × src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a chosen effective date is posted as { effectiveDate } 1008ms
+   → Unable to find an element by: [data-testid="issue-effective-date"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ × src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a 400 effectiveDate error shows at the date field and does not navigate 1015ms
+   → Unable to find an element by: [data-testid="issue-effective-date"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ × src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.3: a 409 is shown as a fixed message 1016ms
+   → Unable to find an element by: [data-testid="issue-submit"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.3: the issue panel is offered for APPROVED applications only 13ms
+ × src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an ISSUED application shows the Issued state with a link to My Policies and no issue form 1006ms
+   → Unable to find an element by: [data-testid="application-issued"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-issued"
+            data-status="ISSUED"
+            data-testid="status-badge"
+          >
+            ISSUED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-issued"
+            data-status="ISSUED"
+            data-testid="status-badge"
+          >
+            ISSUED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ × src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a signed-in quote request carries the Basic Authorization header 628ms
+   → expected null to be 'Basic <redacted-credentials>' // Object.is equality
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a signed-out quote request carries no Authorization header 642ms
+ ✓ src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: product calls and GET /api/quotes/{id} stay credential-free even when signed in 1ms
+ × src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: createQuote attaches the credentials only when it is given them 1ms
+   → expected null to be 'Basic <redacted-credentials>' // Object.is equality
+ × src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a 401 on quote creation shows a fixed sign-in-again message and is never retried anonymously 644ms
+   → expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  /sign in again/i
+Received:
+  Bad credentials for customer1
+ ✓ src/App.test.tsx > App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate 2109ms
+ ✓ src/App.test.tsx > App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in 498ms
+ ✓ src/App.test.tsx > App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it 604ms
+ ✓ src/App.test.tsx > App shell routing > AC-01.1: the default route is the public Quote page and needs no sign-in 8ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.1: TERM_LIFE form shows exactly the six quote-spec risk inputs 80ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR form shows exactly the six quote-spec risk inputs 94ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.3: HOUSEHOLD form shows exactly the seven quote-spec risk inputs 93ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected 749ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: renders the matching application from the caller list, with no KYC fields 12ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: shows a fixed not-found message for an ID that is not in the list 14ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.1: shows APPROVED, AUTO_BIND and UW-OK with its description 16ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.3: lists DECLINE reasons UW-TL-001 then UW-TL-004 in API order 17ms
+ × src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: renders every C2 field of every policy verbatim, in API order, with a link to the detail page 1005ms
+   → Unable to find an element by: [data-testid="policies-list"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ × src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows an empty state when the caller has no policies 1014ms
+   → Unable to find an element by: [data-testid="policies-empty"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ × src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows a fixed error message when the list cannot be loaded 1010ms
+   → Unable to find an element by: [data-testid="policies-error"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: the sign-in form holds credentials in memory only, never in storage, cookies or the URL 408ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: protected calls carry the Basic Authorization header and public calls do not 2ms
+ ✓ src/noMoneyArithmetic.test.ts > money handling > NFR-01: no Number(), parseFloat or unary plus in production sources 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 46 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an APPROVED application posts exactly {} when the date is blank and hands the policy number to the callback
+TestingLibraryElementError: Unable to find an element by: [data-testid="issue-submit"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/ApplicationStatusPage.issue.test.tsx:47:35
+     45|     renderWithSession(<ApplicationStatusPage applicationId={APPLICATIO…
+     46| 
+     47|     await user.click(await screen.findByTestId('issue-submit'));
+       |                                   ^
+     48| 
+     49|     await waitFor(() => expect(onIssued).toHaveBeenCalledWith('PF-TL-2…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/46]⎯
+
+ FAIL  src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a chosen effective date is posted as { effectiveDate }
+TestingLibraryElementError: Unable to find an element by: [data-testid="issue-effective-date"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/ApplicationStatusPage.issue.test.tsx:62:34
+     60|     renderWithSession(<ApplicationStatusPage applicationId={APPLICATIO…
+     61| 
+     62|     await user.type(await screen.findByTestId('issue-effective-date'),…
+       |                                  ^
+     63|     await user.click(screen.getByTestId('issue-submit'));
+     64| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/46]⎯
+
+ FAIL  src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: a 400 effectiveDate error shows at the date field and does not navigate
+TestingLibraryElementError: Unable to find an element by: [data-testid="issue-effective-date"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/ApplicationStatusPage.issue.test.tsx:80:34
+     78|     renderWithSession(<ApplicationStatusPage applicationId={APPLICATIO…
+     79| 
+     80|     await user.type(await screen.findByTestId('issue-effective-date'),…
+       |                                  ^
+     81|     await user.click(screen.getByTestId('issue-submit'));
+     82| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/46]⎯
+
+ FAIL  src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.3: a 409 is shown as a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="issue-submit"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-approved"
+            data-status="APPROVED"
+            data-testid="status-badge"
+          >
+            APPROVED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/ApplicationStatusPage.issue.test.tsx:95:35
+     93|     renderWithSession(<ApplicationStatusPage applicationId={APPLICATIO…
+     94| 
+     95|     await user.click(await screen.findByTestId('issue-submit'));
+       |                                   ^
+     96| 
+     97|     const banner = await screen.findByTestId('issue-error');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/46]⎯
+
+ FAIL  src/pages/ApplicationStatusPage.issue.test.tsx > ApplicationStatusPage issue panel > AC-05.1: an ISSUED application shows the Issued state with a link to My Policies and no issue form
+TestingLibraryElementError: Unable to find an element by: [data-testid="application-issued"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-issued"
+            data-status="ISSUED"
+            data-testid="status-badge"
+          >
+            ISSUED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+    >
+      <h1>
+        Application status
+      </h1>
+      <section
+        aria-labelledby="application-heading"
+        class="panel"
+        data-testid="application-details"
+      >
+        <h2
+          id="application-heading"
+        >
+          <span
+            class="badge badge-issued"
+            data-status="ISSUED"
+            data-testid="status-badge"
+          >
+            ISSUED
+          </span>
+        </h2>
+        <dl
+          class="summary"
+        >
+          <div>
+            <dt>
+              Application ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-id"
+            >
+              A-0b1c2d3e-4f50-4a61-8b72-93a4b5c6d7e8
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Product
+            </dt>
+            <dd
+              data-testid="application-product"
+            >
+              TERM_LIFE
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Decision
+            </dt>
+            <dd
+              data-testid="application-decision"
+            >
+              AUTO_BIND
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Rule version
+            </dt>
+            <dd
+              data-testid="application-rule-version"
+            >
+              1
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Submitted
+            </dt>
+            <dd
+              data-testid="application-submitted-at"
+            >
+              2026-10-28T09:30:00Z
+            </dd>
+          </div>
+          <div>
+            <dt>
+              Quote ID
+            </dt>
+            <dd
+              class="mono"
+              data-testid="application-quote-id"
+            >
+              Q-123e4567-e89b-42d3-a456-426614174000
+            </dd>
+          </div>
+        </dl>
+        <h3>
+          Reasons
+        </h3>
+        <ul
+          class="reasons"
+          data-testid="reason-list"
+        >
+          <li
+            class="reason"
+            data-testid="reason-item-UW-OK"
+          >
+            <span
+              class="reason-code"
+            >
+              UW-OK
+            </span>
+            <span
+              class="reason-description"
+            >
+              No underwriting rule fired
+            </span>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/ApplicationStatusPage.issue.test.tsx:116:25
+    114|     renderWithSession(<ApplicationStatusPage applicationId={APPLICATIO…
+    115| 
+    116|     expect(await screen.findByTestId('application-issued')).toHaveText…
+       |                         ^
+    117|     expect(screen.getByTestId('application-policies-link')).toHaveAttr…
+    118|     expect(screen.queryByTestId('issue-panel')).not.toBeInTheDocument(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.1: the type selector offers all three types and each has its own form fields
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:87:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.5: the relationship select offers exactly the five spec values
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:108:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-06.2: a HOUSEHOLD policy shows the building and contents fields instead of newSumInsured
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/EndorsePage.test.tsx:122:18
+    120|     const user = userEvent.setup();
+    121|     renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} />, CU…
+    122|     await screen.findByTestId('endorse-type');
+       |                  ^
+    123| 
+    124|     await chooseType(user, 'CHANGE_SUM_INSURED');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage type selector and forms > AC-10.4: shows a fixed not-found message when the policy does not exist
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-not-found"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/EndorsePage.test.tsx:135:34
+    133|     renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} />, CU…
+    134| 
+    135|     const message = await screen.findByTestId('endorse-not-found');
+       |                                  ^
+    136|     expect(message).toHaveTextContent('We could not find that policy.'…
+    137|     expect(message).not.toHaveTextContent('customer1');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an address change posts exactly the C4 body, with no effectiveDate when none was given, then navigates
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:145:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: an optional effective date is sent as effectiveDate
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:162:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a blank required field is flagged at the input and nothing is posted
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:178:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.1: a 400 errors[] entry shows next to the input whose dotted path matches its field
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:198:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.4: NOMINEE_NOT_SUPPORTED is shown as a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:219:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_SHARE_EXCEEDED is shown, with the share error at the share input, and the body carries an integer share
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:239:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_LIMIT_REACHED is shown as a fixed message
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.5: NOMINEE_RELATIONSHIP_INVALID is shown as a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:259:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_OUT_OF_TERM is shown as a fixed message and the date error sits at the date input
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: EFFECTIVE_DATE_BEFORE_LAST_ENDORSEMENT is shown as a fixed message and the date error sits at the date input
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:273:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-06.6: a lost race (409 POLICY_UPDATE_CONFLICT) shows a fixed message and does not navigate
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:285:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage confirm > AC-10.2: a 409 invalid-policy-state is shown as a fixed message and does not navigate
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:305:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: Confirm stays disabled until a preview succeeds, then shows 9490.00 and 1330.85 exactly as received
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:326:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: confirming after a preview posts exactly the C4 body and navigates
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:351:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: editing any input clears the preview and disables Confirm again
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:369:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a HOUSEHOLD preview and confirm send only the components that were filled in
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ src/pages/EndorsePage.test.tsx:389:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a blank sum-insured is flagged at the input and no preview is requested
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:404:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: a 400 SUM_INSURED_OUT_OF_RANGE on preview shows at the input and leaves Confirm disabled
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:420:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-06.2: SUM_INSURED_UNCHANGED is shown as a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:433:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/46]⎯
+
+ FAIL  src/pages/EndorsePage.test.tsx > EndorsePage sum-insured preview > AC-10.2: a 409 invalid-policy-state on preview is shown as a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="endorse-type"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="endorse-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/EndorsePage.test.tsx:65:16
+     63|   const user = userEvent.setup();
+     64|   renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} onEndors…
+     65|   await screen.findByTestId('endorse-type');
+       |                ^
+     66|   return { user, onEndorsed };
+     67| }
+ ❯ openSumInsured src/pages/EndorsePage.test.tsx:319:27
+ ❯ src/pages/EndorsePage.test.tsx:445:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/46]⎯
+
+ FAIL  src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: renders every C2 field of every policy verbatim, in API order, with a link to the detail page
+TestingLibraryElementError: Unable to find an element by: [data-testid="policies-list"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/MyPoliciesPage.test.tsx:26:31
+     24|     renderWithSession(<MyPoliciesPage />, CUSTOMER);
+     25| 
+     26|     const list = await screen.findByTestId('policies-list');
+       |                               ^
+     27|     const cards = within(list).getAllByTestId(/^policy-card-PF-[A-Z]{2…
+     28|     expect(cards.map((card) => card.getAttribute('data-testid'))).toEq…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/46]⎯
+
+ FAIL  src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows an empty state when the caller has no policies
+TestingLibraryElementError: Unable to find an element by: [data-testid="policies-empty"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/MyPoliciesPage.test.tsx:59:25
+     57|     renderWithSession(<MyPoliciesPage />, CUSTOMER);
+     58| 
+     59|     expect(await screen.findByTestId('policies-empty')).toBeInTheDocum…
+       |                         ^
+     60|     expect(screen.queryByTestId('policies-list')).not.toBeInTheDocumen…
+     61|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/46]⎯
+
+ FAIL  src/pages/MyPoliciesPage.test.tsx > MyPoliciesPage > AC-05.1: shows a fixed error message when the list cannot be loaded
+TestingLibraryElementError: Unable to find an element by: [data-testid="policies-error"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-testid="my-policies-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/MyPoliciesPage.test.tsx:68:32
+     66|     renderWithSession(<MyPoliciesPage />, CUSTOMER);
+     67| 
+     68|     const error = await screen.findByTestId('policies-error');
+       |                                ^
+     69|     expect(error).toHaveTextContent('Please try again.');
+     70|     expect(error).not.toHaveTextContent('stack trace');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: the header shows the number, status badge, product, dates, sum insured, premium and next due date
+TestingLibraryElementError: Unable to find an element by: [data-testid="policy-number"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:94:25
+     92|     const fetchMock = show(policyDetail());
+     93| 
+     94|     expect(await screen.findByTestId('policy-number')).toHaveTextConte…
+       |                         ^
+     95|     expect(screen.getByTestId('policy-status-badge')).toHaveTextConten…
+     96|     expect(screen.getByTestId('policy-product')).toHaveTextContent('TE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-05.1: shows a fixed not-found message on a 404 and no policy details
+TestingLibraryElementError: Unable to find an element by: [data-testid="policy-not-found"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:111:34
+    109|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+    110| 
+    111|     const message = await screen.findByTestId('policy-not-found');
+       |                                  ^
+    112|     expect(message).toHaveTextContent('We could not find that policy.'…
+    113|     expect(message).not.toHaveTextContent('customer1');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.1: the Versions tab shows v1 with the old address and v2 with the new address
+TestingLibraryElementError: Unable to find an element by: [data-testid="policy-number"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:120:18
+    118|     show(endorsedDetail());
+    119| 
+    120|     await screen.findByTestId('policy-number');
+       |                  ^
+    121|     expect(screen.getByTestId('tabpanel-versions')).toBeInTheDocument(…
+    122|     expect(screen.getByTestId('version-1-address')).toHaveTextContent(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-06.6: the Endorsements tab lists sequence 1, 2, 3 in API order, linked to versions 2, 3, 4
+TestingLibraryElementError: Unable to find an element by: [data-testid="tab-endorsements"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:145:35
+    143|     show(endorsedDetail());
+    144| 
+    145|     await user.click(await screen.findByTestId('tab-endorsements'));
+       |                                   ^
+    146| 
+    147|     const rows = within(screen.getByTestId('tabpanel-endorsements')).g…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Status tab lists the transitions in API order with a dash for the null from-status, and the badge equals the policy status
+TestingLibraryElementError: Unable to find an element by: [data-testid="tab-status"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:167:35
+    165|     show(endorsedDetail());
+    166| 
+    167|     await user.click(await screen.findByTestId('tab-status'));
+       |                                   ^
+    168| 
+    169|     const rows = within(screen.getByTestId('tabpanel-status')).getAllB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.4: the Refunds tab shows an empty state
+TestingLibraryElementError: Unable to find an element by: [data-testid="tab-refunds"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:190:35
+    188|     show(policyDetail());
+    189| 
+    190|     await user.click(await screen.findByTestId('tab-refunds'));
+       |                                   ^
+    191| 
+    192|     expect(screen.getByTestId('refunds-empty')).toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ACTIVE policy
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force ENDORSED policy
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: the Endorse link is shown for an in-force RENEWED policy
+TestingLibraryElementError: Unable to find an element by: [data-testid="policy-endorse-link"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:200:33
+    198|       show(policyDetail({ policy: policyHeader({ status }) }));
+    199| 
+    200|       const link = await screen.findByTestId('policy-endorse-link');
+       |                                 ^
+    201|       expect(link).toHaveAttribute('href', `#/policies/${POLICY_NUMBER…
+    202|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/46]⎯
+
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a CANCELLED policy
+ FAIL  src/pages/PolicyDetailPage.test.tsx > PolicyDetailPage > AC-10.2: no Endorse link on a LAPSED policy
+TestingLibraryElementError: Unable to find an element by: [data-testid="policy-status-badge"]
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <main
+      class="page"
+      data-policy="PF-TL-2026-000001"
+      data-testid="policy-detail-stub"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.test.tsx:208:25
+    206|     show(policyDetail({ policy: policyHeader({ status }) }));
+    207| 
+    208|     expect(await screen.findByTestId('policy-status-badge')).toHaveTex…
+       |                         ^
+    209|     expect(screen.queryByTestId('policy-endorse-link')).not.toBeInTheD…
+    210|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/46]⎯
+
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a signed-in quote request carries the Basic Authorization header
+AssertionError: expected null to be 'Basic <redacted-credentials>' // Object.is equality
+
+- Expected: 
+"Basic <redacted-credentials>"
+
++ Received: 
+null
+
+ ❯ src/pages/QuotePageCredentials.test.tsx:62:43
+     60|     expect(await screen.findByTestId('quote-premium')).toHaveTextConte…
+     61|     const [post] = quotePosts(fetchMock);
+     62|     expect(header(post, 'Authorization')).toBe(basic(CUSTOMER));
+       |                                           ^
+     63|   });
+     64| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/46]⎯
+
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: createQuote attaches the credentials only when it is given them
+AssertionError: expected null to be 'Basic <redacted-credentials>' // Object.is equality
+
+- Expected: 
+"Basic <redacted-credentials>"
+
++ Received: 
+null
+
+ ❯ src/pages/QuotePageCredentials.test.tsx:98:47
+     96| 
+     97|     const [signedIn, signedOut] = quotePosts(fetchMock);
+     98|     expect(header(signedIn, 'Authorization')).toBe(basic(CUSTOMER));
+       |                                               ^
+     99|     expect(header(signedOut, 'Authorization')).toBeNull();
+    100|     expect(JSON.parse(String(signedIn.init?.body))).toEqual(request);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/46]⎯
+
+ FAIL  src/pages/QuotePageCredentials.test.tsx > QuotePage credentials > AC-01.13: a 401 on quote creation shows a fixed sign-in-again message and is never retried anonymously
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  /sign in again/i
+Received:
+  Bad credentials for customer1
+ ❯ src/pages/QuotePageCredentials.test.tsx:111:21
+    109| 
+    110|     const message = await screen.findByTestId('request-error');
+    111|     expect(message).toHaveTextContent(/sign in again/i);
+       |                     ^
+    112|     expect(message).not.toHaveTextContent('customer1');
+    113|     expect(screen.queryByTestId('quote-result')).not.toBeInTheDocument…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/46]⎯
+
+
+ Test Files  5 failed | 8 passed (13)
+      Tests  46 failed | 41 passed (87)
+   Start at  19:13:28
+   Duration  68.55s (transform 456ms, setup 269ms, collect 1.06s, tests 66.38s, environment 487ms, prepare 74ms)
+

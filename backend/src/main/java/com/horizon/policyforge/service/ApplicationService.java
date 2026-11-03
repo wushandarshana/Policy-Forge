@@ -102,6 +102,10 @@ public class ApplicationService {
 
         QuoteEntity quote = quotes.findByQuoteId(command.quoteId())
                 .orElseThrow(() -> named("QUOTE_NOT_FOUND", "quoteId", "was not found"));
+        if (quote.getOwnerId() != null && !quote.getOwnerId().equals(command.customerId())) {
+            // Another customer's quote looks exactly like a missing one (U-2 step 2): same code, field and message.
+            throw named("QUOTE_NOT_FOUND", "quoteId", "was not found");
+        }
         if (today.isAfter(quote.getValidUntil())) {
             throw named("QUOTE_EXPIRED", "quoteId", "has expired");
         }

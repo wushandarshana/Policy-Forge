@@ -218,6 +218,125 @@ class AppendOnlyArchTest {
         repositoryHasNoDeleteOrUpdate("ApplicationRepository", "NFR-02").check(ArchSupport.production());
     }
 
+    // ---- Policy persistence (AC-05.4, NFR-02): versions and transitions are append-only, the policy and its terms
+    // ---- change only through one intention-revealing method each ----
+
+    @Test
+    @DisplayName("NFR-02: the policy version entity exists, is an immutable JPA entity and has no public setters")
+    void policyVersionEntityIsImmutable() {
+        entityIsImmutable("PolicyVersionEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("PolicyVersionEntity", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy version repository exists and has no delete or update methods")
+    void policyVersionRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyVersionRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyVersionRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy status transition entity exists, is an immutable JPA entity and has no public setters")
+    void policyStatusTransitionEntityIsImmutable() {
+        entityIsImmutable("PolicyStatusTransitionEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("PolicyStatusTransitionEntity", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy status transition repository exists and has no delete or update methods")
+    void policyStatusTransitionRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyStatusTransitionRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyStatusTransitionRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy entity has no public setters and its status and version change only through applyTransition")
+    void policyEntityChangesOnlyThroughApplyTransition() {
+        entityHasNoPublicSetters("PolicyEntity", "NFR-02").check(ArchSupport.production());
+
+        assertThat(publicMutators("com.horizon.policyforge.repository.PolicyEntity"))
+                .as("public methods other than getters: one factory and one transition that applies PolicyStateMachine")
+                .containsExactly("applyTransition", "issue");
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy repository exists and has no delete or update methods")
+    void policyRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy term entity has no public setters and changes only through markPaid")
+    void policyTermEntityChangesOnlyThroughMarkPaid() {
+        entityHasNoPublicSetters("PolicyTermEntity", "NFR-02").check(ArchSupport.production());
+
+        assertThat(publicMutators("com.horizon.policyforge.repository.PolicyTermEntity"))
+                .as("public methods other than getters: one factory and the paid flag")
+                .containsExactly("markPaid", "of");
+    }
+
+    @Test
+    @DisplayName("NFR-02: the policy term repository exists and has no delete or update methods")
+    void policyTermRepositoryHasNoDelete() {
+        repositoryIsNotCrud("PolicyTermRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("PolicyTermRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    // ---- Endorsements (AC-06.7, NFR-02): no API or repository method can change or delete one ----
+
+    @Test
+    @Tag("AC-06")
+    @DisplayName("AC-06.7: the endorsement entity exists, is an immutable JPA entity and has no public setters")
+    void endorsementEntityIsImmutable() {
+        entityIsImmutable("EndorsementEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("EndorsementEntity", "NFR-02").check(ArchSupport.production());
+        assertThat(publicMutators("com.horizon.policyforge.repository.EndorsementEntity"))
+                .as("public methods other than getters: one factory, nothing that changes a stored endorsement")
+                .containsExactly("of");
+    }
+
+    @Test
+    @Tag("AC-06")
+    @DisplayName("AC-06.7: the endorsement repository exists, extends Repository and has no delete or update methods")
+    void endorsementRepositoryHasNoDelete() {
+        repositoryIsNotCrud("EndorsementRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("EndorsementRepository", "NFR-02").check(ArchSupport.production());
+    }
+
+    @Test
+    @Tag("AC-06")
+    @DisplayName("AC-06.7: the set-wide append-only rules cover EndorsementEntity and PolicyVersionEntity, which both exist, and the repositories of both")
+    void appendOnlyRulesCoverEndorsementsAndPolicyVersions() {
+        assertThat(APPEND_ONLY_ENTITIES).contains("EndorsementEntity", "PolicyVersionEntity");
+        assertThat(APPEND_ONLY_REPOSITORIES).contains("EndorsementRepository", "PolicyVersionRepository");
+        for (String entity : List.of("EndorsementEntity", "PolicyVersionEntity")) {
+            JavaClass type = ArchSupport.production().get("com.horizon.policyforge.repository." + entity);
+            assertThat(APPEND_ONLY_ENTITY.test(type)).as(entity + " is matched by the set-wide entity rules").isTrue();
+        }
+        for (String repository : List.of("EndorsementRepository", "PolicyVersionRepository")) {
+            JavaClass type = ArchSupport.production().get("com.horizon.policyforge.repository." + repository);
+            assertThat(APPEND_ONLY_REPOSITORY.test(type)).as(repository + " is matched by the set-wide repository rules")
+                    .isTrue();
+        }
+        ENTITIES_ARE_IMMUTABLE.check(ArchSupport.production());
+        ENTITIES_HAVE_NO_PUBLIC_SETTERS.check(ArchSupport.production());
+        ENTITIES_HAVE_NO_PUBLIC_FIELDS.check(ArchSupport.production());
+        REPOSITORIES_ARE_NOT_CRUD.check(ArchSupport.production());
+        REPOSITORIES_HAVE_NO_DELETE_OR_UPDATE.check(ArchSupport.production());
+    }
+
+    /** The public methods of a production class that are neither getters ({@code get*}, {@code is*}) nor toString. */
+    private static List<String> publicMutators(String className) {
+        JavaClass entity = ArchSupport.production().get(className);
+        return entity.getMethods().stream()
+                .filter(method -> method.getModifiers().contains(JavaModifier.PUBLIC))
+                .map(JavaMethod::getName)
+                .filter(name -> !name.matches("(get|is)[A-Z].*") && !name.equals("toString"))
+                .sorted()
+                .toList();
+    }
+
     // ---- Negative fixtures: every rule must reject a deliberately violating class ----
 
     @Test

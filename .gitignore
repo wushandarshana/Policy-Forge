@@ -38,3 +38,6 @@ Thumbs.db
 
 # Playwright MCP page snapshots (evaluator scratch output)
 .playwright-mcp/
+# Committed TDD evidence (red/green logs), redacted by scripts/redact_evidence.py
+!sprint-contracts/**/*.log
+!docs/fix-loops/**/*.log

@@ -7,6 +7,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.horizon.policyforge.support.ApplicationApi;
+import com.horizon.policyforge.support.PolicyApi;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -46,6 +51,8 @@ class RoleBoundaryIT {
             "{\"decision\":\"APPROVE\",\"reasonCode\":\"UW-MAN-001\",\"comment\":\"Acceptable after review\"}";
     private static final String OVERRIDE_BODY =
             "{\"reasonCode\":\"UW-OVR-001\",\"comment\":\"Commercial exception signed off\"}";
+    private static final String ENDORSE_BODY = "{\"type\":\"CHANGE_ADDRESS\",\"address\":{\"line1\":\"22 New Road\","
+            + "\"city\":\"Mumbai\",\"postcode\":\"400001\"}}";
     private static final String APPLICATION_BODY = "{\"quoteId\":\"Q-00000000-0000-4000-8000-000000000000\","
             + "\"kyc\":{\"fullName\":\"Asha Test\",\"dateOfBirth\":\"1991-04-02\",\"aadhaar\":\"XXXX-XXXX-1234\","
             + "\"pan\":\"ABCDE1234F\",\"address\":{\"line1\":\"1 Demo Street\",\"city\":\"Pune\","
@@ -77,9 +84,17 @@ class RoleBoundaryIT {
     private static final Call OVERRIDE =
             new Call("POST", "/api/underwriting/" + APPLICATION_ID + "/override", OVERRIDE_BODY);
     private static final Call PUBLISH = new Call("POST", "/api/products/MOTOR/versions", "{}");
+    private static final Call ISSUE = new Call("POST", "/api/applications/" + APPLICATION_ID + "/issue", "{}");
+    private static final Call MINE_POLICIES = new Call("GET", "/api/policies/mine", null);
+    private static final Call POLICY_DETAIL = new Call("GET", "/api/policies/PF-TL-2026-999999", null);
+    private static final Call ENDORSE =
+            new Call("POST", "/api/policies/PF-TL-2026-999999/endorsements", ENDORSE_BODY);
+    private static final Call PREVIEW =
+            new Call("POST", "/api/policies/PF-TL-2026-999999/endorsements/preview", ENDORSE_BODY);
 
     static Stream<Arguments> protectedCalls() {
-        return Stream.of(SUBMIT, MINE, QUEUE, QUEUE_DECLINED, DECISION, OVERRIDE, PUBLISH).map(Arguments::of);
+        return Stream.of(SUBMIT, MINE, QUEUE, QUEUE_DECLINED, DECISION, OVERRIDE, PUBLISH, ISSUE, MINE_POLICIES,
+                POLICY_DETAIL, ENDORSE, PREVIEW).map(Arguments::of);
     }
 
     static Stream<Arguments> underwriterCalls() {
@@ -87,11 +102,17 @@ class RoleBoundaryIT {
     }
 
     static Stream<Arguments> customerOnlyCalls() {
-        return Stream.of(SUBMIT, MINE).map(Arguments::of);
+        return Stream.of(SUBMIT, MINE, ISSUE, MINE_POLICIES, ENDORSE, PREVIEW).map(Arguments::of);
     }
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper json;
+
+    @Autowired
+    private Clock clock;
 
     @Autowired
     @Qualifier("requestMappingHandlerMapping")
@@ -153,6 +174,31 @@ class RoleBoundaryIT {
     @MethodSource("customerOnlyCalls")
     void adminCannotCallCustomerEndpoints(Call call) throws Exception {
         assertThat(status(call, "admin1")).isEqualTo(403);
+    }
+
+    @Test
+    @DisplayName("NFR-04.1: an UNDERWRITER calling GET /api/policies/{number} gets 403, while a CUSTOMER and an ADMIN are let through (404 for an unknown number, never 401 or 403)")
+    void policyDetailRefusesUnderwriters() throws Exception {
+        assertThat(status(POLICY_DETAIL, "underwriter1")).isEqualTo(403);
+        assertThat(status(POLICY_DETAIL, "customer1")).isEqualTo(404);
+        assertThat(status(POLICY_DETAIL, "admin1")).isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("NFR-04.1: a policy's owner and an ADMIN get 200 on its detail, another customer and an UNDERWRITER do not, and ADMIN is still refused issue and mine")
+    void policyDetailIsForTheOwnerAndAdmins() throws Exception {
+        ApplicationApi applications = new ApplicationApi(mvc, json);
+        PolicyApi policies = new PolicyApi(mvc, json);
+        String applicationId = applications.approvedApplication("customer1", LocalDate.now(clock));
+        String number = policies.issueOk("customer1", applicationId, null).get("policyNumber").asText();
+
+        assertThat(policies.detail("customer1", number).getResponse().getStatus()).isEqualTo(200);
+        assertThat(policies.detail("admin1", number).getResponse().getStatus())
+                .as("admin1 reads another customer's policy").isEqualTo(200);
+        assertThat(policies.detail("customer2", number).getResponse().getStatus()).isEqualTo(404);
+        assertThat(policies.detail("underwriter1", number).getResponse().getStatus()).isEqualTo(403);
+        assertThat(status(ISSUE, "admin1")).isEqualTo(403);
+        assertThat(status(MINE_POLICIES, "admin1")).isEqualTo(403);
     }
 
     @Test

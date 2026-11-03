@@ -1,5 +1,6 @@
 package com.horizon.policyforge.web;
 
+import com.horizon.policyforge.domain.policy.InvalidPolicyStateException;
 import com.horizon.policyforge.service.ConflictException;
 import com.horizon.policyforge.service.ResourceNotFoundException;
 import com.horizon.policyforge.service.ValidationFailedException;
@@ -46,6 +47,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     static final String NOT_FOUND_DETAIL = "The requested resource was not found.";
     static final String TOO_LARGE_DETAIL = "The request body is too large.";
+    static final String INVALID_POLICY_STATE_TYPE = "/problems/invalid-policy-state";
+    static final String INVALID_POLICY_STATE_CODE = "INVALID_POLICY_STATE";
     private static final URI ABOUT_BLANK = URI.create("about:blank");
     /** Spring fills a missing instance with the request path, so a 404 carries this fixed value instead (F-4). */
     private static final URI NOT_FOUND_INSTANCE = URI.create("urn:policyforge:problem:not-found");
@@ -137,6 +140,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return withInstance(problem, request);
     }
 
+    /**
+     * 409 for a move the policy lifecycle does not allow, for example endorsing a CANCELLED or LAPSED policy (AC-10.2).
+     * The detail is fixed: it never names the statuses, the policy or anything the caller sent.
+     */
+    @ExceptionHandler(InvalidPolicyStateException.class)
+    public ProblemDetail handleInvalidPolicyState(InvalidPolicyStateException ex, HttpServletRequest request) {
+        ProblemDetail problem = problem(HttpStatus.CONFLICT, "Invalid policy state", INVALID_POLICY_STATE_TYPE,
+                "The policy is not in a state that allows this action.");
+        problem.setProperty("code", INVALID_POLICY_STATE_CODE);
+        return withInstance(problem, request);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
         // Fixed detail and instance: the message and the path name the requested code (or a date), and a 404 never
@@ -174,6 +189,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             case ConflictException.QUOTE_ALREADY_APPLIED -> "An application already exists for this quote.";
             case ConflictException.INVALID_APPLICATION_STATE ->
                     "The application is not in a state that allows this action.";
+            case ConflictException.POLICY_UPDATE_CONFLICT ->
+                    "The policy was changed by another request. Review it and try again.";
             default -> "The request conflicts with the current state of the resource.";
         };
     }

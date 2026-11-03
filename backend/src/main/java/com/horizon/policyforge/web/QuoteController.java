@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,8 +87,23 @@ public class QuoteController {
     /** JSON only (NFR-04.3). Bodies over 16 KB are refused before this point with 413 (AC-01.9). */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public QuoteResponse create(@RequestBody CreateQuoteRequest request) {
-        return QuoteResponse.created(quotes.create(request.productCode(), request.riskInputs()));
+    public QuoteResponse create(@RequestBody CreateQuoteRequest request, Authentication authentication) {
+        return QuoteResponse.created(quotes.create(request.productCode(), request.riskInputs(),
+                ownerOf(authentication)));
+    }
+
+    /**
+     * The quote's owner (P-8): the caller when valid CUSTOMER credentials came with the request, otherwise nobody.
+     * Invalid credentials never get here: the Basic filter answers 401 first.
+     */
+    private static String ownerOf(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        boolean customer = authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_CUSTOMER".equals(authority.getAuthority()));
+        return customer ? authentication.getName() : null;
     }
 
     @GetMapping("/{quoteId}")

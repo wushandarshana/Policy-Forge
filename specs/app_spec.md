@@ -131,6 +131,7 @@ AuditEntry (append-only: actorId, action, entityType, entityId, reasonCode, comm
 | GET | `/api/policies/mine` | CUSTOMER | issuance |
 | GET | `/api/policies/{number}` | owner / ADMIN | issuance |
 | POST | `/api/policies/{number}/endorsements` | owner | endorsement |
+| POST | `/api/policies/{number}/endorsements/preview` | owner | endorsement |
 | POST | `/api/policies/{number}/renewal/pay` | owner | renewal |
 | GET | `/api/policies/{number}/cancel/preview?date=` | owner | cancellation |
 | POST | `/api/policies/{number}/cancel` | owner | cancellation |

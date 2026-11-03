@@ -59,7 +59,7 @@ public class UnderwritingService {
     static final String OVERRIDE_ACTION = "UNDERWRITING_OVERRIDE";
 
     /** The shape of an ID this application issues ({@code A-<UUID>}). Anything else is not found, without a lookup. */
-    private static final Pattern APPLICATION_ID =
+    static final Pattern APPLICATION_ID =
             Pattern.compile("A-[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}");
 
     private static final TypeReference<LinkedHashMap<String, Object>> INPUTS = new TypeReference<>() {

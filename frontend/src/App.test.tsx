@@ -10,6 +10,11 @@ import {
   header,
   installFetch,
   jsonResponse,
+  endorsement,
+  policyDetail,
+  policyHeader,
+  policySummary,
+  POLICY_NUMBER,
   postedJson,
   queueItem,
   QUOTE_ID,
@@ -110,5 +115,122 @@ describe('App shell routing', () => {
 
     expect(await screen.findByTestId('quote-form')).toBeInTheDocument();
     expect(screen.queryByTestId('signin-form')).not.toBeInTheDocument();
+  });
+});
+
+/** Handler for the policy pages: C2 list, C3 detail, plus whatever a test adds on top. */
+function policyHandler(extra: Handler = () => jsonResponse(404, {})): Handler {
+  return (url, init) => {
+    if (url.endsWith('/api/products')) return jsonResponse(200, PRODUCTS);
+    if (url.endsWith('/api/policies/mine')) return jsonResponse(200, [policySummary()]);
+    if (url.endsWith(`/api/policies/${POLICY_NUMBER}`)) return jsonResponse(200, policyDetail());
+    return extra(url, init);
+  };
+}
+
+describe('App shell routing for the policy pages (C9)', () => {
+  it('AC-05.1: #/policies renders My Policies behind the sign-in gate', async () => {
+    const { user } = renderAt('#/policies', policyHandler());
+
+    expect(await screen.findByTestId('signin-form')).toBeInTheDocument();
+    expect(screen.queryByTestId('policies-list')).not.toBeInTheDocument();
+
+    await signInAs(user, CUSTOMER);
+
+    expect(await screen.findByTestId('policies-list')).toBeInTheDocument();
+    expect(screen.getByTestId(`policy-card-${POLICY_NUMBER}`)).toBeInTheDocument();
+  });
+
+  it('AC-05.1: #/policies/<number> renders that policy detail', async () => {
+    const { fetchMock, user } = renderAt(`#/policies/${POLICY_NUMBER}`, policyHandler());
+
+    await signInAs(user, CUSTOMER);
+
+    expect(await screen.findByTestId('policy-number')).toHaveTextContent(POLICY_NUMBER);
+    expect(screen.getByTestId('policy-status-badge')).toHaveTextContent('ACTIVE');
+    const detailCall = calls(fetchMock).find((call) => call.url.endsWith(`/api/policies/${POLICY_NUMBER}`));
+    expect(detailCall).toBeDefined();
+    expect(header(detailCall!, 'Authorization')).toBe(basic(CUSTOMER));
+  });
+
+  it('AC-05.1: the My Policies nav link reaches the list and a card link opens the detail page', async () => {
+    const { user } = renderAt('', policyHandler());
+
+    await user.click(await screen.findByTestId('nav-policies'));
+    expect(window.location.hash).toBe('#/policies');
+    await signInAs(user, CUSTOMER);
+
+    await user.click(await screen.findByTestId(`policy-card-${POLICY_NUMBER}-link`));
+    expect(window.location.hash).toBe(`#/policies/${POLICY_NUMBER}`);
+    expect(await screen.findByTestId('policy-number')).toHaveTextContent(POLICY_NUMBER);
+  });
+
+  it('AC-05.1: issuing from the Application Status page navigates to the new policy detail page', async () => {
+    const approved = application();
+    const { fetchMock, user } = renderAt(
+      `#/applications/${approved.applicationId}`,
+      policyHandler((url, init) => {
+        if (url.endsWith('/api/applications/mine')) return jsonResponse(200, [approved]);
+        if (url.endsWith(`/api/applications/${approved.applicationId}/issue`) && init?.method === 'POST') {
+          return jsonResponse(201, policyHeader());
+        }
+        return jsonResponse(200, [approved]);
+      }),
+    );
+
+    await signInAs(user, CUSTOMER);
+    await user.click(await screen.findByTestId('issue-submit'));
+
+    await waitFor(() => expect(window.location.hash).toBe(`#/policies/${POLICY_NUMBER}`));
+    expect(await screen.findByTestId('policy-number')).toHaveTextContent(POLICY_NUMBER);
+    const post = calls(fetchMock).find((call) => call.method === 'POST');
+    expect(post?.url).toBe(`/api/applications/${approved.applicationId}/issue`);
+    expect(postedJson(post!)).toEqual({});
+  });
+
+  it('AC-06.1: #/policies/<number>/endorse renders the Endorse page for that policy', async () => {
+    const { user } = renderAt(`#/policies/${POLICY_NUMBER}/endorse`, policyHandler());
+
+    await signInAs(user, CUSTOMER);
+
+    expect(await screen.findByTestId('endorse-form')).toBeInTheDocument();
+    expect(screen.getByTestId('endorse-type')).toBeInTheDocument();
+    expect(screen.queryByTestId('policy-number')).not.toBeInTheDocument();
+  });
+
+  it('AC-06.1: the detail Endorse link opens the Endorse route and a confirmed endorsement returns to the detail page', async () => {
+    const after = endorsement();
+    const { fetchMock, user } = renderAt(
+      `#/policies/${POLICY_NUMBER}`,
+      policyHandler((url, init) => {
+        if (url.endsWith(`/api/policies/${POLICY_NUMBER}/endorsements`) && init?.method === 'POST') {
+          return jsonResponse(201, { endorsement: after, policy: policyHeader({ status: 'ENDORSED', endorsementCount: 1 }) });
+        }
+        return jsonResponse(404, {});
+      }),
+    );
+
+    await signInAs(user, CUSTOMER);
+    await user.click(await screen.findByTestId('policy-endorse-link'));
+    expect(window.location.hash).toBe(`#/policies/${POLICY_NUMBER}/endorse`);
+
+    await user.type(await screen.findByTestId('input-line1'), '99 New Road');
+    await user.type(screen.getByTestId('input-city'), 'Mumbai');
+    await user.type(screen.getByTestId('input-postcode'), '400001');
+    await user.click(screen.getByTestId('endorse-confirm'));
+
+    await waitFor(() => expect(window.location.hash).toBe(`#/policies/${POLICY_NUMBER}`));
+    expect(await screen.findByTestId('policy-number')).toHaveTextContent(POLICY_NUMBER);
+    const post = calls(fetchMock).find((call) => call.method === 'POST');
+    expect(postedJson(post!)).toMatchObject({ type: 'CHANGE_ADDRESS', address: { city: 'Mumbai' } });
+  });
+
+  it('AC-06.1: an unknown policy route segment is still a gated detail page, not the Quote page', async () => {
+    const { user } = renderAt('#/policies/PF-XX-0000-000000', policyHandler());
+
+    await signInAs(user, CUSTOMER);
+
+    expect(await screen.findByTestId('policy-not-found')).toBeInTheDocument();
+    expect(screen.queryByTestId('quote-form')).not.toBeInTheDocument();
   });
 });

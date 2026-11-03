@@ -1,0 +1,7 @@
+TASK-003 RED run: AC-03.1 AC-03.2 AC-03.4 AC-09.4 AC-09.5 AC-09.6 (domain: KycValidator, ApplicationLifecycle, ManualDecisionRules; production stubs throw UnsupportedOperationException)
+Command: ./mvnw test -Dskip.frontend=true -Dtest=KycValidatorTest,ApplicationLifecycleTest,ManualDecisionRulesTest
+[ERROR] Tests run: 19, Failures: 14, Errors: 4, Skipped: 0, Time elapsed: 0.213 s <<< FAILURE! -- in com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[ERROR] Tests run: 45, Failures: 2, Errors: 43, Skipped: 0, Time elapsed: 0.175 s <<< FAILURE! -- in com.horizon.policyforge.domain.application.KycValidatorTest
+[ERROR] Tests run: 23, Failures: 2, Errors: 21, Skipped: 0, Time elapsed: 0.065 s <<< FAILURE! -- in com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[ERROR] Tests run: 87, Failures: 18, Errors: 68, Skipped: 0
+[INFO] BUILD FAILURE

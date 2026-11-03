@@ -1,0 +1,71 @@
+GREEN ROUND 2 - Sprint 1 security fix loop (R-1 / NFR-04.4, R-2 / AC-01.10)
+Command: ./mvnw verify   (JDK 21.0.12 Adoptium; full build incl. frontend, surefire, failsafe, ArchUnit, JaCoCo check)
+
+## Finding -> now-passing tests
+R-1 / NFR-04.4.1 encoded quote paths capped at 16 KB
+    BodySizeLimitEndToEndIT.encodedQuotesPathIsLimited               (/api/%71uotes, 20 KB -> 413, nothing stored)
+    BodySizeLimitEndToEndIT.encodedQuotesPathTrailingEscapeIsLimited (/api/quote%73, 20 KB -> 413, nothing stored)
+    RequestBodySizeLimitFilterTest.encodedPathsGetTheDefault
+R-1 / NFR-04.4.2 chunked (no Content-Length) capped while reading
+    BodySizeLimitEndToEndIT.chunkedEncodedPathIsLimited
+    RequestBodySizeLimitFilterTest.chunkedEncodedPathIsLimited / chunkedOversizedBodyIsRejected
+R-1 / NFR-04.4.3 64 KB only for Basic-authenticated POST /api/products/{code}/versions
+    BodySizeLimitEndToEndIT.publishOverSixtyFourKbIsRefused (>64 KB MOTOR -> 413, no version stored)
+    BodySizeLimitEndToEndIT.publishUpToSixtyFourKbIsNotRefusedForSize (~40 KB -> 201, guard)
+    RequestBodySizeLimitFilterTest.publishAllowanceIsSixtyFourKb / allowanceIsExplicit
+R-1 / NFR-04.4.4 default-deny before Spring Security
+    BodySizeLimitEndToEndIT.unknownApiPathIsLimitedByDefault (anonymous /api/unknown-endpoint 20 KB -> 413, not 401)
+    RequestBodySizeLimitFilterTest.everyPathIsLimitedByDefault
+AC-01.9 (unchanged intent) QuoteApiIT.oversizedQuoteBodyIsRejected (whitespace-padded, 413)
+R-2 / AC-01.10 healthDeclarations = list of <=10 codes matching ^[A-Z][A-Z0-9_]{0,63}$
+    QuoteHealthDeclarationsIT.illegalHealthDeclarationsAreRejected x5 (object, number, lower-case, 65 chars, 11 items -> 400, nothing stored)
+    QuoteHealthDeclarationsIT.legalHealthDeclarationsAreAccepted ([DIABETES, ASTHMA] -> 201)
+    HealthDeclarationsRuleTest (domain, 2 tests)
+
+Other checks:
+    python -I .claude/skills/premium-calc-evaluator/premium_check.py spec-examples  -> all PASS
+    python .claude/hooks/tests/test_hooks.py                                         -> ALL PASSED
+
+## Maven summary
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.525 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.265 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.407 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.589 s -- in com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.050 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.290 s -- in com.horizon.policyforge.web.RequestBodySizeLimitFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.423 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 106, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.24 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.640 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.870 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.731 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.474 s -- in com.horizon.policyforge.web.BodySizeLimitEndToEndIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.094 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.750 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.084 s -- in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 s -- in com.horizon.policyforge.web.QuoteHealthDeclarationsIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.960 s -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.971 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Tests run: 75, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Analyzed bundle 'PolicyForge' with 71 classes
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Analyzed bundle 'policyforge' with 71 classes
+[INFO] All coverage checks have been met.
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Analyzed bundle 'policyforge' with 33 classes
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS

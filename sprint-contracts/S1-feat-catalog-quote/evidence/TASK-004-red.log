@@ -1,0 +1,284 @@
+TASK-004 RED run (2026-10-28). Shows every architecture rule FAILING against its deliberately violating negative fixture.
+Method: a temporary class RedDemoTmpTest (deleted after this capture) applied each production ArchRule constant (the
+same objects the @ArchTest production checks and the negative-fixture tests use) directly to its fixture package with
+rule.check(...), without asserting the failure. Every one of the 17 therefore fails, and each ArchUnit report below
+names the violated rule, its because(...) clause (NFR-01, NFR-02, NFR-05 or NFR-08) and the violating fixture members.
+Rule coverage: layer matrix (1), domain purity (2), money precision (4), controller placement (2), append-only (7: setters,
+@Immutable, public fields, CrudRepository, JpaRepository/non-Repository, delete/remove, update/@Modifying) and the
+AC-02.6 retained check failing when RuleSetVersionEntity is absent (1). J3: that check is the "no classes matched" failure.
+Command: ./mvnw -B -ntp test -Dtest=RedDemoTmpTest
+Fixtures: backend/src/test/java/com/horizon/archfixtures/** (outside the application base package, so never scanned)
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 81 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.architecture.RedDemoTmpTest
+[ERROR] Tests run: 17, Failures: 17, Errors: 0, Skipped: 0, Time elapsed: 2.437 s <<< FAILURE! -- in com.horizon.policyforge.architecture.RedDemoTmpTest
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.moneyFields -- Time elapsed: 1.133 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no fields that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should have raw type a double or float type, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (2 times):
+Field <com.horizon.archfixtures.money.domain.MoneyBoxedFloatField.rate> has raw type a double or float type in (MoneyBoxedFloatField.java:0)
+Field <com.horizon.archfixtures.money.domain.MoneyDoubleField.premium> has raw type a double or float type in (MoneyDoubleField.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyDelete -- Time elapsed: 0.139 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only repositories should have name matching '(delete|remove|update).*' or should be annotated with @Modifying, because NFR-02: append-only repositories declare no delete*, remove*, update* or @Modifying methods' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.delete.repository.AuditEntryRepository.removeById(java.lang.Long)> has name matching '(delete|remove|update).*' in (AuditEntryRepository.java:0)
+Method <com.horizon.archfixtures.appendonly.delete.repository.RuleSetVersionRepository.deleteByProductCode(java.lang.String)> has name matching '(delete|remove|update).*' in (RuleSetVersionRepository.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyFields -- Time elapsed: 0.071 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'fields that are declared in classes that append-only entities and are not static should not be public, because NFR-02: a public field is a setter by another name, so append-only entities hide their fields' was violated (1 times):
+Field <com.horizon.archfixtures.appendonly.publicfield.repository.RuleSetVersionEntity.payload> has modifier PUBLIC in (RuleSetVersionEntity.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlySetters -- Time elapsed: 0.077 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only entities and are public should have name matching 'set[A-Z].*', because NFR-02: append-only entities have no public setters' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.setter.repository.QuoteEntity.setStatus(java.lang.String)> has name matching 'set[A-Z].*' in (QuoteEntity.java:13)
+Method <com.horizon.archfixtures.appendonly.setter.repository.RuleSetVersionEntity.setPayload(java.lang.String)> has name matching 'set[A-Z].*' in (RuleSetVersionEntity.java:13)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.ac026Absent -- Time elapsed: 0.060 s <<< FAILURE!
+java.lang.AssertionError: Rule 'classes that have simple name 'RuleSetVersionEntity' should reside in a package 'com.horizon..repository..' and should be annotated with @Entity and should be annotated with @Immutable, because NFR-05: RuleSetVersionEntity is append-only, a new fact is a new row' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can either use `ArchRule.allowEmptyShould(true)` on a single rule or set the configuration property `archRule.failOnEmptyShould = false` to change the behavior globally.
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.purityJdk -- Time elapsed: 0.279 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that reside in a package 'com.horizon..domain..' should only depend on classes that reside in any package ['java..', 'com.horizon..domain..'], because NFR-08: the domain may depend on the JDK (java.*) and other domain classes only' was violated (9 times):
+Class <com.horizon.archfixtures.purity.domain.DomainUsesJpa> is annotated with <jakarta.persistence.Entity> in (DomainUsesJpa.java:0)
+Class <com.horizon.archfixtures.purity.domain.DomainUsesSpring> is annotated with <org.springframework.stereotype.Component> in (DomainUsesSpring.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesJackson.mapper> has type <com.fasterxml.jackson.databind.ObjectMapper> in (DomainUsesJackson.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.LOG> has type <org.slf4j.Logger> in (DomainUsesSlf4j.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web> has type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesJackson.mapper()> has return type <com.fasterxml.jackson.databind.ObjectMapper> in (DomainUsesJackson.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.log()> has return type <org.slf4j.Logger> in (DomainUsesSlf4j.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web()> has return type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Static Initializer <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.<clinit>()> calls method <org.slf4j.LoggerFactory.getLogger(java.lang.Class)> in (DomainUsesSlf4j.java:8)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyJpa -- Time elapsed: 0.061 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only repositories should be interfaces and should be assignable to org.springframework.data.repository.Repository and should not be assignable to org.springframework.data.repository.CrudRepository and should not be assignable to org.springframework.data.repository.ListCrudRepository and should not be assignable to org.springframework.data.repository.PagingAndSortingRepository and should not be assignable to org.springframework.data.repository.ListPagingAndSortingRepository and should not be assignable to org.springframework.data.jpa.repository.JpaRepository, because NFR-02: append-only repositories extend Repository, never a CRUD or JPA repository that exposes delete' was violated (5 times):
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.jpa.repository.JpaRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.CrudRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.ListCrudRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.ListPagingAndSortingRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.PagingAndSortingRepository in (RuleSetVersionRepository.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.moneyParameters -- Time elapsed: 0.051 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'methods that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should not have double or float parameters, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (1 times):
+com.horizon.archfixtures.money.domain.MoneyDoubleParameter.toCents(double) has a parameter of type double
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyUpdate -- Time elapsed: 0.054 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only repositories should have name matching '(delete|remove|update).*' or should be annotated with @Modifying, because NFR-02: append-only repositories declare no delete*, remove*, update* or @Modifying methods' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.update.repository.AuditEntryRepository.updateActor(java.lang.String)> has name matching '(delete|remove|update).*' in (AuditEntryRepository.java:0)
+Method <com.horizon.archfixtures.appendonly.update.repository.RuleSetVersionRepository.overwrite(java.lang.String)> is annotated with @Modifying in (RuleSetVersionRepository.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.layers -- Time elapsed: 0.077 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'Layered architecture considering only dependencies in layers, consisting of
+layer 'Web' ('com.horizon..web..')
+layer 'Service' ('com.horizon..service..')
+layer 'Repository' ('com.horizon..repository..')
+layer 'Domain' ('com.horizon..domain..')
+layer 'Config' ('com.horizon..config..')
+where layer 'Web' may only access layers ['Service', 'Domain']
+where layer 'Service' may only access layers ['Repository', 'Domain']
+where layer 'Repository' may only access layers ['Domain']
+where layer 'Domain' may not access any layer, because NFR-08: docs/architecture.md section 2 fixes the layer matrix (web to service to repository to domain, never upwards)' was violated (20 times):
+Field <com.horizon.archfixtures.layers.domain.DomainToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (DomainToConfig.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToRepository.target> has type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (DomainToRepository.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToService.target> has type <com.horizon.archfixtures.layers.service.ServiceMarker> in (DomainToService.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (DomainToWeb.java:0)
+Field <com.horizon.archfixtures.layers.repository.RepositoryToService.target> has type <com.horizon.archfixtures.layers.service.ServiceMarker> in (RepositoryToService.java:0)
+Field <com.horizon.archfixtures.layers.repository.RepositoryToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (RepositoryToWeb.java:0)
+Field <com.horizon.archfixtures.layers.service.ServiceToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (ServiceToConfig.java:0)
+Field <com.horizon.archfixtures.layers.service.ServiceToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (ServiceToWeb.java:0)
+Field <com.horizon.archfixtures.layers.web.WebToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (WebToConfig.java:0)
+Field <com.horizon.archfixtures.layers.web.WebToRepository.target> has type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (WebToRepository.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (DomainToConfig.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToRepository.target()> has return type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (DomainToRepository.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToService.target()> has return type <com.horizon.archfixtures.layers.service.ServiceMarker> in (DomainToService.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (DomainToWeb.java:0)
+Method <com.horizon.archfixtures.layers.repository.RepositoryToService.target()> has return type <com.horizon.archfixtures.layers.service.ServiceMarker> in (RepositoryToService.java:0)
+Method <com.horizon.archfixtures.layers.repository.RepositoryToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (RepositoryToWeb.java:0)
+Method <com.horizon.archfixtures.layers.service.ServiceToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (ServiceToConfig.java:0)
+Method <com.horizon.archfixtures.layers.service.ServiceToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (ServiceToWeb.java:0)
+Method <com.horizon.archfixtures.layers.web.WebToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (WebToConfig.java:0)
+Method <com.horizon.archfixtures.layers.web.WebToRepository.target()> has return type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (WebToRepository.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.moneyConversion -- Time elapsed: 0.049 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should call code unit where convert between BigDecimal and double or float, because NFR-01: BigDecimal must not be built from or converted to double or float (use BigDecimal.valueOf(long), a string, or setScale)' was violated (4 times):
+Method <com.horizon.archfixtures.money.domain.MoneyFromDouble.viaConstructor()> calls constructor <java.math.BigDecimal.<init>(double)> in (MoneyFromDouble.java:8)
+Method <com.horizon.archfixtures.money.domain.MoneyFromDouble.viaValueOf()> calls method <java.math.BigDecimal.valueOf(double)> in (MoneyFromDouble.java:12)
+Method <com.horizon.archfixtures.money.domain.MoneyToDouble.viaDoubleValue(java.math.BigDecimal)> calls method <java.math.BigDecimal.doubleValue()> in (MoneyToDouble.java:8)
+Method <com.horizon.archfixtures.money.domain.MoneyToDouble.viaFloatValue(java.math.BigDecimal)> calls method <java.math.BigDecimal.floatValue()> in (MoneyToDouble.java:12)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.moneyReturns -- Time elapsed: 0.040 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should have raw return type a double or float type, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (2 times):
+Method <com.horizon.archfixtures.money.domain.MoneyBoxedDoubleReturn.factor()> has raw return type a double or float type in (MoneyBoxedDoubleReturn.java:6)
+Method <com.horizon.archfixtures.money.domain.MoneyFloatReturn.rate()> has raw return type a double or float type in (MoneyFloatReturn.java:6)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.controllersPlacement -- Time elapsed: 0.039 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that are meta-annotated with @Controller should reside in a package 'com.horizon..web..', because NFR-08: web is the only layer that serves HTTP (docs/architecture.md section 2)' was violated (2 times):
+Class <com.horizon.archfixtures.controllers.repository.MisplacedPlainController> does not reside in a package 'com.horizon..web..' in (MisplacedPlainController.java:0)
+Class <com.horizon.archfixtures.controllers.service.MisplacedController> does not reside in a package 'com.horizon..web..' in (MisplacedController.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyImmutable -- Time elapsed: 0.040 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only entities should reside in a package 'com.horizon..repository..' and should be annotated with @Entity and should be annotated with @Immutable, because NFR-02/NFR-05: policy versions, endorsements, transitions, refunds, audit entries, rule-set versions, underwriting decisions and quotes are append-only, a new fact is a new row' was violated (1 times):
+Class <com.horizon.archfixtures.appendonly.notimmutable.repository.RuleSetVersionEntity> is not annotated with @Immutable in (RuleSetVersionEntity.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.purityFramework -- Time elapsed: 0.135 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'no classes that reside in a package 'com.horizon..domain..' should depend on classes that reside in any package ['org.springframework..', 'jakarta..', 'javax..', 'org.hibernate..', 'com.horizon..web..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..config..'], because NFR-08: the domain has no Spring, JPA or web imports and does not reach other layers (docs/architecture.md section 2)' was violated (4 times):
+Class <com.horizon.archfixtures.purity.domain.DomainUsesJpa> is annotated with <jakarta.persistence.Entity> in (DomainUsesJpa.java:0)
+Class <com.horizon.archfixtures.purity.domain.DomainUsesSpring> is annotated with <org.springframework.stereotype.Component> in (DomainUsesSpring.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web> has type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web()> has return type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.controllersNaming -- Time elapsed: 0.034 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that are meta-annotated with @Controller should have simple name ending with 'Controller', because NFR-08: controllers are recognisable by name (docs/architecture.md section 2)' was violated (1 times):
+Class <com.horizon.archfixtures.controllers.web.Misnamed> does not have simple name ending with 'Controller' in (Misnamed.java:0)
+
+[ERROR] com.horizon.policyforge.architecture.RedDemoTmpTest.appendOnlyCrud -- Time elapsed: 0.035 s <<< FAILURE!
+java.lang.AssertionError: 
+Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only repositories should be interfaces and should be assignable to org.springframework.data.repository.Repository and should not be assignable to org.springframework.data.repository.CrudRepository and should not be assignable to org.springframework.data.repository.ListCrudRepository and should not be assignable to org.springframework.data.repository.PagingAndSortingRepository and should not be assignable to org.springframework.data.repository.ListPagingAndSortingRepository and should not be assignable to org.springframework.data.jpa.repository.JpaRepository, because NFR-02: append-only repositories extend Repository, never a CRUD or JPA repository that exposes delete' was violated (1 times):
+Class <com.horizon.archfixtures.appendonly.crud.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.CrudRepository in (RuleSetVersionRepository.java:0)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   RedDemoTmpTest.ac026Absent:109 Rule 'classes that have simple name 'RuleSetVersionEntity' should reside in a package 'com.horizon..repository..' and should be annotated with @Entity and should be annotated with @Immutable, because NFR-05: RuleSetVersionEntity is append-only, a new fact is a new row' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can either use `ArchRule.allowEmptyShould(true)` on a single rule or set the configuration property `archRule.failOnEmptyShould = false` to change the behavior globally.
+[ERROR]   RedDemoTmpTest.appendOnlyCrud:84 Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only repositories should be interfaces and should be assignable to org.springframework.data.repository.Repository and should not be assignable to org.springframework.data.repository.CrudRepository and should not be assignable to org.springframework.data.repository.ListCrudRepository and should not be assignable to org.springframework.data.repository.PagingAndSortingRepository and should not be assignable to org.springframework.data.repository.ListPagingAndSortingRepository and should not be assignable to org.springframework.data.jpa.repository.JpaRepository, because NFR-02: append-only repositories extend Repository, never a CRUD or JPA repository that exposes delete' was violated (1 times):
+Class <com.horizon.archfixtures.appendonly.crud.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.CrudRepository in (RuleSetVersionRepository.java:0)
+[ERROR]   RedDemoTmpTest.appendOnlyDelete:96 Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only repositories should have name matching '(delete|remove|update).*' or should be annotated with @Modifying, because NFR-02: append-only repositories declare no delete*, remove*, update* or @Modifying methods' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.delete.repository.AuditEntryRepository.removeById(java.lang.Long)> has name matching '(delete|remove|update).*' in (AuditEntryRepository.java:0)
+Method <com.horizon.archfixtures.appendonly.delete.repository.RuleSetVersionRepository.deleteByProductCode(java.lang.String)> has name matching '(delete|remove|update).*' in (RuleSetVersionRepository.java:0)
+[ERROR]   RedDemoTmpTest.appendOnlyFields:78 Architecture Violation [Priority: MEDIUM] - Rule 'fields that are declared in classes that append-only entities and are not static should not be public, because NFR-02: a public field is a setter by another name, so append-only entities hide their fields' was violated (1 times):
+Field <com.horizon.archfixtures.appendonly.publicfield.repository.RuleSetVersionEntity.payload> has modifier PUBLIC in (RuleSetVersionEntity.java:0)
+[ERROR]   RedDemoTmpTest.appendOnlyImmutable:72 Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only entities should reside in a package 'com.horizon..repository..' and should be annotated with @Entity and should be annotated with @Immutable, because NFR-02/NFR-05: policy versions, endorsements, transitions, refunds, audit entries, rule-set versions, underwriting decisions and quotes are append-only, a new fact is a new row' was violated (1 times):
+Class <com.horizon.archfixtures.appendonly.notimmutable.repository.RuleSetVersionEntity> is not annotated with @Immutable in (RuleSetVersionEntity.java:0)
+[ERROR]   RedDemoTmpTest.appendOnlyJpa:90 Architecture Violation [Priority: MEDIUM] - Rule 'classes that append-only repositories should be interfaces and should be assignable to org.springframework.data.repository.Repository and should not be assignable to org.springframework.data.repository.CrudRepository and should not be assignable to org.springframework.data.repository.ListCrudRepository and should not be assignable to org.springframework.data.repository.PagingAndSortingRepository and should not be assignable to org.springframework.data.repository.ListPagingAndSortingRepository and should not be assignable to org.springframework.data.jpa.repository.JpaRepository, because NFR-02: append-only repositories extend Repository, never a CRUD or JPA repository that exposes delete' was violated (5 times):
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.jpa.repository.JpaRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.CrudRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.ListCrudRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.ListPagingAndSortingRepository in (RuleSetVersionRepository.java:0)
+Class <com.horizon.archfixtures.appendonly.jpa.repository.RuleSetVersionRepository> is assignable to org.springframework.data.repository.PagingAndSortingRepository in (RuleSetVersionRepository.java:0)
+[ERROR]   RedDemoTmpTest.appendOnlySetters:66 Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only entities and are public should have name matching 'set[A-Z].*', because NFR-02: append-only entities have no public setters' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.setter.repository.QuoteEntity.setStatus(java.lang.String)> has name matching 'set[A-Z].*' in (QuoteEntity.java:13)
+Method <com.horizon.archfixtures.appendonly.setter.repository.RuleSetVersionEntity.setPayload(java.lang.String)> has name matching 'set[A-Z].*' in (RuleSetVersionEntity.java:13)
+[ERROR]   RedDemoTmpTest.appendOnlyUpdate:102 Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that append-only repositories should have name matching '(delete|remove|update).*' or should be annotated with @Modifying, because NFR-02: append-only repositories declare no delete*, remove*, update* or @Modifying methods' was violated (2 times):
+Method <com.horizon.archfixtures.appendonly.update.repository.AuditEntryRepository.updateActor(java.lang.String)> has name matching '(delete|remove|update).*' in (AuditEntryRepository.java:0)
+Method <com.horizon.archfixtures.appendonly.update.repository.RuleSetVersionRepository.overwrite(java.lang.String)> is annotated with @Modifying in (RuleSetVersionRepository.java:0)
+[ERROR]   RedDemoTmpTest.controllersNaming:60 Architecture Violation [Priority: MEDIUM] - Rule 'classes that are meta-annotated with @Controller should have simple name ending with 'Controller', because NFR-08: controllers are recognisable by name (docs/architecture.md section 2)' was violated (1 times):
+Class <com.horizon.archfixtures.controllers.web.Misnamed> does not have simple name ending with 'Controller' in (Misnamed.java:0)
+[ERROR]   RedDemoTmpTest.controllersPlacement:54 Architecture Violation [Priority: MEDIUM] - Rule 'classes that are meta-annotated with @Controller should reside in a package 'com.horizon..web..', because NFR-08: web is the only layer that serves HTTP (docs/architecture.md section 2)' was violated (2 times):
+Class <com.horizon.archfixtures.controllers.repository.MisplacedPlainController> does not reside in a package 'com.horizon..web..' in (MisplacedPlainController.java:0)
+Class <com.horizon.archfixtures.controllers.service.MisplacedController> does not reside in a package 'com.horizon..web..' in (MisplacedController.java:0)
+[ERROR]   RedDemoTmpTest.layers:12 Architecture Violation [Priority: MEDIUM] - Rule 'Layered architecture considering only dependencies in layers, consisting of
+layer 'Web' ('com.horizon..web..')
+layer 'Service' ('com.horizon..service..')
+layer 'Repository' ('com.horizon..repository..')
+layer 'Domain' ('com.horizon..domain..')
+layer 'Config' ('com.horizon..config..')
+where layer 'Web' may only access layers ['Service', 'Domain']
+where layer 'Service' may only access layers ['Repository', 'Domain']
+where layer 'Repository' may only access layers ['Domain']
+where layer 'Domain' may not access any layer, because NFR-08: docs/architecture.md section 2 fixes the layer matrix (web to service to repository to domain, never upwards)' was violated (20 times):
+Field <com.horizon.archfixtures.layers.domain.DomainToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (DomainToConfig.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToRepository.target> has type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (DomainToRepository.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToService.target> has type <com.horizon.archfixtures.layers.service.ServiceMarker> in (DomainToService.java:0)
+Field <com.horizon.archfixtures.layers.domain.DomainToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (DomainToWeb.java:0)
+Field <com.horizon.archfixtures.layers.repository.RepositoryToService.target> has type <com.horizon.archfixtures.layers.service.ServiceMarker> in (RepositoryToService.java:0)
+Field <com.horizon.archfixtures.layers.repository.RepositoryToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (RepositoryToWeb.java:0)
+Field <com.horizon.archfixtures.layers.service.ServiceToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (ServiceToConfig.java:0)
+Field <com.horizon.archfixtures.layers.service.ServiceToWeb.target> has type <com.horizon.archfixtures.layers.web.WebMarker> in (ServiceToWeb.java:0)
+Field <com.horizon.archfixtures.layers.web.WebToConfig.target> has type <com.horizon.archfixtures.layers.config.ConfigMarker> in (WebToConfig.java:0)
+Field <com.horizon.archfixtures.layers.web.WebToRepository.target> has type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (WebToRepository.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (DomainToConfig.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToRepository.target()> has return type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (DomainToRepository.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToService.target()> has return type <com.horizon.archfixtures.layers.service.ServiceMarker> in (DomainToService.java:0)
+Method <com.horizon.archfixtures.layers.domain.DomainToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (DomainToWeb.java:0)
+Method <com.horizon.archfixtures.layers.repository.RepositoryToService.target()> has return type <com.horizon.archfixtures.layers.service.ServiceMarker> in (RepositoryToService.java:0)
+Method <com.horizon.archfixtures.layers.repository.RepositoryToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (RepositoryToWeb.java:0)
+Method <com.horizon.archfixtures.layers.service.ServiceToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (ServiceToConfig.java:0)
+Method <com.horizon.archfixtures.layers.service.ServiceToWeb.target()> has return type <com.horizon.archfixtures.layers.web.WebMarker> in (ServiceToWeb.java:0)
+Method <com.horizon.archfixtures.layers.web.WebToConfig.target()> has return type <com.horizon.archfixtures.layers.config.ConfigMarker> in (WebToConfig.java:0)
+Method <com.horizon.archfixtures.layers.web.WebToRepository.target()> has return type <com.horizon.archfixtures.layers.repository.RepositoryMarker> in (WebToRepository.java:0)
+[ERROR]   RedDemoTmpTest.moneyConversion:48 Architecture Violation [Priority: MEDIUM] - Rule 'no classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should call code unit where convert between BigDecimal and double or float, because NFR-01: BigDecimal must not be built from or converted to double or float (use BigDecimal.valueOf(long), a string, or setScale)' was violated (4 times):
+Method <com.horizon.archfixtures.money.domain.MoneyFromDouble.viaConstructor()> calls constructor <java.math.BigDecimal.<init>(double)> in (MoneyFromDouble.java:8)
+Method <com.horizon.archfixtures.money.domain.MoneyFromDouble.viaValueOf()> calls method <java.math.BigDecimal.valueOf(double)> in (MoneyFromDouble.java:12)
+Method <com.horizon.archfixtures.money.domain.MoneyToDouble.viaDoubleValue(java.math.BigDecimal)> calls method <java.math.BigDecimal.doubleValue()> in (MoneyToDouble.java:8)
+Method <com.horizon.archfixtures.money.domain.MoneyToDouble.viaFloatValue(java.math.BigDecimal)> calls method <java.math.BigDecimal.floatValue()> in (MoneyToDouble.java:12)
+[ERROR]   RedDemoTmpTest.moneyFields:30 Architecture Violation [Priority: MEDIUM] - Rule 'no fields that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should have raw type a double or float type, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (2 times):
+Field <com.horizon.archfixtures.money.domain.MoneyBoxedFloatField.rate> has raw type a double or float type in (MoneyBoxedFloatField.java:0)
+Field <com.horizon.archfixtures.money.domain.MoneyDoubleField.premium> has raw type a double or float type in (MoneyDoubleField.java:0)
+[ERROR]   RedDemoTmpTest.moneyParameters:42 Architecture Violation [Priority: MEDIUM] - Rule 'methods that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should not have double or float parameters, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (1 times):
+com.horizon.archfixtures.money.domain.MoneyDoubleParameter.toCents(double) has a parameter of type double
+[ERROR]   RedDemoTmpTest.moneyReturns:36 Architecture Violation [Priority: MEDIUM] - Rule 'no methods that are declared in classes that reside in any package ['com.horizon..domain..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..web..'] should have raw return type a double or float type, because NFR-01: money, rates and factors are BigDecimal, never double or float' was violated (2 times):
+Method <com.horizon.archfixtures.money.domain.MoneyBoxedDoubleReturn.factor()> has raw return type a double or float type in (MoneyBoxedDoubleReturn.java:6)
+Method <com.horizon.archfixtures.money.domain.MoneyFloatReturn.rate()> has raw return type a double or float type in (MoneyFloatReturn.java:6)
+[ERROR]   RedDemoTmpTest.purityFramework:18 Architecture Violation [Priority: MEDIUM] - Rule 'no classes that reside in a package 'com.horizon..domain..' should depend on classes that reside in any package ['org.springframework..', 'jakarta..', 'javax..', 'org.hibernate..', 'com.horizon..web..', 'com.horizon..service..', 'com.horizon..repository..', 'com.horizon..config..'], because NFR-08: the domain has no Spring, JPA or web imports and does not reach other layers (docs/architecture.md section 2)' was violated (4 times):
+Class <com.horizon.archfixtures.purity.domain.DomainUsesJpa> is annotated with <jakarta.persistence.Entity> in (DomainUsesJpa.java:0)
+Class <com.horizon.archfixtures.purity.domain.DomainUsesSpring> is annotated with <org.springframework.stereotype.Component> in (DomainUsesSpring.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web> has type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web()> has return type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+[ERROR]   RedDemoTmpTest.purityJdk:24 Architecture Violation [Priority: MEDIUM] - Rule 'classes that reside in a package 'com.horizon..domain..' should only depend on classes that reside in any package ['java..', 'com.horizon..domain..'], because NFR-08: the domain may depend on the JDK (java.*) and other domain classes only' was violated (9 times):
+Class <com.horizon.archfixtures.purity.domain.DomainUsesJpa> is annotated with <jakarta.persistence.Entity> in (DomainUsesJpa.java:0)
+Class <com.horizon.archfixtures.purity.domain.DomainUsesSpring> is annotated with <org.springframework.stereotype.Component> in (DomainUsesSpring.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesJackson.mapper> has type <com.fasterxml.jackson.databind.ObjectMapper> in (DomainUsesJackson.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.LOG> has type <org.slf4j.Logger> in (DomainUsesSlf4j.java:0)
+Field <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web> has type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesJackson.mapper()> has return type <com.fasterxml.jackson.databind.ObjectMapper> in (DomainUsesJackson.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.log()> has return type <org.slf4j.Logger> in (DomainUsesSlf4j.java:0)
+Method <com.horizon.archfixtures.purity.domain.DomainUsesWeb.web()> has return type <com.horizon.archfixtures.purity.web.WebThing> in (DomainUsesWeb.java:0)
+Static Initializer <com.horizon.archfixtures.purity.domain.DomainUsesSlf4j.<clinit>()> calls method <org.slf4j.LoggerFactory.getLogger(java.lang.Class)> in (DomainUsesSlf4j.java:8)
+[INFO] 
+[ERROR] Tests run: 17, Failures: 17, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.013 s
+[INFO] Finished at: 2026-10-28T12:11:00+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project policyforge: There are test failures.
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -3,6 +3,9 @@ import { RequireSession } from './auth/RequireSession';
 import { SessionProvider, useSession } from './auth/SessionContext';
 import { ApplicationStatusPage } from './pages/ApplicationStatusPage';
 import { ApplyPage } from './pages/ApplyPage';
+import { EndorsePage } from './pages/EndorsePage';
+import { MyPoliciesPage } from './pages/MyPoliciesPage';
+import { PolicyDetailPage } from './pages/PolicyDetailPage';
 import { QuotePage } from './pages/QuotePage';
 import { WorkbenchPage } from './pages/WorkbenchPage';
 
@@ -10,7 +13,10 @@ type Route =
   | { name: 'quote' }
   | { name: 'apply'; quoteId: string | null }
   | { name: 'application'; applicationId: string }
-  | { name: 'workbench' };
+  | { name: 'workbench' }
+  | { name: 'policies' }
+  | { name: 'policy'; policyNumber: string }
+  | { name: 'endorse'; policyNumber: string };
 
 /** Parses the location hash into a route (C8). Anything unknown is the public Quote page, the default route. */
 export function parseRoute(hash: string): Route {
@@ -21,6 +27,11 @@ export function parseRoute(hash: string): Route {
     return { name: 'apply', quoteId: quoteId && quoteId.trim() !== '' ? quoteId : null };
   }
   if (path === '/workbench') return { name: 'workbench' };
+  if (path === '/policies') return { name: 'policies' };
+  const endorse = /^\/policies\/([^/]+)\/endorse$/.exec(path);
+  if (endorse) return { name: 'endorse', policyNumber: decodeURIComponent(endorse[1]) };
+  const policy = /^\/policies\/([^/]+)$/.exec(path);
+  if (policy) return { name: 'policy', policyNumber: decodeURIComponent(policy[1]) };
   const application = /^\/applications\/([^/]+)$/.exec(path);
   if (application) return { name: 'application', applicationId: decodeURIComponent(application[1]) };
   return { name: 'quote' };
@@ -47,6 +58,13 @@ function NavBar({ route }: { route: Route }) {
       </a>
       <a href="#/workbench" data-testid="nav-workbench" aria-current={route.name === 'workbench' ? 'page' : undefined}>
         Workbench
+      </a>
+      <a
+        href="#/policies"
+        data-testid="nav-policies"
+        aria-current={route.name === 'policies' || route.name === 'policy' || route.name === 'endorse' ? 'page' : undefined}
+      >
+        My Policies
       </a>
       {credentials ? (
         <span className="nav-session">
@@ -86,7 +104,37 @@ function Routes({ route }: { route: Route }) {
     case 'application':
       return (
         <RequireSession>
-          <ApplicationStatusPage key={route.applicationId} applicationId={route.applicationId} />
+          <ApplicationStatusPage
+            key={route.applicationId}
+            applicationId={route.applicationId}
+            onIssued={(policyNumber) => {
+              window.location.hash = `#/policies/${encodeURIComponent(policyNumber)}`;
+            }}
+          />
+        </RequireSession>
+      );
+    case 'policies':
+      return (
+        <RequireSession>
+          <MyPoliciesPage />
+        </RequireSession>
+      );
+    case 'policy':
+      return (
+        <RequireSession>
+          <PolicyDetailPage key={route.policyNumber} policyNumber={route.policyNumber} />
+        </RequireSession>
+      );
+    case 'endorse':
+      return (
+        <RequireSession>
+          <EndorsePage
+            key={route.policyNumber}
+            policyNumber={route.policyNumber}
+            onEndorsed={(policyNumber) => {
+              window.location.hash = `#/policies/${encodeURIComponent(policyNumber)}`;
+            }}
+          />
         </RequireSession>
       );
     case 'workbench':
@@ -102,7 +150,7 @@ function Routes({ route }: { route: Route }) {
 
 /**
  * App shell: the in-memory session sits above the router so hash navigation keeps the user signed in (TASK-002
- * contract). The Quote page is the default route and stays public; the other three routes sit behind the sign-in gate.
+ * contract). The Quote page is the default route and stays public; the other routes sit behind the sign-in gate.
  */
 export function App() {
   return (

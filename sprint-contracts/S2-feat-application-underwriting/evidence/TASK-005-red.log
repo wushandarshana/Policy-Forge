@@ -1,0 +1,195 @@
+# TASK-005 red run: test(red) AC-09.1 AC-09.2 AC-09.3 AC-09.4 AC-09.5 AC-09.6 AC-09.7 NFR-03.1 NFR-04.1 NFR-04.3 NFR-04.4 underwriter queue, manual decision, admin override, role boundary and body limits (tests plus the PiiMasker and RiskInputSchema.reviewView stubs)
+# command: ./mvnw verify -Dskip.frontend=true -Djacoco.skip=true -Dmaven.test.failure.ignore=true -Dtest='PiiMaskerTest,RiskInputSchemaReviewViewTest' -Dit.test='UnderwritingQueueIT,UnderwritingDecisionIT,UnderwritingOverrideIT,RoleBoundaryIT,UnderwritingBodyLimitIT,ApplicationLogCaptureIT'
+# note: the endpoints do not exist yet, so the new IT tests fail on assertions (404 where 200/403/409 is expected). Rows that already hold in red are the default-deny 401 checks and the Sprint 1 filters (anonymous 401, 16 KB cap on /api/applications).
+[ERROR] Tests run: 10, Failures: 0, Errors: 10, Skipped: 0, Time elapsed: 0.150 s <<< FAILURE! -- in com.horizon.policyforge.domain.PiiMaskerTest
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.panKeepsOnlyItsLastFourCharacters -- Time elapsed: 0.021 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.maskIsStarsForAllButTheLastFour(String, String)[1] -- Time elapsed: 0.013 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.maskIsStarsForAllButTheLastFour(String, String)[2] -- Time elapsed: 0.003 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.maskIsStarsForAllButTheLastFour(String, String)[3] -- Time elapsed: 0.003 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.nullStaysNull -- Time elapsed: 0.001 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.aadhaarKeepsOnlyItsLastFourCharacters -- Time elapsed: 0.002 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.shortValuesAreNeverRevealed(String)[1] -- Time elapsed: 0.004 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.shortValuesAreNeverRevealed(String)[2] -- Time elapsed: 0.002 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.shortValuesAreNeverRevealed(String)[3] -- Time elapsed: 0.002 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.PiiMaskerTest.shortValuesAreNeverRevealed(String)[4] -- Time elapsed: 0.001 s <<< ERROR!
+[ERROR] Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.176 s <<< FAILURE! -- in com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest.absentInputsAreLeftOut -- Time elapsed: 0.067 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest.termLifeViewIncludesHealthInputs -- Time elapsed: 0.097 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest.otherProductsViewTheirDeclaredInputs -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest.undeclaredKeysNeverAppear -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] Tests run: 14, Failures: 4, Errors: 10, Skipped: 0
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 13.87 s <<< FAILURE! -- in com.horizon.policyforge.web.ApplicationLogCaptureIT
+[ERROR] com.horizon.policyforge.web.ApplicationLogCaptureIT.underwriterActionsLogIdsOnly(CapturedOutput) -- Time elapsed: 0.955 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ApplicationLogCaptureIT.rejectedUnderwriterRequestsLogNoSubmittedValues(CapturedOutput) -- Time elapsed: 1.064 s <<< FAILURE!
+[ERROR] Tests run: 28, Failures: 9, Errors: 0, Skipped: 0, Time elapsed: 5.074 s <<< FAILURE! -- in com.horizon.policyforge.web.RoleBoundaryIT
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.onlyTheDocumentedMethodsAreMapped -- Time elapsed: 0.029 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.overrideIsAdminOnly -- Time elapsed: 0.159 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.underwriterEndpointsAcceptUnderwriters -- Time elapsed: 0.158 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.customerCannotCallUnderwriterEndpoints(Call)[1] -- Time elapsed: 0.152 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.customerCannotCallUnderwriterEndpoints(Call)[2] -- Time elapsed: 0.167 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.customerCannotCallUnderwriterEndpoints(Call)[3] -- Time elapsed: 0.168 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.customerCannotCallUnderwriterEndpoints(Call)[4] -- Time elapsed: 0.167 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.everyUnderwritingHandlerDeclaresItsRole -- Time elapsed: 0.009 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.otherVerbsAreNotAllowed -- Time elapsed: 0.168 s <<< FAILURE!
+[ERROR] Tests run: 6, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 5.255 s <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingBodyLimitIT
+[ERROR] com.horizon.policyforge.web.UnderwritingBodyLimitIT.queueIsReachableThroughTheRealServer -- Time elapsed: 0.360 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingBodyLimitIT.oversizedDecisionIsRefused -- Time elapsed: 0.361 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingBodyLimitIT.oversizedOverrideIsRefused -- Time elapsed: 0.369 s <<< FAILURE!
+[ERROR] Tests run: 31, Failures: 30, Errors: 0, Skipped: 0, Time elapsed: 13.34 s <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingDecisionIT
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.invalidDecisionValueIsRejected -- Time elapsed: 0.673 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.missingReasonCodeIsRejectedAndPairedCodesAreAccepted -- Time elapsed: 0.357 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.validationComesBeforeTheStateCheck -- Time elapsed: 0.290 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.staleVersionIsAConflict -- Time elapsed: 0.348 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.commentIsTrimmed -- Time elapsed: 0.353 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[1] -- Time elapsed: 0.351 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[2] -- Time elapsed: 0.356 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[3] -- Time elapsed: 0.357 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[4] -- Time elapsed: 0.327 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[5] -- Time elapsed: 0.331 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[6] -- Time elapsed: 0.354 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unpairedReasonCodeIsRejected(String, String)[7] -- Time elapsed: 0.335 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.formEncodedDecisionIsUnsupportedMediaType -- Time elapsed: 0.356 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.approvalIsAuditedWithTheActorId -- Time elapsed: 0.354 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.secondDecisionOnTheSameApplicationIsAConflict -- Time elapsed: 0.332 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unknownKeyIsRejected -- Time elapsed: 0.347 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unreadableBodyIsRejected -- Time elapsed: 0.504 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.actorIdComesFromThePrincipal -- Time elapsed: 0.324 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.simultaneousDecisionsOnlyOneWins -- Time elapsed: 0.354 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.approvalAppendsAManualDecisionRow -- Time elapsed: 0.341 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.invalidCommentIsRejected -- Time elapsed: 0.343 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.commentBoundariesAreAccepted -- Time elapsed: 0.534 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.commentProblemDoesNotEchoTheComment -- Time elapsed: 0.340 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.decidedApplicationLeavesTheQueue -- Time elapsed: 0.358 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.underwriterDeclinesAReferredApplication -- Time elapsed: 0.342 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.decisionOnANonReferredApplicationIsAConflict -- Time elapsed: 0.543 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.textPlainDecisionIsUnsupportedMediaType -- Time elapsed: 0.342 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.underwriterApprovesAReferredApplication -- Time elapsed: 0.353 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.everyBodyProblemIsReportedTogether -- Time elapsed: 0.346 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.validationComesBeforeTheLookup -- Time elapsed: 0.133 s <<< FAILURE!
+[ERROR] Tests run: 24, Failures: 23, Errors: 0, Skipped: 0, Time elapsed: 8.319 s <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingOverrideIT
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.overrideIsAuditedWithTheActorId -- Time elapsed: 0.342 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.textPlainOverrideIsUnsupportedMediaType -- Time elapsed: 0.330 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.secondOverrideCodeIsAccepted -- Time elapsed: 0.330 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.customerCannotOverride -- Time elapsed: 0.346 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.validationComesBeforeTheStateCheck -- Time elapsed: 0.349 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.secondOverrideIsAConflict -- Time elapsed: 0.347 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.staleVersionIsAConflict -- Time elapsed: 0.353 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.underwriterCannotOverride -- Time elapsed: 0.352 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.overrideOnAnApprovedApplicationIsAConflict -- Time elapsed: 0.347 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.missingReasonCodeIsRejected -- Time elapsed: 0.339 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.manuallyDeclinedApplicationCanBeOverridden -- Time elapsed: 0.466 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.overrideOnAReferredApplicationIsAConflict -- Time elapsed: 0.350 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.overrideAppendsARowAndKeepsTheOriginalDecision -- Time elapsed: 0.349 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.invalidCommentIsRejected -- Time elapsed: 0.329 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.unknownKeysAreRejected -- Time elapsed: 0.330 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.overriddenApplicationLeavesTheDeclinedList -- Time elapsed: 0.360 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.adminOverridesADeclinedApplication -- Time elapsed: 0.336 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.onlyOverrideCodesAreAccepted(String)[1] -- Time elapsed: 0.342 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.onlyOverrideCodesAreAccepted(String)[2] -- Time elapsed: 0.347 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.onlyOverrideCodesAreAccepted(String)[3] -- Time elapsed: 0.319 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.onlyOverrideCodesAreAccepted(String)[4] -- Time elapsed: 0.330 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.onlyOverrideCodesAreAccepted(String)[5] -- Time elapsed: 0.328 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.validationComesBeforeTheLookup -- Time elapsed: 0.152 s <<< FAILURE!
+[ERROR] Tests run: 10, Failures: 10, Errors: 0, Skipped: 0, Time elapsed: 3.672 s <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingQueueIT
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.plainQueueListsOnlyReferredApplications -- Time elapsed: 0.697 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.adminSeesDeclinedApplications -- Time elapsed: 0.692 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.queueIsOldestFirstBySubmissionTime -- Time elapsed: 0.518 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.aadhaarAndPanAreMaskedToTheirLastFourCharacters -- Time elapsed: 0.310 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.householdItemCarriesOnlyItsDeclaredInputs -- Time elapsed: 0.320 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.unrecognisedIncludeDeclinedIsRejected -- Time elapsed: 0.144 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.adminWithoutIncludeDeclinedGetsThePlainQueue -- Time elapsed: 0.323 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.seededApplicationIsInThePlainQueue -- Time elapsed: 0.161 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.queueItemCarriesOnlyTheAllowListedFields -- Time elapsed: 0.339 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingQueueIT.underwriterCannotIncludeDeclined -- Time elapsed: 0.135 s <<< FAILURE!
+[ERROR] Tests run: 103, Failures: 77, Errors: 0, Skipped: 0
+[ERROR]   RiskInputSchemaReviewViewTest.absentInputsAreLeftOut:71 
+[ERROR]   RiskInputSchemaReviewViewTest.otherProductsViewTheirDeclaredInputs:56 
+[ERROR]   RiskInputSchemaReviewViewTest.termLifeViewIncludesHealthInputs:31 
+[ERROR]   RiskInputSchemaReviewViewTest.undeclaredKeysNeverAppear:48 
+[ERROR]   PiiMaskerTest.aadhaarKeepsOnlyItsLastFourCharacters:22 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.maskIsStarsForAllButTheLastFour:38 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.maskIsStarsForAllButTheLastFour:38 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.maskIsStarsForAllButTheLastFour:38 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.nullStaysNull:50 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.panKeepsOnlyItsLastFourCharacters:28 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.shortValuesAreNeverRevealed:44 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.shortValuesAreNeverRevealed:44 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.shortValuesAreNeverRevealed:44 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   PiiMaskerTest.shortValuesAreNeverRevealed:44 � UnsupportedOperation PiiMasker.mask is not implemented yet
+[ERROR]   ApplicationLogCaptureIT.rejectedUnderwriterRequestsLogNoSubmittedValues:158 
+[ERROR]   ApplicationLogCaptureIT.underwriterActionsLogIdsOnly:125 
+[ERROR]   RoleBoundaryIT.customerCannotCallUnderwriterEndpoints:142 
+[ERROR]   RoleBoundaryIT.customerCannotCallUnderwriterEndpoints:142 
+[ERROR]   RoleBoundaryIT.customerCannotCallUnderwriterEndpoints:142 
+[ERROR]   RoleBoundaryIT.customerCannotCallUnderwriterEndpoints:142 
+[ERROR]   RoleBoundaryIT.everyUnderwritingHandlerDeclaresItsRole:209 [the queue, decision and override handlers are mapped] 
+[ERROR]   RoleBoundaryIT.onlyTheDocumentedMethodsAreMapped:225 
+[ERROR]   RoleBoundaryIT.otherVerbsAreNotAllowed:182 
+[ERROR]   RoleBoundaryIT.overrideIsAdminOnly:161 
+[ERROR]   RoleBoundaryIT.underwriterEndpointsAcceptUnderwriters:168 
+[ERROR]   UnderwritingBodyLimitIT.oversizedDecisionIsRefused:132 [the unpadded body is a valid decision] 
+[ERROR]   UnderwritingBodyLimitIT.oversizedOverrideIsRefused:147 [the unpadded body is a valid override] 
+[ERROR]   UnderwritingBodyLimitIT.queueIsReachableThroughTheRealServer:210 
+[ERROR]   UnderwritingDecisionIT.actorIdComesFromThePrincipal:176 
+[ERROR]   UnderwritingDecisionIT.approvalAppendsAManualDecisionRow:132 
+[ERROR]   UnderwritingDecisionIT.approvalIsAuditedWithTheActorId:157 
+[ERROR]   UnderwritingDecisionIT.commentBoundariesAreAccepted:240 
+[ERROR]   UnderwritingDecisionIT.commentIsTrimmed:205 [a MANUAL row was appended] 
+[ERROR]   UnderwritingDecisionIT.commentProblemDoesNotEchoTheComment:279 
+[ERROR]   UnderwritingDecisionIT.decidedApplicationLeavesTheQueue:215 
+[ERROR]   UnderwritingDecisionIT.decisionOnANonReferredApplicationIsAConflict:373->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.everyBodyProblemIsReportedTogether:319->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.formEncodedDecisionIsUnsupportedMediaType:521 
+[ERROR]   UnderwritingDecisionIT.invalidCommentIsRejected:262->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.invalidDecisionValueIsRejected:308->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.missingReasonCodeIsRejectedAndPairedCodesAreAccepted:355->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.secondDecisionOnTheSameApplicationIsAConflict:391 
+[ERROR]   UnderwritingDecisionIT.simultaneousDecisionsOnlyOneWins:482 [round 0] 
+[ERROR]   UnderwritingDecisionIT.staleVersionIsAConflict:454->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.textPlainDecisionIsUnsupportedMediaType:505 
+[ERROR]   UnderwritingDecisionIT.underwriterApprovesAReferredApplication:115 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.underwriterDeclinesAReferredApplication:189 
+[ERROR]   UnderwritingDecisionIT.unknownKeyIsRejected:291->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unpairedReasonCodeIsRejected:341->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.unreadableBodyIsRejected:541->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.validationComesBeforeTheLookup:419->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingDecisionIT.validationComesBeforeTheStateCheck:430->problemOf:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.adminOverridesADeclinedApplication:108 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.customerCannotOverride:220->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.invalidCommentIsRejected:237->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.manuallyDeclinedApplicationCanBeOverridden:184 
+[ERROR]   UnderwritingOverrideIT.missingReasonCodeIsRejected:267->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.onlyOverrideCodesAreAccepted:254->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.onlyOverrideCodesAreAccepted:254->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.onlyOverrideCodesAreAccepted:254->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.onlyOverrideCodesAreAccepted:254->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.onlyOverrideCodesAreAccepted:254->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.overriddenApplicationLeavesTheDeclinedList:193 
+[ERROR]   UnderwritingOverrideIT.overrideAppendsARowAndKeepsTheOriginalDecision:126 
+[ERROR]   UnderwritingOverrideIT.overrideIsAuditedWithTheActorId:151 
+[ERROR]   UnderwritingOverrideIT.overrideOnAReferredApplicationIsAConflict:309->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.overrideOnAnApprovedApplicationIsAConflict:294->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.secondOverrideCodeIsAccepted:170 
+[ERROR]   UnderwritingOverrideIT.secondOverrideIsAConflict:318 
+[ERROR]   UnderwritingOverrideIT.staleVersionIsAConflict:377->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.textPlainOverrideIsUnsupportedMediaType:394 
+[ERROR]   UnderwritingOverrideIT.underwriterCannotOverride:208->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.unknownKeysAreRejected:280->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.validationComesBeforeTheLookup:344->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingOverrideIT.validationComesBeforeTheStateCheck:355->problemOf:92 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.aadhaarAndPanAreMaskedToTheirLastFourCharacters:112 
+[ERROR]   UnderwritingQueueIT.adminSeesDeclinedApplications:208->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.adminWithoutIncludeDeclinedGetsThePlainQueue:227->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.householdItemCarriesOnlyItsDeclaredInputs:155->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.plainQueueListsOnlyReferredApplications:170->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.queueIsOldestFirstBySubmissionTime:95->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.queueItemCarriesOnlyTheAllowListedFields:129->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.seededApplicationIsInThePlainQueue:193->queueAs:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   UnderwritingQueueIT.underwriterCannotIncludeDeclined:183 
+[ERROR]   UnderwritingQueueIT.unrecognisedIncludeDeclinedIsRejected:236 

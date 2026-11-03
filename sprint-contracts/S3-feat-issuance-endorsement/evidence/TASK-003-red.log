@@ -1,0 +1,1269 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] argLine set to empty
+[INFO] 
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Skipping the execution.
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 121 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.web.ApplicationSeedIT
+19:22:43.400 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.horizon.policyforge.web.ApplicationSeedIT]: ApplicationSeedIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:22:43.619 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.web.ApplicationSeedIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+{"@timestamp":"2026-11-03T19:22:44.2471534+05:30","@version":"1","message":"HV000001: Hibernate Validator 8.0.3.Final","logger_name":"org.hibernate.validator.internal.util.Version","thread_name":"background-preinit","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:44.29245+05:30","@version":"1","message":"Starting ApplicationSeedIT using Java 21.0.12.1 with PID 27028 (started by wdarshana in C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend)","logger_name":"com.horizon.policyforge.web.ApplicationSeedIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:44.2934502+05:30","@version":"1","message":"No active profile set, falling back to 1 default profile: \"default\"","logger_name":"com.horizon.policyforge.web.ApplicationSeedIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:45.3445026+05:30","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:45.4583446+05:30","@version":"1","message":"Finished Spring Data repository scanning in 94 ms. Found 5 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.3798803+05:30","@version":"1","message":"HikariPool-1 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.5802522+05:30","@version":"1","message":"HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:f629abbe-a7bc-437c-b8f5-456a6f44e134 user=SA","logger_name":"com.zaxxer.hikari.pool.HikariPool","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.5832523+05:30","@version":"1","message":"HikariPool-1 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.6503742+05:30","@version":"1","message":"Database: jdbc:h2:mem:f629abbe-a7bc-437c-b8f5-456a6f44e134 (H2 2.3)","logger_name":"org.flywaydb.core.FlywayExecutor","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.694893+05:30","@version":"1","message":"Schema history table \"PUBLIC\".\"flyway_schema_history\" does not exist yet","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.6978924+05:30","@version":"1","message":"Successfully validated 6 migrations (execution time 00:00.024s)","logger_name":"org.flywaydb.core.internal.command.DbValidate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7058922+05:30","@version":"1","message":"Creating Schema History table \"PUBLIC\".\"flyway_schema_history\" ...","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7428919+05:30","@version":"1","message":"Current version of schema \"PUBLIC\": << Empty Schema >>","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7528925+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"1 - rule set version\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7729+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"2 - audit entry\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7814134+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"3 - quote\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.7984136+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"4 - application\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.8134195+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"5 - underwriting decision\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.8224198+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"6 - audit entry status columns\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:46.8395631+05:30","@version":"1","message":"Successfully applied 6 migrations to schema \"PUBLIC\", now at version v6 (execution time 00:00.042s)","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:47.148911+05:30","@version":"1","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.jpa.internal.util.LogHelper","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:47.2295168+05:30","@version":"1","message":"HHH000412: Hibernate ORM core version 6.6.29.Final","logger_name":"org.hibernate.Version","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:47.2574338+05:30","@version":"1","message":"HHH000026: Second-level cache disabled","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:47.5439571+05:30","@version":"1","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:47.6025671+05:30","@version":"1","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']\n\tDatabase driver: undefined/unknown\n\tDatabase version: 2.3.232\n\tAutocommit mode: undefined/unknown\n\tIsolation level: undefined/unknown\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","logger_name":"org.hibernate.orm.connections.pooling","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:48.601893+05:30","@version":"1","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:48.6324155+05:30","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:49.3738732+05:30","@version":"1","message":"Adding welcome page: class path resource [static/index.html]","logger_name":"org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:49.6908861+05:30","@version":"1","message":"Exposing 1 endpoint beneath base path '/actuator'","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:49.8223261+05:30","@version":"1","message":"Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.3179835+05:30","@version":"1","message":"Initializing Spring TestDispatcherServlet ''","logger_name":"org.springframework.boot.test.mock.web.SpringBootMockServletContext","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.3189842+05:30","@version":"1","message":"Initializing Servlet ''","logger_name":"org.springframework.test.web.servlet.TestDispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.3199862+05:30","@version":"1","message":"Completed initialization in 1 ms","logger_name":"org.springframework.test.web.servlet.TestDispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.3863705+05:30","@version":"1","message":"Started ApplicationSeedIT in 6.638 seconds (process running for 7.776)","logger_name":"com.horizon.policyforge.web.ApplicationSeedIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.6313984+05:30","@version":"1","message":"Rule set seeded productCode=TERM_LIFE version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.6433988+05:30","@version":"1","message":"Rule set seeded productCode=MOTOR version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.64895+05:30","@version":"1","message":"Rule set seeded productCode=HOUSEHOLD version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.6514588+05:30","@version":"1","message":"Rule set seed load finished inserted=3","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.6694822+05:30","@version":"1","message":"Rule set seed load finished inserted=0","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.7170505+05:30","@version":"1","message":"Quote created quoteId=Q-35316ff3-5fd9-415e-a348-674dd1938893 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.7648201+05:30","@version":"1","message":"Application submitted applicationId=A-ce129008-bfca-485d-8efb-b2361279f295 quoteId=Q-35316ff3-5fd9-415e-a348-674dd1938893 productCode=TERM_LIFE status=REFERRED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:50.7749291+05:30","@version":"1","message":"Application seeded applicationId=A-ce129008-bfca-485d-8efb-b2361279f295 quoteId=Q-35316ff3-5fd9-415e-a348-674dd1938893 status=REFERRED","logger_name":"com.horizon.policyforge.config.ApplicationSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\wdarshana\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.7\byte-buddy-agent-1.17.7.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+{"@timestamp":"2026-11-03T19:22:51.4582881+05:30","@version":"1","message":"request completed method=GET path=/api/applications/mine status=200 durationMs=245","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"91d2c261-6236-4ea6-8791-db0f5bfd02e1","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.6021822+05:30","@version":"1","message":"request completed method=GET path=/api/applications/mine status=200 durationMs=81","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"bb8ad58d-942c-459e-9fcf-7254d7057572","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.652478+05:30","@version":"1","message":"Rule set seed load finished inserted=0","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.6554803+05:30","@version":"1","message":"Application seed already present","logger_name":"com.horizon.policyforge.config.ApplicationSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.666808+05:30","@version":"1","message":"Rule set seed load finished inserted=0","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.6688098+05:30","@version":"1","message":"Application seed already present","logger_name":"com.horizon.policyforge.config.ApplicationSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.7494696+05:30","@version":"1","message":"request completed method=GET path=/api/applications/mine status=200 durationMs=73","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"381ebab3-2160-47b7-94e1-b46c50428c19","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.8636176+05:30","@version":"1","message":"request completed method=GET path=/api/applications/mine status=200 durationMs=87","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"d22853f8-b578-4905-89a7-7720fd7f485f","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/applications/mine
+       Parameters = {}
+          Headers = [Authorization:"Basic <redacted-credentials>"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#mine(Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [X-Correlation-Id:"d22853f8-b578-4905-89a7-7720fd7f485f", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = [{"applicationId":"A-ce129008-bfca-485d-8efb-b2361279f295","quoteId":"Q-35316ff3-5fd9-415e-a348-674dd1938893","productCode":"TERM_LIFE","status":"REFERRED","decision":"MANUAL_REVIEW","reasonCodes":["UW-TL-002"],"reasons":[{"code":"UW-TL-002","description":"Smoker with sum insured above 10,000,000"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}]
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 4, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 8.583 s <<< FAILURE! -- in com.horizon.policyforge.web.ApplicationSeedIT
+[ERROR] com.horizon.policyforge.web.ApplicationSeedIT.seedQuoteIsOwnedByCustomer2 -- Time elapsed: 0.109 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select q.owner_id from quote q join application a on a.quote_id = q.quote_id where a.application_id = ?]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:723)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:754)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:767)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:889)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:918)
+	at com.horizon.policyforge.web.ApplicationSeedIT.seedQuoteIsOwnedByCustomer2(ApplicationSeedIT.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "Q.OWNER_ID" not found; SQL statement:
+select q.owner_id from quote q join application a on a.quote_id = q.quote_id where a.application_id = ? [42122-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1228)
+	at org.h2.command.query.Query.prepare(Query.java:232)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:315)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.springframework.jdbc.core.JdbcTemplate$SimplePreparedStatementCreator.createPreparedStatement(JdbcTemplate.java:1719)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:656)
+	... 9 more
+
+[INFO] Running com.horizon.policyforge.web.QuoteOwnershipIT
+{"@timestamp":"2026-11-03T19:22:51.9001744+05:30","@version":"1","message":"Could not detect default configuration classes for test class [com.horizon.policyforge.web.QuoteOwnershipIT]: QuoteOwnershipIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.","logger_name":"org.springframework.test.context.support.AnnotationConfigContextLoaderUtils","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.9072071+05:30","@version":"1","message":"Found @SpringBootConfiguration com.horizon.policyforge.PolicyForgeApplication for test class com.horizon.policyforge.web.QuoteOwnershipIT","logger_name":"org.springframework.boot.test.context.SpringBootTestContextBootstrapper","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+{"@timestamp":"2026-11-03T19:22:51.945205+05:30","@version":"1","message":"Starting QuoteOwnershipIT using Java 21.0.12.1 with PID 27028 (started by wdarshana in C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend)","logger_name":"com.horizon.policyforge.web.QuoteOwnershipIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:51.946204+05:30","@version":"1","message":"No active profile set, falling back to 1 default profile: \"default\"","logger_name":"com.horizon.policyforge.web.QuoteOwnershipIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.2557118+05:30","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.2827393+05:30","@version":"1","message":"Finished Spring Data repository scanning in 25 ms. Found 5 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3568167+05:30","@version":"1","message":"HikariPool-2 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3608157+05:30","@version":"1","message":"HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:fc6fbcb8-fe1c-49fa-b83f-9ea00a8a1ea7 user=SA","logger_name":"com.zaxxer.hikari.pool.HikariPool","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3618156+05:30","@version":"1","message":"HikariPool-2 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3628161+05:30","@version":"1","message":"Database: jdbc:h2:mem:fc6fbcb8-fe1c-49fa-b83f-9ea00a8a1ea7 (H2 2.3)","logger_name":"org.flywaydb.core.FlywayExecutor","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3708215+05:30","@version":"1","message":"Schema history table \"PUBLIC\".\"flyway_schema_history\" does not exist yet","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3708215+05:30","@version":"1","message":"Successfully validated 6 migrations (execution time 00:00.006s)","logger_name":"org.flywaydb.core.internal.command.DbValidate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3728202+05:30","@version":"1","message":"Creating Schema History table \"PUBLIC\".\"flyway_schema_history\" ...","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.37782+05:30","@version":"1","message":"Current version of schema \"PUBLIC\": << Empty Schema >>","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3798212+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"1 - rule set version\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3843656+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"2 - audit entry\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3913653+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"3 - quote\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.3974052+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"4 - application\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.4054099+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"5 - underwriting decision\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.411412+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"6 - audit entry status columns\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.41841+05:30","@version":"1","message":"Successfully applied 6 migrations to schema \"PUBLIC\", now at version v6 (execution time 00:00.017s)","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.4364107+05:30","@version":"1","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.jpa.internal.util.LogHelper","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.4394093+05:30","@version":"1","message":"HHH000026: Second-level cache disabled","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.4484319+05:30","@version":"1","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.4494292+05:30","@version":"1","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']\n\tDatabase driver: undefined/unknown\n\tDatabase version: 2.3.232\n\tAutocommit mode: undefined/unknown\n\tIsolation level: undefined/unknown\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","logger_name":"org.hibernate.orm.connections.pooling","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.5281+05:30","@version":"1","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.5311003+05:30","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.6661393+05:30","@version":"1","message":"Adding welcome page: class path resource [static/index.html]","logger_name":"org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.7127558+05:30","@version":"1","message":"Exposing 1 endpoint beneath base path '/actuator'","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.7970161+05:30","@version":"1","message":"Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.8824999+05:30","@version":"1","message":"Initializing Spring TestDispatcherServlet ''","logger_name":"org.springframework.boot.test.mock.web.SpringBootMockServletContext","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.8824999+05:30","@version":"1","message":"Initializing Servlet ''","logger_name":"org.springframework.test.web.servlet.TestDispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.8824999+05:30","@version":"1","message":"Completed initialization in 0 ms","logger_name":"org.springframework.test.web.servlet.TestDispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.8935047+05:30","@version":"1","message":"Started QuoteOwnershipIT in 0.982 seconds (process running for 10.284)","logger_name":"com.horizon.policyforge.web.QuoteOwnershipIT","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.902502+05:30","@version":"1","message":"Rule set seeded productCode=TERM_LIFE version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9075031+05:30","@version":"1","message":"Rule set seeded productCode=MOTOR version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9115022+05:30","@version":"1","message":"Rule set seeded productCode=HOUSEHOLD version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9115022+05:30","@version":"1","message":"Rule set seed load finished inserted=3","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9225055+05:30","@version":"1","message":"Rule set seed load finished inserted=0","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9315033+05:30","@version":"1","message":"Quote created quoteId=Q-218de752-1f31-463f-94e9-d4c2e097309e productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9475045+05:30","@version":"1","message":"Application submitted applicationId=A-6bf2d6f8-e906-4912-8272-e4f76ec50db9 quoteId=Q-218de752-1f31-463f-94e9-d4c2e097309e productCode=TERM_LIFE status=REFERRED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:52.9495055+05:30","@version":"1","message":"Application seeded applicationId=A-6bf2d6f8-e906-4912-8272-e4f76ec50db9 quoteId=Q-218de752-1f31-463f-94e9-d4c2e097309e status=REFERRED","logger_name":"com.horizon.policyforge.config.ApplicationSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1150933+05:30","@version":"1","message":"Quote created quoteId=Q-0034cd03-7542-4850-96d9-8cd9ea9c7492 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"af514146-af1c-4379-9860-7c312a5970c4","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1335839+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=175","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"af514146-af1c-4379-9860-7c312a5970c4","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1484573+05:30","@version":"1","message":"request completed method=GET path=/api/quotes/Q-0034cd03-7542-4850-96d9-8cd9ea9c7492 status=200 durationMs=11","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"89160fe0-c0f4-44f6-b78e-93c9c85e441c","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1574562+05:30","@version":"1","message":"Quote created quoteId=Q-1664ced3-bd30-465a-8937-5d383e10f479 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"498724ae-68b2-4472-b8f7-a69ac7b93ef8","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1604546+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=9","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"498724ae-68b2-4472-b8f7-a69ac7b93ef8","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.1714607+05:30","@version":"1","message":"request completed method=GET path=/api/quotes/Q-1664ced3-bd30-465a-8937-5d383e10f479 status=200 durationMs=9","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"20ec780f-8f25-4b59-bfff-c5283c7ece76","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.2479783+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=401 durationMs=68","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"f05396cb-3105-40ef-b730-91d23cd34959","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.3137467+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=401 durationMs=64","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"2cfb3203-4bec-4f43-894d-779cc45ee969","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.3945164+05:30","@version":"1","message":"Quote created quoteId=Q-adfe8875-d49a-4791-9e6b-9b6cbbe7c39d productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"a1c882d7-6a9c-42fe-8e82-a18d5c7f9507","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.3985174+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=75","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"a1c882d7-6a9c-42fe-8e82-a18d5c7f9507","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.4958352+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=400 durationMs=91","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"62294c9c-c069-4ee4-8c53-399eb03dd4d8","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.5916085+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=400 durationMs=94","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"0c05bf69-ddbe-4b92-aeaf-0d3ab800753c","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"a1c882d7-6a9c-42fe-8e82-a18d5c7f9507", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-adfe8875-d49a-4791-9e6b-9b6cbbe7c39d","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-adfe8875-d49a-4791-9e6b-9b6cbbe7c39d","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-11-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.horizon.policyforge.service.ValidationFailedException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [X-Correlation-Id:"62294c9c-c069-4ee4-8c53-399eb03dd4d8", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"/problems/validation-failed","title":"Validation failed","status":400,"detail":"One or more fields are invalid.","instance":"/api/applications","errors":[{"field":"quoteId","message":"has expired"}],"code":"QUOTE_EXPIRED"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-adfe8875-d49a-4791-9e6b-9b6cbbe7c39d","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-11-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.horizon.policyforge.service.ValidationFailedException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [X-Correlation-Id:"0c05bf69-ddbe-4b92-aeaf-0d3ab800753c", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"/problems/validation-failed","title":"Validation failed","status":400,"detail":"One or more fields are invalid.","instance":"/api/applications","errors":[{"field":"quoteId","message":"has expired"}],"code":"QUOTE_EXPIRED"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:53.6296103+05:30","@version":"1","message":"Quote created quoteId=Q-00a14633-9766-454a-ae4f-c7305d1fe65c productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"6315dc38-9f09-4d70-ad68-efa9157f8f98","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.6335421+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=15","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"6315dc38-9f09-4d70-ad68-efa9157f8f98","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.7056288+05:30","@version":"1","message":"Application submitted applicationId=A-09015cdd-b345-4d05-8722-90228b11309b quoteId=Q-00a14633-9766-454a-ae4f-c7305d1fe65c productCode=TERM_LIFE status=APPROVED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"6ad64a32-4ecd-4ab4-8f12-658932176072","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.7126264+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=201 durationMs=78","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"6ad64a32-4ecd-4ab4-8f12-658932176072","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.7936498+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=409 durationMs=79","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"f6aef89c-58fa-4e11-bcd4-31f874b636ef","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"6315dc38-9f09-4d70-ad68-efa9157f8f98", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-00a14633-9766-454a-ae4f-c7305d1fe65c","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-00a14633-9766-454a-ae4f-c7305d1fe65c","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"6ad64a32-4ecd-4ab4-8f12-658932176072", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"applicationId":"A-09015cdd-b345-4d05-8722-90228b11309b","quoteId":"Q-00a14633-9766-454a-ae4f-c7305d1fe65c","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-00a14633-9766-454a-ae4f-c7305d1fe65c","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.horizon.policyforge.service.ConflictException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 409
+    Error message = null
+          Headers = [X-Correlation-Id:"f6aef89c-58fa-4e11-bcd4-31f874b636ef", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"/problems/conflict","title":"Conflict","status":409,"detail":"An application already exists for this quote.","instance":"/api/applications","code":"QUOTE_ALREADY_APPLIED"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:53.8798226+05:30","@version":"1","message":"Quote created quoteId=Q-4f816def-2ea3-420d-aac1-071ee61a9200 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"dbe50d26-3009-4dd3-bb44-cb5ef29b1620","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.8863426+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=80","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"dbe50d26-3009-4dd3-bb44-cb5ef29b1620","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.9791238+05:30","@version":"1","message":"Application submitted applicationId=A-b9517e4d-c305-4d05-bc20-ceba84695b81 quoteId=Q-4f816def-2ea3-420d-aac1-071ee61a9200 productCode=TERM_LIFE status=APPROVED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"418e85b0-26f1-4f89-afbb-2d3e5641eced","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:53.9816583+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=201 durationMs=94","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"418e85b0-26f1-4f89-afbb-2d3e5641eced","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.0815635+05:30","@version":"1","message":"Quote created quoteId=Q-9fc13801-9fbf-4455-8b56-8e7362bdbd7e productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"685427ef-0576-4f19-80b5-34fa73b8e138","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.0885753+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=104","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"685427ef-0576-4f19-80b5-34fa73b8e138","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.1917468+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=409 durationMs=100","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"6df9c2a9-aa51-4aba-90e4-a0025498a386","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"dbe50d26-3009-4dd3-bb44-cb5ef29b1620", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-4f816def-2ea3-420d-aac1-071ee61a9200","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-4f816def-2ea3-420d-aac1-071ee61a9200","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"418e85b0-26f1-4f89-afbb-2d3e5641eced", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"applicationId":"A-b9517e4d-c305-4d05-bc20-ceba84695b81","quoteId":"Q-4f816def-2ea3-420d-aac1-071ee61a9200","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"685427ef-0576-4f19-80b5-34fa73b8e138", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-9fc13801-9fbf-4455-8b56-8e7362bdbd7e","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-4f816def-2ea3-420d-aac1-071ee61a9200","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.horizon.policyforge.service.ConflictException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 409
+    Error message = null
+          Headers = [X-Correlation-Id:"6df9c2a9-aa51-4aba-90e4-a0025498a386", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"/problems/conflict","title":"Conflict","status":409,"detail":"An application already exists for this quote.","instance":"/api/applications","code":"QUOTE_ALREADY_APPLIED"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:54.276112+05:30","@version":"1","message":"Quote created quoteId=Q-d5421c19-5e4a-47c7-8931-1c7f4ed0d1e9 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5cb3c87b-1936-4cd9-acfc-f238df57e801","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.2826442+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=79","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5cb3c87b-1936-4cd9-acfc-f238df57e801","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.3565197+05:30","@version":"1","message":"Quote created quoteId=Q-7c38f0da-12d4-4b52-bd1f-eb479b7e9f74 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"15b86753-4a3c-4206-bed1-3ef4d6ae26e6","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.3605158+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=76","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"15b86753-4a3c-4206-bed1-3ef4d6ae26e6","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"5cb3c87b-1936-4cd9-acfc-f238df57e801", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-d5421c19-5e4a-47c7-8931-1c7f4ed0d1e9","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"15b86753-4a3c-4206-bed1-3ef4d6ae26e6", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-7c38f0da-12d4-4b52-bd1f-eb479b7e9f74","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:54.4351689+05:30","@version":"1","message":"Quote created quoteId=Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"8bf56ce6-239f-4066-9176-0525507cf08d","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.4411684+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=71","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"8bf56ce6-239f-4066-9176-0525507cf08d","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.5211953+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=400 durationMs=78","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"12e89b84-1940-46bf-9efa-8f74ba23796d","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.6000334+05:30","@version":"1","message":"Application submitted applicationId=A-b0cae1ab-6a31-47e4-b8e7-4e15e33d61e8 quoteId=Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1 productCode=TERM_LIFE status=APPROVED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"59d8bf1e-1162-4c92-b11e-72f040709c30","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.604034+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=201 durationMs=80","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"59d8bf1e-1162-4c92-b11e-72f040709c30","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"8bf56ce6-239f-4066-9176-0525507cf08d", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-00000000-0000-4000-8000-000000000000","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = com.horizon.policyforge.service.ValidationFailedException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = [X-Correlation-Id:"12e89b84-1940-46bf-9efa-8f74ba23796d", Content-Type:"application/problem+json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/problem+json
+             Body = {"type":"/problems/validation-failed","title":"Validation failed","status":400,"detail":"One or more fields are invalid.","instance":"/api/applications","errors":[{"field":"quoteId","message":"was not found"}],"code":"QUOTE_NOT_FOUND"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"59d8bf1e-1162-4c92-b11e-72f040709c30", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"applicationId":"A-b0cae1ab-6a31-47e4-b8e7-4e15e33d61e8","quoteId":"Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:54.7016459+05:30","@version":"1","message":"Quote created quoteId=Q-f70ea496-4dff-4c10-ad5e-07dbc1fb14b6 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"b3429556-453f-4233-9ae2-870bf1982c25","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.7056393+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=92","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"b3429556-453f-4233-9ae2-870bf1982c25","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.7156402+05:30","@version":"1","message":"Quote created quoteId=Q-d66bbd8b-a1ad-457b-b4a2-8362fd1571e6 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"0246d44c-616e-49bc-ad9f-7fabc8f3868b","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.7196399+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=12","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"0246d44c-616e-49bc-ad9f-7fabc8f3868b","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.7943764+05:30","@version":"1","message":"Quote created quoteId=Q-ce740d1d-493b-45dd-9601-e93c7d479d2d productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"481834d9-ebba-4021-9226-44cb723f4bb3","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.7983764+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=77","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"481834d9-ebba-4021-9226-44cb723f4bb3","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"b3429556-453f-4233-9ae2-870bf1982c25", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-f70ea496-4dff-4c10-ad5e-07dbc1fb14b6","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"0246d44c-616e-49bc-ad9f-7fabc8f3868b", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-d66bbd8b-a1ad-457b-b4a2-8362fd1571e6","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"481834d9-ebba-4021-9226-44cb723f4bb3", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-ce740d1d-493b-45dd-9601-e93c7d479d2d","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:54.8767431+05:30","@version":"1","message":"Quote created quoteId=Q-d3e25ebc-7a98-4677-9e78-d063316c448b productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5e66a49c-538d-4fd2-86b7-8320538dbc59","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.8807426+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=73","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5e66a49c-538d-4fd2-86b7-8320538dbc59","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.9648151+05:30","@version":"1","message":"Application submitted applicationId=A-574af420-d833-4627-836b-bb3e0bb7527f quoteId=Q-d3e25ebc-7a98-4677-9e78-d063316c448b productCode=TERM_LIFE status=APPROVED ruleVersion=1","logger_name":"com.horizon.policyforge.service.ApplicationService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"97775dae-ded9-4a6b-bb87-7451ce15b8c3","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.9668112+05:30","@version":"1","message":"request completed method=POST path=/api/applications status=201 durationMs=83","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"97775dae-ded9-4a6b-bb87-7451ce15b8c3","app":"policyforge"}
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/quotes
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"142", Authorization:"Basic <redacted-credentials>"]
+             Body = {"productCode":"TERM_LIFE","riskInputs":{"age":35,"smoker":false,"sumInsured":"5000000.00","termYears":20,"bmi":"24","healthDeclarations":[]}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.QuoteController
+           Method = com.horizon.policyforge.web.QuoteController#create(CreateQuoteRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"5e66a49c-538d-4fd2-86b7-8320538dbc59", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"quoteId":"Q-d3e25ebc-7a98-4677-9e78-d063316c448b","productCode":"TERM_LIFE","ruleVersion":1,"sumInsured":"5000000.00","annualPremium":"6850.00","breakdown":[{"factor":"sumInsured","value":"5000000.00"},{"factor":"baseRatePerThousand","value":"1.20"},{"factor":"smokerFactor","value":"1.00"},{"factor":"termFactor","value":"1.10"},{"factor":"policyFee","value":"250.00"}],"validUntil":"2026-11-27"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/applications
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"226", Authorization:"Basic <redacted-credentials>"]
+             Body = {"quoteId":"Q-d3e25ebc-7a98-4677-9e78-d063316c448b","kyc":{"fullName":"Asha Test","dateOfBirth":"1991-10-28","aadhaar":"XXXX-XXXX-1234","pan":"ABCDE1234F","address":{"line1":"1 Demo Street","city":"Pune","postcode":"411001"}}}
+    Session Attrs = {}
+
+Handler:
+             Type = com.horizon.policyforge.web.ApplicationController
+           Method = com.horizon.policyforge.web.ApplicationController#submit(SubmitRequest, Authentication)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [X-Correlation-Id:"97775dae-ded9-4a6b-bb87-7451ce15b8c3", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"applicationId":"A-574af420-d833-4627-836b-bb3e0bb7527f","quoteId":"Q-d3e25ebc-7a98-4677-9e78-d063316c448b","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+{"@timestamp":"2026-11-03T19:22:54.9798223+05:30","@version":"1","message":"Quote created quoteId=Q-4de6ab55-15ed-4e5f-8f65-2ece4fcab582 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5283c8ea-774b-428d-8a29-41ab9a79ea99","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.9839864+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=10","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"5283c8ea-774b-428d-8a29-41ab9a79ea99","app":"policyforge"}
+{"@timestamp":"2026-11-03T19:22:54.9910181+05:30","@version":"1","message":"request completed method=GET path=/api/quotes/Q-4de6ab55-15ed-4e5f-8f65-2ece4fcab582 status=200 durationMs=7","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"main","level":"INFO","level_value":20000,"correlationId":"eb7be434-018d-4e34-a631-e258e5ebe13f","app":"policyforge"}
+[ERROR] Tests run: 10, Failures: 3, Errors: 4, Skipped: 0, Time elapsed: 3.096 s <<< FAILURE! -- in com.horizon.policyforge.web.QuoteOwnershipIT
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.ownershipIsCheckedBeforeExpiry -- Time elapsed: 0.287 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: "QUOTE_NOT_FOUND"
+ but was: "QUOTE_EXPIRED"
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownershipIsCheckedBeforeExpiry(QuoteOwnershipIT.java:250)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.firstApplicantClaimsAnAnonymousQuote -- Time elapsed: 0.188 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:723)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:754)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:767)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:889)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:918)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownerOf(QuoteOwnershipIT.java:102)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.firstApplicantClaimsAnAnonymousQuote(QuoteOwnershipIT.java:236)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "OWNER_ID" not found; SQL statement:
+select owner_id from quote where quote_id = ? [42122-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1228)
+	at org.h2.command.query.Query.prepare(Query.java:232)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:315)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.springframework.jdbc.core.JdbcTemplate$SimplePreparedStatementCreator.createPreparedStatement(JdbcTemplate.java:1719)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:656)
+	... 10 more
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.ownershipIsCheckedBeforeAlreadyAppliedAndAge -- Time elapsed: 0.393 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+[{"type":"/problems/conflict","title":"Conflict","status":409,"detail":"An application already exists for this quote.","instance":"/api/applications","code":"QUOTE_ALREADY_APPLIED"}] 
+expected: 400
+ but was: 409
+	at com.horizon.policyforge.web.QuoteOwnershipIT.problemOf(QuoteOwnershipIT.java:130)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownershipIsCheckedBeforeAlreadyAppliedAndAge(QuoteOwnershipIT.java:262)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.quoteFromAnotherRoleHasNoOwner -- Time elapsed: 0.165 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:723)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:754)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:767)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:889)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:918)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownerOf(QuoteOwnershipIT.java:102)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.quoteFromAnotherRoleHasNoOwner(QuoteOwnershipIT.java:176)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "OWNER_ID" not found; SQL statement:
+select owner_id from quote where quote_id = ? [42122-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1228)
+	at org.h2.command.query.Query.prepare(Query.java:232)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:315)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.springframework.jdbc.core.JdbcTemplate$SimplePreparedStatementCreator.createPreparedStatement(JdbcTemplate.java:1719)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:656)
+	... 10 more
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.anotherCustomersQuoteLooksExactlyLikeAMissingOne -- Time elapsed: 0.242 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+[{"applicationId":"A-b0cae1ab-6a31-47e4-b8e7-4e15e33d61e8","quoteId":"Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}] 
+expected: 400
+ but was: 201
+	at com.horizon.policyforge.web.QuoteOwnershipIT.problemOf(QuoteOwnershipIT.java:130)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.anotherCustomersQuoteLooksExactlyLikeAMissingOne(QuoteOwnershipIT.java:202)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.signedInCustomerOwnsTheQuoteAndAnAnonymousQuoteHasNoOwner -- Time elapsed: 0.194 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:723)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:754)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:767)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:889)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:918)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownerOf(QuoteOwnershipIT.java:102)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.signedInCustomerOwnsTheQuoteAndAnAnonymousQuoteHasNoOwner(QuoteOwnershipIT.java:148)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "OWNER_ID" not found; SQL statement:
+select owner_id from quote where quote_id = ? [42122-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1228)
+	at org.h2.command.query.Query.prepare(Query.java:232)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:315)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.springframework.jdbc.core.JdbcTemplate$SimplePreparedStatementCreator.createPreparedStatement(JdbcTemplate.java:1719)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:656)
+	... 10 more
+
+[ERROR] com.horizon.policyforge.web.QuoteOwnershipIT.ownerCanApply -- Time elapsed: 0.165 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:723)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:754)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:767)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:889)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:918)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownerOf(QuoteOwnershipIT.java:102)
+	at com.horizon.policyforge.web.QuoteOwnershipIT.ownerCanApply(QuoteOwnershipIT.java:220)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "OWNER_ID" not found; SQL statement:
+select owner_id from quote where quote_id = ? [42122-232]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1228)
+	at org.h2.command.query.Query.prepare(Query.java:232)
+	at org.h2.command.Parser.prepareCommand(Parser.java:489)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:645)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:561)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1164)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:315)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:328)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at org.springframework.jdbc.core.JdbcTemplate$SimplePreparedStatementCreator.createPreparedStatement(JdbcTemplate.java:1719)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:656)
+	... 10 more
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   QuoteOwnershipIT.anotherCustomersQuoteLooksExactlyLikeAMissingOne:202->problemOf:130 [{"applicationId":"A-b0cae1ab-6a31-47e4-b8e7-4e15e33d61e8","quoteId":"Q-b5281dc2-41a2-4e0c-be50-04ccadef5ec1","productCode":"TERM_LIFE","status":"APPROVED","decision":"AUTO_BIND","reasonCodes":["UW-OK"],"reasons":[{"code":"UW-OK","description":"No underwriting rule fired"}],"ruleVersion":1,"submittedAt":"2026-10-28T00:00:00Z"}] 
+expected: 400
+ but was: 201
+[ERROR]   QuoteOwnershipIT.ownershipIsCheckedBeforeAlreadyAppliedAndAge:262->problemOf:130 [{"type":"/problems/conflict","title":"Conflict","status":409,"detail":"An application already exists for this quote.","instance":"/api/applications","code":"QUOTE_ALREADY_APPLIED"}] 
+expected: 400
+ but was: 409
+[ERROR]   QuoteOwnershipIT.ownershipIsCheckedBeforeExpiry:250 
+expected: "QUOTE_NOT_FOUND"
+ but was: "QUOTE_EXPIRED"
+[ERROR] Errors: 
+[ERROR]   ApplicationSeedIT.seedQuoteIsOwnedByCustomer2:108 � BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select q.owner_id from quote q join application a on a.quote_id = q.quote_id where a.application_id = ?]
+[ERROR]   QuoteOwnershipIT.firstApplicantClaimsAnAnonymousQuote:236->ownerOf:102 � BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+[ERROR]   QuoteOwnershipIT.ownerCanApply:220->ownerOf:102 � BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+[ERROR]   QuoteOwnershipIT.quoteFromAnotherRoleHasNoOwner:176->ownerOf:102 � BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+[ERROR]   QuoteOwnershipIT.signedInCustomerOwnsTheQuoteAndAnAnonymousQuoteHasNoOwner:148->ownerOf:102 � BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select owner_id from quote where quote_id = ?]
+[INFO] 
+[ERROR] Tests run: 14, Failures: 3, Errors: 5, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.409 s
+[INFO] Finished at: 2026-11-03T19:22:55+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (default) on project policyforge: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+
+=== Evidence summary (TASK-003 red) ===
+Red run: QuoteOwnershipIT and ApplicationSeedIT fail as expected before V7 and the ownership rules exist.
+Failing tests cover AC-01.12 (owner_id column missing), AC-03.9 (other customer's quote accepted, ownership not checked before expiry/already-applied/age), AC-09.7 (seed quote owner) and NFR-04.1 (public quote endpoints, passes already as a re-proof).

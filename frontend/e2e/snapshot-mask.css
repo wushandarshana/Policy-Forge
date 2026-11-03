@@ -1,0 +1,12 @@
+/*
+ * Injected into the policy-lifecycle visual snapshots (toHaveScreenshot `stylePath`).
+ * Policy numbers and dates change on every run, so they are hidden (the space stays, so the layout is the real one).
+ * Playwright's own `mask` overlay lands in the wrong place on the mobile project when the captured element is taller
+ * than the viewport, which would leave today's date in the baseline.
+ */
+.card-title,
+[data-testid$='effective-date'],
+[data-testid$='-next-due'],
+[data-testid='input-effectiveDate'] {
+  visibility: hidden !important;
+}
