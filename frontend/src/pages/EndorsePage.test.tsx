@@ -130,7 +130,7 @@ describe('EndorsePage type selector and forms', () => {
     expect(screen.queryByTestId('input-newSumInsured')).not.toBeInTheDocument();
   });
 
-  it('AC-10.4: shows a fixed not-found message when the policy does not exist', async () => {
+  it('AC-06.1: the endorsement form is not offered for a policy that cannot be found; a fixed not-found message is shown instead', async () => {
     installFetch(() => problem(404, { detail: 'Policy PF-TL-2026-000001 unknown for customer1' }));
     renderWithSession(<EndorsePage policyNumber={POLICY_NUMBER} />, CUSTOMER);
 
