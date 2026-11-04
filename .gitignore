@@ -29,6 +29,10 @@ frontend/coverage/*
 __pycache__/
 .venv/
 
+# CI tooling (scripts/ci): pinned tool downloads and review/gate outputs
+.ci-tools/
+ci-out/
+
 # IDE / OS
 .idea/
 .vscode/
