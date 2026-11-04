@@ -552,6 +552,8 @@ class PermissionAndSecretTests(CiConfigTestCase):
         self.assertIn("pull_request", comment[0]["if"])
         self.assertTrue(self.is_always(comment[0]["if"]))
         gitlab = self.gitlab()
+        self.assertEqual(gitlab["_jobs"]["claude-review"].get("environment"), "claude-review",
+                         "GitLab gives every job the project variables; the environment scope limits the key to this job")
         for name, job in gitlab["_jobs"].items():
             if name != "claude-review":
                 self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(job), name)

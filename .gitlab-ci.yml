@@ -173,6 +173,9 @@ claude-review:
   allow_failure: false
   image: node:22.11.0-bookworm@sha256:ec878c763e9fad09d22aae86e2edcb7a05b397dfe8411c16e2b90158d595e2ce
   timeout: 40 minutes
+  # GitLab gives every job of a pipeline the project's CI variables. Give ANTHROPIC_API_KEY the environment scope
+  # claude-review (Settings, CI/CD, Variables) and only this job receives it; build and e2e run the merge request's code.
+  environment: claude-review
   variables:
     GIT_DEPTH: "0"
   script:
