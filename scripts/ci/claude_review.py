@@ -154,6 +154,11 @@ def child_environment(env=None):
     return out
 
 
+def read_deny_rules(repo, home):
+    """NFR-09.7 red stub: the Read deny rules for paths outside the checkout."""
+    return []
+
+
 def run_git(repo, *args):
     """Run git in `repo` and return the CompletedProcess (bytes). Never raises for a non-zero status."""
     env = child_environment()

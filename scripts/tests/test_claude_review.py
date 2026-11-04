@@ -4,7 +4,10 @@ They drive the real entry point with a stub CLI (scripts/tests/fixtures/fake_cla
 PF_CLAUDE_CLI), so no API is ever called and no real credential is read (plan P-15).
 """
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -21,9 +24,15 @@ FAKE_TOKEN_VALUE = "not-a-real-" + "token-value-0001"
 EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbd0f2d"
 FRONTMATTER = re.compile(rb"\A---\r?\n(.*?)\r?\n---\r?\n(.*)\Z", re.DOTALL)
 AGENT_NAMES = ("security-reviewer", "test-engineer")
-ALLOWED_TOOLS = ["Read", "Grep", "Glob", "Bash(git diff *)", "Bash(git log *)", "Bash(git show *)",
-                 "Bash(git ls-files *)", "Bash(grep *)", "Bash(rg *)"]
-DISALLOWED_TOOLS = ["Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch"]
+# NFR-09.7: no Bash at all, and Read (which also governs Grep and Glob) allowed only inside the checkout.
+TOOLS = ["Read,Grep,Glob"]
+ALLOWED_TOOLS = ["Read(./**)"]
+DISALLOWED_BASE = ["Bash", "Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch", "Read(./.git/**)",
+                   "Read(//proc/**)"]
+ENV_ALLOWLIST = {"PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TEMP", "TMP", "SYSTEMROOT", "ANTHROPIC_API_KEY"}
+INPUT_DIR = Path("ci-out") / "review" / "input"
+MARKER = "<!-- policyforge-claude-review -->"
+BOT = {"login": "github-actions[bot]", "type": "Bot"}
 
 
 def agent_parts(name):
@@ -90,12 +99,19 @@ class ReviewTestCase(unittest.TestCase):
         self.log = Path(work.name) / "log"
 
     def run_review(self, security="approve", test="approve", env=None, version=None, key=FAKE_API_KEY,
-                   base=None, head=None, event="pull_request", repo_flag=True):
+                   base=None, head=None, event="pull_request", repo_flag=True, fake=None, repo=None):
+        """Run the runner against `repo` (default: the class repository) with the stub CLI.
+
+        The stub reads its scenario from a config file named on its command line (PF_CLAUDE_CLI), because the runner
+        hands the CLI an allowlisted environment only (NFR-09.7)."""
+        repo = repo or self.repo
+        config = {"log": str(self.log), "security": security, "test": test, **(fake or {})}
+        if version is not None:
+            config["version"] = version
+        config_file = self.log.parent / "fake-config.json"
+        config_file.write_text(json.dumps(config), encoding="utf-8")
         values = {
-            "PF_CLAUDE_CLI": str(FAKE_CLAUDE),
-            "FAKE_CLAUDE_LOG": str(self.log),
-            "FAKE_CLAUDE_SECURITY": security,
-            "FAKE_CLAUDE_TEST": test,
+            "PF_CLAUDE_CLI": json.dumps([sys.executable, str(FAKE_CLAUDE), "--fake-config", str(config_file)]),
             "GITHUB_TOKEN": FAKE_TOKEN_VALUE,
             "GH_TOKEN": FAKE_TOKEN_VALUE,
             "CI_JOB_TOKEN": FAKE_TOKEN_VALUE,
@@ -103,14 +119,12 @@ class ReviewTestCase(unittest.TestCase):
         }
         if key is not None:
             values["ANTHROPIC_API_KEY"] = key
-        if version is not None:
-            values["FAKE_CLAUDE_VERSION"] = version
         values.update(env or {})
         args = [CLAUDE_REVIEW, "run", "--base", base or self.base, "--head", head or self.head,
                 "--event", event, "--out", self.out]
         if repo_flag:
-            args += ["--repo", self.repo]
-        proc = run_python(args, env=clean_env(**values), cwd=self.repo)
+            args += ["--repo", repo]
+        proc = run_python(args, env=clean_env(**values), cwd=repo)
         return proc
 
     def report(self):
@@ -280,6 +294,19 @@ class ReviewPromptTests(ReviewTestCase):
         for fragment in ("read-only", "untrusted", "CLAUDE.md", "already passed", "src/a.txt", "src/b.txt"):
             self.assertIn(fragment, preamble)
 
+    def test_preamble_points_at_the_input_files_and_offers_no_shell(self):
+        """NFR-09.7: the preamble tells the model to Read the diff, the log and the file list from
+        ci-out/review/input/ and says that there is no shell, instead of naming git commands to run."""
+        self.run_review()
+        stdin = pass_calls(self.log)[0]["stdin"].decode("utf-8")
+        preamble = stdin.split(agent_parts("security-reviewer")[1].decode("utf-8"))[0]
+        for fragment in ("ci-out/review/input/diff.patch", "ci-out/review/input/log.txt",
+                         "ci-out/review/input/changed-files.txt", "no shell"):
+            self.assertIn(fragment, preamble)
+        self.assertNotIn("git ls-files", preamble)
+        self.assertNotIn(" rg ", preamble)
+        self.assertNotIn("Inspect it with `git diff", preamble)
+
     def test_command_line_matches_the_contract(self):
         """NFR-09.4: the CLI argv has the exact flag set, the frontmatter model and both caps for each pass."""
         proc = self.run_review()
@@ -296,9 +323,12 @@ class ReviewPromptTests(ReviewTestCase):
                 self.assertEqual(values_after(argv, "--output-format"), ["json"])
                 self.assertEqual(json.loads(values_after(argv, "--json-schema")[0]), schema)
                 self.assertEqual(values_after(argv, "--model"), [agent_parts(name)[0]])
-                self.assertEqual(values_after(argv, "--tools"), ["Read,Grep,Glob,Bash"])
+                self.assertEqual(values_after(argv, "--tools"), TOOLS)
                 self.assertEqual(values_after(argv, "--allowedTools"), ALLOWED_TOOLS)
-                self.assertEqual(values_after(argv, "--disallowedTools"), DISALLOWED_TOOLS)
+                denied = values_after(argv, "--disallowedTools")
+                self.assertEqual(denied[:len(DISALLOWED_BASE)], DISALLOWED_BASE)
+                self.assertEqual(values_after(argv, "--setting-sources"), ["user"],
+                                 "the reviewed checkout's .claude/settings.json must not widen the permissions")
                 self.assertEqual(values_after(argv, "--permission-mode"), ["dontAsk"])
                 self.assertEqual(values_after(argv, "--max-turns"), ["40"])
                 self.assertEqual(values_after(argv, "--max-budget-usd"), ["5.00"])
@@ -356,6 +386,252 @@ class ReviewPromptTests(ReviewTestCase):
         security, test_engineer = (c["stdin"].decode("utf-8") for c in pass_calls(self.log))
         self.assertRegex(test_engineer, r"AC audit \(offline\): \*\*Covered \d+ / \d+ ACs")
         self.assertNotIn("AC audit (offline)", security)
+
+
+def fresh_review_repo():
+    """A temporary repository like the class one, with scripts/redact_evidence.py tracked and .venv/ ignored.
+
+    Returns (holder, repo, base, head); the caller owns the TemporaryDirectory."""
+    holder, repo = init_repo()
+    for name, data in agent_files().items():
+        write_bytes(repo, f".claude/agents/{name}", data)
+    write_bytes(repo, "CLAUDE.md", b"# Test repository\n")
+    write_bytes(repo, ".gitignore", b".venv/\n")
+    write_bytes(repo, "scripts/redact_evidence.py", b"PATTERNS = []\n")
+    write_bytes(repo, "src/a.txt", b"one\ntwo\n")
+    base = commit_all(repo, "base")
+    write_bytes(repo, "src/a.txt", b"one\ntwo\nthree\n")
+    head = commit_all(repo, "head: add a third line")
+    return holder, repo, base, head
+
+
+class ReviewInputTests(ReviewTestCase):
+    """NFR-09.7: the reviewer reads the change from files the runner writes, never through a shell."""
+
+    def git_bytes(self, *args):
+        return subprocess.run(["git", "-C", str(self.repo), "-c", "core.quotepath=off", *args], capture_output=True,
+                              env=clean_env(), check=True).stdout
+
+    def test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder(self):
+        """NFR-09.7: before each pass ci-out/review/input/ holds diff.patch (git diff base head), log.txt (the commit
+        log of the range) and changed-files.txt (one changed path per line)."""
+        proc = self.run_review()
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        calls = pass_calls(self.log)
+        self.assertEqual(len(calls), 2)
+        expected_diff = self.git_bytes("diff", "--no-color", "--no-ext-diff", "--no-textconv", self.base, self.head)
+        for call in calls:
+            folder = self.log / f"pass-{call['n']}.input"
+            with self.subTest(pass_number=call["n"]):
+                self.assertTrue((folder / "diff.patch").is_file(), "no diff.patch while the pass ran")
+                self.assertEqual((folder / "diff.patch").read_bytes(), expected_diff)
+                log = (folder / "log.txt").read_text(encoding="utf-8")
+                self.assertIn(self.head, log)
+                self.assertIn("head", log)
+                self.assertEqual((folder / "changed-files.txt").read_text(encoding="utf-8").splitlines(),
+                                 ["src/a.txt", "src/b.txt"])
+                self.assertEqual(Path(call["cwd"]).resolve(), self.repo.resolve(), "the CLI runs in the checkout")
+
+    def test_a_stale_input_file_is_removed_before_the_review(self):
+        """NFR-09.7: a file left in ci-out/review/input/ by an earlier run is not shown to the reviewer."""
+        write_bytes(self.repo, "ci-out/review/input/stale.txt", b"old\n")
+        try:
+            proc = self.run_review()
+        finally:
+            shutil.rmtree(self.repo / "ci-out", ignore_errors=True)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        folder = self.log / f"pass-{pass_calls(self.log)[0]['n']}.input"
+        self.assertTrue((folder / "diff.patch").is_file(), "no diff.patch while the pass ran")
+        self.assertFalse((folder / "stale.txt").exists())
+
+
+class ToolSandboxTests(ReviewTestCase):
+    """NFR-09.7: the CLI has no Bash tool and may read only inside the checkout."""
+
+    def test_the_cli_gets_no_bash_tool_and_no_shell_rule(self):
+        """NFR-09.7: --tools is Read,Grep,Glob, Bash is denied, and no argument grants Bash, PowerShell, rg or git."""
+        proc = self.run_review()
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        calls = pass_calls(self.log)
+        self.assertEqual(len(calls), 2)
+        for call in calls:
+            argv = call["argv"]
+            self.assertEqual(values_after(argv, "--tools"), TOOLS)
+            self.assertIn("Bash", values_after(argv, "--disallowedTools"))
+            allowed = values_after(argv, "--allowedTools")
+            self.assertEqual(allowed, ALLOWED_TOOLS)
+            for token in allowed:
+                self.assertNotRegex(token, r"Bash|PowerShell|rg|git", token)
+            self.assertNotIn("--add-dir", argv)
+            for flag in ("--dangerously-skip-permissions", "--allow-dangerously-skip-permissions"):
+                self.assertNotIn(flag, argv)
+            self.assertEqual(values_after(argv, "--permission-mode"), ["dontAsk"])
+            for flag in ("--bare", "--strict-mcp-config"):
+                self.assertIn(flag, argv)
+
+    def test_reads_outside_the_checkout_are_denied_but_the_checkout_is_not(self):
+        """NFR-09.7: the deny rules cover /proc, /sys, /dev and /etc, and none of them is the checkout or one of its
+        parent folders (a deny rule wins over the allow rule, so that would block the review)."""
+        self.run_review()
+        repo = self.repo.resolve().as_posix()
+        calls = pass_calls(self.log)
+        self.assertEqual(len(calls), 2)
+        for call in calls:
+            denied = values_after(call["argv"], "--disallowedTools")
+            for root in ("proc", "sys", "dev", "etc"):
+                self.assertIn(f"Read(//{root}/**)", denied)
+            for rule in denied:
+                match = re.fullmatch(r"Read\(//(.+?)(/\*\*)?\)", rule)
+                if match:
+                    path = "/" + match.group(1)
+                    self.assertFalse(repo == path or repo.startswith(path.rstrip("/") + "/"),
+                                     f"{rule} would deny the checkout {repo}")
+
+    def test_deny_rules_for_a_github_and_a_gitlab_runner_layout(self):
+        """NFR-09.7: read_deny_rules keeps the ancestors of the checkout readable and denies every other system root,
+        the home folder (or, when the checkout is inside it, its credential folders)."""
+        review = load_script("claude_review")
+        github = review.read_deny_rules("/home/runner/work/pf/pf", "/home/runner")
+        for rule in ("Read(//proc/**)", "Read(//etc/**)", "Read(//sys/**)", "Read(//root/**)", "Read(~/.ssh/**)",
+                     "Read(~/.config/**)", "Read(~/.npmrc)", "Read(~/.git-credentials)"):
+            self.assertIn(rule, github)
+        for rule in ("Read(//home/**)", "Read(~/**)"):
+            self.assertNotIn(rule, github)
+        gitlab = review.read_deny_rules("/builds/group/policyforge", "/root")
+        for rule in ("Read(//proc/**)", "Read(//home/**)", "Read(//root/**)", "Read(~/**)", "Read(//etc/**)"):
+            self.assertIn(rule, gitlab)
+        self.assertNotIn("Read(//builds/**)", gitlab)
+        self.assertEqual(len(gitlab), len(set(gitlab)), "no duplicate rule")
+
+
+class EnvironmentAllowlistTests(ReviewTestCase):
+    """NFR-09.7: the CLI environment is built from an allowlist, so no platform credential reaches it."""
+
+    def test_tokens_registry_passwords_and_token_urls_never_reach_the_cli(self):
+        """NFR-09.7: CI_REPOSITORY_URL with a token, CI_REGISTRY_PASSWORD, GITHUB_TOKEN and a random variable are
+        absent from the stub CLI's environment, and every variable it receives is on the allowlist."""
+        hostile = {
+            "CI_REPOSITORY_URL": f"https://gitlab-ci-token:{FAKE_TOKEN_VALUE}@gitlab.example.invalid/g/p.git",
+            "CI_REGISTRY_PASSWORD": FAKE_TOKEN_VALUE,
+            "CI_DEPENDENCY_PROXY_PASSWORD": FAKE_TOKEN_VALUE,
+            "GITHUB_TOKEN": FAKE_TOKEN_VALUE,
+            "ACTIONS_RUNTIME_TOKEN": FAKE_TOKEN_VALUE,
+            "PF_SOME_RANDOM_SETTING": "random-value-0042",
+            "RANDOM_VARIABLE_XYZ": "random-value-0043",
+        }
+        proc = self.run_review(env=hostile)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        calls = pass_calls(self.log)
+        self.assertEqual(len(calls), 2)
+        for call in calls:
+            names = {name.upper() for name in call["env"]}
+            for name in hostile:
+                self.assertNotIn(name, names)
+            for value in call["env"].values():
+                self.assertNotIn(FAKE_TOKEN_VALUE, value)
+                self.assertNotIn("random-value-004", value)
+            for name in names:
+                self.assertTrue(name in ENV_ALLOWLIST or name.startswith("CLAUDE_"), f"{name} is not on the allowlist")
+            self.assertEqual(call["env"].get("ANTHROPIC_API_KEY"), FAKE_API_KEY)
+            self.assertEqual(call["env"].get("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"), "1")
+
+    def test_child_environment_helper_keeps_only_the_allowlist(self):
+        """NFR-09.7: child_environment keeps PATH, HOME, LANG, LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT,
+        ANTHROPIC_API_KEY and CLAUDE_* and drops everything else, whatever its case."""
+        review = load_script("claude_review")
+        source = {"PATH": "p", "HOME": "h", "LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "TMPDIR": "t", "TEMP": "t",
+                  "TMP": "t", "SystemRoot": "C:\\Windows", "ANTHROPIC_API_KEY": "k", "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "9",
+                  "CI_REPOSITORY_URL": "https://gitlab-ci-token:x@host/p.git", "CI_REGISTRY_PASSWORD": "x",
+                  "GITHUB_TOKEN": "x", "GH_TOKEN": "x", "SSH_AUTH_SOCK": "/tmp/agent", "NODE_OPTIONS": "--require x",
+                  "LD_PRELOAD": "x.so", "HTTPS_PROXY": "http://user:pw@proxy", "RANDOM": "x"}
+        env = review.child_environment(source)
+        self.assertEqual(sorted(env), sorted(["PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TEMP", "TMP", "SystemRoot",
+                                              "ANTHROPIC_API_KEY", "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
+                                              "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"]))
+
+    def test_the_docstring_describes_the_allowlist(self):
+        """NFR-09.7: the module docstring describes the allowlist and no longer says only that the CLI never
+        receives a GitHub or GitLab token."""
+        review = load_script("claude_review")
+        self.assertIn("allowlist", review.__doc__)
+        self.assertNotIn("The CLI never receives a GitHub or GitLab token", review.__doc__)
+
+
+class UnchangedTreeTests(ReviewTestCase):
+    """NFR-09.7: after each pass the runner fails closed when the checkout changed outside ci-out/."""
+
+    def review_in_fresh_repo(self, write, before=None):
+        holder, repo, base, head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        for relative, data in (before or {}).items():
+            write_bytes(repo, relative, data)
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": {"path": write, "data": "print('payload')\n"}})
+        return proc, repo
+
+    def assert_failed_closed(self, proc, path):
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 1, "no later pass may run after the tree changed")
+        self.assertFalse((self.out / "test-engineer.json").exists())
+        report = self.report()
+        self.assertIn("GATE: FAIL", report.rstrip().splitlines()[-1])
+        self.assertIn("working tree changed", report)
+        self.assertIn(path, report)
+        self.assertIn("working tree changed", proc.stderr_text)
+
+    def test_a_modified_tracked_file_fails_closed_before_any_later_step(self):
+        """NFR-09.7: a pass that modifies scripts/redact_evidence.py makes the runner exit 2 before the second pass."""
+        proc, _ = self.review_in_fresh_repo("scripts/redact_evidence.py")
+        self.assert_failed_closed(proc, "scripts/redact_evidence.py")
+
+    def test_a_new_untracked_file_fails_closed(self):
+        """NFR-09.7: a pass that creates an untracked file outside ci-out/ makes the runner exit 2."""
+        proc, _ = self.review_in_fresh_repo("src/dropped.py")
+        self.assert_failed_closed(proc, "src/dropped.py")
+
+    def test_a_new_ignored_file_fails_closed(self):
+        """NFR-09.7: a pass that creates a new git-ignored file outside ci-out/ makes the runner exit 2."""
+        proc, _ = self.review_in_fresh_repo(".venv/sitecustomize.py")
+        self.assert_failed_closed(proc, ".venv/sitecustomize.py")
+
+    def test_a_change_to_an_untracked_file_that_existed_before_fails_closed(self):
+        """NFR-09.7: an untracked file that was present before the pass and changes during it fails the run."""
+        proc, _ = self.review_in_fresh_repo("notes.txt", before={"notes.txt": b"draft\n"})
+        self.assert_failed_closed(proc, "notes.txt")
+
+    def test_writes_under_ci_out_are_allowed(self):
+        """NFR-09.7: a file written under ci-out/ is not a change of the checkout; both passes run and the exit is 0."""
+        proc, _ = self.review_in_fresh_repo("ci-out/review/scratch.txt")
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 2)
+
+    def test_ignored_paths_that_existed_before_the_pass_are_not_a_change(self):
+        """NFR-09.7: ignored files already present before the pass (.venv, .ci-tools, node_modules) do not fail the
+        run, even when their content changes, and neither does an unchanged untracked file."""
+        proc, _ = self.review_in_fresh_repo(".venv/lib/site.txt", before={".venv/lib/site.txt": b"x\n",
+                                                                         "notes.txt": b"draft\n"})
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 2)
+
+
+class LockedCliTests(unittest.TestCase):
+    """NFR-09.7: without PF_CLAUDE_CLI the runner starts the CLI that `npm ci --prefix scripts/ci/claude-cli` installs."""
+
+    def test_the_locked_cli_is_the_default(self):
+        """NFR-09.7: cli_command() returns scripts/ci/claude-cli/node_modules/.bin/claude (claude.cmd on Windows)
+        when it exists, before any claude on PATH."""
+        review = load_script("claude_review")
+        self.assertEqual(getattr(review, "LOCKED_CLI_DIR", None), CI_DIR / "claude-cli")
+        with tempfile.TemporaryDirectory() as folder:
+            name = "claude.cmd" if os.name == "nt" else "claude"
+            binary = write_bytes(Path(folder), f"node_modules/.bin/{name}", b"")
+            review.LOCKED_CLI_DIR = Path(folder)
+            saved = os.environ.pop("PF_CLAUDE_CLI", None)
+            try:
+                self.assertEqual(review.cli_command(), [str(binary)])
+            finally:
+                if saved is not None:
+                    os.environ["PF_CLAUDE_CLI"] = saved
 
 
 class DiffRangeTests(unittest.TestCase):
@@ -599,7 +875,8 @@ class CommentTests(unittest.TestCase):
 
     def github(self, server, **overrides):
         env = {"GITHUB_EVENT_NAME": "pull_request", "GITHUB_EVENT_PATH": str(self.event),
-               "GITHUB_REPOSITORY": "octo/demo", "GITHUB_API_URL": server.url, "GH_TOKEN": FAKE_TOKEN_VALUE}
+               "GITHUB_REPOSITORY": "octo/demo", "GITHUB_API_URL": server.url, "GH_TOKEN": FAKE_TOKEN_VALUE,
+               "PF_REVIEW_ALLOW_HTTP_LOOPBACK": "1"}
         env.update(overrides)
         env = {k: v for k, v in env.items() if v is not None}
         return run_python([CLAUDE_REVIEW, "comment", "--platform", "github", "--report", self.report],
@@ -607,7 +884,7 @@ class CommentTests(unittest.TestCase):
 
     def gitlab(self, server, **overrides):
         env = {"CI_API_V4_URL": server.url + "/api/v4", "CI_PROJECT_ID": "42", "CI_MERGE_REQUEST_IID": "9",
-               "PF_GITLAB_REVIEW_TOKEN": FAKE_TOKEN_VALUE}
+               "PF_GITLAB_REVIEW_TOKEN": FAKE_TOKEN_VALUE, "PF_REVIEW_ALLOW_HTTP_LOOPBACK": "1"}
         env.update(overrides)
         env = {k: v for k, v in env.items() if v is not None}
         return run_python([CLAUDE_REVIEW, "comment", "--platform", "gitlab", "--report", self.report],
@@ -632,8 +909,8 @@ class CommentTests(unittest.TestCase):
         """NFR-09.4: a second run edits the comment that carries the marker instead of adding another."""
         def responder(method, path):
             if method == "GET":
-                return 200, [{"id": 56, "body": "someone else"},
-                             {"id": 55, "body": "old text <!-- policyforge-claude-review -->"}]
+                return 200, [{"id": 56, "body": "someone else", "user": {"login": "octocat", "type": "User"}},
+                             {"id": 55, "body": "old text <!-- policyforge-claude-review -->", "user": BOT}]
             return 200, {"id": 55}
         server = self.serve(responder)
         proc = self.github(server)
@@ -672,6 +949,8 @@ class CommentTests(unittest.TestCase):
     def test_gitlab_creates_a_merge_request_note_with_the_private_token_header(self):
         """NFR-09.4: on GitLab the report is posted as an MR note, authenticated with PRIVATE-TOKEN."""
         def responder(method, path):
+            if path == "/api/v4/user":
+                return 200, {"id": 5, "username": "project_42_bot"}
             return (201, {"id": 3}) if method == "POST" else (200, [])
         server = self.serve(responder)
         proc = self.gitlab(server)
@@ -685,8 +964,10 @@ class CommentTests(unittest.TestCase):
     def test_gitlab_updates_the_existing_marked_note(self):
         """NFR-09.4: a rerun on GitLab edits the note with the marker."""
         def responder(method, path):
+            if path == "/api/v4/user":
+                return 200, {"id": 5, "username": "project_42_bot"}
             if method == "GET":
-                return 200, [{"id": 77, "body": "old <!-- policyforge-claude-review -->"}]
+                return 200, [{"id": 77, "body": "old <!-- policyforge-claude-review -->", "author": {"id": 5}}]
             return 200, {"id": 77}
         server = self.serve(responder)
         proc = self.gitlab(server)
@@ -703,6 +984,85 @@ class CommentTests(unittest.TestCase):
             with self.subTest(case=label):
                 proc = self.gitlab(server, **overrides)
                 self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(server.requests, [])
+
+    def test_github_never_edits_a_marked_comment_of_another_author(self):
+        """NFR-09.7: a marked comment by a person or by another bot is left alone; a new comment is posted instead,
+        because only github-actions[bot] (type Bot) comments are ours."""
+        def responder(method, path):
+            if method == "GET":
+                return 200, [{"id": 61, "body": MARKER + " fake", "user": {"login": "mallory", "type": "User"}},
+                             {"id": 62, "body": MARKER, "user": {"login": "dependabot[bot]", "type": "Bot"}},
+                             {"id": 63, "body": MARKER, "user": {"login": "github-actions[bot]", "type": "User"}}]
+            return (201, {"id": 64}) if method == "POST" else (200, {"id": 0})
+        server = self.serve(responder)
+        proc = self.github(server)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        writes = [(r["method"], r["path"]) for r in server.requests if r["method"] != "GET"]
+        self.assertEqual(writes, [("POST", "/repos/octo/demo/issues/7/comments")])
+
+    def test_gitlab_edits_only_a_note_written_by_the_token_user(self):
+        """NFR-09.7: on GitLab the note to update is the marked note whose author id equals GET /user of the token;
+        a marked note of anyone else is never edited."""
+        def responder(method, path):
+            if path == "/api/v4/user":
+                return 200, {"id": 5, "username": "project_42_bot"}
+            if method == "GET":
+                return 200, [{"id": 76, "body": MARKER, "author": {"id": 6}},
+                             {"id": 77, "body": "old " + MARKER, "author": {"id": 5}}]
+            return 200, {"id": 77}
+        server = self.serve(responder)
+        proc = self.gitlab(server)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        writes = [(r["method"], r["path"]) for r in server.requests if r["method"] != "GET"]
+        self.assertEqual(writes, [("PUT", "/api/v4/projects/42/merge_requests/9/notes/77")])
+        self.assertIn("/api/v4/user", [r["path"] for r in server.requests])
+
+    def test_gitlab_posts_a_new_note_when_only_foreign_notes_carry_the_marker(self):
+        """NFR-09.7: when the only marked notes belong to other users, the runner adds its own note."""
+        def responder(method, path):
+            if path == "/api/v4/user":
+                return 200, {"id": 5}
+            if method == "GET":
+                return 200, [{"id": 76, "body": MARKER, "author": {"id": 6}}]
+            return (201, {"id": 78}) if method == "POST" else (200, {"id": 0})
+        server = self.serve(responder)
+        proc = self.gitlab(server)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        writes = [(r["method"], r["path"]) for r in server.requests if r["method"] != "GET"]
+        self.assertEqual(writes, [("POST", "/api/v4/projects/42/merge_requests/9/notes")])
+
+    def test_gitlab_posts_nothing_when_the_token_user_is_unknown(self):
+        """NFR-09.7: when GET /user fails, no note is posted or edited and the step only warns (exit 0)."""
+        def responder(method, path):
+            if path == "/api/v4/user":
+                return 401, {"message": "401 Unauthorized"}
+            return 200, [{"id": 77, "body": MARKER, "author": {"id": 5}}]
+        server = self.serve(responder)
+        proc = self.gitlab(server)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual([r for r in server.requests if r["method"] != "GET"], [])
+        self.assertIn("WARNING", proc.stderr_text)
+
+    def test_an_api_url_that_is_not_https_is_refused_before_any_request(self):
+        """NFR-09.7: GITHUB_API_URL or CI_API_V4_URL with http:// is refused, so the token is never sent in clear;
+        the loopback exception of the tests needs PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 and a loopback host."""
+        server = self.serve(lambda method, path: (200, []))
+        for platform, run in (("github", self.github), ("gitlab", self.gitlab)):
+            with self.subTest(platform=platform, case="http without the test flag"):
+                proc = run(server, PF_REVIEW_ALLOW_HTTP_LOOPBACK=None)
+                self.assertEqual(proc.returncode, 0, proc.stderr_text)
+                self.assertIn("https://", proc.stderr_text)
+        self.assertEqual(server.requests, [])
+        for platform, overrides in (("github", {"GITHUB_API_URL": "http://api.example.invalid"}),
+                                    ("gitlab", {"CI_API_V4_URL": "http://gitlab.example.invalid/api/v4"}),
+                                    ("github", {"GITHUB_API_URL": "ftp://127.0.0.1/"})):
+            with self.subTest(platform=platform, case=str(overrides)):
+                run = self.github if platform == "github" else self.gitlab
+                proc = run(server, **overrides)
+                self.assertEqual(proc.returncode, 0, proc.stderr_text)
+                self.assertIn("https://", proc.stderr_text)
+                self.assertNotIn("posted", proc.stdout_text)
         self.assertEqual(server.requests, [])
 
     def test_a_key_in_the_report_is_redacted_before_it_is_posted(self):
@@ -750,7 +1110,7 @@ class SecretHandlingTests(ReviewTestCase):
 
     def test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output(self):
         """NFR-09.3: a key-shaped string that the CLI echoes is replaced by a marker in stdout, stderr and files."""
-        proc = self.run_review(security="leak_key", env={"FAKE_CLAUDE_LEAK": FAKE_LEAK_KEY})
+        proc = self.run_review(security="leak_key", fake={"leak": FAKE_LEAK_KEY})
         self.assertEqual(proc.returncode, 0, proc.stderr_text)
         outputs = self.all_outputs(proc)
         self.assertNotIn(FAKE_LEAK_KEY, outputs)
@@ -761,7 +1121,7 @@ class SecretHandlingTests(ReviewTestCase):
         """NFR-09.3: the literal ANTHROPIC_API_KEY value is redacted wherever the CLI echoes it."""
         odd_key = "plainvalue-" + "0123456789abcdef"
         proc = self.run_review(security="leak_key", key=odd_key,
-                               env={"FAKE_CLAUDE_LEAK": FAKE_LEAK_KEY, "FAKE_CLAUDE_ECHO_ENV_KEY": "1"})
+                               fake={"leak": FAKE_LEAK_KEY, "echo_env_key": True})
         self.assertEqual(proc.returncode, 0, proc.stderr_text)
         outputs = self.all_outputs(proc)
         self.assertIn("<redacted-api-key>", self.report())

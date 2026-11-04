@@ -1,23 +1,28 @@
 """Stub Claude Code CLI for the CI script tests. It never talks to an API and never reads a credential.
 
-The review runner starts it through PF_CLAUDE_CLI. Behaviour comes from environment variables:
+The review runner starts it through PF_CLAUDE_CLI as `python fake_claude.py --fake-config <file> <CLI arguments>`.
+The runner gives the CLI an allowlisted environment (NFR-09.7), so the stub takes its behaviour from the JSON config
+file, not from environment variables. Keys of the config:
 
-    FAKE_CLAUDE_LOG        directory where every call is recorded (calls.jsonl, pass-N.stdin, pass-N.env.json)
-    FAKE_CLAUDE_VERSION    what `--version` prints (default 2.1.311)
-    FAKE_CLAUDE_SECURITY   scenario for the security-reviewer pass (default approve)
-    FAKE_CLAUDE_TEST       scenario for the test-engineer pass (default approve)
-    FAKE_CLAUDE_LEAK       a key-shaped string the leak_key scenario echoes to stdout and stderr
-    FAKE_CLAUDE_ECHO_ENV_KEY=1   also echo the ANTHROPIC_API_KEY of this process
+    log          directory where every call is recorded (calls.jsonl, pass-N.stdin, pass-N.env.json, pass-N.input/)
+    version      what `--version` prints (default 2.1.311)
+    security     scenario for the security-reviewer pass (default approve)
+    test         scenario for the test-engineer pass (default approve)
+    leak         a key-shaped string the leak_key scenario echoes to stdout and stderr
+    echo_env_key true: the leak_key scenario also echoes the ANTHROPIC_API_KEY of this process
+    write        {"path": "<relative to the working directory>", "data": "<text>"}: the `write` scenario writes it
 
 Scenarios: approve, blocker, major_minor, changes_no_blocker, minor_only, fenced, no_output, invalid_schema,
-missing_key, exit1, is_error, leak_key.
+missing_key, exit1, is_error, leak_key, write (writes a file, then approves).
 """
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 
 PREFIX = {"security-reviewer": "SEC", "test-engineer": "TEST"}
+INPUT_DIR = Path("ci-out") / "review" / "input"
 
 
 def finding(agent, severity, number=1, detail=None):
@@ -79,29 +84,45 @@ def record(log_dir, argv, stdin, env):
     calls = log / "calls.jsonl"
     number = len(calls.read_text(encoding="utf-8").splitlines()) + 1 if calls.exists() else 1
     with calls.open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps({"n": number, "argv": argv, "version_call": "--version" in argv}) + "\n")
+        handle.write(json.dumps({"n": number, "argv": argv, "version_call": "--version" in argv,
+                                 "cwd": os.getcwd()}) + "\n")
     if "--version" not in argv:
         (log / f"pass-{number}.stdin").write_bytes(stdin)
         (log / f"pass-{number}.env.json").write_text(json.dumps(env), encoding="utf-8")
+        if INPUT_DIR.is_dir():  # what the review input folder held while this pass ran
+            shutil.copytree(INPUT_DIR, log / f"pass-{number}.input")
+
+
+def load_config(argv):
+    """(config, remaining argv). The runner puts `--fake-config <file>` first, from PF_CLAUDE_CLI."""
+    if len(argv) >= 2 and argv[0] == "--fake-config":
+        return json.loads(Path(argv[1]).read_text(encoding="utf-8")), argv[2:]
+    return {}, argv
 
 
 def main(argv):
-    log_dir = os.environ.get("FAKE_CLAUDE_LOG")
+    config, argv = load_config(argv)
+    log_dir = config.get("log")
     if "--version" in argv:
         record(log_dir, argv, b"", {})
-        print(f"{os.environ.get('FAKE_CLAUDE_VERSION', '2.1.311')} (Claude Code)")
+        print(f"{config.get('version', '2.1.311')} (Claude Code)")
         return 0
     stdin = sys.stdin.buffer.read()
     record(log_dir, argv, stdin, dict(os.environ))
     agent = "security-reviewer" if b"**security reviewer**" in stdin else "test-engineer"
-    scenario = os.environ.get("FAKE_CLAUDE_SECURITY" if agent == "security-reviewer" else "FAKE_CLAUDE_TEST",
-                              "approve")
-    leak = os.environ.get("FAKE_CLAUDE_LEAK", "")
+    scenario = config.get("security" if agent == "security-reviewer" else "test", "approve")
+    leak = config.get("leak", "")
     if scenario == "leak_key":
         sys.stderr.write(f"debug: the stub CLI echoes {leak}\n")
-        if os.environ.get("FAKE_CLAUDE_ECHO_ENV_KEY") == "1":
+        if config.get("echo_env_key"):
             sys.stderr.write(f"debug: and the process key {os.environ.get('ANTHROPIC_API_KEY', '')}\n")
             leak = leak + " " + os.environ.get("ANTHROPIC_API_KEY", "")
+    if scenario == "write":
+        target = Path(config["write"]["path"])
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("a", encoding="utf-8", newline="\n") as handle:
+            handle.write(config["write"].get("data", "written by the stub CLI\n"))
+        scenario = "approve"
     if scenario == "exit1":
         sys.stderr.write("fake claude: the call failed\n")
         return 1

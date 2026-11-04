@@ -2,9 +2,10 @@
 
 They prove NFR-09.1 (the five jobs and their commands), NFR-09.2 (every pin), NFR-09.3 (permissions and secrets) and
 NFR-09.6 (both platforms run the quality gates), plus the update mode that the Linux snapshot generators use
-(NFR-09.5). The expected pins are the verified values of plan C3, so a typo in a SHA or a digest fails here, not in
+(NFR-09.5) and the sandboxed review of NFR-09.7 (separate comment job, aggregator job, CODEOWNERS, lockfile installs).
+The expected pins are the verified values of plan C3, so a typo in a SHA or a digest fails here, not in
 the first CI run. The files are parsed with PyYAML (scripts/requirements-ci.txt); a missing PyYAML or a missing CI
-file is a failure, never a skip.
+file is a failure, never a skip. Install it first: pip install --require-hashes -r scripts/requirements-ci.txt
 """
 import json
 import re
@@ -27,10 +28,17 @@ CI_FILES = [GITHUB_CI, GITHUB_SNAPSHOTS, GITLAB_CI]
 WORKFLOWS = [GITHUB_CI, GITHUB_SNAPSHOTS]
 
 JOBS = ["build", "frontend-unit", "e2e", "quality-gates", "claude-review"]
-GITLAB_STAGES = ["build", "test", "e2e", "review"]
+EXTRA_JOBS = ["claude-review-comment", "ci-gate"]  # NFR-09.7
+GITLAB_STAGES = ["build", "test", "e2e", "review", "gate"]
 GITLAB_JOB_STAGE = {"build": "build", "frontend-unit": "test", "quality-gates": "test", "e2e": "e2e",
-                    "claude-review": "review", "e2e-update-linux-snapshots": "e2e"}
-TIMEOUT_MINUTES = {"build": 40, "frontend-unit": 15, "e2e": 45, "quality-gates": 20, "claude-review": 40}
+                    "claude-review": "review", "e2e-update-linux-snapshots": "e2e", "claude-review-comment": "review",
+                    "ci-gate": "gate"}
+TIMEOUT_MINUTES = {"build": 40, "frontend-unit": 15, "e2e": 45, "quality-gates": 20, "claude-review": 40,
+                   "claude-review-comment": 10, "ci-gate": 5}
+PIP_INSTALL = "pip install --require-hashes -r scripts/requirements-ci.txt"
+CLI_INSTALL = "npm ci --prefix scripts/ci/claude-cli"
+CLI_PACKAGE = ROOT / "scripts" / "ci" / "claude-cli"
+YAML_MISSING = f"PyYAML is not installed: run {PIP_INSTALL} (in .venv) first"
 RUNNER = "ubuntu-24.04"
 
 # Plan C1: the commands that both platforms run, per job (identical text on both).
@@ -38,9 +46,8 @@ GATE_COMMANDS = {
     "build": ["cd backend && ./mvnw -B verify"],
     "frontend-unit": ["cd frontend && npm ci && npm test && npm run build"],
     "e2e": ["cd frontend && npm ci && npx playwright test"],
-    "quality-gates": ["pip install -r scripts/requirements-ci.txt", "python scripts/ci/quality_gates.py"],
-    "claude-review": ["npm install -g @anthropic-ai/claude-code@2.1.311", "python3 scripts/ci/claude_review.py run",
-                      "--out ci-out/review", "python3 scripts/ci/claude_review.py comment"],
+    "quality-gates": [PIP_INSTALL, "python scripts/ci/quality_gates.py"],
+    "claude-review": [CLI_INSTALL, "python3 scripts/ci/claude_review.py run", "--out ci-out/review"],
 }
 
 # Plan C3: the pins, verified on 2026-11-04.
@@ -90,7 +97,7 @@ class CiConfigTestCase(unittest.TestCase):
 
     def load_yaml(self, relative):
         if yaml is None:
-            self.fail("PyYAML is not installed (pip install -r scripts/requirements-ci.txt)")
+            self.fail(YAML_MISSING)
         data = yaml.safe_load(self.read(relative))
         self.assertIsInstance(data, dict, f"{relative} must be a YAML mapping")
         return data
@@ -109,6 +116,12 @@ class CiConfigTestCase(unittest.TestCase):
         data["_jobs"] = {name: cfg for name, cfg in data.items()
                          if isinstance(cfg, dict) and not name.startswith((".", "_")) and name not in GITLAB_RESERVED}
         return data
+
+    def job(self, jobs, name):
+        """jobs[name], or a test failure that names the missing job."""
+        if name not in jobs:
+            self.fail(f"the CI file has no job {name}")
+        return jobs[name]
 
     @staticmethod
     def steps(job):
@@ -168,11 +181,12 @@ class CiConfigTestCase(unittest.TestCase):
 
 class JobDefinitionTests(CiConfigTestCase):
     def test_github_ci_defines_the_five_jobs(self):
-        """NFR-09.1: .github/workflows/ci.yml is named CI and defines exactly build, frontend-unit, e2e,
-        quality-gates and claude-review, each named like its ID, on ubuntu-24.04 with its timeout."""
+        """NFR-09.1: .github/workflows/ci.yml is named CI and defines build, frontend-unit, e2e, quality-gates and
+        claude-review, plus the NFR-09.7 jobs claude-review-comment and ci-gate, each named like its ID, on
+        ubuntu-24.04 with its timeout."""
         wf = self.workflow(GITHUB_CI)
         self.assertEqual(wf.get("name"), "CI")
-        self.assertEqual(sorted(wf["jobs"]), sorted(JOBS))
+        self.assertEqual(sorted(wf["jobs"]), sorted(JOBS + EXTRA_JOBS))
         for name, job in wf["jobs"].items():
             with self.subTest(job=name):
                 self.assertEqual(job.get("name"), name, "the check name must equal the job ID (stable for required checks)")
@@ -180,11 +194,12 @@ class JobDefinitionTests(CiConfigTestCase):
                 self.assertEqual(job.get("timeout-minutes"), TIMEOUT_MINUTES[name])
 
     def test_gitlab_ci_defines_the_five_jobs(self):
-        """NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e and review and the same five jobs, plus the
-        manual Linux snapshot job, each in its stage with its timeout; frontend-unit and quality-gates start at once."""
+        """NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e, review and gate and the same five jobs, plus the
+        manual Linux snapshot job and the NFR-09.7 jobs, each in its stage with its timeout; frontend-unit and
+        quality-gates start at once."""
         data = self.gitlab()
         self.assertEqual(data.get("stages"), GITLAB_STAGES)
-        self.assertEqual(sorted(data["_jobs"]), sorted([*JOBS, "e2e-update-linux-snapshots"]))
+        self.assertEqual(sorted(data["_jobs"]), sorted([*JOBS, *EXTRA_JOBS, "e2e-update-linux-snapshots"]))
         for name, job in data["_jobs"].items():
             with self.subTest(job=name):
                 self.assertEqual(job.get("stage"), GITLAB_JOB_STAGE[name])
@@ -253,6 +268,9 @@ class JobDefinitionTests(CiConfigTestCase):
                 self.assertNotIn("continue-on-error", text)
                 self.assertNotIn("|| true", text)
                 self.assertNotIn("!reference", text)
+        self.assertNotIn("python3 scripts/ci/claude_review.py comment", self.github_job_script(github["claude-review"]),
+                         "NFR-09.7: the review job never posts the comment")
+        self.assertNotIn("claude_review.py comment", self.gitlab_job_script(gitlab["claude-review"]))
 
     def test_backend_mvnw_is_executable_in_the_index(self):
         """NFR-09.1: backend/mvnw has mode 100755, so ./mvnw runs on a Linux runner."""
@@ -419,24 +437,23 @@ class PinTests(CiConfigTestCase):
 
     def test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact(self):
         """NFR-09.2: the Claude Code CLI is @anthropic-ai/claude-code@2.1.311 (the runner's pinned version),
-        .mcp.json pins @playwright/mcp@0.0.84, CI runs no unpinned npm package and installs pip packages only
-        from the pinned requirements file."""
+        installed with npm ci from scripts/ci/claude-cli; .mcp.json pins @playwright/mcp@0.0.84; CI runs no npm
+        install and installs pip packages only with --require-hashes from the hashed requirements file."""
         runner = (CI_DIR / "claude_review.py").read_text(encoding="utf-8")
         self.assertEqual(re.search(r'^PINNED_VERSION = "([^"]+)"', runner, re.M).group(1), CLAUDE_CLI.rsplit("@", 1)[1])
         mcp = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
         self.assertIn(PLAYWRIGHT_MCP, mcp["mcpServers"]["playwright"]["args"])
-        requirements = (ROOT / "scripts" / "requirements-ci.txt").read_text(encoding="utf-8").split()
-        self.assertEqual(sorted(requirements), ["PyYAML==6.0.3", "check-jsonschema==0.39.0"])
         scripts = [text for _, _, text in self.all_script_blocks()]
         self.assertGreater(len(scripts), 0)
         joined = "\n".join(scripts)
-        self.assertIn(f"npm install -g {CLAUDE_CLI}", joined)
-        for package in re.findall(r"npm (?:install|i)\s+(?:-g\s+|--global\s+)?(@?[\w./-]+(?:@\S+)?)", joined):
-            self.assertRegex(package, r"@\d+\.\d+\.\d+$", f"npm package without an exact version: {package}")
+        self.assertIn(CLI_INSTALL, joined)
+        self.assertNotRegex(joined, r"\bnpm\s+(install|i)\b", "CI installs npm packages only with npm ci")
         for command in re.findall(r"\bnpx\s+(\S+)", joined):
             self.assertEqual(command, "playwright", "npx may only run the locked local Playwright")
-        for command in re.findall(r"\bpip3?\s+install\s+(.+)", joined):
-            self.assertEqual(command.split()[:2], ["-r", "scripts/requirements-ci.txt"])
+        installs = re.findall(r"\bpip3?\s+install\s+(.+)", joined)
+        self.assertGreater(len(installs), 0)
+        for command in installs:
+            self.assertEqual(command.split()[:3], ["--require-hashes", "-r", "scripts/requirements-ci.txt"])
 
     def test_nothing_uses_a_floating_reference(self):
         """NFR-09.2: the strings @latest, :latest and ubuntu-latest occur in none of the CI files or .mcp.json,
@@ -477,15 +494,16 @@ class PinTests(CiConfigTestCase):
 
 class PermissionAndSecretTests(CiConfigTestCase):
     def test_permissions_are_read_only_except_for_claude_review(self):
-        """NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review job of ci.yml
-        adds pull-requests: write, and nothing else gets a write permission."""
+        """NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review-comment job of
+        ci.yml adds pull-requests: write (NFR-09.7 moved it off the job that holds the key), and nothing else gets
+        a write permission."""
         for rel in WORKFLOWS:
             wf = self.workflow(rel)
             with self.subTest(file=rel):
                 self.assertEqual(wf.get("permissions"), {"contents": "read"})
                 for name, job in wf["jobs"].items():
                     permissions = job.get("permissions")
-                    if rel == GITHUB_CI and name == "claude-review":
+                    if rel == GITHUB_CI and name == "claude-review-comment":
                         self.assertEqual(permissions, {"contents": "read", "pull-requests": "write"})
                     else:
                         self.assertIn(permissions, (None, {"contents": "read"}), f"{name} must not widen permissions")
@@ -501,8 +519,9 @@ class PermissionAndSecretTests(CiConfigTestCase):
                 self.assertNotIn("workflow_run", self.read(rel))
                 for name, job in wf["jobs"].items():
                     checkouts = [s for s in self.steps(job) if str(s.get("uses", "")).startswith("actions/checkout@")]
-                    self.assertEqual(len(checkouts), 1, f"{name} checks out exactly once")
-                    self.assertIs(checkouts[0].get("with", {}).get("persist-credentials"), False, name)
+                    self.assertEqual(len(checkouts), 0 if name == "ci-gate" else 1, f"{name} checks out exactly once")
+                    for checkout in checkouts:
+                        self.assertIs(checkout.get("with", {}).get("persist-credentials"), False, name)
         review = [s for s in self.steps(self.workflow(GITHUB_CI)["jobs"]["claude-review"])
                   if str(s.get("uses", "")).startswith("actions/checkout@")]
         self.assertEqual(review[0]["with"].get("fetch-depth"), 0, "the review reads the whole history (P-7)")
@@ -526,7 +545,8 @@ class PermissionAndSecretTests(CiConfigTestCase):
 
     def test_api_key_reaches_only_the_review_step_and_is_never_printed(self):
         """NFR-09.3: ANTHROPIC_API_KEY is referenced in exactly one place, the env of the review step of the
-        claude-review job (GitHub) or the claude-review job (GitLab); the PR comment step has the token and no key."""
+        claude-review job, which runs in the environment claude-review (GitHub) or the protected environment
+        claude-review (GitLab); the comment job has the token and no key."""
         references = []
         for rel in WORKFLOWS:
             wf = self.workflow(rel)
@@ -545,18 +565,22 @@ class PermissionAndSecretTests(CiConfigTestCase):
         self.assertNotIn("ANTHROPIC_API_KEY", str(step.get("run")), "the script reads the key from env, nothing prints it")
         for forbidden in ("GH_TOKEN", "GITHUB_TOKEN", "github.token"):
             self.assertNotIn(forbidden, json.dumps(step), "the Claude step never receives a GitHub token")
-        comment = [s for s in self.steps(self.workflow(GITHUB_CI)["jobs"]["claude-review"])
-                   if "claude_review.py comment" in str(s.get("run"))]
+        jobs = self.workflow(GITHUB_CI)["jobs"]
+        self.assertEqual(jobs["claude-review"].get("environment"), "claude-review",
+                         "the key is a secret of the GitHub Environment claude-review, which needs the owner's approval")
+        self.assertNotIn("github.token", json.dumps(jobs["claude-review"]))
+        self.assertNotIn("GH_TOKEN", json.dumps(jobs["claude-review"]))
+        comment = [s for s in self.steps(self.job(jobs, "claude-review-comment")) if "claude_review.py comment" in str(s.get("run"))]
         self.assertEqual(len(comment), 1)
-        self.assertEqual(comment[0]["env"], {"GH_TOKEN": "${{ github.token }}"})
-        self.assertIn("pull_request", comment[0]["if"])
-        self.assertTrue(self.is_always(comment[0]["if"]))
+        self.assertEqual(comment[0]["env"].get("GH_TOKEN"), "${{ github.token }}")
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(self.job(jobs, "claude-review-comment")))
         gitlab = self.gitlab()
         self.assertEqual(gitlab["_jobs"]["claude-review"].get("environment"), "claude-review",
                          "GitLab gives every job the project variables; the environment scope limits the key to this job")
         for name, job in gitlab["_jobs"].items():
             if name != "claude-review":
                 self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(job), name)
+            if name != "claude-review-comment":
                 self.assertNotIn("PF_GITLAB_REVIEW_TOKEN", json.dumps(job), name)
         for key in ("variables", "default", "workflow"):
             self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(gitlab.get(key)))
@@ -588,7 +612,7 @@ class QualityGateWiringTests(CiConfigTestCase):
         gitlab = self.gitlab_job_script(self.gitlab()["_jobs"]["quality-gates"])
         for where, script in (("GitHub", github), ("GitLab", gitlab)):
             with self.subTest(platform=where):
-                self.assertIn("pip install -r scripts/requirements-ci.txt", script)
+                self.assertIn(PIP_INSTALL, script)
                 self.assertIn("python scripts/ci/quality_gates.py", script)
                 self.assertLess(script.index("pip install"), script.index("quality_gates.py"))
                 self.assertNotIn("--only", script)
@@ -660,6 +684,237 @@ class LinuxSnapshotGeneratorTests(CiConfigTestCase):
         paths = job["artifacts"]["paths"]
         self.assertIn("frontend/e2e/__snapshots__/*-linux.png", paths)
         self.assertIn("frontend/playwright-report/", paths)
+
+
+# ------------------------------------------------------------------------------------------------ NFR-09.7
+
+class CommentJobTests(CiConfigTestCase):
+    def test_github_review_job_holds_the_key_only_and_uploads_the_report(self):
+        """NFR-09.7: the GitHub claude-review job runs in the environment claude-review, has no pull-requests
+        permission and no GitHub token, installs the CLI from the lockfile and uploads the report artifact."""
+        job = self.workflow(GITHUB_CI)["jobs"]["claude-review"]
+        self.assertEqual(job.get("environment"), "claude-review")
+        self.assertIn(job.get("permissions"), (None, {"contents": "read"}))
+        text = json.dumps(job)
+        for forbidden in ("pull-requests", "github.token", "GH_TOKEN", "GITHUB_TOKEN"):
+            self.assertNotIn(forbidden, text)
+        self.assertIn(CLI_INSTALL, self.github_job_script(job))
+        uploads = [s for s in self.steps(job) if str(s.get("uses", "")).startswith("actions/upload-artifact@")]
+        self.assertEqual([s["with"]["name"] for s in uploads], ["claude-review"])
+        self.assertTrue(self.is_always(uploads[0].get("if")))
+
+    def test_github_comment_job_runs_the_base_branch_script_with_the_token_only(self):
+        """NFR-09.7: claude-review-comment needs claude-review, runs on pull requests even when the review failed,
+        has pull-requests: write and no environment or key, checks out github.base_ref (never the code under
+        review), downloads only the claude-review artifact and runs the base branch's comment code on it, with a
+        notice and exit 0 when the base branch has no comment code yet."""
+        job = self.job(self.workflow(GITHUB_CI)["jobs"], "claude-review-comment")
+        self.assertEqual(normalise_list(job.get("needs")), ["claude-review"])
+        condition = str(job.get("if"))
+        self.assertTrue(self.is_always(condition), condition)
+        self.assertIn("github.event_name == 'pull_request'", condition)
+        self.assertEqual(job.get("permissions"), {"contents": "read", "pull-requests": "write"})
+        self.assertNotIn("environment", job)
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(job))
+        self.assertNotIn("secrets.", json.dumps(job))
+        steps = self.steps(job)
+        checkout = [s for s in steps if str(s.get("uses", "")).startswith("actions/checkout@")]
+        self.assertEqual(len(checkout), 1)
+        self.assertEqual(checkout[0]["with"].get("ref"), "${{ github.base_ref }}")
+        self.assertIs(checkout[0]["with"].get("persist-credentials"), False)
+        downloads = [s for s in steps if str(s.get("uses", "")).startswith("actions/download-artifact@")]
+        self.assertEqual([s["with"].get("name") for s in downloads], ["claude-review"])
+        self.assertLess(steps.index(checkout[0]), steps.index(downloads[0]))
+        download_path = str(downloads[0]["with"].get("path"))
+        self.assertIn("runner.temp", download_path, "the artifact lands outside the checkout")
+        script = self.github_job_script(job)
+        self.assertIn("python3 -I scripts/ci/claude_review.py comment --platform github", script)
+        self.assertIn("[ ! -f scripts/ci/claude_review.py ]", script)
+        self.assertIn("::notice::", script)
+        self.assertRegex(script, r"::notice::[^\n]*\n\s*exit 0")
+        for forbidden in ("npm ", "pip ", "mvnw", "claude_review.py run"):
+            self.assertNotIn(forbidden, script)
+
+    def test_gitlab_review_job_has_no_review_token_and_no_comment(self):
+        """NFR-09.7: the GitLab claude-review job runs in the protected environment claude-review, installs the CLI
+        with npm ci from the lockfile, never names PF_GITLAB_REVIEW_TOKEN and does not post the note."""
+        job = self.gitlab()["_jobs"]["claude-review"]
+        self.assertEqual(job.get("environment"), "claude-review")
+        script = self.gitlab_job_script(job)
+        self.assertIn(CLI_INSTALL, script)
+        self.assertNotIn("PF_GITLAB_REVIEW_TOKEN", json.dumps(job))
+        self.assertNotIn("comment --platform", script)
+
+    def test_gitlab_comment_job_uses_its_own_environment_and_the_target_branch_scripts(self):
+        """NFR-09.7: claude-review-comment runs only for merge request pipelines (also after a failed review), in the
+        environment claude-review-comment that scopes PF_GITLAB_REVIEW_TOKEN, takes the claude-review artifact, and
+        runs the comment code of the target branch (git fetch of CI_MERGE_REQUEST_TARGET_BRANCH_NAME plus a
+        worktree), skipping with a notice when that branch has no comment code."""
+        job = self.job(self.gitlab()["_jobs"], "claude-review-comment")
+        environment = job.get("environment")
+        name = environment.get("name") if isinstance(environment, dict) else environment
+        self.assertEqual(name, "claude-review-comment")
+        needs = job.get("needs")
+        self.assertEqual(len(needs), 1)
+        need = needs[0]
+        self.assertEqual(need if isinstance(need, str) else need.get("job"), "claude-review")
+        if isinstance(need, dict):
+            self.assertIsNot(need.get("artifacts"), False)
+        rules = job.get("rules")
+        self.assertEqual(len(rules), 1)
+        self.assertIn('$CI_PIPELINE_SOURCE == "merge_request_event"', str(rules[0].get("if")))
+        self.assertEqual(rules[0].get("when"), "always")
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(job))
+        self.assertEqual(self.image_of(job), PYTHON_IMAGE)
+        script = self.gitlab_job_script(job)
+        self.assertRegex(script, r'git fetch [^\n]*origin "\$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"')
+        self.assertIn("git worktree add --detach", script)
+        self.assertRegex(script, r'python3 -I "\$base_dir/scripts/ci/claude_review\.py" comment --platform gitlab')
+        self.assertIn("ci-out/review/claude-review.md", script)
+        self.assertNotRegex(script, r"(^|\s)python3? (-I )?scripts/", "never run the merge request's own scripts")
+        self.assertIn("notice", script)
+        for forbidden in ("npm ", "pip ", "mvnw", "claude_review.py run"):
+            self.assertNotIn(forbidden, script)
+
+    def test_gitlab_header_documents_protected_environments_and_the_token_scope(self):
+        """NFR-09.7: the .gitlab-ci.yml header says to protect the environment claude-review (deployment approval)
+        instead of the feature branches, scopes PF_GITLAB_REVIEW_TOKEN to claude-review-comment and names its
+        minimum scope."""
+        header = "\n".join(line for line in self.read(GITLAB_CI).splitlines() if line.startswith("#"))
+        for fragment in ("protected environment", "claude-review", "claude-review-comment", "approval",
+                         "PF_GITLAB_REVIEW_TOKEN", "scope", "Reporter"):
+            self.assertIn(fragment, header)
+        self.assertNotRegex(header, r"feat/\*", "protected feature branches would hand every MR the key")
+
+
+class GateJobTests(CiConfigTestCase):
+    def test_github_ci_gate_fails_unless_every_gate_job_succeeded(self):
+        """NFR-09.7: ci-gate needs the five gate jobs, runs always, and fails unless each needs.<job>.result is
+        success, so a skipped or cancelled review never counts as passing."""
+        job = self.job(self.workflow(GITHUB_CI)["jobs"], "ci-gate")
+        self.assertEqual(sorted(normalise_list(job.get("needs"))), sorted(JOBS))
+        self.assertEqual(str(job.get("if")).strip(), "always()")
+        self.assertIn(job.get("permissions"), (None, {"contents": "read"}))
+        env = {}
+        for step in self.steps(job):
+            env.update(step.get("env") or {})
+        results = {value for value in env.values()}
+        for name in JOBS:
+            self.assertIn("${{ needs.%s.result }}" % name, results, name)
+        script = self.github_job_script(job)
+        self.assertIn('= success', script)
+        self.assertIn("exit", script)
+        self.assertNotIn("secrets.", json.dumps(job))
+
+    def test_gitlab_gate_jobs_write_a_status_file_and_ci_gate_requires_all_five(self):
+        """NFR-09.7: each GitLab gate job writes ci-out/status/<job>.ok as its last command and keeps it as an
+        artifact; ci-gate (stage gate, when: always, needs all five) fails unless every status file is there and
+        belongs to this pipeline."""
+        jobs = self.gitlab()["_jobs"]
+        for name in JOBS:
+            with self.subTest(job=name):
+                lines = [str(line) for line in normalise_list(jobs[name].get("script"))]
+                self.assertIn(f"ci-out/status/{name}.ok", lines[-1], "the status file is written last")
+                self.assertIn("$CI_PIPELINE_ID", lines[-1])
+                self.assertIn(f"ci-out/status/{name}.ok", jobs[name]["artifacts"]["paths"])
+        gate = self.job(jobs, "ci-gate")
+        self.assertEqual(gate.get("stage"), "gate")
+        self.assertEqual(gate.get("when"), "always")
+        self.assertIsNot(gate.get("allow_failure"), True)
+        needs = [n if isinstance(n, str) else n.get("job") for n in gate.get("needs")]
+        self.assertEqual(sorted(needs), sorted(JOBS))
+        for need in gate.get("needs"):
+            if isinstance(need, dict):
+                self.assertIsNot(need.get("artifacts"), False)
+        script = self.gitlab_job_script(gate)
+        self.assertIn("ci-out/status/", script)
+        self.assertIn("$CI_PIPELINE_ID", script)
+        for name in JOBS:
+            self.assertIn(name, script)
+        self.assertIn('exit "$status"', script)
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(gate))
+
+
+class CodeOwnersTests(CiConfigTestCase):
+    def test_codeowners_covers_the_ci_and_review_files(self):
+        """NFR-09.7: .github/CODEOWNERS gives @wushandarshana the CI definitions, the CI scripts, the redaction and
+        audit scripts and the reviewer agents, so a change to them needs the code owner's review."""
+        lines = [line.split("#", 1)[0].split() for line in self.read(".github/CODEOWNERS").splitlines()]
+        owners = {parts[0].lstrip("/"): parts[1:] for parts in lines if parts}
+        for pattern in (".github/**", ".gitlab-ci.yml", "scripts/ci/**", "scripts/redact_evidence.py",
+                        "scripts/ac_audit.py", ".claude/agents/**"):
+            with self.subTest(pattern=pattern):
+                self.assertIn(pattern, owners)
+                self.assertEqual(owners[pattern], ["@wushandarshana"])
+        self.assertEqual(owners.get("*"), ["@wushandarshana"])
+
+
+class LockedInstallTests(CiConfigTestCase):
+    def test_the_claude_cli_lockfile_pins_the_runner_version_with_integrity(self):
+        """NFR-09.7: scripts/ci/claude-cli/package.json depends on exactly the runner's PINNED_VERSION, and the
+        committed package-lock.json resolves it, and every platform package, with an integrity hash."""
+        runner = (CI_DIR / "claude_review.py").read_text(encoding="utf-8")
+        pinned = re.search(r'^PINNED_VERSION = "([^"]+)"', runner, re.M).group(1)
+        package = json.loads(self.read("scripts/ci/claude-cli/package.json"))
+        self.assertEqual(package.get("dependencies"), {"@anthropic-ai/claude-code": pinned})
+        self.assertIs(package.get("private"), True)
+        lock = json.loads(self.read("scripts/ci/claude-cli/package-lock.json"))
+        self.assertGreaterEqual(lock.get("lockfileVersion", 0), 3)
+        packages = lock["packages"]
+        self.assertEqual(packages[""]["dependencies"], {"@anthropic-ai/claude-code": pinned})
+        main = packages["node_modules/@anthropic-ai/claude-code"]
+        self.assertEqual(main["version"], pinned)
+        self.assertIn("node_modules/@anthropic-ai/claude-code-linux-x64", packages, "the CI runner platform")
+        for name, entry in packages.items():
+            if not name:
+                continue
+            with self.subTest(package=name):
+                self.assertRegex(entry.get("integrity", ""), r"^sha512-[A-Za-z0-9+/=]{80,}$")
+                self.assertTrue(entry.get("resolved", "").startswith("https://registry.npmjs.org/"))
+        self.assertEqual(git(ROOT, "ls-files", "scripts/ci/claude-cli/node_modules"), "",
+                         "node_modules is never committed")
+
+    def test_requirements_ci_pins_every_package_with_hashes(self):
+        """NFR-09.7: scripts/requirements-ci.txt pins PyYAML 6.0.3, check-jsonschema 0.39.0 and all their transitive
+        dependencies with ==, each with at least one sha256 hash, so pip install --require-hashes accepts it."""
+        text = self.read("scripts/requirements-ci.txt")
+        joined = re.sub(r"\\\n", " ", text)
+        requirements = {}
+        for line in joined.splitlines():
+            line = line.split("#", 1)[0].strip()
+            if not line:
+                continue
+            spec, *rest = line.split(" --hash=")
+            name, _, version = spec.split(";")[0].strip().partition("==")
+            self.assertTrue(version, f"not pinned with ==: {line[:60]}")
+            hashes = [h.split()[0] for h in rest]
+            self.assertTrue(hashes, f"{name} has no hash")
+            for value in hashes:
+                self.assertRegex(value, r"^sha256:[0-9a-f]{64}$")
+            requirements[re.sub(r"[-_.]+", "-", name.strip().lower())] = version.strip()
+        self.assertEqual(requirements.get("pyyaml"), "6.0.3")
+        self.assertEqual(requirements.get("check-jsonschema"), "0.39.0")
+        for transitive in ("jsonschema", "jsonschema-specifications", "referencing", "rpds-py", "attrs", "regress",
+                           "requests", "urllib3", "idna", "certifi", "charset-normalizer", "click", "ruamel-yaml",
+                           "typing-extensions"):
+            self.assertIn(transitive, requirements, f"transitive dependency {transitive} is not pinned")
+
+    def test_ci_installs_from_the_lockfiles(self):
+        """NFR-09.7: both platforms install the CLI with npm ci --prefix scripts/ci/claude-cli and the Python packages
+        with pip install --require-hashes; no CI script runs npm install, npm install -g or an unhashed pip install."""
+        github = self.workflow(GITHUB_CI)["jobs"]
+        gitlab = self.gitlab()["_jobs"]
+        self.assertIn(CLI_INSTALL, self.github_job_script(github["claude-review"]))
+        self.assertIn(CLI_INSTALL, self.gitlab_job_script(gitlab["claude-review"]))
+        self.assertIn(PIP_INSTALL, self.github_job_script(github["quality-gates"]))
+        self.assertIn(PIP_INSTALL, self.gitlab_job_script(gitlab["quality-gates"]))
+        for _, name, text in self.all_script_blocks():
+            with self.subTest(job=name):
+                self.assertNotRegex(text, r"\bnpm\s+(install|i)\b")
+                for command in re.findall(r"\bpip3?\s+install\s+(.+)", text):
+                    self.assertIn("--require-hashes", command)
+        cache = [s for s in self.steps(github["quality-gates"]) if str(s.get("uses", "")).startswith("actions/setup-python@")]
+        self.assertEqual(cache[0]["with"].get("cache-dependency-path"), "scripts/requirements-ci.txt")
 
 
 if __name__ == "__main__":
