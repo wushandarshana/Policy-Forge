@@ -166,16 +166,6 @@ function Loaded({
         ) : null}
       </section>
 
-      {inForce && detail.pendingRenewal ? (
-        <RenewPanel
-          policyNumber={policy.policyNumber}
-          pending={detail.pendingRenewal}
-          onPaid={() => onChanged(RENEWAL_PAID_NOTICE)}
-        />
-      ) : null}
-
-      {inForce ? <CancelPanel policyNumber={policy.policyNumber} onCancelled={() => onChanged(CANCELLED_NOTICE)} /> : null}
-
       <div className="tabs" role="tablist" aria-label="Policy history" data-testid="policy-tabs">
         {TABS.map((item) => (
           <button
@@ -200,6 +190,18 @@ function Loaded({
         {tab === 'status' ? <Transitions transitions={detail.transitions} /> : null}
         {tab === 'refunds' ? <Refunds refunds={detail.refunds} /> : null}
       </section>
+
+      {/* The actions follow the history, so an offer or the Cancel panel never moves the history tabs (the Sprint 3
+          visual baselines are element screenshots of the tab panel, sensitive to sub-pixel position). */}
+      {inForce && detail.pendingRenewal ? (
+        <RenewPanel
+          policyNumber={policy.policyNumber}
+          pending={detail.pendingRenewal}
+          onPaid={() => onChanged(RENEWAL_PAID_NOTICE)}
+        />
+      ) : null}
+
+      {inForce ? <CancelPanel policyNumber={policy.policyNumber} onCancelled={() => onChanged(CANCELLED_NOTICE)} /> : null}
     </>
   );
 }

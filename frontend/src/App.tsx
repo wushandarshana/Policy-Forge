@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RequireSession } from './auth/RequireSession';
 import { SessionProvider, useSession } from './auth/SessionContext';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { ApplicationStatusPage } from './pages/ApplicationStatusPage';
 import { ApplyPage } from './pages/ApplyPage';
 import { EndorsePage } from './pages/EndorsePage';
@@ -14,6 +15,7 @@ type Route =
   | { name: 'apply'; quoteId: string | null }
   | { name: 'application'; applicationId: string }
   | { name: 'workbench' }
+  | { name: 'dashboard' }
   | { name: 'policies' }
   | { name: 'policy'; policyNumber: string }
   | { name: 'endorse'; policyNumber: string };
@@ -27,6 +29,7 @@ export function parseRoute(hash: string): Route {
     return { name: 'apply', quoteId: quoteId && quoteId.trim() !== '' ? quoteId : null };
   }
   if (path === '/workbench') return { name: 'workbench' };
+  if (path === '/admin/dashboard') return { name: 'dashboard' };
   if (path === '/policies') return { name: 'policies' };
   const endorse = /^\/policies\/([^/]+)\/endorse$/.exec(path);
   if (endorse) return { name: 'endorse', policyNumber: decodeURIComponent(endorse[1]) };
@@ -58,6 +61,9 @@ function NavBar({ route }: { route: Route }) {
       </a>
       <a href="#/workbench" data-testid="nav-workbench" aria-current={route.name === 'workbench' ? 'page' : undefined}>
         Workbench
+      </a>
+      <a href="#/admin/dashboard" data-testid="nav-dashboard" aria-current={route.name === 'dashboard' ? 'page' : undefined}>
+        Dashboard
       </a>
       <a
         href="#/policies"
@@ -141,6 +147,12 @@ function Routes({ route }: { route: Route }) {
       return (
         <RequireSession>
           <WorkbenchPage />
+        </RequireSession>
+      );
+    case 'dashboard':
+      return (
+        <RequireSession>
+          <AdminDashboardPage />
         </RequireSession>
       );
     default:
