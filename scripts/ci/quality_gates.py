@@ -247,7 +247,12 @@ def main(argv=None, gates=None, runner=None, stream=None):
     parser.add_argument("--only", action="append", metavar="NAME", help="run only this gate (repeatable)")
     parser.add_argument("--report", metavar="FILE", help="also write the table and every gate's output to FILE")
     args = parser.parse_args(argv)
-    stream = stream or sys.stdout
+    if stream is None:
+        for std in (sys.stdout, sys.stderr):  # gate output is UTF-8; a Windows pipe defaults to a legacy code page
+            reconfigure = getattr(std, "reconfigure", None)
+            if reconfigure is not None:
+                reconfigure(encoding="utf-8", errors="replace")
+        stream = sys.stdout
     gates = build_gates() if gates is None else gates
     if args.list:
         for gate in gates:
