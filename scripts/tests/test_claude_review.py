@@ -559,9 +559,11 @@ class _FakeApiHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(length) if length else b""
         self.server.requests.append({"method": self.command, "path": self.path, "headers": dict(self.headers),
                                      "body": body.decode("utf-8")})
-        status, payload = self.server.responder(self.command, self.path)
+        status, payload, *extra = self.server.responder(self.command, self.path)
         data = json.dumps(payload).encode("utf-8")
         self.send_response(status)
+        for name, value in (extra[0] if extra else {}).items():
+            self.send_header(name, value)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
@@ -648,6 +650,16 @@ class CommentTests(unittest.TestCase):
                 proc = self.github(server, **overrides)
                 self.assertEqual(proc.returncode, 0, proc.stderr_text)
         self.assertEqual(server.requests, [])
+
+    def test_a_redirect_from_the_api_is_not_followed_so_the_token_is_never_resent(self):
+        """NFR-09.3: a 307 answer is not followed, so the Authorization header never reaches another host."""
+        elsewhere = self.serve(lambda method, path: (200, []))
+        redirecting = self.serve(lambda method, path: (307, {}, {"Location": elsewhere.url + "/stolen"}))
+        proc = self.github(redirecting)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(elsewhere.requests, [], "the redirect target must never be contacted")
+        self.assertIn("307", proc.stderr_text)
+        self.assertNotIn(FAKE_TOKEN_VALUE, proc.stdout_text + proc.stderr_text)
 
     def test_github_api_failure_is_a_warning_and_never_prints_the_token(self):
         """NFR-09.4: a failed comment call warns and exits 0 (the gate is the job, not the comment)."""

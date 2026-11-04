@@ -603,10 +603,18 @@ def run(args):
 
 # -------------------------------------------------------------------------------------------- comment
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Never follow a redirect: urllib would resend the Authorization header to wherever the answer points."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def _http_json(method, url, headers, payload=None):
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
     request = urllib.request.Request(url, data=data, method=method, headers=headers)
-    with urllib.request.urlopen(request, timeout=30, context=ssl.create_default_context()) as response:
+    opener = urllib.request.build_opener(_NoRedirect, urllib.request.HTTPSHandler(context=ssl.create_default_context()))
+    with opener.open(request, timeout=30) as response:
         body = response.read()
     return json.loads(body.decode("utf-8")) if body.strip() else None
 
