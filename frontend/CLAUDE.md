@@ -11,4 +11,5 @@ React 18 + Vite + TypeScript SPA. Visual polish isn't graded; correctness, respo
 - Every interactive element that tests touch has a `data-testid`.
 - Tests: Vitest + Testing Library for components (`*.test.tsx`), Playwright E2E in `e2e/` (see `e2e/CLAUDE.md`).
   Titles start with `AC-NN.M:`.
-- Coverage: `vitest --coverage` (v8) writes `coverage/lcov.info`, which is committed.
+- Coverage: `vitest --coverage` (v8) writes `coverage/lcov.info`. It is **not committed** (`.gitignore`). CI publishes
+  it as the `frontend-coverage` artifact of the `frontend-unit` job.
