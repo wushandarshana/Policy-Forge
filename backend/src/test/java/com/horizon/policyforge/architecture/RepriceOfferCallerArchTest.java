@@ -75,7 +75,7 @@ class RepriceOfferCallerArchTest {
 
     @Test
     @Tag("NFR-08.1")
-    @DisplayName("NFR-08.1 negative fixture: a class other than the fixture's endorsement service that calls repriceOffer is rejected and named, and the fixture's endorsement service is not")
+    @DisplayName("NFR-08.1: negative fixture: a class other than the fixture's endorsement service that calls repriceOffer is rejected and named, and the fixture's endorsement service is not")
     void aCallerOtherThanTheEndorsementServiceIsRejected() {
         ArchSupport.assertRuleRejects(onlyCalledBy(FIXTURE_OWNER, FIXTURE_ALLOWED_CALLER),
                 ArchSupport.fixtures("reprice"))
