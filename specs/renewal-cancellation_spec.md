@@ -7,6 +7,18 @@
 
 `RenewalScheduler` runs end of day (`@Scheduled(cron = "0 0 23 * * *")`), and on demand through
 `POST /api/admin/jobs/renewal-cycle?date=YYYY-MM-DD` (ADMIN) for testing. The job is idempotent for a given date.
+
+**Job date bounds (security review MAJOR-2, user decision 2026-11-04).** On the admin endpoint, an absent `date` means
+today. A given `date` must satisfy `today − 30 days ≤ date ≤ today`, or the response is 400 naming `date` and nothing
+runs. The setting `policyforge.jobs.renewal-cycle.any-date` (default `false`) lifts this bound. Only the test and
+browser-test configurations set it to `true`; production and the packaged demo never do. The scheduler always runs for
+today.
+
+**Re-pricing a pending offer (security review MAJOR-1, user decision 2026-11-04).** When a `CHANGE_SUM_INSURED`
+endorsement is applied while an unpaid renewal term exists, the same transaction re-prices that term: its premium is
+re-quoted from the endorsed risk inputs with the rule version the term already records. The term's dates and rule
+version don't change, and the term is never paid by this step. An endorsement that doesn't re-rate leaves the offer
+unchanged. Paying a renewal always charges the term's premium as it stands at payment.
 For each in-force policy with a current term:
 
 1. **Offer.** If `runDate >= termEnd − renewalOfferDaysBeforeExpiry` and no next term exists, create a `PolicyTerm`
@@ -42,6 +54,12 @@ renewal is paid, and the renewal term from the moment it is paid, even before it
 `REPLACED_BY_OTHER_COVER`, `AFFORDABILITY` or `OTHER`. Anything else gives 400 naming `reason`. The transition
 → CANCELLED records it as its reason.
 
+**No backdating (security review BLOCKER-1, user decision 2026-11-04).** The cancellation date must also be on or
+after today: `max(today, termStart) ≤ cancellationDate ≤ termEnd`. A date before today gives 400
+`CANCELLATION_DATE_OUT_OF_TERM` naming `cancellationDate`, and nothing is written. The preview applies the same rule to
+its `date` parameter, naming `date`. Because the date can't be in the past, cooling-off is still judged on the
+cancellation date, which is no earlier than the request.
+
 `ProRataRefundCalculator.calculate(premium, termStart, termEnd, cancellationDate, policyEffectiveDate, firstTerm, coolingOffDays, cancellationFee)`:
 
 - `termDays = DAYS.between(termStart, termEnd + 1)`
@@ -70,6 +88,13 @@ formula string, createdAt, actorId) and the transition → **CANCELLED**. Refund
 - **AC-07.5** Given an offered renewal, when the owner pays on 2027-11-10 (within grace), then the term is paid and the
   status is **RENEWED**. Paying on 2027-12-01 gives 409.
 - **AC-07.6** Grace periods differ by product: MOTOR and HOUSEHOLD lapse on termEnd + 16, TERM_LIFE on termEnd + 31.
+- **AC-07.7** Given the AC-07.1 offer at 6850.00 (rule version 1) for sum insured 5,000,000, when the owner changes the
+  sum insured to 7,000,000 effective 2027-10-05, then the pending renewal term's premium becomes 9490.00, its dates and
+  rule version are unchanged, and paying it on 2027-10-06 records the RENEWED version with sum insured 7,000,000 and
+  premium 9490.00.
+- **AC-07.8** Given today is 2027-10-01 and `any-date` is off, when an ADMIN runs the job with `date=2207-10-01`, or
+  with `date=2027-08-31` (today − 31), then the response is 400 naming `date`, and no term, transition or audit entry is
+  written. `date=2027-09-01` (today − 30) and `date=2027-10-01` are accepted.
 - **AC-08.1** Given TERM_LIFE premium 6850.00, term 2026-11-01..2027-10-31 (365 days), cancellation on 2027-02-09
   (unexpired 265 days), fee 500.00, then the refund is **4473.29**.
 - **AC-08.2** Given cancellation within the cooling-off period (TERM_LIFE, 10 days after effective date), then the
@@ -80,6 +105,10 @@ formula string, createdAt, actorId) and the transition → **CANCELLED**. Refund
   second cancel request gives 409 with no second refund record.
 - **AC-08.5** Refund calculation uses only `BigDecimal`. A property test across 1,000 random dates shows
   `0 ≤ refund ≤ premium` with scale exactly 2.
+- **AC-08.6** Given today is 2027-10-20 and a TERM_LIFE first term 2026-11-01..2027-10-31 with cooling-off 10 days,
+  when the owner cancels with `cancellationDate` 2026-11-02, then the response is 400 `CANCELLATION_DATE_OUT_OF_TERM`
+  naming `cancellationDate`, and no refund record or transition is written. The preview with `date=2026-11-02` gives
+  400 naming `date`. Cancelling with 2027-10-20 is accepted, with refund `max(0, 6850.00 × 12 / 365 − 500.00) = 0.00`.
 
 ## UI
 Policy detail has **Renew** (when an offer is pending: shows the new premium, then Pay) and **Cancel** (shows a refund
