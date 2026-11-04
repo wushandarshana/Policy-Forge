@@ -1,0 +1,87 @@
+# TASK-005 red run: ./mvnw verify -Dskip.frontend=true -Djacoco.skip=true -Dmaven.test.failure.ignore=true -Dtest='CancellationReasonTest,RefundRecordMigrationTest,AppendOnlyArchTest' -Dit.test='Cancellation*IT'
+# surefire (CancellationReasonTest, RefundRecordMigrationTest, AppendOnlyArchTest) and failsafe (Cancellation*IT): 38 assertion failures and 25 errors, 0 compile errors.
+# Every error is a missing-implementation error, not a test defect: 22 integration tests and 2 migration tests hit 'Table REFUND_RECORD not found' (BadSqlGrammar) when they take their before-snapshot or insert a row, because V11 is added in the green commit
+#   (a committed migration is never edited, so the schema is written once, with its tests already in place); the AppendOnlyArchTest 'set-wide' check errors because RefundRecordEntity and RefundRecordRepository do not exist yet. Every other failure is an assertion.
+# Production stub: domain.cancellation.CancellationReason (the four names, parse() recognises none). Absent on purpose: V11, RefundRecordEntity, RefundRecordRepository (AppendOnlyArchTest existence checks fail while absent), CancellationService, CancellationController.
+# The cancel and preview endpoints do not exist, so MockMvc answers 404/405 and every API test fails on its status assertion. The CancellationReasonTest cases that expect 'not a reason' pass with the stub (it recognises nothing); 'each parses to itself' fails.
+# IDs covered: AC-08.1 (worked example, defaults, reasons, per-product fee, premium basis, date window, shape, P-5 order, early renewal), AC-08.2 (cooling-off and its boundaries), AC-08.3 (floor), AC-08.4 (one record, second cancel, race, atomicity, ArchUnit, migration),
+#   AC-10.2 (endorse after a real cancel), AC-10.3 (LAPSED by the real cycle), AC-10.4 (sequences with a real cancel), NFR-03.1 (log capture), NFR-04.1 (roles, 404, no challenge), NFR-04.3 (415), NFR-04.4 (413 incl. percent-encoded path), NFR-05 (V1 to V10 checksums, V11 next)
+
+== red summary: 74 tests in the reports, 38 assertion failures, 25 errors, 11 passing ==
+AC-08.1: 11 passing, 22 failing
+AC-08.2: 0 passing, 9 failing
+AC-08.3: 0 passing, 1 failing
+AC-08.4: 0 passing, 13 failing
+AC-10.2: 0 passing, 1 failing
+AC-10.3: 0 passing, 3 failing
+AC-10.4: 0 passing, 3 failing
+NFR-03.1: 0 passing, 2 failing
+NFR-04.1: 0 passing, 4 failing
+NFR-04.3: 0 passing, 1 failing
+NFR-04.4: 0 passing, 3 failing
+NFR-05: 0 passing, 1 failing
+
+== failing tests (class: display name, kind) ==
+AppendOnlyArchTest: AC-08.4: the refund record entity exists, is an immutable JPA entity, has no public setters and one factory [assertion failure]
+AppendOnlyArchTest: AC-08.4: the refund record repository exists, extends Repository and declares only save and finder methods [assertion failure]
+AppendOnlyArchTest: AC-08.4: the set-wide append-only rules cover RefundRecordEntity and RefundRecordRepository, which both exist [error]
+CancellationAtomicityIT: AC-08.4: a failure at the transition write, after the refund insert reached the database, leaves no refund row, and the status, the current version and the transition count are unchanged; the same request then succeeds [error]
+CancellationBodyLimitIT: NFR-04.4: a body over 16 KB that is not a valid cancellation is still a 413, not a 400, so the cap is checked before the shape [error]
+CancellationBodyLimitIT: NFR-04.4: a body over 16 KB to POST /api/policies/{number}/cancel is a 413 and nothing is written, with or without a Content-Length header, while the same body without padding cancels [error]
+CancellationBodyLimitIT: NFR-04.4: a body over 16 KB to a percent-encoded variant of the cancel path is a 413 and nothing is written, and the encoded path does reach the endpoint [error]
+CancellationConflictIT: AC-08.4: when two cancels race and the second reads the policy before the first commits, the first gets 201 and the loser gets 409 POLICY_UPDATE_CONFLICT with a fixed detail, so exactly one refund record and one CANCELLED transition exist [assertion failure]
+CancellationConflictIT: AC-08.4: 2 cancels sent at the same moment to one policy give exactly one 201 and the rest 409 (POLICY_UPDATE_CONFLICT or INVALID_POLICY_STATE), with one refund record and one CANCELLED transition [assertion failure]
+CancellationConflictIT: AC-08.4: 8 cancels sent at the same moment to one policy give exactly one 201 and the rest 409 (POLICY_UPDATE_CONFLICT or INVALID_POLICY_STATE), with one refund record and one CANCELLED transition [assertion failure]
+CancellationLogCaptureIT: NFR-03.1: previewing, cancelling and reading the policy back log IDs only, and no captured line contains an Aadhaar, a PAN, the full name, the date of birth, an address line or health declaration text [assertion failure]
+CancellationLogCaptureIT: NFR-03.1: rejected preview and cancel requests (unknown keys, a malformed date, a bad reason, a wrong content type, another customer's policy, a date outside the term, a second cancel) log none of the submitted values [assertion failure]
+CancellationReasonTest: AC-08.1: the reasons are NO_LONGER_NEEDED, REPLACED_BY_OTHER_COVER, AFFORDABILITY and OTHER, and each parses to itself [assertion failure]
+CancellationRefundIT: AC-08.1: a TERM_LIFE 6850.00 policy issued 2026-11-01 and cancelled on 2027-02-09 gets 4473.29 from the preview and from the cancel (265 of 365 days, fee 500.00, the C5 formula), the stored record equals the preview field by field, and the cancel is 201 with the C4 body [error]
+CancellationRefundIT: AC-08.1: a malformed or non-text cancellationDate is 400 naming cancellationDate and never echoing it, and a malformed preview date, an empty one and a repeated one are 400 naming date; nothing is written [error]
+CancellationRefundIT: AC-08.1: a missing, null, non-text, lower-case or unknown reason is 400 naming reason and never echoing it, an empty body is 400, and nothing is written [error]
+CancellationRefundIT: AC-08.1: after a +1330.85 sum-insured endorsement effective 2027-05-01, cancelling on 2027-06-01 refunds 2929.23 on a basis of 8180.85 (the term premium 6850.00 plus the adjustment), in the preview, the response and the record [assertion failure]
+CancellationRefundIT: AC-08.1: after an early renewal payment the current paid term is the renewal term, so a date in term 1 and today's date are 400, and 2027-11-03 refunds 6312.57 against the renewal premium 6850.00 over its 366 days (364 unexpired, fee 500.00, no cooling-off) [error]
+CancellationRefundIT: AC-08.1: an unknown key is 400 naming it sanitised (a 5000-character key is cut to 64, markup characters become underscores), a refund amount or a term number cannot be supplied, all faults are reported together, and nothing is written [error]
+CancellationRefundIT: AC-08.1: in the grace period after the term ended (an offer pending, not yet lapsed) today's date is outside the current paid term, so a cancel and a preview without a date are 400 CANCELLATION_DATE_OUT_OF_TERM and nothing is written [error]
+CancellationRefundIT: AC-08.1: the cancellation date is optional and defaults to today, so on 2027-02-09 a cancel without a date and a preview without a date both give 4473.29, and the chosen reason is the transition's reason [assertion failure]
+CancellationRefundIT: AC-08.1: the checks run in the P-5 order: the shape (400) before the owner (404), the owner before the state (409), and the state before the date window (400), for the cancel and for the preview [assertion failure]
+CancellationRefundIT: AC-08.2: MOTOR cancelled on day 7 (cooling-off is 7 days, so it does not apply) gets the pro-rata refund 14609.45 on 15150.00 with fee 250.00, and TERM_LIFE on day 15 gets 6068.49 [assertion failure]
+CancellationRefundIT: AC-08.2: TERM_LIFE cancelled on 2026-11-11, 10 days after the effective date, refunds the full premium 6850.00 with fee 0.00 and coolingOff true, in the preview, the response and the record [assertion failure]
+CancellationRefundIT: AC-08.2: a policy issued today and cancelled today, with no date given, is inside cooling-off and refunds exactly 6850.00 with fee 0.00 [assertion failure]
+CancellationRefundIT: AC-08.3: cancelling on the last day of the term, 2027-10-31, with a fee larger than the pro-rata amount stores a refund of 0.00, never negative, and the status becomes CANCELLED [assertion failure]
+CancellationRefundIT: AC-08.1: the date 2000-01-01 is outside the term 2026-11-01..2027-10-31, so the cancel names cancellationDate and the preview names date, each a 400 CANCELLATION_DATE_OUT_OF_TERM that writes nothing [error]
+CancellationRefundIT: AC-08.1: the date 2026-10-31 is outside the term 2026-11-01..2027-10-31, so the cancel names cancellationDate and the preview names date, each a 400 CANCELLATION_DATE_OUT_OF_TERM that writes nothing [error]
+CancellationRefundIT: AC-08.1: the date 2027-11-01 is outside the term 2026-11-01..2027-10-31, so the cancel names cancellationDate and the preview names date, each a 400 CANCELLATION_DATE_OUT_OF_TERM that writes nothing [error]
+CancellationRefundIT: AC-08.1: the date 2099-12-31 is outside the term 2026-11-01..2027-10-31, so the cancel names cancellationDate and the preview names date, each a 400 CANCELLATION_DATE_OUT_OF_TERM that writes nothing [error]
+CancellationRefundIT: AC-08.1: HOUSEHOLD 11350.00 cancelled on 2027-02-09 uses its own fee 200.00 and gives 8040.41 [assertion failure]
+CancellationRefundIT: AC-08.1: MOTOR 15150.00 cancelled on 2027-02-09 uses its own fee 250.00 and gives 10749.32 [assertion failure]
+CancellationRefundIT: AC-08.1: each of the four reasons is accepted and recorded as the transition reason: AFFORDABILITY [assertion failure]
+CancellationRefundIT: AC-08.1: each of the four reasons is accepted and recorded as the transition reason: NO_LONGER_NEEDED [assertion failure]
+CancellationRefundIT: AC-08.1: each of the four reasons is accepted and recorded as the transition reason: OTHER [assertion failure]
+CancellationRefundIT: AC-08.1: each of the four reasons is accepted and recorded as the transition reason: REPLACED_BY_OTHER_COVER [assertion failure]
+CancellationRefundIT: AC-08.2: HOUSEHOLD (cooling-off 14 days) cancelled 13 days after the effective date is inside the cooling-off: true [assertion failure]
+CancellationRefundIT: AC-08.2: HOUSEHOLD (cooling-off 14 days) cancelled 14 days after the effective date is inside the cooling-off: false [assertion failure]
+CancellationRefundIT: AC-08.2: MOTOR (cooling-off 7 days) cancelled 6 days after the effective date is inside the cooling-off: true [assertion failure]
+CancellationRefundIT: AC-08.2: MOTOR (cooling-off 7 days) cancelled 7 days after the effective date is inside the cooling-off: false [assertion failure]
+CancellationRefundIT: AC-08.2: TERM_LIFE (cooling-off 15 days) cancelled 14 days after the effective date is inside the cooling-off: true [assertion failure]
+CancellationRefundIT: AC-08.2: TERM_LIFE (cooling-off 15 days) cancelled 15 days after the effective date is inside the cooling-off: false [assertion failure]
+CancellationRefundIT: AC-08.1: the first day and the last day of the term are inside it: 2026-11-01 [assertion failure]
+CancellationRefundIT: AC-08.1: the first day and the last day of the term are inside it: 2027-10-31 [assertion failure]
+CancellationSecurityIT: NFR-04.1: a wrong password on the preview and the cancel is 401 with no Basic challenge and writes nothing, so a browser is never asked for credentials to cache [error]
+CancellationSecurityIT: NFR-04.1: cancelling answers anonymous with 401 and no Basic challenge, underwriter1 and admin1 with 403, another customer, an unknown number and a malformed number with 404 and the fixed detail, and writes nothing; the owner is let through with 201 [error]
+CancellationSecurityIT: NFR-04.1: previewing answers anonymous with 401 and no Basic challenge, underwriter1 and admin1 with 403, another customer, an unknown number and a malformed number with 404 and the fixed detail, and the owner with 200 [error]
+CancellationSecurityIT: NFR-04.1: the preview is read-only and the cancel is POST only: a POST to the preview, and a GET, PUT, PATCH or DELETE to the cancel, are refused and write nothing [error]
+CancellationSecurityIT: NFR-04.3: a text/plain or form-encoded cancel is 415 with the fixed detail and writes nothing, even though the same text is a valid JSON body, and the same body as JSON is accepted [error]
+CancellationStateIT: AC-08.4: a customer sees only their own refunds, and another policy's detail never lists them [assertion failure]
+CancellationStateIT: AC-08.4: after a cancel the status is CANCELLED and exactly one refund record exists, a second cancel is 409 invalid-policy-state with the fixed detail and writes nothing, and a preview of the cancelled policy is 409 [assertion failure]
+CancellationStateIT: AC-08.4: the detail lists the refunds in append order with the C5 shape, empty before the cancel and one entry equal to the cancel response after it [assertion failure]
+CancellationStateIT: AC-10.2: a policy cancelled through the real endpoint refuses an address, a nominee and a sum-insured endorsement and the preview of each with 409 invalid-policy-state, and nothing is written [assertion failure]
+CancellationStateIT: AC-10.4: issue, endorse, cancel: the status equals the last transition's target after every step and the count is the status-changing operations + 1, and a rejected endorse, pay, second cancel and preview afterwards change no count [assertion failure]
+CancellationStateIT: AC-10.4: issue, offer, pay, cancel in the renewal term: the transitions are ACTIVE, RENEWED, CANCELLED, an offer adds none, and the status equals the last transition's target after every step [assertion failure]
+CancellationStateIT: AC-10.4: issue, offer, then cancel inside term 1: the transitions are ACTIVE, CANCELLED, and the unpaid offer stays in the term history but cannot be paid [assertion failure]
+CancellationStateIT: AC-10.3: a HOUSEHOLD policy LAPSED by the real renewal cycle on 2027-11-16 gets 409 invalid-policy-state on cancel and on preview, and no refund record is written [error]
+CancellationStateIT: AC-10.3: a MOTOR policy LAPSED by the real renewal cycle on 2027-11-16 gets 409 invalid-policy-state on cancel and on preview, and no refund record is written [error]
+CancellationStateIT: AC-10.3: a TERM_LIFE policy LAPSED by the real renewal cycle on 2027-12-01 gets 409 invalid-policy-state on cancel and on preview, and no refund record is written [error]
+RefundRecordMigrationTest: AC-08.4: V11 creates refund_record with NUMERIC(19,2) for premium, fee and amount and no floating-point column [assertion failure]
+RefundRecordMigrationTest: AC-08.4: a refund row must belong to an existing policy, and a negative amount or an amount above the premium is refused by the database [error]
+RefundRecordMigrationTest: AC-08.4: refund_record is unique on the policy number, so a second refund row for one policy is refused by the database and another policy's refund is accepted [error]
+RefundRecordMigrationTest: NFR-05: V1 to V10 keep the checksums they were committed with, and V11 is the next migration after them [assertion failure]

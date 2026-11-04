@@ -5,13 +5,17 @@ import { SessionProvider } from '../auth/SessionContext';
 import type {
   ApplicationSummary,
   Credentials,
+  Dashboard,
   Endorsement,
+  PendingRenewal,
   PolicyDetail,
   PolicyHeader,
   PolicySummary,
   PolicyTransition,
   PolicyVersion,
   QueueItem,
+  Refund,
+  RefundQuote,
 } from '../api/types';
 
 // Synthetic fixtures only (root CLAUDE.md rule 4).
@@ -139,8 +143,70 @@ export function policyDetail(overrides: Partial<PolicyDetail> = {}): PolicyDetai
     versions: [policyVersion()],
     endorsements: [],
     transitions: [transition()],
-    terms: [{ termNo: 1, startDate: '2026-11-01', endDate: '2027-10-31', premium: '6850.00', paid: true }],
+    terms: [{ termNo: 1, startDate: '2026-11-01', endDate: '2027-10-31', premium: '6850.00', paid: true, ruleVersion: 1 }],
+    pendingRenewal: null,
     refunds: [],
+    ...overrides,
+  };
+}
+
+/** C5 pending renewal: the AC-07.1 offer (2027-11-01..2028-10-31 at 6850.00, rule version 1, payable until term end + 30). */
+export function pendingRenewal(overrides: Partial<PendingRenewal> = {}): PendingRenewal {
+  return {
+    termNo: 2,
+    startDate: '2027-11-01',
+    endDate: '2028-10-31',
+    premium: '6850.00',
+    ruleVersion: 1,
+    payableUntil: '2027-11-30',
+    ...overrides,
+  };
+}
+
+/** C3 refund quote: the AC-08.1 cancellation on 2027-02-09 (265 of 365 days, fee 500.00, refund 4473.29). */
+export function refundQuote(overrides: Partial<RefundQuote> = {}): RefundQuote {
+  return {
+    cancellationDate: '2027-02-09',
+    termNo: 1,
+    termStart: '2026-11-01',
+    termEnd: '2027-10-31',
+    premium: '6850.00',
+    termDays: 365,
+    unexpiredDays: 265,
+    coolingOff: false,
+    fee: '500.00',
+    amount: '4473.29',
+    formula: 'max(0, 6850.00 * 265 / 365 - 500.00) = 4473.29',
+    ...overrides,
+  };
+}
+
+/** C5 refund record: the AC-08.1 refund. */
+export function refund(overrides: Partial<Refund> = {}): Refund {
+  return {
+    termNo: 1,
+    cancellationDate: '2027-02-09',
+    premium: '6850.00',
+    termDays: 365,
+    unexpiredDays: 265,
+    coolingOff: false,
+    fee: '500.00',
+    amount: '4473.29',
+    formula: 'max(0, 6850.00 * 265 / 365 - 500.00) = 4473.29',
+    actorId: 'customer1',
+    createdAt: '2027-02-09T10:00:00Z',
+    ...overrides,
+  };
+}
+
+/** C6 dashboard: the spec example (counts 3/2/2, premium collected total 73550.00, one pipeline row, one forecast). */
+export function dashboard(overrides: Partial<Dashboard> = {}): Dashboard {
+  return {
+    asOf: '2027-10-15',
+    activePoliciesByProduct: { TERM_LIFE: 3, MOTOR: 2, HOUSEHOLD: 2 },
+    premiumCollected: { TERM_LIFE: '20550.00', MOTOR: '30300.00', HOUSEHOLD: '22700.00', total: '73550.00' },
+    renewalPipeline: [{ policyNumber: 'PF-TL-2026-000001', termEnd: '2027-10-31', renewalPremium: '6850.00', paid: false }],
+    lapseForecast: { count: 1, policies: ['PF-MO-2026-000002'] },
     ...overrides,
   };
 }

@@ -192,7 +192,7 @@ class PolicyIssuanceIT {
     }
 
     @Test
-    @DisplayName("AC-05.1: an unknown key of 5000 characters gets 400 naming the key cut to its first 100 characters, the full key is never echoed, and nothing is stored")
+    @DisplayName("AC-05.1: an unknown key of 5000 characters gets 400 naming the key cut to its first 64 characters, the full key is never echoed, and nothing is stored")
     void aLongUnknownKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
         String applicationId = approvedTermLife();
         PolicyRows.Snapshot before = PolicyRows.snapshot(jdbc, applicationId);
@@ -203,10 +203,36 @@ class PolicyIssuanceIT {
         MvcResult result = policies.issue("customer1", applicationId, body);
 
         assertThat(result.getResponse().getStatus()).isEqualTo(400);
-        assertThat(errorFields(policies.bodyOf(result))).containsExactly(longKey.substring(0, 100));
+        JsonNode problem = policies.bodyOf(result);
+        assertThat(errorFields(problem)).containsExactly(longKey.substring(0, 64));
+        assertThat(problem.get("errors").get(0).get("message").asText()).isEqualTo("is not an accepted field");
+        assertThat(problem.get("errors")).as("no other field is named").hasSize(1);
         assertThat(result.getResponse().getContentAsString())
-                .as("the key is never reflected beyond 100 characters")
-                .doesNotContain(longKey.substring(0, 101));
+                .as("the key is never reflected beyond 64 characters")
+                .doesNotContain(longKey.substring(0, 65));
+        assertThat(PolicyRows.snapshot(jdbc, applicationId)).as("nothing stored").isEqualTo(before);
+    }
+
+    @Test
+    @DisplayName("AC-05.1: unknown keys holding <, >, quotes and spaces are echoed with each of those characters replaced by an underscore, keys that sanitise to the same text are named once, and nothing is stored")
+    void unknownKeysAreEchoedSanitised() throws Exception {
+        String applicationId = approvedTermLife();
+        PolicyRows.Snapshot before = PolicyRows.snapshot(jdbc, applicationId);
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("<a b=\"c\" d='e'>", "x");
+        body.put("a b", "x");
+        body.put("a<b", "x");
+        body.put("valid.Key-1_x", "x");
+
+        MvcResult result = policies.issue("customer1", applicationId, body);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+        JsonNode problem = policies.bodyOf(result);
+        assertThat(errorFields(problem)).containsExactly("_a_b__c__d__e__", "a_b", "valid.Key-1_x");
+        problem.get("errors").forEach(error -> assertThat(error.get("message").asText())
+                .isEqualTo("is not an accepted field"));
+        assertThat(result.getResponse().getContentAsString()).doesNotContain("<").doesNotContain(">")
+                .doesNotContain("'").doesNotContain("a b");
         assertThat(PolicyRows.snapshot(jdbc, applicationId)).as("nothing stored").isEqualTo(before);
     }
 

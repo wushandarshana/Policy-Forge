@@ -14,19 +14,21 @@ import com.horizon.policyforge.repository.PolicyTermEntity;
 import com.horizon.policyforge.repository.PolicyTermRepository;
 import com.horizon.policyforge.repository.PolicyVersionEntity;
 import com.horizon.policyforge.repository.PolicyVersionRepository;
+import com.horizon.policyforge.repository.RefundRecordRepository;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The policy read use cases (AC-05.1): a customer's own policies (C2) and one policy's detail (C3). A customer reads
+ * The policy read use cases (AC-05.1): a customer's own policies (C2) and one policy's detail (C3), with its refund
+ * records once it is cancelled (C5). A customer reads
  * only their own policies and an ADMIN reads any; everyone else gets the same not-found answer as for an unknown number.
  * Every view is built from an allow-list (P-9): the risk inputs of a version are the product's declared inputs minus
  * the health inputs, and no KYC field is ever carried.
@@ -47,20 +49,25 @@ public class PolicyQueryService {
     private final PolicyTermRepository terms;
     private final PolicyStatusTransitionRepository transitions;
     private final EndorsementRepository endorsements;
+    private final RefundRecordRepository refunds;
     private final EndorsementViews endorsementViews;
     private final RuleSetService ruleSets;
+    private final PolicyTerms policyTerms;
     private final ObjectMapper mapper;
 
     public PolicyQueryService(PolicyRepository policies, PolicyVersionRepository versions, PolicyTermRepository terms,
             PolicyStatusTransitionRepository transitions, EndorsementRepository endorsements,
-            EndorsementViews endorsementViews, RuleSetService ruleSets, ObjectMapper mapper) {
+            RefundRecordRepository refunds, EndorsementViews endorsementViews, RuleSetService ruleSets,
+            PolicyTerms policyTerms, ObjectMapper mapper) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
         this.transitions = transitions;
         this.endorsements = endorsements;
+        this.refunds = refunds;
         this.endorsementViews = endorsementViews;
         this.ruleSets = ruleSets;
+        this.policyTerms = policyTerms;
         this.mapper = mapper;
     }
 
@@ -117,27 +124,52 @@ public class PolicyQueryService {
                 .toList();
         List<PolicyDetail.TermView> termViews = allTerms.stream()
                 .map(t -> new PolicyDetail.TermView(t.getTermNo(), t.getStartDate(), t.getEndDate(), t.getPremium(),
-                        t.isPaid()))
+                        t.isPaid(), t.getRuleVersion()))
                 .toList();
         List<PolicyDetail.EndorsementView> endorsementViewList = endorsementEntities.stream()
                 .map(endorsementViews::view)
                 .toList();
+        List<PolicyDetail.RefundView> refundViews = refunds.findByPolicyNumberOrderByIdAsc(policyNumber).stream()
+                .map(PolicyDetail.RefundView::of)
+                .toList();
         return new PolicyDetail(header(policy, allVersions, allTerms, endorsementEntities.size()), versionViews,
-                endorsementViewList, transitionViews, termViews);
+                endorsementViewList, transitionViews, termViews, pendingRenewal(policy, allTerms), refundViews);
     }
 
-    /** The header from the policy's current version and its latest term, with its endorsement count. */
-    private static PolicyHeader header(PolicyEntity policy, Collection<PolicyVersionEntity> policyVersions,
-            Collection<PolicyTermEntity> policyTerms, int endorsementCount) {
+    /**
+     * The renewal offer an in-force policy can still pay (C5): the unpaid term above the current paid term, with
+     * {@code payableUntil} = the current paid term's end + the grace days of that term's own rule version. A policy that
+     * is not in force (LAPSED, CANCELLED) has no offer left to pay, so it shows none; its unpaid term stays in the
+     * term history.
+     */
+    private PolicyDetail.PendingRenewalView pendingRenewal(PolicyEntity policy, List<PolicyTermEntity> allTerms) {
+        if (!policy.getStatus().isInForce()) {
+            return null;
+        }
+        Optional<PolicyTermEntity> pending = policyTerms.pending(allTerms);
+        if (pending.isEmpty()) {
+            return null;
+        }
+        PolicyTermEntity current = policyTerms.requireCurrentPaid(allTerms, policy.getPolicyNumber());
+        int graceDays = ruleSets.version(policy.getProductCode(), current.getRuleVersion()).lifecycle()
+                .gracePeriodDays();
+        PolicyTermEntity offer = pending.get();
+        return new PolicyDetail.PendingRenewalView(offer.getTermNo(), offer.getStartDate(), offer.getEndDate(),
+                offer.getPremium(), offer.getRuleVersion(), policyTerms.payableUntil(current, graceDays));
+    }
+
+    /**
+     * The header from the policy's current version and its current paid term (plan G-5), with its endorsement count. An
+     * unpaid renewal offer does not move the header's dates: they follow the term in force until the renewal is paid.
+     */
+    private PolicyHeader header(PolicyEntity policy, Collection<PolicyVersionEntity> policyVersions,
+            Collection<PolicyTermEntity> termRows, int endorsementCount) {
         PolicyVersionEntity current = policyVersions.stream()
                 .filter(version -> version.getVersionNo() == policy.getCurrentVersionNo())
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Policy has no current version: policyNumber="
                         + policy.getPolicyNumber()));
-        PolicyTermEntity term = policyTerms.stream()
-                .max(Comparator.comparingInt(PolicyTermEntity::getTermNo))
-                .orElseThrow(() -> new IllegalStateException("Policy has no term: policyNumber="
-                        + policy.getPolicyNumber()));
+        PolicyTermEntity term = policyTerms.requireCurrentPaid(termRows, policy.getPolicyNumber());
         return PolicyHeader.of(policy, current, term, endorsementCount);
     }
 

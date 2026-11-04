@@ -54,7 +54,8 @@ public class RequestBodySizeLimitFilter extends OncePerRequestFilter {
     /** 64 KB: authenticated rule-set publish only. */
     static final int PUBLISH_MAX_BODY_BYTES = 64 * 1024;
 
-    static final URI INSTANCE = URI.create("urn:policyforge:problem:payload-too-large");
+    /** The fixed URN of this problem type, the last segment of its {@code type} (NFR-04.1, contract C7). */
+    static final URI INSTANCE = ProblemInstances.of("payload-too-large");
 
     private static final PathPattern PUBLISH = PathPatternParser.defaultInstance.parse("/api/products/{code}/versions");
 

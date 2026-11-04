@@ -1,0 +1,47 @@
+# TASK-001 red run: ./mvnw test -Dskip.frontend=true (8 new test classes; stubs return wrong values; failures are assertions, 0 errors)
+# ACs covered: AC-05.1, AC-06.1, AC-07.1, AC-07.2, AC-07.4, AC-07.5, AC-07.6, AC-08.1, AC-08.2, AC-08.3, AC-08.4(n/a, TASK-005), AC-08.5, AC-11.2, AC-11.3, AC-11.4
+[ERROR] Tests run: 4, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.105 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.CancellationDateRuleTest
+[ERROR] com.horizon.policyforge.domain.cancellation.CancellationDateRuleTest.outsideTermRejected -- Time elapsed: 0.071 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.CancellationDateRuleTest.termBoundsAccepted -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.CancellationDateRuleTest.defaultedTodayOutsideTermRejected -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] Tests run: 7, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 0.040 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.feeLargerThanProRataFloorsAtZero -- Time elapsed: 0.010 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.renewalTermHasNoCoolingOff -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.coolingOffBoundary -- Time elapsed: 0.005 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.motorAndHouseholdProRata -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.termLifeProRata -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.zeroCoolingOffDays -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest.coolingOffRefundsFullPremium -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.018 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.ProRataRefundPropertyTest
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundPropertyTest.refundStaysWithinPremium -- Time elapsed: 0.016 s <<< FAILURE!
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.013 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.RefundPremiumBasisTest
+[ERROR] com.horizon.policyforge.domain.cancellation.RefundPremiumBasisTest.endorsementAdjustmentRaisesTheBasis -- Time elapsed: 0.006 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.RefundPremiumBasisTest.otherTermAdjustmentsExcluded -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.cancellation.RefundPremiumBasisTest.boundaryAndCreditAdjustments -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] Tests run: 5, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.024 s <<< FAILURE! -- in com.horizon.policyforge.domain.EchoedKeySanitiserTest
+[ERROR] com.horizon.policyforge.domain.EchoedKeySanitiserTest.longKeyIsCut -- Time elapsed: 0.006 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.EchoedKeySanitiserTest.everyOtherCharacterBecomesUnderscore -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.EchoedKeySanitiserTest.markupIsNeutralised -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.EchoedKeySanitiserTest.cutAndReplaced -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] Tests run: 9, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 0.023 s <<< FAILURE! -- in com.horizon.policyforge.domain.portfolio.PortfolioRulesTest
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.premiumCollectedIsExact -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.pipelineBoundary -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.emptyAndCredits -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.forecastIncludesExpiredUnpaid -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.pipelineTwentyAndNinetyDays -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.pipelineNeedsInForceAndATermInForce -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.pipelineUsesTheTermInForce -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.portfolio.PortfolioRulesTest.totalIsTheSumOfTheProducts -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] Tests run: 5, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.156 s <<< FAILURE! -- in com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest
+[ERROR] com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest.motorAndHouseholdGraceIsFifteen -- Time elapsed: 0.145 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest.termLifeGraceIsThirty -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest.notLapsedBeforeTermEnd -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest.unpaidLapsesTheDayAfterGrace -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] Tests run: 8, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 0.028 s <<< FAILURE! -- in com.horizon.policyforge.domain.renewal.RenewalPolicyTest
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.offerDueThirtyDaysBeforeExpiry -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.currentPaidTermFollowsPayment -- Time elapsed: 0.016 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.paymentWindowWithGraceThirty -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.renewalTermDates -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.pendingTerm -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.renewal.RenewalPolicyTest.termInForceOnDate -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] Tests run: 42, Failures: 36, Errors: 0, Skipped: 0

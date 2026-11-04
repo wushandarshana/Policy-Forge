@@ -206,6 +206,64 @@ class EndorsementIT extends EndorsementTestSupport {
     }
 
     @Test
+    @DisplayName("AC-06.1: an unknown key of 5000 characters, at the top level, in address and in nominee, on the endorsement and on its preview, gets 400 naming the key cut to its first 64 characters after its fixed prefix, never echoes the full key, and writes nothing")
+    void aLongUnknownKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
+        String number = issued("TERM_LIFE");
+        EndorsementRows.Snapshot before = snapshot(number);
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        String bounded = longKey.substring(0, 64);
+
+        Map<String, Object> topLevel = body("type", "CHANGE_ADDRESS", "address", address("1 A", "Pune", "411001"));
+        topLevel.put(longKey, "x");
+        Map<String, Object> inAddress = address("1 A", "Pune", "411001");
+        inAddress.put(longKey, "x");
+        Map<String, Object> inNominee = nominee("Nom One", "SPOUSE", 25);
+        inNominee.put(longKey, "x");
+        Map<Map<String, Object>, String> expected = new LinkedHashMap<>();
+        expected.put(topLevel, bounded);
+        expected.put(body("type", "CHANGE_ADDRESS", "address", inAddress), "address." + bounded);
+        expected.put(body("type", "ADD_NOMINEE", "nominee", inNominee), "nominee." + bounded);
+
+        for (Map.Entry<Map<String, Object>, String> entry : expected.entrySet()) {
+            for (MvcResult result : List.of(endorsements.endorse("customer1", number, entry.getKey()),
+                    endorsements.preview("customer1", number, entry.getKey()))) {
+                JsonNode problem = problem(result, 400);
+                assertThat(errorFields(problem)).containsExactly(entry.getValue());
+                assertThat(problem.get("errors").get(0).get("message").asText())
+                        .isEqualTo("is not an accepted field");
+                assertThat(problem.has("code")).as("a shape error has no business code").isFalse();
+                assertThat(result.getResponse().getContentAsString()).doesNotContain(longKey.substring(0, 65));
+            }
+        }
+        assertThat(snapshot(number)).as("nothing written").isEqualTo(before);
+    }
+
+    @Test
+    @DisplayName("AC-06.1: unknown keys holding <, >, quotes and spaces, on the endorsement and on its preview, get 400 naming each with those characters replaced by an underscore, keys that sanitise to the same text are named once, and nothing is written")
+    void unknownKeysAreEchoedSanitised() throws Exception {
+        String number = issued("TERM_LIFE");
+        EndorsementRows.Snapshot before = snapshot(number);
+        Map<String, Object> inAddress = address("1 A", "Pune", "411001");
+        inAddress.put("<a b=\"c\" d='e'>", "x");
+        Map<String, Object> request = body("type", "CHANGE_ADDRESS", "address", inAddress);
+        request.put("<a b=\"c\" d='e'>", "x");
+        request.put("a b", "x");
+        request.put("a<b", "x");
+
+        for (MvcResult result : List.of(endorsements.endorse("customer1", number, request),
+                endorsements.preview("customer1", number, request))) {
+            JsonNode problem = problem(result, 400);
+            assertThat(errorFields(problem)).containsExactlyInAnyOrder("_a_b__c__d__e__", "a_b",
+                    "address._a_b__c__d__e__");
+            problem.get("errors").forEach(error -> assertThat(error.get("message").asText())
+                    .isEqualTo("is not an accepted field"));
+            assertThat(result.getResponse().getContentAsString()).doesNotContain("<").doesNotContain(">")
+                    .doesNotContain("'").doesNotContain("a b");
+        }
+        assertThat(snapshot(number)).as("nothing written").isEqualTo(before);
+    }
+
+    @Test
     @DisplayName("AC-06.1: a request for a product's other sum-insured key (a building key on TERM_LIFE, newSumInsured on HOUSEHOLD) gets 400 naming it, and writes nothing")
     void otherProductsSumInsuredKeysAreRefused() throws Exception {
         String termLife = issued("TERM_LIFE");

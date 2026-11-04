@@ -7,6 +7,15 @@
 .card-title,
 [data-testid$='effective-date'],
 [data-testid$='-next-due'],
-[data-testid='input-effectiveDate'] {
+[data-testid='input-effectiveDate'],
+/* Sprint 4: renewal offer dates, refund dates and day counts (a term is 365 or 366 days), dashboard figures. */
+[data-testid='renew-start'],
+[data-testid='renew-end'],
+[data-testid='renew-payable-until'],
+[data-testid='refund-preview-date'],
+[data-testid='refund-preview-days'],
+[data-testid^='refund-'][data-testid$='-date'],
+[data-testid^='refund-'][data-testid$='-days'],
+.kpi-value {
   visibility: hidden !important;
 }

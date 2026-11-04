@@ -33,6 +33,9 @@ confirming a sum-insured change.
   MOTOR it replaces `vehicleValue`. For HOUSEHOLD the payload uses `newBuildingSumInsured` and/or
   `newContentsSumInsured`.
 - `CHANGE_ADDRESS`: the postcode must be 6 digits.
+- A sum-insured change does not re-run underwriting. This is an accepted v1 limitation (G-6, SG-1).
+- A `CHANGE_SUM_INSURED` applied while an unpaid renewal term exists also re-prices that term in the same transaction
+  (see the renewal spec, "Re-pricing a pending offer"; AC-07.7). The preview reports only the current-term adjustment.
 
 ## Premium adjustment (CHANGE_SUM_INSURED)
 - `newAnnualPremium` = re-quote with the modified risk inputs using the **policy's own rule version** (not the latest).

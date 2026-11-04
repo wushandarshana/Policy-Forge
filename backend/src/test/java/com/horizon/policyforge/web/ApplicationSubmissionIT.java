@@ -333,6 +333,63 @@ class ApplicationSubmissionIT {
     }
 
     @Test
+    @DisplayName("AC-03.5: an unknown key of 5000 characters, at the top level, inside kyc and inside kyc.address, is named with its fixed prefix and the key cut to its first 64 characters, and the full key is never echoed")
+    void aLongUnknownKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
+        String quoteId = api.quoteId("TERM_LIFE", cleanTermLifeInputs());
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        String bounded = longKey.substring(0, 64);
+        Counts before = counts();
+
+        Map<String, Object> top = application(quoteId, kyc(dobForAge(35)));
+        top.put(longKey, true);
+        Map<String, Object> inKyc = kyc(dobForAge(35));
+        inKyc.put(longKey, "synthetic");
+        Map<String, Object> inAddress = kyc(dobForAge(35));
+        addressOf(inAddress).put(longKey, "synthetic");
+
+        MvcResult topResult = api.apply("customer1", top);
+        MvcResult kycResult = api.apply("customer1", application(quoteId, inKyc));
+        MvcResult addressResult = api.apply("customer1", application(quoteId, inAddress));
+
+        assertThat(errorFields(problemOf(topResult, 400))).containsExactly(bounded);
+        assertThat(errorFields(problemOf(kycResult, 400))).containsExactly("kyc." + bounded);
+        assertThat(errorFields(problemOf(addressResult, 400))).containsExactly("kyc.address." + bounded);
+        for (MvcResult result : List.of(topResult, kycResult, addressResult)) {
+            assertThat(result.getResponse().getContentAsString()).doesNotContain(longKey.substring(0, 65));
+            problemOf(result, 400).get("errors").forEach(error -> assertThat(error.get("message").asText())
+                    .isEqualTo("is not an accepted field"));
+        }
+        assertThat(counts()).isEqualTo(before);
+    }
+
+    @Test
+    @DisplayName("AC-03.5: unknown keys holding <, >, quotes and spaces, at each of the three levels, are echoed with those characters replaced by an underscore, and keys that sanitise to the same text are named once")
+    void unknownKeysAreEchoedSanitised() throws Exception {
+        String quoteId = api.quoteId("TERM_LIFE", cleanTermLifeInputs());
+        Counts before = counts();
+
+        Map<String, Object> body = application(quoteId, kyc(dobForAge(35)));
+        body.put("<a b=\"c\" d='e'>", true);
+        Map<String, Object> inKyc = kyc(dobForAge(35));
+        inKyc.put("<a b=\"c\" d='e'>", "synthetic");
+        inKyc.put("x y", "synthetic");
+        inKyc.put("x<y", "synthetic");
+        addressOf(inKyc).put("<a b=\"c\" d='e'>", "synthetic");
+        body.put("kyc", inKyc);
+
+        MvcResult result = api.apply("customer1", body);
+
+        JsonNode problem = problemOf(result, 400);
+        assertThat(errorFields(problem)).containsExactlyInAnyOrder("_a_b__c__d__e__", "kyc._a_b__c__d__e__",
+                "kyc.x_y", "kyc.address._a_b__c__d__e__");
+        problem.get("errors").forEach(error -> assertThat(error.get("message").asText())
+                .isEqualTo("is not an accepted field"));
+        assertThat(result.getResponse().getContentAsString()).doesNotContain("<").doesNotContain(">")
+                .doesNotContain("'").doesNotContain("x y");
+        assertThat(counts()).isEqualTo(before);
+    }
+
+    @Test
     @DisplayName("AC-03.5: an unknown key and an invalid PAN are reported together (U-2 step 1)")
     void unknownKeyAndFormatErrorAreReportedTogether() throws Exception {
         String quoteId = api.quoteId("TERM_LIFE", cleanTermLifeInputs());

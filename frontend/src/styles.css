@@ -544,3 +544,46 @@ input[type='password'] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---- Renew and Cancel panels, Refunds tab and Admin Dashboard (Sprint 4) ---- */
+.dashboard-controls {
+  align-items: flex-start;
+}
+
+/* KPI tiles: one column on a phone, wrapping to two from 640px up. */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.kpi-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.kpi-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.kpi-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 640px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

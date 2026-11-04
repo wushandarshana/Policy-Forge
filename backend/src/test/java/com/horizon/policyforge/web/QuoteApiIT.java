@@ -339,6 +339,42 @@ class QuoteApiIT {
     }
 
     @Test
+    @DisplayName("AC-01.9: a riskInputs key of 5000 characters is a 400 naming the key cut to its first 64 characters, the full key is never echoed and no quote is stored")
+    void aLongUnknownRiskInputKeyIsEchoedOnlyInItsBoundedForm() throws Exception {
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        Map<String, Object> inputs = termLifeInputs("5000000.00");
+        inputs.put(longKey, "x");
+        int before = storedQuotes();
+
+        MvcResult result = postQuote("TERM_LIFE", inputs);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+        JsonNode problem = bodyOf(result);
+        assertThat(errorFields(problem)).containsExactly(longKey.substring(0, 64));
+        assertThat(problem.get("errors").get(0).get("message").asText()).isEqualTo("is not an accepted input");
+        assertThat(result.getResponse().getContentAsString()).doesNotContain(longKey.substring(0, 65));
+        assertThat(storedQuotes()).isEqualTo(before);
+    }
+
+    @Test
+    @DisplayName("AC-01.9: riskInputs keys holding <, >, quotes and spaces are a 400 naming each with those characters replaced by an underscore, keys that sanitise to the same text are named once, and no quote is stored")
+    void unknownRiskInputKeysAreEchoedSanitised() throws Exception {
+        Map<String, Object> inputs = termLifeInputs("5000000.00");
+        inputs.put("<a b=\"c\" d='e'>", "x");
+        inputs.put("a b", "x");
+        inputs.put("a<b", "x");
+        int before = storedQuotes();
+
+        MvcResult result = postQuote("TERM_LIFE", inputs);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(400);
+        assertThat(errorFields(bodyOf(result))).containsExactly("_a_b__c__d__e__", "a_b");
+        assertThat(result.getResponse().getContentAsString()).doesNotContain("<").doesNotContain(">")
+                .doesNotContain("'").doesNotContain("a b");
+        assertThat(storedQuotes()).isEqualTo(before);
+    }
+
+    @Test
     @DisplayName("AC-01.9: an anonymous POST /api/quotes with a body over 16 KB is a 413 and no quote is stored")
     void oversizedQuoteBodyIsRejected() throws Exception {
         Map<String, Object> body = new LinkedHashMap<>();

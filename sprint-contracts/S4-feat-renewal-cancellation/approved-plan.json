@@ -1,0 +1,214 @@
+{
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Domain rules: GracePeriodPolicy, RenewalPolicy (current paid term, offer, renewal dates, payment window), ProRataRefundCalculator and RefundQuote, the cancellation-date rule, the refund premium basis, portfolio figures and the shared unknown-key sanitiser",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Confirms before its first commit that the G-3 to G-6 amendment `spec:` commit exists after `12f95c3` (the orchestrator has committed it, with G-6 vetoed). Does not create another spec commit.",
+        "Implements GracePeriodPolicy.isLapsed(termEnd, graceDays, runDate, paid) exactly as the spec defines it, and proves \"AC-07.4: …\": with termEnd 2027-10-31, grace 30 and unpaid, 2027-11-30 is not lapsed and 2027-12-01 is lapsed. A paid term never lapses.",
+        "Proves \"AC-07.6: …\" with the lifecycles of the shipped v1 rule files. MOTOR and HOUSEHOLD (grace 15) are first lapsed on termEnd + 16 and not on termEnd + 15. TERM_LIFE (grace 30) is first lapsed on termEnd + 31 and not on termEnd + 30.",
+        "Implements RenewalPolicy as pure functions. The current paid term is the highest-numbered paid term (G-5). The term in force on a date is the paid term whose start ≤ date ≤ end (P-11). An offer is due ⇔ runDate ≥ current paid term end − renewalOfferDaysBeforeExpiry and no later term exists. The renewal term starts at termEnd + 1 and ends at start + termMonths − 1 day. Payment is allowed ⇔ an unpaid later term exists and today ≤ current paid term end + graceDays.",
+        "Proves \"AC-07.1: …\": for term 2026-11-01..2027-10-31 with 30 offer days, an offer is due on 2027-10-01 and not on 2027-09-30, and the renewal term is 2027-11-01..2028-10-31. An unpaid offer leaves term 1 as the current paid term, and a paid renewal term is current even before it starts. Proves \"AC-07.2: …\": an existing later term means no offer.",
+        "Proves \"AC-07.5: …\" for the payment window with grace 30: payment is allowed on 2027-11-10 and 2027-11-30, and refused on 2027-12-01 and when no unpaid later term exists.",
+        "Implements ProRataRefundCalculator.calculate(premium, termStart, termEnd, cancellationDate, policyEffectiveDate, firstTerm, coolingOffDays, cancellationFee), returning a RefundQuote of termDays, unexpiredDays, coolingOff, fee, amount and the C5 formula string. Intermediates use scale 10 HALF_UP after each multiply and divide in the oracle's order, and the result is HALF_UP to 2 dp with a floor of 0.00. Cooling-off applies only to the first term and returns the full premium with fee 0.00.",
+        "Proves \"AC-08.1: …\": 6850.00 over 2026-11-01..2027-10-31, cancelled on 2027-02-09 with fee 500.00, gives termDays 365, unexpiredDays 265, amount 4473.29 and formula `max(0, 6850.00 * 265 / 365 - 500.00) = 4473.29`. MOTOR 15150.00 with fee 250.00 gives 10749.32, and HOUSEHOLD 11350.00 with fee 200.00 gives 8040.41.",
+        "Proves \"AC-08.2: …\" with cooling-off 15: 2026-11-11 gives 6850.00, fee 0.00 and coolingOff true. 2026-11-15 (day 14) still gives the full premium, and 2026-11-16 (day 15) gives the pro-rata 6068.49. A renewal term (2027-11-01..2028-10-31, 6850.00) cancelled on 2027-11-03 gives 6312.57 and never the full premium.",
+        "Proves \"AC-08.3: …\": cancellation on 2027-10-31 (unexpiredDays 1) with fee 500.00 gives 0.00 at scale 2, never a negative amount.",
+        "Proves \"AC-08.5: …\" with a fixed-seed generator over 1,000 random cases (random terms and cancellation dates within them, random 2 dp premiums and fees, random cooling-off days and first-term flags): every amount satisfies 0.00 ≤ amount ≤ premium, has scale exactly 2, and no case throws.",
+        "Implements the pure cancellation-date rule. An absent date defaults to today. A date outside [current paid term start, end] is a violation naming the given field, with code `CANCELLATION_DATE_OUT_OF_TERM` and a fixed message. Proves \"AC-08.1: …\" that the term start and end are accepted and the days just outside them are rejected.",
+        "Implements the refund premium basis: the term premium plus the adjustments of endorsements whose effective date lies in that term. Proves \"AC-08.1: …\": 6850.00 + 1330.85 (effective 2027-05-01) gives a basis of 8180.85, and cancelling on 2027-06-01 refunds 2929.23 (153/365). An endorsement effective in another term is excluded.",
+        "Implements the pure portfolio rules of P-11: premium collected per product is the sum of paid term premiums plus adjustments minus refunds, and total is the sum of the products, all at scale 2; plus pipeline and forecast membership. Proves \"AC-11.2: …\": 6850.00 + 6850.00 + 1330.85 − 4473.29 = 10557.56 exactly, and total equals the per-product sum.",
+        "Proves \"AC-11.3: …\" for the pipeline: a term ending in 20 days is in, one ending in 90 days is out, and the boundaries are 60 days in and 61 days out. Proves \"AC-11.4: …\" for the forecast: an in-force policy whose current paid term ended before asOf with no paid renewal is in, while a paid renewal, LAPSED, CANCELLED and not-yet-ended are out.",
+        "Implements the shared unknown-key sanitiser (P-14): at most 64 characters, and any character outside `[A-Za-z0-9_.-]` becomes `_`. Proves \"AC-05.1: …\" and \"AC-06.1: …\": a 5000-character key gives its first 64 characters, `<script>` gives `_script_`, and a valid key is unchanged.",
+        "Imports only `java.*` and domain classes, uses no double or float, and passes DomainPurityArchTest and MoneyPrecisionArchTest.",
+        "Cross-checks every refund and sum value above with `premium_check.py` and records the oracle output in the green log.",
+        "Shows a `test(red): AC-…` commit with the failing tests (stubs allowed) before the `feat(green)` commit. Saves `sprint-progress/TASK-001-red.log` and `TASK-001-green.log` naming AC-05.1, AC-06.1, AC-07.1, AC-07.2, AC-07.4, AC-07.5, AC-07.6, AC-08.1–08.5, AC-11.2, AC-11.3 and AC-11.4.",
+        "Passes `./mvnw verify -Dskip.frontend=true` with ArchUnit green and JaCoCo at or above 80% domain and 70% overall."
+      ]
+    },
+    {
+      "id": "TASK-002",
+      "title": "Frontend: Renew and Cancel panels on Policy Detail, the Refunds tab, the Admin Dashboard page, the typed API client and Vitest",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Touches nothing outside `frontend/`, adds no npm dependencies, and never commits spec files (TASK-001 is the only amendment fallback).",
+        "Adds typed API client functions and types matching C2–C6 field for field: pay renewal, cancel preview, cancel, the extended policy detail (Term with ruleVersion, pendingRenewal, Refund) and the dashboard. Parses the C7 problems, including `errors[]`, `code` and the invalid-policy-state `type`.",
+        "Renders a Renew panel on Policy Detail only when `pendingRenewal` is non-null and the status is in force. It shows the renewal start and end dates, premium, rule version and payable-until date verbatim. Pay posts exactly `{}` and reloads the detail on 200. It shows fixed messages for 409 `NO_PENDING_RENEWAL`, 409 `RENEWAL_PAYMENT_WINDOW_CLOSED`, 409 invalid-policy-state, 409 `POLICY_UPDATE_CONFLICT` and 403.",
+        "Renders a Cancel panel only for in-force statuses, with an optional date input and a required reason select offering the four G-4 values. Preview calls the C3 endpoint with `date` only when one is given, and shows amount, fee, unexpiredDays/termDays, the cooling-off flag and formula verbatim.",
+        "Enables Confirm only after a successful preview for the current inputs, and clears the preview when any input changes. Confirm posts exactly `{reason}` or `{reason, cancellationDate}` and reloads the detail on 201. It shows a 400 `date` or `cancellationDate` error at the date input, and fixed messages for every C7 code and 409.",
+        "Populates the Refunds tab with one row per refund (termNo, cancellation date, amount, fee, days, cooling-off and formula, verbatim) and keeps the empty state when there are none.",
+        "Adds an Admin Dashboard page component, which TASK-007 mounts. It has an optional As-of input, and loads C6 with `asOf` only when given. The Active policies tile shows the sum of the three integer counts, and the Premium collected tile shows `total` verbatim.",
+        "Renders the dashboard's per-product table (count and premium per product), the renewal pipeline (number, term end, renewal premium or \"No offer yet\" when null, and Paid/Unpaid) and the lapse forecast (count and numbers). It shows a fixed not-authorised message on 403 and an `asOf` error at its field on 400.",
+        "Lays out with CSS grid/flex and the single 640px breakpoint, where the KPI tiles wrap to one column below 640px. Has no horizontal scrolling at 375px on the detail page and the dashboard. Puts every C9 `data-testid` on its element.",
+        "Does no money arithmetic, renders API strings verbatim, and keeps `noMoneyArithmetic.test.ts` passing.",
+        "Includes Vitest tests titled \"AC-07.1: …\" (the panel shows the offered term and premium verbatim, and is hidden with no offer), \"AC-07.5: …\" (Pay posts `{}` and the reload shows RENEWED; the window-closed message), \"AC-08.1: …\" (preview shows 4473.29 and the formula verbatim; exact confirm body; editing clears the preview), \"AC-08.2: …\" (cooling-off preview shows 6850.00, fee 0.00 and the flag) and \"AC-08.3: …\" (0.00 shown).",
+        "Includes Vitest tests titled \"AC-08.4: …\" (Refunds tab shows one row; no Cancel panel on CANCELLED; the 409 message), \"AC-10.3: …\" (no Renew or Cancel panel on LAPSED; the 409 invalid-policy-state message from cancel), \"AC-11.1: …\" (tiles and table verbatim), \"AC-11.2: …\" (premium collected per product and total verbatim), \"AC-11.3: …\" (pipeline rows, including a null premium), \"AC-11.4: …\" (forecast count and numbers) and \"AC-11.5: …\" (403 shows the not-authorised message).",
+        "Leaves the app shell routing unchanged (TASK-007 mounts the dashboard), and keeps every existing Vitest test passing, updating detail fixtures only for the new C5 fields.",
+        "Shows a `test(red): AC-…` commit with the failing Vitest tests before the `feat(green)` commit. Saves `sprint-progress/TASK-002-red.log` and `TASK-002-green.log` naming every AC above.",
+        "Passes `npm test` (lcov refreshed) and `npm run build` with no TypeScript errors."
+      ]
+    },
+    {
+      "id": "TASK-003",
+      "title": "Security hardening carry-overs (no Basic challenge, fixed problem instance, shared key sanitiser, exhausted policy-number sequence)",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [
+        "TASK-001"
+      ],
+      "acceptance_criteria": [
+        "Confirms that the amendment `spec:` commit precedes its first commit.",
+        "Sends no `WWW-Authenticate` header on any 401: from the security entry point, a failed Basic filter or the exception handler. Updates the three existing `startsWith(\"Basic\")` assertions (SecurityBaselineIT, RoleBoundaryIT, EndorsementSecurityIT) to assert that the header is absent.",
+        "Proves \"NFR-04.1: …\": anonymous and bad-credential requests to a protected GET and POST, and invalid credentials on `POST /api/quotes`, get 401 problem+json with no `WWW-Authenticate` header, while valid preemptive Basic credentials still succeed.",
+        "Sets every problem+json `instance` to the C7 URN, across the exception handler, the security handler, the body-limit filter and framework errors (400, 404, 405, 406, 413, 415, 500).",
+        "Proves \"NFR-04.1: …\" with a parameterised test: a marker path segment and query value are sent to the issue, endorse, preview, application-status, decision and override routes, triggering 400, 401, 403, 404, 405, 413 and 415. The marker appears in no response header or body, and every `instance` matches `^urn:policyforge:problem:[a-z-]+$`.",
+        "Wires the TASK-001 sanitiser into every place that names a caller-supplied key in `errors[].field`: quote risk inputs, the application body (including `kyc.` and `kyc.address.` keys), the underwriting decision and override, issue, and endorse and preview. Updates the Sprint 3 100-character assertions to the 64-character rule.",
+        "Proves the sanitiser per endpoint, titled with that endpoint's existing unknown-key AC (for example \"AC-05.1: …\" for issue and \"AC-06.1: …\" for endorse): a 5000-character key and a key containing `<`, `>`, quotes and spaces are echoed sanitised, and no other field or message changes.",
+        "Returns 503 problem+json with code `POLICY_NUMBER_SEQUENCE_EXHAUSTED` and a fixed detail (no SQL or constraint text) when the counter for the product and issue year is at 999999. The application stays APPROVED, no policy, version, term, transition or audit row is written, and the counter is unchanged.",
+        "Proves \"AC-05.2: …\" for the exhausted sequence, with test setup that sets the counter of an otherwise unused year with one JDBC statement (the counter table is not append-only), and shows that another product or year still issues.",
+        "Implements no underwriting re-check for sum-insured endorsements: G-6 was VETOED at the checkpoint, so SG-1 stays an accepted v1 limitation as the spec amendment records. No AC-06.8 test and no `SUM_INSURED_REQUIRES_UNDERWRITING` code are added, and the progress file records the veto",
+        "Keeps every existing test passing, logs IDs only, keeps NFR-03.1 log capture green, and passes every ArchUnit test.",
+        "Shows a `test(red): …` commit before the `feat(green)` commit. Saves `sprint-progress/TASK-003-red.log` and `TASK-003-green.log` naming NFR-04.1, AC-05.1, AC-05.2 and AC-06.1, plus every other endpoint AC used for sanitiser tests.",
+        "Passes `./mvnw verify -Dskip.frontend=true`."
+      ]
+    },
+    {
+      "id": "TASK-004",
+      "title": "Renewal backend: V10 term rule version, current paid term, RenewalService cycle, RenewalScheduler, the admin job endpoint, the pay endpoint and the detail additions",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [
+        "TASK-001",
+        "TASK-003"
+      ],
+      "acceptance_criteria": [
+        "Adds Flyway V10 (C8) and leaves V1–V9 byte-identical. Issuance writes term 1 with the quote's rule version. The term's rule version is set at construction with no setter, and marking an already-paid term paid is refused.",
+        "Applies the current paid term (G-5) in the endorsement service, the policy header, C2 and C3. Proves \"AC-07.1: …\": after an offer exists, the header dates, `nextPremiumDueDate`, the endorsement window and the AC-06.2 preview values (9490.00, 1330.85, 184, 365) are unchanged. After a payment, the header shows the renewal term's dates.",
+        "Implements the cycle of P-7 in the service layer. Each in-force policy is processed in its own transaction, offer then lapse. The offer premium comes from PremiumCalculator over the current version's stored risk inputs, with the rule version active on the run date, and the term records that version.",
+        "Applies the lapse through the policy aggregate and PolicyStateMachine, appending the transition with reason `GRACE_PERIOD_EXPIRED` and actor `system:renewal-scheduler`.",
+        "Exposes C1 for ADMIN only, consuming `application/json` only, returning the C1 body, and appending one `RENEWAL_CYCLE_RUN` audit entry per run (P-10).",
+        "Adds RenewalScheduler with cron `0 0 23 * * *` in the configured time zone, run date = today on the injected clock and actor `system:renewal-scheduler`. Disables its trigger in test configuration, and proves \"AC-07.1: …\" by invoking it directly on a fixed clock.",
+        "Proves \"AC-07.1: …\" on a fixed clock: for an ACTIVE TERM_LIFE policy (AC-04.1 profile, 2026-11-01..2027-10-31), the 2027-10-01 run creates term 2 (2027-11-01..2028-10-31, unpaid, 6850.00, ruleVersion 1), lists the policy in `offersCreated` and appends no transition. A 2027-09-30 run creates nothing.",
+        "Proves \"AC-07.2: …\": a second 2027-10-01 run creates no term and returns empty lists, and two concurrent runs for the same date leave exactly one term 2 per policy.",
+        "Proves \"AC-07.3: …\" in its own application context. The policy is issued at 2026-11-01 under v1. The G-1 fixture is published through the publish API with effectiveFrom 2027-09-01. The 2027-10-01 run creates the renewal at 7400.00 and ruleVersion 2. Term 1 still shows 6850.00 at ruleVersion 1, and version 1 still has ruleVersion 1. After the payment, version 2 has 7400.00 at ruleVersion 2.",
+        "Proves \"AC-07.4: …\": after the offer, the 2027-11-30 run leaves the policy in force and unlisted. The 2027-12-01 run makes it LAPSED with reason `GRACE_PERIOD_EXPIRED` and actor `system:renewal-scheduler`, and lists it in `lapsed`. A rerun adds no second transition.",
+        "Exposes C2 (CUSTOMER owner, `application/json` only) with the P-5 order and the G-3 writes in one transaction.",
+        "Proves \"AC-07.5: …\": paying on 2027-11-10 gives 200, with term 2 paid, status RENEWED, version 2 appended per G-3 and transition `RENEWAL_PAID` by customer1. Paying again gives 409 `NO_PENDING_RENEWAL`. Paying on 2027-12-01 before any run gives 409 `RENEWAL_PAYMENT_WINDOW_CLOSED`, and after the 2027-12-01 lapse it gives 409 invalid-policy-state, with nothing written in either case. A pay racing a lapse leaves exactly one of RENEWED or LAPSED, and the loser writes nothing.",
+        "Proves \"AC-07.6: …\": MOTOR and HOUSEHOLD policies issued 2026-11-01 are still in force after the 2027-11-15 run and LAPSED after the 2027-11-16 run. TERM_LIFE is in force after 2027-11-30 and LAPSED after 2027-12-01.",
+        "Extends C3 with `terms[].ruleVersion` and `pendingRenewal` (C5). Updates the existing detail key-set assertions to exactly the new contract and nothing else.",
+        "Proves \"AC-10.4: …\" with real operations: issue → offer → pay → endorse → offer → lapse, plus a variant ending in a rejected pay. Status equals the last transition's `to`, and the transition count equals the status-changing operations + 1, where offers add none.",
+        "Proves \"NFR-04.1: …\": on the job, anonymous gets 401, customer1 and underwriter1 get 403, and admin1 gets 200. On pay, anonymous gets 401, underwriter1 and admin1 get 403, and another customer and an unknown number get 404.",
+        "Proves for job and pay: unknown body keys get a sanitised 400, a malformed `date` gets 400 naming `date`, \"NFR-04.3: …\" `text/plain` gets 415, and \"NFR-04.4: …\" a body over 16 KB, including through a percent-encoded path, gets 413. Nothing changes in any of these cases.",
+        "Proves \"NFR-03.1: …\" by extending log capture to the cycle and pay: no captured line contains KYC values, an address line or health declaration text.",
+        "Keeps controllers thin, passes every ArchUnit test, and keeps every existing AC-05, AC-06 and AC-10 test passing.",
+        "Shows a `test(red): …` commit before the `feat(green)` commit. Saves `sprint-progress/TASK-004-red.log` and `TASK-004-green.log` naming AC-07.1–07.6, AC-10.4, NFR-03.1, NFR-04.1, NFR-04.3 and NFR-04.4.",
+        "Passes `./mvnw verify -Dskip.frontend=true`."
+      ]
+    },
+    {
+      "id": "TASK-005",
+      "title": "Cancellation backend: V11 append-only refund records, refund preview, cancel, refunds in the detail, AC-10.3 API half",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [
+        "TASK-004"
+      ],
+      "acceptance_criteria": [
+        "Adds Flyway V11 (C8) and leaves V1–V10 byte-identical. The refund table is unique on the policy number, stores money as NUMERIC(19,2) and has no floating-point column.",
+        "Maps RefundRecordEntity as an immutable entity with no setters, and its repository has only `save` and finders. AppendOnlyArchTest gains existence checks for both, which fail in the red commit.",
+        "Exposes C3 (CUSTOMER owner) with the P-5 order. It writes nothing and delegates to the TASK-001 calculator, date rule and premium basis, using the current paid term's rule-version lifecycle for the fee and cooling-off.",
+        "Exposes C4 (CUSTOMER owner, `application/json` only) with the P-5 order and the G-4 reasons. One transactional method writes the RefundRecord, applies → CANCELLED and appends the transition.",
+        "Proves \"AC-08.1: …\" on a fixed clock: for a TERM_LIFE 6850.00 policy issued 2026-11-01 and cancelled on 2027-02-09, the preview and the cancel both give 4473.29, 265/365, fee 500.00 and the C5 formula. Every stored field equals the preview, and the response is 201 with the C4 body.",
+        "Proves \"AC-08.1: …\" for the premium basis: after a +1330.85 endorsement effective 2027-05-01, cancelling on 2027-06-01 refunds 2929.23 on basis 8180.85.",
+        "Proves \"AC-08.1: …\" for the date window: before the term start or after the term end gets 400 `CANCELLATION_DATE_OUT_OF_TERM`, naming `cancellationDate` on cancel and `date` on preview. A malformed date, a missing or unknown `reason`, or an unknown key (sanitised) gets 400. In grace, today's date gets 400.",
+        "Proves \"AC-08.1: …\" after an early renewal payment (G-5): a date in term 1 gets 400, and a date in the renewal term refunds against the renewal premium with no cooling-off.",
+        "Proves \"AC-08.2: …\": cancelling on 2026-11-11 gives 6850.00, fee 0.00 and coolingOff true. MOTOR cancelled on day 7 (cooling-off 7) gives the pro-rata 14609.45.",
+        "Proves \"AC-08.3: …\": cancelling on 2027-10-31 stores amount 0.00 and the status becomes CANCELLED.",
+        "Proves \"AC-08.4: …\": after a cancel, the status is CANCELLED and exactly one refund record exists. A second cancel gets 409 invalid-policy-state and there is still one record. Two concurrent cancels give exactly one 201 and one 409, and one record. A preview of a CANCELLED policy gets 409.",
+        "Proves \"AC-08.4: …\" for atomicity: test configuration injects a failure at the transition write after the refund insert reached the database. Afterwards no refund row exists and the status and transition count are unchanged. Production code contains no test-only hook.",
+        "Proves \"AC-10.3: …\": a policy LAPSED by the real cycle gets 409 invalid-policy-state on cancel and on preview, and no refund record is written. This closes the Sprint 3 P-6 carry-over.",
+        "Proves \"AC-10.2: …\" with a really cancelled policy: the endorsement and its preview get 409 and nothing is written.",
+        "Proves \"AC-10.4: …\" with sequences that include a real cancel (issue → endorse → cancel, then rejected endorse, pay and cancel): the counts are unchanged by the rejected operations.",
+        "Extends C3 `refunds[]` with the C5 Refund shape, in append order.",
+        "Proves \"NFR-04.1: …\" for preview and cancel: anonymous 401, underwriter1 and admin1 403, another customer and an unknown number 404.",
+        "Proves \"NFR-04.3: …\" (`text/plain` cancel gets 415) and \"NFR-04.4: …\" (a body over 16 KB gets 413, including through a percent-encoded path), and proves \"NFR-03.1: …\" (log capture of preview and cancel has no PII). Nothing is written in any of these cases.",
+        "Keeps controllers thin, passes every ArchUnit test, and keeps every existing test passing.",
+        "Shows a `test(red): …` commit before the `feat(green)` commit. Saves `sprint-progress/TASK-005-red.log` and `TASK-005-green.log` naming AC-08.1–08.4, AC-10.2, AC-10.3, AC-10.4, NFR-03.1, NFR-04.1, NFR-04.3 and NFR-04.4.",
+        "Passes `./mvnw verify -Dskip.frontend=true`."
+      ]
+    },
+    {
+      "id": "TASK-006",
+      "title": "Admin portfolio dashboard API and the synthetic sample-policy seed",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [
+        "TASK-005"
+      ],
+      "acceptance_criteria": [
+        "Exposes C6 for ADMIN only, using the TASK-001 portfolio rules. It returns exactly the spec's keys, always lists all three products, renders money as scale-2 strings, sorts per P-11, and gives 400 naming `asOf` for a malformed `asOf`.",
+        "Proves \"AC-11.5: …\": customer1, customer2 and underwriter1 get 403 problem+json, anonymous gets 401 (\"NFR-04.1: …\"), and admin1 gets 200.",
+        "Implements the C10 seed through the quote, application and issuance services, with a backdated issuance path in the service layer that no web class can reach (an ArchUnit rule, or package-private visibility), followed by one renewal cycle for T. It is idempotent by its synthetic marker, uses synthetic data only, and logs IDs only.",
+        "Proves \"AC-11.1: …\" in its own context on the fixed clock. The seed holds S1–S6 with the C10 dates and states. The admin dashboard returns `activePoliciesByProduct` equal to the in-force seed policies per product, counted from the seed's own records (2/2/2), and `premiumCollected` 13700.00 / 30300.00 / 22700.00, total 66700.00. The pipeline contains S1 with renewalPremium 6850.00 and paid false, `lapseForecast` is `{ count: 1, policies: [S5] }`, and running the seed again adds nothing.",
+        "Proves \"AC-11.2: …\" with exact decimal string equality and no tolerance, in its own context or as an exact before/after difference: two paid TERM_LIFE terms, a +1330.85 endorsement and a 4473.29 refund move TERM_LIFE by exactly 10557.56, `total` equals the sum of the three products, and a negative adjustment (a credit) lowers the product's figure.",
+        "Proves \"AC-11.3: …\" on the fixed clock: a policy whose term ends in 20 days is in the pipeline. Its premium is null and paid false before the cycle, 6850.00 and false after the offer, and paid true after payment. A policy ending in 90 days is absent, and the 60-day and 61-day boundaries are in and out.",
+        "Proves \"AC-11.4: …\": a policy past termEnd with an unpaid renewal, within grace, is in `lapseForecast` with the right count. It leaves the forecast after payment and after the lapse, and a policy before its termEnd is absent.",
+        "Makes the existing tests seed-aware without weakening any assertion (P-15), and keeps the AC-09.7 seed test, seed idempotency and policy-number tests passing.",
+        "Proves \"NFR-03.1: …\" by extending log capture to the dashboard and the seed: no captured line contains seed KYC names, Aadhaar, PAN or an address line.",
+        "Keeps controllers thin and passes every ArchUnit test.",
+        "Shows a `test(red): …` commit before the `feat(green)` commit. Saves `sprint-progress/TASK-006-red.log` and `TASK-006-green.log` naming AC-11.1–11.5, NFR-03.1 and NFR-04.1.",
+        "Passes `./mvnw verify -Dskip.frontend=true`."
+      ]
+    },
+    {
+      "id": "TASK-007",
+      "title": "App shell route for the Admin Dashboard, Playwright journeys (desktop + mobile), committed visual snapshots and sprint-wide verification",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [
+        "TASK-002",
+        "TASK-006"
+      ],
+      "acceptance_criteria": [
+        "Mounts the Admin Dashboard at `#/admin/dashboard` behind the sign-in gate and adds the `nav-dashboard` link. Includes a Vitest routing test titled \"AC-11.1: …\", and keeps every existing routing test passing.",
+        "Resolves any mismatch between the SPA and the API in favour of the specs and contracts C1–C10, and lists each change in the progress file.",
+        "Adds Playwright tests to `policy-lifecycle.spec.ts`: \"AC-07.1: …\" (the job, called through the API with date = own expiry − 30, lists the policy in `offersCreated`, and the Renew panel shows start = expiry + 1 and 6850.00) and \"AC-07.5: …\" (Pay shows RENEWED and hides the Renew panel; the Status tab ends with RENEWAL_PAID; the Versions tab shows v2).",
+        "Adds Playwright tests to `policy-lifecycle.spec.ts`: \"AC-08.2: …\" (a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab) and \"AC-08.4: …\" (after cancelling, no Cancel, Renew or Endorse action is offered, a second cancel through the API gets 409, and the Refunds tab still has one row).",
+        "Adds `dashboard.spec.ts`: \"AC-11.1: …\" (admin1's tiles and per-product table equal the page's own dashboard response; the tiles stack in one column on mobile-chromium and sit side by side on desktop-chromium), \"AC-11.3: …\" (asOf = own term end − 20 lists the policy, and − 90 does not), \"AC-11.4: …\" (asOf = own term end + 1 lists it in the forecast) and \"AC-11.5: …\" (customer1 sees the not-authorised message).",
+        "Follows P-12: never runs the cycle with a date later than its own policy's expiry − 30 days, and never asserts seed state.",
+        "Uses `data-testid` selectors and web-first assertions with no `waitForTimeout`. Each test creates its own data and acts on it by number. Every test passes on `desktop-chromium` and `mobile-chromium` running in parallel, and the Sprint 1–3 journeys and their snapshots still pass unchanged.",
+        "Adds visual snapshot assertions for the Renew panel with an offer, the cancel refund preview, the Refunds tab and the dashboard KPI tiles, with dates, policy numbers and dashboard values masked. Baselines are committed under `frontend/e2e/__snapshots__/`, platform-suffixed, and a second consecutive run passes without updating snapshots.",
+        "Passes a full `./mvnw verify` (SPA packaged, frontend not skipped) with the JaCoCo thresholds unchanged at 80% domain and 70% overall. Also passes `npm test` (lcov refreshed and committed) and `npm run build`.",
+        "Reports COVERED (not PARENT-ONLY or MISSING) in `python scripts/ac_audit.py --offline --no-write` for AC-07.1–07.6, AC-08.1–08.5, AC-10.2–10.4, AC-11.1–11.5, plus NFR-03.1, NFR-04.1, NFR-04.3 and NFR-04.4, and still for every Sprint 1–3 ID (81/81).",
+        "Confirms from `git log 12f95c3..feat/renewal-cancellation` that the amendment `spec:` commit precedes every code commit, and that every ID in the previous criterion has a `test(red)` commit naming it before a `feat(green)` commit.",
+        "Confirms that `dev` is still `12f95c3` and `main` is still `8e265d6`, locally and in `git ls-remote origin`, and that `origin/feat/renewal-cancellation` does not exist (nothing pushed).",
+        "Confirms that `python scripts/redact_evidence.py --check` exits 0 over every `sprint-progress/` log.",
+        "Records in the progress file every command run and its result (verify, npm test, build, Playwright on both projects twice, the AC audit, the git checks), the spec gaps SG-1 to SG-7, the G-6 veto (SG-1 accepted), and that port 8080 is free.",
+        "Shows a `test(red): AC-…` commit with the E2E and routing tests failing before the dashboard route exists, then the `feat(green)` commit. Saves `sprint-progress/TASK-007-red.log` and `TASK-007-green.log` showing both Playwright projects."
+      ]
+    }
+  ],
+  "parallel_batch": [
+    "TASK-001",
+    "TASK-002"
+  ],
+  "sequential_tasks": [
+    "TASK-003",
+    "TASK-004",
+    "TASK-005",
+    "TASK-006",
+    "TASK-007"
+  ]
+}

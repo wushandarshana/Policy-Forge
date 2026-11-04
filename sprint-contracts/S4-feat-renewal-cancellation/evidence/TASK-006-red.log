@@ -1,0 +1,72 @@
+TASK-006 red run (stubs only: PortfolioSeedLoader does nothing, no dashboard endpoint, no backdated issuance path)
+Covers AC-11.1 AC-11.2 AC-11.3 AC-11.4 AC-11.5 NFR-03.1 NFR-04.1 (+ AC-11 ArchUnit backdated-path rules)
+Command: ./mvnw verify -Dskip.frontend=true -Dit.test='Portfolio*IT' -Dtest=BackdatedIssuanceArchTest -Dsurefire.failIfNoSpecifiedTests=false -Djacoco.skip=true -Dmaven.test.failure.ignore=true
+
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.898 s -- in com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.994 s <<< FAILURE! -- in com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[ERROR] com.horizon.policyforge.architecture.BackdatedIssuanceArchTest.neverPublicOrProtected -- Time elapsed: 0.007 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.architecture.BackdatedIssuanceArchTest.thePathExistsOnTheIssuanceService -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR]   BackdatedIssuanceArchTest.neverPublicOrProtected Rule 'methods that have name containing 'Backdated' should not be public and should not be protected, because AC-11.1: the backdated issuance path has package visibility only' failed to check any class
+[ERROR]   BackdatedIssuanceArchTest.thePathExistsOnTheIssuanceService Rule 'methods that have name 'issueBackdated' should be declared in com.horizon.policyforge.service.PolicyIssuanceService, because AC-11.1: the seed's backdated issuance lives on the issuanc
+[ERROR] Tests run: 5, Failures: 2, Errors: 0, Skipped: 0
+[ERROR] Tests run: 8, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 11.34 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioDashboardIT
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.onlyAnAdminReadsTheDashboard -- Time elapsed: 0.791 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.theDashboardIsReadOnly -- Time elapsed: 0.092 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.malformedAsOfIsA400NamingAsOf -- Time elapsed: 0.092 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.activeCountsEqualTheInForcePoliciesPerProduct -- Time elapsed: 0.975 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.asOfIsEchoedAndListsAreSorted -- Time elapsed: 0.689 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioDashboardIT.exactKeysAllProductsAndScaleTwoMoney -- Time elapsed: 0.079 s <<< FAILURE!
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.939 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioEmptyIT
+[ERROR] com.horizon.policyforge.web.PortfolioEmptyIT.aPortfolioWithNothingInForceStillListsAllThreeProducts -- Time elapsed: 0.610 s <<< FAILURE!
+[ERROR] Tests run: 2, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 1.699 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioLogCaptureIT
+[ERROR] com.horizon.policyforge.web.PortfolioLogCaptureIT.theSeedLogsIdsOnly(CapturedOutput) -- Time elapsed: 0.010 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.PortfolioLogCaptureIT.theDashboardLogsNoPersonalData(CapturedOutput) -- Time elapsed: 0.448 s <<< FAILURE!
+[ERROR] Tests run: 8, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 2.723 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioPipelineIT
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.aPolicyInGraceIsInTheForecast -- Time elapsed: 0.334 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.aLapseTakesAPolicyOutOfTheForecast -- Time elapsed: 0.396 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.paymentTakesAPolicyOutOfTheForecast -- Time elapsed: 0.427 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.aPolicyBeforeItsTermEndIsAbsent -- Time elapsed: 0.381 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.aTermEndingInTwentyDaysIsInThePipeline -- Time elapsed: 0.325 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.ninetyDaysIsOutAndTheBoundaryIsSixtyInSixtyOneOut -- Time elapsed: 0.271 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.onlyWhileThePaidTermIsInForce -- Time elapsed: 0.305 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPipelineIT.aCancelledPolicyIsNotInThePipeline -- Time elapsed: 0.267 s <<< FAILURE!
+[ERROR] Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.802 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioPremiumIT
+[ERROR] com.horizon.policyforge.web.PortfolioPremiumIT.everyProductCollectsItsOwnPaidTerm -- Time elapsed: 0.071 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPremiumIT.theWorkedExampleMovesTermLifeByExactly10557point56 -- Time elapsed: 0.068 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPremiumIT.onlyAPaidRenewalTermCounts -- Time elapsed: 0.304 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioPremiumIT.aCreditLowersTheFigure -- Time elapsed: 0.349 s <<< FAILURE!
+[ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 1.422 s <<< FAILURE! -- in com.horizon.policyforge.web.PortfolioSeedIT
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.seedingTwiceAddsNothing -- Time elapsed: 0.171 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.theSeedWentThroughTheRealServices -- Time elapsed: 0.015 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.theDashboardShowsTheSeedPortfolio -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.theSeedCycleOfferedS1AndS5 -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.theOwnersSeeTheSeedAndTheOffers -- Time elapsed: 0.172 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PortfolioSeedIT.theSeedHoldsSixPoliciesWithTheC10Dates -- Time elapsed: 0.006 s <<< FAILURE!
+[ERROR]   PortfolioDashboardIT.activeCountsEqualTheInForcePoliciesPerProduct:76 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioDashboardIT.asOfIsEchoedAndListsAreSorted:99 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioDashboardIT.exactKeysAllProductsAndScaleTwoMoney:42 
+[ERROR]   PortfolioDashboardIT.malformedAsOfIsA400NamingAsOf:131 [asOf=2027-13-01] 
+[ERROR]   PortfolioDashboardIT.onlyAnAdminReadsTheDashboard:146 [customer1] 
+[ERROR]   PortfolioDashboardIT.theDashboardIsReadOnly:180 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioEmptyIT.aPortfolioWithNothingInForceStillListsAllThreeProducts:35 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioLogCaptureIT.theDashboardLogsNoPersonalData:85 
+[ERROR]   PortfolioPipelineIT.aCancelledPolicyIsNotInThePipeline:75->item:23 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.aLapseTakesAPolicyOutOfTheForecast:124 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.aPolicyBeforeItsTermEndIsAbsent:141 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.aPolicyInGraceIsInTheForecast:88 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.aTermEndingInTwentyDaysIsInThePipeline:31->item:23 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.ninetyDaysIsOutAndTheBoundaryIsSixtyInSixtyOneOut:55->item:23 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.onlyWhileThePaidTermIsInForce:66->item:23 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPipelineIT.paymentTakesAPolicyOutOfTheForecast:110 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPremiumIT.aCreditLowersTheFigure:73 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPremiumIT.everyProductCollectsItsOwnPaidTerm:88 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPremiumIT.onlyAPaidRenewalTermCounts:105 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioPremiumIT.theWorkedExampleMovesTermLifeByExactly10557point56:44 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioSeedIT.seedingTwiceAddsNothing:237 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   PortfolioSeedIT.theDashboardShowsTheSeedPortfolio:154->numberOf:80 [S1 has exactly one policy] 
+[ERROR]   PortfolioSeedIT.theOwnersSeeTheSeedAndTheOffers:213->numberOf:80 [S1 has exactly one policy] 
+[ERROR]   PortfolioSeedIT.theSeedCycleOfferedS1AndS5:128->numberOf:80 [S1 has exactly one policy] 
+[ERROR]   PortfolioSeedIT.theSeedHoldsSixPoliciesWithTheC10Dates:104 [the seed is the only thing in this context] 
+[ERROR]   PortfolioSeedIT.theSeedWentThroughTheRealServices:182->numberOf:80 [S1 has exactly one policy] 
+[ERROR]   PortfolioLogCaptureIT.theSeedLogsIdsOnly:63 » EmptyResultDataAccess Incorrect result size: expected 1, actual 0
+[ERROR] Tests run: 29, Failures: 26, Errors: 1, Skipped: 0

@@ -1,0 +1,69 @@
+# TASK-004 red run: ./mvnw verify -Dskip.frontend=true -Djacoco.skip=true -Dmaven.test.failure.ignore=true -Dtest='PolicyTermEntityTest,SchedulingConfigTest,RenewalSchedulerTest,PolicyTermMigrationTest' -Dit.test='Renewal*IT,PolicyLifecycleSequenceIT,PolicyViewIT'
+# surefire 7 tests, 5 failures; failsafe 47 tests, 43 failures; 0 errors, every failure is an assertion
+# Production stubs: PolicyTermEntity.of(..., ruleVersion) and getRuleVersion() (rule version not kept), RenewalScheduler.runScheduled() (no-op, no @Scheduled), SchedulingConfig (no @EnableScheduling). No V10 migration, no RenewalService, no controllers yet.
+# IDs covered: AC-07.1 (offer, current paid term, scheduler, job audit), AC-07.2 (idempotent, concurrent runs), AC-07.3 (rule version of the renewal term, V10), AC-07.4 (lapse), AC-07.5 (pay, window, race), AC-07.6 (grace per product),
+#   AC-10.4 (real sequences), NFR-03.1 (log capture of cycle and pay), NFR-04.1 (roles, 404, sanitised keys, no challenge), NFR-04.3 (415), NFR-04.4 (413 incl. percent-encoded path)
+
+== red summary: 54 tests in the reports, 48 failing ==
+AC-05.1: 3 passing, 1 failing
+AC-07.1: 2 passing, 12 failing
+AC-07.2: 0 passing, 2 failing
+AC-07.3: 1 passing, 3 failing
+AC-07.4: 0 passing, 5 failing
+AC-07.5: 0 passing, 12 failing
+AC-07.6: 0 passing, 1 failing
+AC-10.4: 0 passing, 3 failing
+NFR-03.1: 0 passing, 2 failing
+NFR-04.1: 0 passing, 2 failing
+NFR-04.3: 0 passing, 1 failing
+NFR-04.4: 0 passing, 4 failing
+
+== failing tests (display names) ==
+PolicyLifecycleSequenceIT: AC-10.4: an endorsed policy that is offered and then paid goes ENDORSED to RENEWED, and the transition count follows the status-changing operations
+PolicyLifecycleSequenceIT: AC-10.4: issue, offer, lapse, then a rejected payment: the rejected operation adds no transition, and the status is still the last transition's target
+PolicyLifecycleSequenceIT: AC-10.4: issue, offer, pay, endorse, offer, lapse: the status equals the last transition's target after every step, and the transition count is the status-changing operations + 1, where offers add none
+PolicyTermEntityTest: AC-07.3: a term records the rule version it was built with, and has no setter that could change it
+PolicyTermEntityTest: AC-07.5: marking an unpaid term paid sets the flag, and marking an already-paid term paid is refused
+PolicyTermMigrationTest: AC-07.3: V10 adds a NOT NULL rule_version to policy_term and backfills every existing term from its policy's version 1
+PolicyViewIT: AC-05.1: GET /api/policies/{number} returns the C3 detail: the header of the issue response, version v1, the null to ACTIVE transition, term #1, no endorsements and no refunds
+RenewalBodyLimitIT: NFR-04.4: a body over 16 KB to POST /api/admin/jobs/renewal-cycle is a 413 and nothing is run or audited, while the same body without padding runs the cycle
+RenewalBodyLimitIT: NFR-04.4: a body over 16 KB to POST /api/policies/{number}/renewal/pay is a 413 and nothing is written, while the same body without padding pays
+RenewalBodyLimitIT: NFR-04.4: a body over 16 KB to a percent-encoded variant of the job path is a 413 and nothing is run, and the encoded path does reach the endpoint
+RenewalBodyLimitIT: NFR-04.4: a body over 16 KB to a percent-encoded variant of the payment path is a 413 and nothing is written, and the encoded path does reach the endpoint
+RenewalCurrentTermIT: AC-07.1: after an offer exists the header dates, nextPremiumDueDate, the endorsement window and the AC-06.2 preview (9490.00, 1330.85, 184, 365) are unchanged, because term 1 stays the current paid term
+RenewalCurrentTermIT: AC-07.1: payableUntil follows the product's grace days: 2027-11-15 for a MOTOR policy (grace 15)
+RenewalCurrentTermIT: AC-07.1: the detail carries the C5 additions: terms[].ruleVersion, and pendingRenewal with the offered term and payableUntil = the current paid term's end + its grace days
+RenewalCurrentTermIT: AC-07.4: a lapsed policy shows no pending renewal in its detail, because the offer can no longer be paid
+RenewalCurrentTermIT: AC-07.5: after the payment the header shows the renewal term's dates, there is no pending renewal, an endorsement is rated against the renewal term, and its version keeps the renewal expiry
+RenewalCycleIT: AC-07.1: a MOTOR and a HOUSEHOLD policy are offered 2027-11-01..2028-10-31 at the premium PremiumCalculator gives for their stored inputs, 15150.00 and 11350.00, at rule version 1
+RenewalCycleIT: AC-07.1: a job with no date runs for today on the injected clock, and every run appends exactly one RENEWAL_CYCLE_RUN audit entry by the caller, even when nothing is offered
+RenewalCycleIT: AC-07.1: a run on 2027-09-30, the day before the offer window opens, creates nothing for the policy
+RenewalCycleIT: AC-07.1: on 2027-10-01 the cycle offers an ACTIVE TERM_LIFE policy (2026-11-01..2027-10-31) a renewal term 2027-11-01..2028-10-31, unpaid, 6850.00 at rule version 1, lists it in offersCreated and appends no transition
+RenewalCycleIT: AC-07.1: the scheduler invoked directly on a fixed clock of 2027-10-01 runs the cycle for that date, creates the offer and audits the run as system:renewal-scheduler
+RenewalCycleIT: AC-07.2: a second run for 2027-10-01 creates no term and returns empty lists, so the offer is idempotent
+RenewalCycleIT: AC-07.2: four runs for the same date sent at the same moment leave exactly one term 2 and list the policy in offersCreated exactly once in all
+RenewalCycleIT: AC-07.4: a policy that is no longer in force (LAPSED) is skipped by later runs: no offer, no second lapse
+RenewalCycleIT: AC-07.4: a policy whose offer window was missed is offered and lapsed in the same run, with both lists naming it, and its offered term stays unpaid
+RenewalCycleIT: AC-07.4: after the offer, the 2027-11-30 run (termEnd + 30) leaves the policy in force and unlisted, the 2027-12-01 run makes it LAPSED with reason GRACE_PERIOD_EXPIRED by system:renewal-scheduler and lists it, and a rerun adds no second transition
+RenewalCycleIT: AC-07.6: MOTOR and HOUSEHOLD (grace 15) are still in force after the 2027-11-15 run and LAPSED after the 2027-11-16 run, and TERM_LIFE (grace 30) is in force after 2027-11-30 and LAPSED after 2027-12-01
+RenewalIsolationIT: AC-07.1: when the offer of one policy fails, the run still answers 200, the other policies are offered, the failed one is unlisted with nothing written, and the next run offers it
+RenewalIsolationIT: AC-07.4: when the lapse fails after the offer was written in the same run, that policy's offer is rolled back too, and the other policy is still offered and lapsed
+RenewalLogCaptureIT: NFR-03.1: rejected job and payment requests (unknown keys, a malformed date, a wrong content type, another customer's policy, a refused state) log none of the submitted values
+RenewalLogCaptureIT: NFR-03.1: running the cycle (offer and lapse), paying and reading the policy back log IDs only, and no captured line contains an Aadhaar, a PAN, the full name, the date of birth, an address line or health declaration text
+RenewalPaymentIT: AC-07.5: an empty JSON body is accepted like {}, and the last day of the window (2027-11-30) still pays
+RenewalPaymentIT: AC-07.5: paying a renewed policy again gives 409 NO_PENDING_RENEWAL with a fixed detail and writes nothing
+RenewalPaymentIT: AC-07.5: paying before any offer exists gives 409 NO_PENDING_RENEWAL and writes nothing
+RenewalPaymentIT: AC-07.5: paying on 2027-11-10 gives 200 with the header and the paid term, the term is paid, the status is RENEWED, version 2 carries the renewal term per G-3 and the transition is RENEWAL_PAID by customer1
+RenewalPaymentIT: AC-07.5: paying on 2027-12-01 before any run gives 409 RENEWAL_PAYMENT_WINDOW_CLOSED, and after the 2027-12-01 lapse gives 409 invalid-policy-state, and neither writes anything
+RenewalPaymentIT: AC-07.5: six payments sent at the same moment give exactly one 200 and the rest 409, and leave one paid term, one version 2 and one RENEWAL_PAID transition
+RenewalPaymentIT: AC-07.5: the checks run in the P-5 order: an unknown key is 400 before the policy is looked up, an unknown or another customer's policy is 404 before any state check, and a refused state is 409
+RenewalRaceIT: AC-07.5: a lapse that races a payment and loses skips the policy and writes nothing, so the policy is RENEWED with no GRACE_PERIOD_EXPIRED transition and is not listed in lapsed
+RenewalRaceIT: AC-07.5: a payment that races the lapse and loses gets 409 POLICY_UPDATE_CONFLICT and writes nothing, so the policy is LAPSED with its term unpaid, no version 2 and no RENEWAL_PAID transition
+RenewalRuleVersionIT: AC-07.3: with TERM_LIFE v2 (effective 2027-09-01, higher rates) active, the 2027-10-01 run offers the renewal at 7400.00 and rule version 2, term 1 and version 1 keep 6850.00 at rule version 1, and after the payment version 2 has 7400.00 at rule version 2
+RenewalSchedulerTest: AC-07.1: the scheduler's trigger is the cron 0 0 23 * * * in the configured policyforge.time-zone
+RenewalSecurityIT: AC-07.1: an unknown key in the job body is 400 naming it sanitised (a 5000-character key is cut to 64, markup characters become underscores), a malformed date is 400 naming date, both are reported together, and nothing is run or audited
+RenewalSecurityIT: AC-07.5: an unknown key in the pay body is 400 naming it sanitised, including date and amount, and nothing is written, while an empty object is accepted
+RenewalSecurityIT: NFR-04.1: paying answers anonymous with 401 and no Basic challenge, underwriter1 and admin1 with 403, and another customer and an unknown policy number with 404, and writes nothing
+RenewalSecurityIT: NFR-04.1: the renewal job answers anonymous with 401 and no Basic challenge, customer1 and underwriter1 with 403, and admin1 with 200, and a refused call runs nothing and audits nothing
+RenewalSecurityIT: NFR-04.3: a text/plain or form-encoded job or payment is 415 with the fixed detail and changes nothing, even though the same text is a valid JSON body
+SchedulingConfigTest: AC-07.1: scheduled methods are enabled by default, so the end-of-day renewal cycle runs in production

@@ -1,3 +1,6 @@
+import { mkdirSync, rmSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { expect } from '@playwright/test';
 import type { APIRequestContext, Page } from '@playwright/test';
 
@@ -137,5 +140,69 @@ export async function fillKyc(page: Page, age: number, overrides: Partial<Record
   };
   for (const [name, value] of Object.entries(values)) {
     await page.getByTestId(`input-${name}`).fill(value);
+  }
+}
+
+/** `iso` (YYYY-MM-DD) moved by `days`, as a calendar date (no clock or zone involved). */
+export function shiftDate(iso: string, days: number): string {
+  const [year, month, day] = iso.split('-').map(Number);
+  const moved = new Date(Date.UTC(year, month - 1, day + days));
+  return moved.toISOString().slice(0, 10);
+}
+
+/** The policy's expiry date (the end of its current paid term), read through the API as customer1. */
+export async function policyExpiry(request: APIRequestContext, policyNumber: string): Promise<string> {
+  const response = await request.get(`/api/policies/${policyNumber}`, { headers: { Authorization: basic('customer1') } });
+  expect(response.status()).toBe(200);
+  const body = (await response.json()) as { policy: { expiryDate: string } };
+  return body.policy.expiryDate;
+}
+
+export interface RenewalCycleRun {
+  runDate: string;
+  offersCreated: string[];
+  lapsed: string[];
+}
+
+/** Runs the renewal cycle for `date` through the admin job endpoint (C1) as admin1. */
+export async function runRenewalCycle(request: APIRequestContext, date: string): Promise<RenewalCycleRun> {
+  const response = await request.post(`/api/admin/jobs/renewal-cycle?date=${date}`, {
+    headers: { Authorization: basic('admin1') },
+    data: {},
+  });
+  expect(response.status()).toBe(200);
+  return (await response.json()) as RenewalCycleRun;
+}
+
+const RENEWAL_LOCK = join(tmpdir(), 'policyforge-e2e-renewal.lock');
+const STALE_LOCK_MS = 120_000;
+
+function tryAcquireRenewalLock(): boolean {
+  try {
+    mkdirSync(RENEWAL_LOCK);
+    return true;
+  } catch {
+    try {
+      // A crashed run leaves its lock behind: a lock older than any test is taken over.
+      if (Date.now() - statSync(RENEWAL_LOCK).mtimeMs > STALE_LOCK_MS) rmSync(RENEWAL_LOCK, { recursive: true, force: true });
+    } catch {
+      // The holder released it between the two calls: the next poll takes it.
+    }
+    return false;
+  }
+}
+
+/**
+ * Runs `work` as the only test that creates a policy and runs the renewal cycle (P-12). A cycle offers a renewal to every
+ * in-force policy whose offer window has opened, not only to the test's own, so two tests running the job at the same
+ * time (desktop and mobile projects, separate workers) could each offer the other's policy first and make the job's
+ * `offersCreated` miss it. The lock is a directory in the OS temp folder, shared by every worker.
+ */
+export async function withRenewalLock<T>(work: () => Promise<T>): Promise<T> {
+  await expect.poll(tryAcquireRenewalLock, { timeout: 120_000, intervals: [100, 200, 400] }).toBe(true);
+  try {
+    return await work();
+  } finally {
+    rmSync(RENEWAL_LOCK, { recursive: true, force: true });
   }
 }

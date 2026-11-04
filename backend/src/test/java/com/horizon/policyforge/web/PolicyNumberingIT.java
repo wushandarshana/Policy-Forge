@@ -42,7 +42,8 @@ import org.springframework.test.web.servlet.MvcResult;
  * Policy numbering and the race on one application (AC-05.2, AC-05.3). The sequence is per product and per issue year,
  * so each test issues in a clock year no other test uses and can assert the exact numbers it gets: a gap would show.
  * The years: 2030 concurrent, 2031 one after another, 2032 two products alternating, 2033 the first issue of a year,
- * 2035 the same-application race, 2036 the issue year against the effective date's year.
+ * 2035 the same-application race, 2036 the issue year against the effective date's year, 2040 and 2041 the exhausted
+ * sequence.
  */
 @Tag("AC-05")
 @SpringBootTest
@@ -196,6 +197,48 @@ class PolicyNumberingIT {
         assertThat(issuedNumber(termLife)).isEqualTo("PF-TL-2033-000001");
         assertThat(issuedNumber(household)).isEqualTo("PF-HH-2033-000001");
         assertThat(issuedNumber(approvedTermLife())).isEqualTo("PF-TL-2033-000002");
+    }
+
+    @Test
+    @DisplayName("AC-05.2: when the counter of the product and year is at 999999 the issue is a 503 POLICY_NUMBER_SEQUENCE_EXHAUSTED with a fixed detail, the application stays APPROVED, no policy, version, term, transition or audit row is written and the counter is unchanged, while another product and another year still issue")
+    void anExhaustedSequenceIsA503AndWritesNothing() throws Exception {
+        clock.setDate(LocalDate.parse("2040-03-01"));
+        String exhausted = approvedTermLife();
+        String motor = approvedMotor();
+        // The counter table is not append-only: one statement puts the TERM_LIFE counter of this unused year at its end.
+        jdbc.update("insert into policy_number_sequence (product_code, seq_year, last_value) values (?, ?, ?)",
+                "TERM_LIFE", 2040, 999_999);
+        PolicyRows.Snapshot before = PolicyRows.snapshot(jdbc, exhausted);
+
+        for (int attempt = 1; attempt <= 2; attempt++) {
+            MvcResult result = policies.issue("customer1", exhausted, issueBody(null));
+
+            assertThat(result.getResponse().getStatus()).as("attempt " + attempt + ": "
+                    + result.getResponse().getContentAsString()).isEqualTo(503);
+            assertThat(result.getResponse().getContentType()).startsWith("application/problem+json");
+            JsonNode problem = policies.bodyOf(result);
+            assertThat(problem.get("code").asText()).isEqualTo("POLICY_NUMBER_SEQUENCE_EXHAUSTED");
+            assertThat(problem.get("detail").asText())
+                    .isEqualTo("No further policy numbers can be issued for this product at the moment.");
+            assertThat(problem.get("instance").asText())
+                    .isEqualTo("urn:policyforge:problem:policy-number-sequence-exhausted");
+            assertThat(result.getResponse().getContentAsString()).as("no SQL, constraint or counter text")
+                    .doesNotContainIgnoringCase("sql").doesNotContainIgnoringCase("constraint")
+                    .doesNotContain("999999").doesNotContain("policy_number_sequence")
+                    .doesNotContain(exhausted);
+            assertThat(result.getResponse().getHeader("WWW-Authenticate")).isNull();
+            assertThat(ApplicationRows.status(jdbc, exhausted)).as("still APPROVED").isEqualTo("APPROVED");
+            assertThat(PolicyRows.policiesForApplication(jdbc, exhausted)).isZero();
+            assertThat(PolicyRows.snapshot(jdbc, exhausted)).as("no policy, version, term, transition or audit row")
+                    .isEqualTo(before);
+            assertThat(jdbc.queryForObject("select last_value from policy_number_sequence"
+                    + " where product_code = 'TERM_LIFE' and seq_year = 2040", Integer.class))
+                    .as("the counter is unchanged").isEqualTo(999_999);
+        }
+
+        assertThat(issuedNumber(motor)).as("another product still issues").isEqualTo("PF-MO-2040-000001");
+        clock.setDate(LocalDate.parse("2041-03-01"));
+        assertThat(issuedNumber(approvedTermLife())).as("another year still issues").isEqualTo("PF-TL-2041-000001");
     }
 
     @Test

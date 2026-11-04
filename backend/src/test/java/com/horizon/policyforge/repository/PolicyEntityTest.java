@@ -89,7 +89,7 @@ class PolicyEntityTest {
     @DisplayName("AC-05.1: markPaid is the only change a policy term allows: it sets the paid flag")
     void markPaidSetsThePaidFlag() {
         PolicyTermEntity term = PolicyTermEntity.of("PF-TL-2026-000001", 2, LocalDate.parse("2027-11-01"),
-                LocalDate.parse("2028-10-31"), new BigDecimal("6850.00"), false);
+                LocalDate.parse("2028-10-31"), new BigDecimal("6850.00"), false, 1);
 
         assertThat(term.isPaid()).isFalse();
         term.markPaid();
@@ -108,7 +108,7 @@ class PolicyEntityTest {
 
         String printed = newPolicy() + " " + version + " " + transition + " " + PolicyTermEntity.of(
                 "PF-TL-2026-000001", 1, LocalDate.parse("2026-11-01"), LocalDate.parse("2027-10-31"),
-                new BigDecimal("6850.00"), true);
+                new BigDecimal("6850.00"), true, 1);
 
         assertThat(printed).contains("PF-TL-2026-000001");
         assertThat(printed).doesNotContain("1 Demo Street", "Pune", "411001", "27.3189", "bmi");

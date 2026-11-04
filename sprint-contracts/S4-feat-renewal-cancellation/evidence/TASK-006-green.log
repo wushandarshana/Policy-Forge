@@ -1,0 +1,37 @@
+TASK-006 green run: ./mvnw verify -Dskip.frontend=true (full, JaCoCo on)
+Result: BUILD SUCCESS, 479 unit tests and 550 integration tests, 0 failures, 0 errors, JaCoCo "All coverage checks have been met" (80% domain, 70% overall), 3m20s
+Covers AC-11.1 AC-11.2 AC-11.3 AC-11.4 AC-11.5 NFR-03.1 NFR-04.1
+
+Passing tests per sub-criterion in the TASK-006 classes (failures: 0)
+  AC-02.1: 1
+  AC-09.7: 4
+  AC-11.1: 14
+  AC-11.2: 4
+  AC-11.3: 4
+  AC-11.4: 4
+  AC-11.5: 1
+  NFR-03.1: 2
+  NFR-04.1: 2
+  other(NFR-05 seed: a seed file whose row is mi): 1
+  other(NFR-05 seed: running the loader again (a): 1
+  other(neverPublicOrProtected): 1
+  other(noCallerOutsideTheService): 1
+  other(thePathExistsOnTheIssuanceService): 1
+
+  ApplicationSeedIT AC-09.7 4
+  BackdatedIssuanceArchTest AC-11.1 2
+  BackdatedIssuanceArchTest other(neverPublicOrProtected) 1
+  BackdatedIssuanceArchTest other(noCallerOutsideTheService) 1
+  BackdatedIssuanceArchTest other(thePathExistsOnTheIssuanceService) 1
+  PortfolioDashboardIT AC-11.1 5
+  PortfolioDashboardIT AC-11.5 1
+  PortfolioDashboardIT NFR-04.1 2
+  PortfolioEmptyIT AC-11.1 1
+  PortfolioLogCaptureIT NFR-03.1 2
+  PortfolioPipelineIT AC-11.3 4
+  PortfolioPipelineIT AC-11.4 4
+  PortfolioPremiumIT AC-11.2 4
+  PortfolioSeedIT AC-11.1 6
+  RuleSetSeedLoaderIT AC-02.1 1
+  RuleSetSeedLoaderIT other(NFR-05 seed: a seed file whose row is mi) 1
+  RuleSetSeedLoaderIT other(NFR-05 seed: running the loader again (a) 1

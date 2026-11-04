@@ -94,7 +94,7 @@ class PolicyStateMachineTest {
 
     @Test
     @Tag("AC-10.3")
-    @DisplayName("AC-10.3: a LAPSED policy cannot be CANCELLED (domain rule; the API half is a Sprint 4 carry-over)")
+    @DisplayName("AC-10.3: a LAPSED policy cannot be CANCELLED (domain rule; the API half is CancellationStateIT)")
     void lapsedPolicyCannotBeCancelled() {
         assertThatThrownBy(() -> machine.transition(LAPSED, CANCELLED))
                 .isInstanceOf(InvalidPolicyStateException.class)

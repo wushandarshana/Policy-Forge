@@ -1,5 +1,6 @@
 package com.horizon.policyforge.service;
 
+import com.horizon.policyforge.domain.EchoedKeySanitiser;
 import com.horizon.policyforge.domain.application.ApplicationStatus;
 import com.horizon.policyforge.domain.application.InvalidApplicationStateException;
 import com.horizon.policyforge.domain.endorsement.Address;
@@ -56,11 +57,6 @@ public class PolicyIssuanceService {
     private static final String NO_NOMINEES_JSON = "[]";
     private static final int FIRST_VERSION = 1;
     private static final int FIRST_TERM = 1;
-    /**
-     * An unknown key is named in the 400, so it is cut to this many characters first: the same bound the endorsement
-     * parser uses, so a key of any length is never reflected in full.
-     */
-    private static final int MAX_ECHOED_KEY = 100;
 
     private final ApplicationRepository applications;
     private final QuoteRepository quotes;
@@ -102,8 +98,27 @@ public class PolicyIssuanceService {
     public PolicyHeader issue(IssuePolicyCommand command) {
         LocalDate today = LocalDate.now(clock);
         LocalDate effectiveDate = resolveEffectiveDate(command, today);
-        ApplicationEntity application = loadOwned(command);
+        ApplicationEntity application = loadOwned(command.applicationId(), command.customerId());
+        return issueFor(application, command.customerId(), effectiveDate, today);
+    }
 
+    /**
+     * Issues the customer's APPROVED application with an effective date that may lie in the past (AC-11.1): the way the
+     * synthetic sample portfolio gets policies that are already part-way through their term. The public {@link #issue}
+     * refuses such a date (AC-05.1) and keeps refusing it. This path has package visibility on purpose: only the
+     * service layer can call it, no web class can reach it, and an ArchUnit rule says so. The application checks, the
+     * writes and the audit entry are exactly the issue path's.
+     */
+    @Transactional
+    PolicyHeader issueBackdated(String customerId, String applicationId, LocalDate effectiveDate) {
+        LocalDate today = LocalDate.now(clock);
+        ApplicationEntity application = loadOwned(applicationId, customerId);
+        return issueFor(application, customerId, effectiveDate, today);
+    }
+
+    /** The one issuing sequence, after the effective date is settled and the application is loaded and owned. */
+    private PolicyHeader issueFor(ApplicationEntity application, String customerId, LocalDate effectiveDate,
+            LocalDate today) {
         try {
             application.applyTransition(ApplicationStatus.ISSUED);
         } catch (InvalidApplicationStateException notApproved) {
@@ -122,7 +137,6 @@ public class PolicyIssuanceService {
         LocalDate expiryDate = IssuanceDates.expiryDate(effectiveDate, rules.lifecycle().termMonths());
         String policyNumber = numbers.next(quote.getProductCode(), today.getYear());
         Instant now = Instant.now(clock);
-        String customerId = command.customerId();
 
         PolicyEntity policy = PolicyEntity.issue(policyNumber, application.getApplicationId(),
                 quote.getProductCode(), customerId, now);
@@ -136,7 +150,7 @@ public class PolicyIssuanceService {
                 quote.getSumInsured(), quote.getAnnualPremium(), quote.getRiskInputsJson(), addressOf(application),
                 NO_NOMINEES_JSON, quote.getRuleVersion(), effectiveDate, expiryDate, now));
         PolicyTermEntity term = terms.save(PolicyTermEntity.of(policyNumber, FIRST_TERM, effectiveDate, expiryDate,
-                quote.getAnnualPremium(), true));
+                quote.getAnnualPremium(), true, quote.getRuleVersion()));
         transitions.save(PolicyStatusTransitionEntity.of(policyNumber, null, PolicyStatus.ACTIVE, ISSUANCE_REASON,
                 customerId, now));
         audit.recordStatusChange(customerId, ISSUED_ACTION, ApplicationService.ENTITY_TYPE,
@@ -154,7 +168,9 @@ public class PolicyIssuanceService {
      */
     private static LocalDate resolveEffectiveDate(IssuePolicyCommand command, LocalDate today) {
         List<FieldViolation> problems = new ArrayList<>();
-        command.unknownKeys().stream().map(PolicyIssuanceService::boundedKey).distinct()
+        // An unknown key is named in the 400, so it goes through the shared sanitiser first (P-14): bounded, with only
+        // A-Z a-z 0-9 _ . - kept. Keys that sanitise alike are named once.
+        command.unknownKeys().stream().map(EchoedKeySanitiser::sanitise).distinct()
                 .forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
         LocalDate requested = null;
         if (command.effectiveDate() != null) {
@@ -176,19 +192,14 @@ public class PolicyIssuanceService {
         }
     }
 
-    private static String boundedKey(String key) {
-        return key.length() > MAX_ECHOED_KEY ? key.substring(0, MAX_ECHOED_KEY) : key;
-    }
-
     /** P-5 step 2: an unknown, malformed or another customer's application all look the same: 404. */
-    private ApplicationEntity loadOwned(IssuePolicyCommand command) {
-        String applicationId = command.applicationId();
+    private ApplicationEntity loadOwned(String applicationId, String customerId) {
         if (applicationId == null || !UnderwritingService.APPLICATION_ID.matcher(applicationId).matches()) {
             throw new ResourceNotFoundException("Application not found");
         }
         ApplicationEntity application = applications.findByApplicationId(applicationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
-        if (!application.getCustomerId().equals(command.customerId())) {
+        if (!application.getCustomerId().equals(customerId)) {
             throw new ResourceNotFoundException("Application not found");
         }
         return application;

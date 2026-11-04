@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
 import { ApiError, getPolicy } from '../api';
-import type { Endorsement, Nominee, PolicyAddress, PolicyDetail, PolicyStatus, PolicyTransition, PolicyVersion } from '../api';
+import type {
+  Endorsement,
+  Nominee,
+  PolicyAddress,
+  PolicyDetail,
+  PolicyStatus,
+  PolicyTransition,
+  PolicyVersion,
+  Refund,
+} from '../api';
 import { useSession } from '../auth/SessionContext';
+import { CancelPanel } from '../components/CancelPanel';
+import { RenewPanel } from '../components/RenewPanel';
 import { StatusBadge } from '../components/StatusBadge';
-import { genericMessage, POLICY_NOT_FOUND_MESSAGE } from '../messages';
+import { CANCELLED_NOTICE, genericMessage, POLICY_NOT_FOUND_MESSAGE, RENEWAL_PAID_NOTICE } from '../messages';
 
 type Load =
   | { state: 'loading' }
@@ -19,7 +30,7 @@ const TABS: readonly { name: TabName; label: string }[] = [
   { name: 'refunds', label: 'Refunds' },
 ];
 
-/** P-13: only these statuses can be endorsed. The server still decides (409). */
+/** P-13: only these statuses can be endorsed, renewed or cancelled. The server still decides (409). */
 const IN_FORCE: readonly PolicyStatus[] = ['ACTIVE', 'ENDORSED', 'RENEWED'];
 
 const NO_VALUE = '—';
@@ -37,10 +48,13 @@ export function PolicyDetailPage({ policyNumber }: { policyNumber: string }) {
   const { credentials } = useSession();
   const [load, setLoad] = useState<Load>({ state: 'loading' });
   const [tab, setTab] = useState<TabName>('versions');
+  const [notice, setNotice] = useState<string | null>(null);
+  /** Bumped after a successful pay or cancel: the detail is fetched again and swapped in without a loading flash. */
+  const [reloads, setReloads] = useState(0);
 
   useEffect(() => {
     let active = true;
-    setLoad({ state: 'loading' });
+    setLoad((current) => (reloads > 0 && current.state === 'loaded' ? current : { state: 'loading' }));
     getPolicy(credentials, policyNumber)
       .then((detail) => {
         if (active) setLoad({ state: 'loaded', detail });
@@ -56,7 +70,12 @@ export function PolicyDetailPage({ policyNumber }: { policyNumber: string }) {
     return () => {
       active = false;
     };
-  }, [policyNumber, credentials]);
+  }, [policyNumber, credentials, reloads]);
+
+  function onChanged(message: string) {
+    setNotice(message);
+    setReloads((count) => count + 1);
+  }
 
   return (
     <main className="page">
@@ -77,13 +96,30 @@ export function PolicyDetailPage({ policyNumber }: { policyNumber: string }) {
         </p>
       ) : null}
 
-      {load.state === 'loaded' ? <Loaded detail={load.detail} tab={tab} onTab={setTab} /> : null}
+      {load.state === 'loaded' && notice ? (
+        <p className="banner banner-ok" role="status" data-testid="policy-notice">
+          {notice}
+        </p>
+      ) : null}
+
+      {load.state === 'loaded' ? <Loaded detail={load.detail} tab={tab} onTab={setTab} onChanged={onChanged} /> : null}
     </main>
   );
 }
 
-function Loaded({ detail, tab, onTab }: { detail: PolicyDetail; tab: TabName; onTab: (tab: TabName) => void }) {
+function Loaded({
+  detail,
+  tab,
+  onTab,
+  onChanged,
+}: {
+  detail: PolicyDetail;
+  tab: TabName;
+  onTab: (tab: TabName) => void;
+  onChanged: (message: string) => void;
+}) {
   const { policy } = detail;
+  const inForce = IN_FORCE.includes(policy.status);
   return (
     <>
       <section className="panel" aria-labelledby="policy-heading" data-testid="policy-header">
@@ -119,7 +155,7 @@ function Loaded({ detail, tab, onTab }: { detail: PolicyDetail; tab: TabName; on
             <dd data-testid="policy-next-due">{policy.nextPremiumDueDate}</dd>
           </div>
         </dl>
-        {IN_FORCE.includes(policy.status) ? (
+        {inForce ? (
           <a
             className="button"
             data-testid="policy-endorse-link"
@@ -152,8 +188,20 @@ function Loaded({ detail, tab, onTab }: { detail: PolicyDetail; tab: TabName; on
         {tab === 'versions' ? <Versions versions={detail.versions} /> : null}
         {tab === 'endorsements' ? <Endorsements endorsements={detail.endorsements} /> : null}
         {tab === 'status' ? <Transitions transitions={detail.transitions} /> : null}
-        {tab === 'refunds' ? <Refunds count={detail.refunds.length} /> : null}
+        {tab === 'refunds' ? <Refunds refunds={detail.refunds} /> : null}
       </section>
+
+      {/* The actions follow the history, so an offer or the Cancel panel never moves the history tabs (the Sprint 3
+          visual baselines are element screenshots of the tab panel, sensitive to sub-pixel position). */}
+      {inForce && detail.pendingRenewal ? (
+        <RenewPanel
+          policyNumber={policy.policyNumber}
+          pending={detail.pendingRenewal}
+          onPaid={() => onChanged(RENEWAL_PAID_NOTICE)}
+        />
+      ) : null}
+
+      {inForce ? <CancelPanel policyNumber={policy.policyNumber} onCancelled={() => onChanged(CANCELLED_NOTICE)} /> : null}
     </>
   );
 }
@@ -280,8 +328,8 @@ function Transitions({ transitions }: { transitions: PolicyTransition[] }) {
   );
 }
 
-function Refunds({ count }: { count: number }) {
-  if (count === 0) {
+function Refunds({ refunds }: { refunds: Refund[] }) {
+  if (refunds.length === 0) {
     return (
       <p className="muted" data-testid="refunds-empty">
         No refunds.
@@ -289,8 +337,47 @@ function Refunds({ count }: { count: number }) {
     );
   }
   return (
-    <p className="muted" data-testid="refunds-count">
-      {count} refund record(s).
-    </p>
+    <ul className="rows" data-testid="refunds-list">
+      {refunds.map((refund) => {
+        const id = `refund-${refund.termNo}`;
+        return (
+          <li key={refund.termNo} className="row" data-testid={`refund-row-${refund.termNo}`}>
+            <h3>Term {refund.termNo} refund</h3>
+            <dl className="summary">
+              <div>
+                <dt>Cancellation date</dt>
+                <dd data-testid={`${id}-date`}>{refund.cancellationDate}</dd>
+              </div>
+              <div>
+                <dt>Refund amount</dt>
+                <dd data-testid={`${id}-amount`}>{refund.amount}</dd>
+              </div>
+              <div>
+                <dt>Premium basis</dt>
+                <dd data-testid={`${id}-premium`}>{refund.premium}</dd>
+              </div>
+              <div>
+                <dt>Fee</dt>
+                <dd data-testid={`${id}-fee`}>{refund.fee}</dd>
+              </div>
+              <div>
+                <dt>Unexpired / term days</dt>
+                <dd data-testid={`${id}-days`}>{`${refund.unexpiredDays} / ${refund.termDays}`}</dd>
+              </div>
+              <div>
+                <dt>Cooling-off</dt>
+                <dd data-testid={`${id}-cooling-off`}>{String(refund.coolingOff)}</dd>
+              </div>
+              <div>
+                <dt>Formula</dt>
+                <dd className="mono" data-testid={`${id}-formula`}>
+                  {refund.formula}
+                </dd>
+              </div>
+            </dl>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

@@ -211,23 +211,54 @@ public class PolicyController {
         }
     }
 
-    /** Contract C3, a term. */
-    public record TermResponse(int termNo, LocalDate startDate, LocalDate endDate, String premium, boolean paid) {
+    /** Contract C3 and C5, a term: with the rule version its premium was rated with. */
+    public record TermResponse(int termNo, LocalDate startDate, LocalDate endDate, String premium, boolean paid,
+            int ruleVersion) {
 
         static TermResponse from(PolicyDetail.TermView term) {
             return new TermResponse(term.termNo(), term.startDate(), term.endDate(), term.premium().toPlainString(),
-                    term.paid());
+                    term.paid(), term.ruleVersion());
         }
     }
 
-    /** Contract C3. Refunds are always empty until cancellation arrives (P-9). */
+    /** Contract C5, the unpaid renewal offer of an in-force policy, with the last day it can be paid. */
+    public record PendingRenewalResponse(int termNo, LocalDate startDate, LocalDate endDate, String premium,
+            int ruleVersion, LocalDate payableUntil) {
+
+        static PendingRenewalResponse from(PolicyDetail.PendingRenewalView offer) {
+            return offer == null ? null : new PendingRenewalResponse(offer.termNo(), offer.startDate(),
+                    offer.endDate(), offer.premium().toPlainString(), offer.ruleVersion(), offer.payableUntil());
+        }
+    }
+
+    /**
+     * Contract C5, a refund record: the term it was calculated on, the premium basis, the day counts, the fee, the amount
+     * and the formula string, with who cancelled and when. Money is a decimal string (NFR-01); numbers, dates and codes
+     * only (P-9).
+     */
+    public record RefundResponse(int termNo, LocalDate cancellationDate, String premium, int termDays,
+            int unexpiredDays, boolean coolingOff, String fee, String amount, String formula, String actorId,
+            Instant createdAt) {
+
+        static RefundResponse from(PolicyDetail.RefundView refund) {
+            return new RefundResponse(refund.termNo(), refund.cancellationDate(), refund.premium().toPlainString(),
+                    refund.termDays(), refund.unexpiredDays(), refund.coolingOff(), refund.fee().toPlainString(),
+                    refund.amount().toPlainString(), refund.formula(), refund.actorId(), refund.createdAt());
+        }
+    }
+
+    /**
+     * Contract C3 and C5. {@code pendingRenewal} is null when there is no offer to pay. {@code refunds} lists the refund
+     * records in append order: empty until the policy is cancelled, then one.
+     */
     public record PolicyDetailResponse(
             PolicyHeaderResponse policy,
             List<VersionResponse> versions,
             List<EndorsementResponse> endorsements,
             List<TransitionResponse> transitions,
             List<TermResponse> terms,
-            List<Object> refunds) {
+            PendingRenewalResponse pendingRenewal,
+            List<RefundResponse> refunds) {
 
         static PolicyDetailResponse from(PolicyDetail detail) {
             return new PolicyDetailResponse(
@@ -236,7 +267,8 @@ public class PolicyController {
                     detail.endorsements().stream().map(EndorsementResponse::from).toList(),
                     detail.transitions().stream().map(TransitionResponse::from).toList(),
                     detail.terms().stream().map(TermResponse::from).toList(),
-                    List.of());
+                    PendingRenewalResponse.from(detail.pendingRenewal()),
+                    detail.refunds().stream().map(RefundResponse::from).toList());
         }
 
         /** The policy number only: the versions carry the insured address (NFR-03). */

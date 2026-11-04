@@ -37,6 +37,8 @@ Definitions:
 - **AC-11.4** Given a policy past termEnd with an unpaid renewal and still within grace, then it appears in
   `lapseForecast`.
 - **AC-11.5** Given a CUSTOMER or UNDERWRITER, when the dashboard is requested, then 403.
+- **AC-11.6** Given an ADMIN, when `asOf` is outside 2000-01-01..2100-12-31 (for example `+999999999-12-31`) or is not a
+  date, then the response is 400 naming `asOf` with a fixed detail, never 500 (security review MINOR-1).
 
 ## UI
 The **Admin Dashboard** has KPI tiles (active policies, premium collected), a per-product breakdown table, a

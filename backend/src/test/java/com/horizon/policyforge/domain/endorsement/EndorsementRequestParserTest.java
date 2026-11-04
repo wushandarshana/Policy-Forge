@@ -102,6 +102,30 @@ class EndorsementRequestParserTest {
         assertThat(household.newSumInsured()).isNull();
     }
 
+    // ---- unknown keys are named in the shared sanitised form (P-14) ----
+
+    @Test
+    @DisplayName("AC-06.1: an unknown key is named with its fixed prefix and the key sanitised: 64 characters at most, anything outside A-Z a-z 0-9 _ . - replaced by an underscore, and keys that sanitise alike named once")
+    void unknownKeysAreNamedSanitised() {
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        Map<String, Object> address = goodAddress();
+        address.put(longKey, "x");
+        address.put("<a b=\"c\" d='e'>", "x");
+        Map<String, Object> nominee = goodNominee();
+        nominee.put("n o", "x");
+        nominee.put("n<o", "x");
+
+        Parsed onAddress = parser.parse(map("type", "CHANGE_ADDRESS", "address", address, longKey, "x",
+                "a b", "x", "a<b", "x"));
+        Parsed onNominee = parser.parse(map("type", "ADD_NOMINEE", "nominee", nominee));
+
+        assertThat(fields(onAddress)).containsExactlyInAnyOrder(longKey.substring(0, 64), "a_b",
+                "address." + longKey.substring(0, 64), "address._a_b__c__d__e__");
+        assertThat(fields(onNominee)).containsExactly("nominee.n_o");
+        onAddress.violations().forEach(violation -> assertThat(violation.message())
+                .isEqualTo("is not an accepted field"));
+    }
+
     // ---- shape errors, one row each ----
 
     static Stream<Arguments> addressShapeErrors() {

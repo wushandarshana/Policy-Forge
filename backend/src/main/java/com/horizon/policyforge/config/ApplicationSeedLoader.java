@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,10 +32,13 @@ import org.springframework.stereotype.Component;
  * seed's synthetic Aadhaar means it already ran, so a restart adds nothing.
  */
 @Component
+@Order(ApplicationSeedLoader.ORDER)
 public class ApplicationSeedLoader implements ApplicationRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationSeedLoader.class);
 
+    /** Runs before the portfolio seed ({@link PortfolioSeedLoader}). */
+    static final int ORDER = 10;
     static final String CUSTOMER = "customer2";
     /** Synthetic and distinctive, so it doubles as the marker that the seed already ran. */
     static final String SEED_AADHAAR = "XXXX-XXXX-0002";

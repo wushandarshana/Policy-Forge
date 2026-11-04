@@ -1,0 +1,143 @@
+# TASK-005 green run: ./mvnw verify -Dskip.frontend=true (full suite, JaCoCo on), real time 3m17s
+# surefire 474 tests, failsafe 521 tests: 0 failures, 0 errors, 0 skipped. ArchUnit green (AppendOnly incl. the three new refund checks, DomainPurity, Layered, MoneyPrecision, ControllerPlacement). JaCoCo: All coverage checks have been met (80% domain, 70% overall). BUILD SUCCESS
+# IDs covered: AC-08.1 (worked example 4473.29, defaults, reasons, per-product fee, premium basis 8180.85, date window, shape, P-5 order, early renewal 6312.57), AC-08.2 (cooling-off 6850.00 and boundaries, MOTOR day 7 14609.45), AC-08.3 (floor 0.00),
+#   AC-08.4 (one record, second cancel 409, concurrent cancels, atomicity, ArchUnit, V11), AC-10.2 (endorse after a real cancel), AC-10.3 (LAPSED by the real cycle), AC-10.4 (sequences with a real cancel), NFR-03.1, NFR-04.1, NFR-04.3, NFR-04.4, NFR-05 (V1 to V10 checksums)
+# Migrations: V1 to V9 byte-identical to 12f95c3 (git hash-object), V10 identical to its TASK-004 commit 249e684, V11__refund_record.sql is the only new migration; no rule file touched
+
+== oracle cross-check (premium_check.py refund, independent exact-decimal oracle; premium termStart termEnd cancelDate fee) ==
+-- AC-08.1 TERM_LIFE 265/365 (expect 4473.29):
+4473.29
+-- AC-08.1 basis 8180.85, 153/365 (expect 2929.23):
+2929.23
+-- AC-08.1 MOTOR own fee 250.00 (expect 10749.32):
+10749.32
+-- AC-08.1 HOUSEHOLD own fee 200.00 (expect 8040.41):
+8040.41
+-- AC-08.1 renewal term, 366 days, 364 unexpired (expect 6312.57):
+6312.57
+-- AC-08.2 MOTOR day 7, cooling-off 7 does not apply (expect 14609.45):
+14609.45
+-- AC-08.2 TERM_LIFE day 15, just outside cooling-off 15 (expect 6068.49):
+6068.49
+-- AC-08.3 last day, fee above the pro-rata amount (expect 0.00):
+0.00
+-- AC-10.4 MOTOR cancelled on 2027-10-20, 12/365 (expect 248.08):
+248.08
+-- AC-08.2 inside cooling-off: the refund is the full premium, no fee (expect 6850.00): see spec-examples below
+-- spec-examples:
+case                      expected      oracle  status
+AC-01.1                    6850.00     6850.00  PASS
+AC-01.2                   15150.00    15150.00  PASS
+AC-01.3                   11350.00    11350.00  PASS
+AC-01.6                   18150.00    18150.00  PASS
+AC-06.2 new premium        9490.00     9490.00  PASS
+AC-06.2 adjustment         1330.85     1330.85  PASS
+AC-08.1                    4473.29     4473.29  PASS
+AC-08.2                    6850.00     6850.00  PASS
+AC-08.3                       0.00        0.00  PASS
+
+== ac_audit.py --offline --no-write ==
+**Covered 81 / 81 ACs (100%)** - parent-only 0 - not covered (incl. parent-only) 0
+
+== green summary (whole suite): 995 tests in the reports, 0 assertion failures, 0 errors, 995 passing ==
+AC-01.1: 3 passing, 0 failing
+AC-01.2: 2 passing, 0 failing
+AC-01.3: 2 passing, 0 failing
+AC-01.4: 1 passing, 0 failing
+AC-01.5: 2 passing, 0 failing
+AC-01.6: 2 passing, 0 failing
+AC-01.7: 16 passing, 0 failing
+AC-01.8: 3 passing, 0 failing
+AC-01.9: 11 passing, 0 failing
+AC-01.10: 8 passing, 0 failing
+AC-01.12: 4 passing, 0 failing
+AC-02: 2 passing, 0 failing
+AC-02.1: 3 passing, 0 failing
+AC-02.2: 3 passing, 0 failing
+AC-02.3: 2 passing, 0 failing
+AC-02.4: 5 passing, 0 failing
+AC-02.5: 16 passing, 0 failing
+AC-02.6: 7 passing, 0 failing
+AC-02.7: 1 passing, 0 failing
+AC-03.1: 22 passing, 0 failing
+AC-03.2: 41 passing, 0 failing
+AC-03.3: 3 passing, 0 failing
+AC-03.4: 9 passing, 0 failing
+AC-03.5: 5 passing, 0 failing
+AC-03.6: 2 passing, 0 failing
+AC-03.7: 1 passing, 0 failing
+AC-03.8: 1 passing, 0 failing
+AC-03.9: 5 passing, 0 failing
+AC-04.1: 3 passing, 0 failing
+AC-04.2: 2 passing, 0 failing
+AC-04.3: 2 passing, 0 failing
+AC-04.4: 5 passing, 0 failing
+AC-04.5: 2 passing, 0 failing
+AC-04.6: 15 passing, 0 failing
+AC-05.1: 28 passing, 0 failing
+AC-05.2: 11 passing, 0 failing
+AC-05.3: 4 passing, 0 failing
+AC-05.4: 3 passing, 0 failing
+AC-06.1: 39 passing, 0 failing
+AC-06.2: 37 passing, 0 failing
+AC-06.3: 1 passing, 0 failing
+AC-06.4: 2 passing, 0 failing
+AC-06.5: 23 passing, 0 failing
+AC-06.6: 9 passing, 0 failing
+AC-06.7: 5 passing, 0 failing
+AC-07.1: 19 passing, 0 failing
+AC-07.2: 3 passing, 0 failing
+AC-07.3: 4 passing, 0 failing
+AC-07.4: 8 passing, 0 failing
+AC-07.5: 14 passing, 0 failing
+AC-07.6: 3 passing, 0 failing
+AC-08.1: 42 passing, 0 failing
+AC-08.2: 13 passing, 0 failing
+AC-08.3: 2 passing, 0 failing
+AC-08.4: 13 passing, 0 failing
+AC-08.5: 1 passing, 0 failing
+AC-09.1: 19 passing, 0 failing
+AC-09.2: 7 passing, 0 failing
+AC-09.3: 6 passing, 0 failing
+AC-09.4: 26 passing, 0 failing
+AC-09.5: 14 passing, 0 failing
+AC-09.6: 26 passing, 0 failing
+AC-09.7: 9 passing, 0 failing
+AC-10.1: 32 passing, 0 failing
+AC-10.2: 12 passing, 0 failing
+AC-10.3: 5 passing, 0 failing
+AC-10.4: 16 passing, 0 failing
+AC-11.2: 3 passing, 0 failing
+AC-11.3: 4 passing, 0 failing
+AC-11.4: 2 passing, 0 failing
+NFR-01: 4 passing, 0 failing
+NFR-02: 20 passing, 0 failing
+NFR-03: 1 passing, 0 failing
+NFR-03.1: 13 passing, 0 failing
+NFR-04: 20 passing, 0 failing
+NFR-04.1: 149 passing, 0 failing
+NFR-04.2: 8 passing, 0 failing
+NFR-04.3: 8 passing, 0 failing
+NFR-04.4: 7 passing, 0 failing
+NFR-05: 5 passing, 0 failing
+NFR-06: 1 passing, 0 failing
+NFR-06.1: 1 passing, 0 failing
+NFR-06.2: 1 passing, 0 failing
+NFR-07.1: 1 passing, 0 failing
+NFR-08: 11 passing, 0 failing
+other: 69 passing, 0 failing
+
+== this task's own tests ==
+== task-005 summary: 74 tests in the reports, 0 assertion failures, 0 errors, 74 passing ==
+AC-08.1: 33 passing, 0 failing
+AC-08.2: 9 passing, 0 failing
+AC-08.3: 1 passing, 0 failing
+AC-08.4: 13 passing, 0 failing
+AC-10.2: 1 passing, 0 failing
+AC-10.3: 3 passing, 0 failing
+AC-10.4: 3 passing, 0 failing
+NFR-03.1: 2 passing, 0 failing
+NFR-04.1: 4 passing, 0 failing
+NFR-04.3: 1 passing, 0 failing
+NFR-04.4: 3 passing, 0 failing
+NFR-05: 1 passing, 0 failing

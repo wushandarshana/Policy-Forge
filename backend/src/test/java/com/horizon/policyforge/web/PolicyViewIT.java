@@ -161,12 +161,16 @@ class PolicyViewIT {
         assertThat(transitions.get(0).get("actorId").asText()).isEqualTo("customer1");
         JsonNode terms = detail.get("terms");
         assertThat(terms).hasSize(1);
-        assertThat(fieldNames(terms.get(0))).containsExactly("termNo", "startDate", "endDate", "premium", "paid");
+        assertThat(fieldNames(terms.get(0))).containsExactly("termNo", "startDate", "endDate", "premium", "paid",
+                "ruleVersion");
         assertThat(terms.get(0).get("termNo").asInt()).isEqualTo(1);
         assertThat(terms.get(0).get("startDate").asText()).isEqualTo("2026-11-01");
         assertThat(terms.get(0).get("endDate").asText()).isEqualTo("2027-10-31");
         assertThat(terms.get(0).get("premium").asText()).isEqualTo("6850.00");
         assertThat(terms.get(0).get("paid").asBoolean()).isTrue();
+        assertThat(terms.get(0).get("ruleVersion").asInt()).as("the term records the quote's rule version")
+                .isEqualTo(issued.get("ruleVersion").asInt());
+        assertThat(detail.path("pendingRenewal").isNull()).as("no offer yet").isTrue();
         assertThat(detail.get("refunds").isArray()).isTrue();
         assertThat(detail.get("refunds")).isEmpty();
     }

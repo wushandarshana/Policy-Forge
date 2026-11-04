@@ -33,12 +33,10 @@ import com.horizon.policyforge.repository.PolicyVersionEntity;
 import com.horizon.policyforge.repository.PolicyVersionRepository;
 import com.horizon.policyforge.service.ValidationFailedException.FieldViolation;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +60,9 @@ import org.springframework.transaction.annotation.Transactional;
  * through the aggregate's state machine and the {@code -> ENDORSED} transition row. If any step fails nothing is kept
  * (AC-06.3). Two concurrent endorsements of one policy compute the same sequence and version number, so the unique
  * keys and the policy's optimistic lock let one win and make the other fail, and that one answers 409
- * {@code POLICY_UPDATE_CONFLICT} with nothing written (AC-06.6).
+ * {@code POLICY_UPDATE_CONFLICT} with nothing written (AC-06.6). A CHANGE_SUM_INSURED applied while an unpaid renewal
+ * offer exists also re-prices that offer in the same transaction, with the rule version the offer records (AC-07.7);
+ * an endorsement that does not re-rate leaves the offer alone.
  *
  * <p>The request carries an address or a nominee: this class logs the policy number, the sequence number, the type and
  * the version numbers only (NFR-03).
@@ -76,9 +76,6 @@ public class EndorsementService {
     };
     private static final TypeReference<List<Nominee>> NOMINEES = new TypeReference<>() {
     };
-    /** The SQL state of a unique-key violation, in H2 and in PostgreSQL. */
-    private static final String UNIQUE_VIOLATION = "23505";
-
     private final PolicyRepository policies;
     private final PolicyVersionRepository versions;
     private final PolicyTermRepository terms;
@@ -90,6 +87,7 @@ public class EndorsementService {
     private final EndorsementPremiumAdjuster adjuster;
     private final PremiumCalculator calculator;
     private final EndorsementViews views;
+    private final PolicyTerms policyTerms;
     private final ObjectMapper mapper;
     private final Clock clock;
 
@@ -97,7 +95,7 @@ public class EndorsementService {
             PolicyTermRepository terms, PolicyStatusTransitionRepository transitions,
             EndorsementRepository endorsements, RuleSetService ruleSets, EndorsementRequestParser parser,
             EndorsementValidator validator, EndorsementPremiumAdjuster adjuster, PremiumCalculator calculator,
-            EndorsementViews views, ObjectMapper mapper, Clock clock) {
+            EndorsementViews views, PolicyTerms policyTerms, ObjectMapper mapper, Clock clock) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
@@ -109,6 +107,7 @@ public class EndorsementService {
         this.adjuster = adjuster;
         this.calculator = calculator;
         this.views = views;
+        this.policyTerms = policyTerms;
         this.mapper = mapper;
         this.clock = clock;
     }
@@ -146,6 +145,11 @@ public class EndorsementService {
                     change.address() != null ? change.address() : current.getAddress(),
                     write(prepared.nominees()), current.getRuleVersion(), change.effectiveDate(),
                     current.getExpiryDate(), now));
+            if (prepared.pendingOffer() != null) {
+                // AC-07.7: the pending renewal offer follows the endorsed risk, in this same transaction.
+                prepared.pendingOffer().repriceOffer(prepared.repricedOfferPremium());
+                terms.save(prepared.pendingOffer());
+            }
             policy.applyTransition(PolicyStatus.ENDORSED, afterVersionNo);
             policies.saveAndFlush(policy);
             transitions.save(PolicyStatusTransitionEntity.of(policyNumber, from, PolicyStatus.ENDORSED,
@@ -153,7 +157,7 @@ public class EndorsementService {
         } catch (ConcurrencyFailureException lostRace) {
             throw new ConflictException(ConflictException.POLICY_UPDATE_CONFLICT);
         } catch (DataIntegrityViolationException failure) {
-            if (isUniqueViolation(failure)) {
+            if (WriteConflicts.isUniqueViolation(failure)) {
                 throw new ConflictException(ConflictException.POLICY_UPDATE_CONFLICT);
             }
             throw failure;
@@ -161,6 +165,10 @@ public class EndorsementService {
 
         LOG.info("Policy endorsed policyNumber={} sequenceNo={} type={} afterVersionNo={}", policyNumber, sequenceNo,
                 change.type(), afterVersionNo);
+        if (prepared.pendingOffer() != null) {
+            LOG.info("Pending renewal offer re-priced policyNumber={} termNo={} ruleVersion={}", policyNumber,
+                    prepared.pendingOffer().getTermNo(), prepared.pendingOffer().getRuleVersion());
+        }
         // The sequence numbers run 1..n without gaps, so the new endorsement's sequence is the endorsement count.
         PolicyHeader header = PolicyHeader.of(policy, version, prepared.term(), sequenceNo);
         return new EndorsementResult(views.view(endorsement), header);
@@ -185,7 +193,8 @@ public class EndorsementService {
     /** Everything a validated request resolves to: the loaded policy, the domain's decision and the re-rated money. */
     private record Prepared(PolicyEntity policy, PolicyVersionEntity current, PolicyTermEntity term,
             int lastSequenceNo, EndorsementCommand change, List<Nominee> nominees, BigDecimal newSumInsured,
-            BigDecimal newAnnualPremium, String newRiskInputsJson, PremiumAdjustment adjustment) {
+            BigDecimal newAnnualPremium, String newRiskInputsJson, PremiumAdjustment adjustment,
+            PolicyTermEntity pendingOffer, BigDecimal repricedOfferPremium) {
     }
 
     private Prepared prepare(EndorseCommand command) {
@@ -208,10 +217,9 @@ public class EndorsementService {
                 .findByPolicyNumberAndVersionNo(policy.getPolicyNumber(), policy.getCurrentVersionNo())
                 .orElseThrow(() -> new IllegalStateException("Policy has no current version: policyNumber="
                         + policy.getPolicyNumber()));
-        PolicyTermEntity term = terms.findByPolicyNumberOrderByTermNoAsc(policy.getPolicyNumber()).stream()
-                .max(Comparator.comparingInt(PolicyTermEntity::getTermNo))
-                .orElseThrow(() -> new IllegalStateException("Policy has no term: policyNumber="
-                        + policy.getPolicyNumber()));
+        // The current paid term (G-5): an unpaid renewal offer does not move the endorsement window or basis.
+        List<PolicyTermEntity> policyTermRows = terms.findByPolicyNumberOrderByTermNoAsc(policy.getPolicyNumber());
+        PolicyTermEntity term = policyTerms.requireCurrentPaid(policyTermRows, policy.getPolicyNumber());
         EndorsementEntity last = endorsements.findFirstByPolicyNumberOrderBySequenceNoDesc(policy.getPolicyNumber())
                 .orElse(null);
         RuleSetVersion rules = ruleSets.version(productCode, current.getRuleVersion());
@@ -232,6 +240,8 @@ public class EndorsementService {
         BigDecimal newSumInsured = current.getSumInsured();
         BigDecimal newAnnualPremium = current.getAnnualPremium();
         String newRiskInputsJson = current.getRiskInputsJson();
+        PolicyTermEntity pendingOffer = null;
+        BigDecimal repricedOfferPremium = null;
         if (change.type().reRates()) {
             // The policy's own rule version, through the same calculator as a quote: no rating logic is repeated here.
             Map<String, Object> modified = adjuster.modifiedRiskInputs(productCode, currentInputs,
@@ -246,6 +256,20 @@ public class EndorsementService {
             newSumInsured = priced.sumInsured();
             newAnnualPremium = priced.annualPremium();
             newRiskInputsJson = write(modified);
+
+            // AC-07.7: an unpaid renewal offer is re-quoted from the endorsed inputs with the rule version the offer
+            // records (its dates and version stay). The preview runs the same quote, so it refuses what endorse would.
+            pendingOffer = policyTerms.pending(policyTermRows).orElse(null);
+            if (pendingOffer != null) {
+                RuleSetVersion offerRules = pendingOffer.getRuleVersion() == rules.version() ? rules
+                        : ruleSets.version(productCode, pendingOffer.getRuleVersion());
+                try {
+                    repricedOfferPremium = calculator.calculate(offerRules, modified).annualPremium();
+                } catch (InvalidRiskInputException invalid) {
+                    throw new ValidationFailedException(invalid.violations().stream()
+                            .map(violation -> new FieldViolation(violation.field(), violation.message())).toList());
+                }
+            }
         }
         PremiumAdjustment adjustment = adjuster.adjust(current.getAnnualPremium(), newAnnualPremium,
                 term.getStartDate(), term.getEndDate(), change.effectiveDate());
@@ -256,7 +280,7 @@ public class EndorsementService {
             newNominees.add(change.nominee());
         }
         return new Prepared(policy, current, term, last == null ? 0 : last.getSequenceNo(), change, newNominees,
-                newSumInsured, newAnnualPremium, newRiskInputsJson, adjustment);
+                newSumInsured, newAnnualPremium, newRiskInputsJson, adjustment, pendingOffer, repricedOfferPremium);
     }
 
     /** P-5 step 2: an unknown, malformed or another customer's policy all look the same: 404. */
@@ -295,19 +319,6 @@ public class EndorsementService {
             components.put(key, Money.finalAmount(new BigDecimal(String.valueOf(value))));
         }
         return components;
-    }
-
-    /** Whether the failure is a unique-key violation, as opposed to any other broken constraint. */
-    private static boolean isUniqueViolation(DataIntegrityViolationException failure) {
-        for (Throwable cause = failure; cause != null; cause = cause.getCause()) {
-            if (cause instanceof SQLException sql && UNIQUE_VIOLATION.equals(sql.getSQLState())) {
-                return true;
-            }
-            if (cause.getCause() == cause) {
-                break;
-            }
-        }
-        return false;
     }
 
     private String write(Object value) {

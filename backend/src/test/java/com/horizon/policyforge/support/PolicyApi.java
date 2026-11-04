@@ -25,9 +25,17 @@ public final class PolicyApi {
     public static final List<String> SUMMARY_FIELDS = List.of("policyNumber", "productCode", "status", "sumInsured",
             "annualPremium", "nextPremiumDueDate", "endorsementCount");
 
-    /** The exact key set of the C3 body. */
+    /** The exact key set of the C3 body, including the C5 additions (sprint 4): {@code pendingRenewal}. */
     public static final List<String> DETAIL_FIELDS = List.of("policy", "versions", "endorsements", "transitions",
-            "terms", "refunds");
+            "terms", "pendingRenewal", "refunds");
+
+    /** The exact key set of one C5 term. */
+    public static final List<String> TERM_FIELDS = List.of("termNo", "startDate", "endDate", "premium", "paid",
+            "ruleVersion");
+
+    /** The exact key set of the C5 {@code pendingRenewal} object, when there is one. */
+    public static final List<String> PENDING_RENEWAL_FIELDS = List.of("termNo", "startDate", "endDate", "premium",
+            "ruleVersion", "payableUntil");
 
     private final MockMvc mvc;
     private final ObjectMapper json;
