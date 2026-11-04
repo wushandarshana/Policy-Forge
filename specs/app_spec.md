@@ -112,7 +112,9 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
 - **NFR-09.3** Given the CI definitions, then the GitHub workflows default to `permissions: contents: read`, and
   only `claude-review` adds `pull-requests: write`. No workflow uses `pull_request_target`, and every checkout sets
   `persist-credentials: false`. No `run:` script contains a `${{ github.event.… }}` expression. `ANTHROPIC_API_KEY`
-  reaches only the review step, from the repository secret or the masked GitLab variable, and is never printed. No
+  reaches only the review step, from the secret of the GitHub Environment `claude-review` (which requires the owner's
+  approval before the job runs) or the masked GitLab variable scoped to the protected environment `claude-review`,
+  and is never printed. No repository-level copy of the key exists. No
   CI file sets `NODE_TLS_REJECT_UNAUTHORIZED`. `redact_evidence.py` redacts an Anthropic API key (`sk-ant-…`) in
   evidence and review output.
 - **NFR-09.4** Given a Claude review run, then each pass's prompt contains the body of
@@ -130,6 +132,24 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   `docs/fix-loops/`, when the hook regression suite fails, when a `.claude/hooks/*.sh` file has a CR byte in the
   index or the working tree, when the AC-08.5 oracle fixture differs from a fresh generation, or when actionlint or
   the CI schema checks report an error. It runs every gate and reports each result before it fails.
+- **NFR-09.7** Given a Claude review run (Sprint 5 security review, user decision 2026-11-04), then:
+  - the CLI gets no Bash tool. It receives the diff and the commit log as files it may `Read`, and `Read`, `Grep` and
+    `Glob` are limited to the checkout (no `/proc`, no path outside the repository);
+  - the CLI's environment is built from an allowlist (`PATH`, `HOME`, `LANG`, `TMPDIR`, `ANTHROPIC_API_KEY`,
+    `CLAUDE_*`), so no GitHub or GitLab token, registry password or token-bearing URL reaches it;
+  - after each pass the job fails closed if any tracked or untracked file outside `ci-out/` changed;
+  - the PR or MR comment is posted by a separate job that holds the platform token, downloads only the report
+    artifact, and runs the comment code from the base branch, never from the code under review. It edits only a
+    comment written by its own bot user, and refuses any API URL that is not `https://`;
+    if the base branch has no comment code yet (the first PR that adds CI), it skips the comment with a notice, and
+    the report stays an artifact;
+  - the Claude Code CLI and the CI Python packages are installed from committed lockfiles with integrity hashes
+    (`npm ci`, `pip install --require-hashes`);
+  - a final required job fails unless every gate job succeeded, so a skipped review never counts as passing;
+  - changes to `.github/**`, `.gitlab-ci.yml`, `scripts/ci/**`, `scripts/redact_evidence.py`, `scripts/ac_audit.py`
+    and `.claude/agents/**` need the code owner's review (`CODEOWNERS`).
+  A PR from a fork never receives the key, so its review fails closed. A maintainer re-pushes the branch to `origin`
+  to review it.
 
 ## 6. Domain model (summary)
 
