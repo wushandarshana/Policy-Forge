@@ -1,0 +1,47 @@
+{
+  "title": "PolicyForge CI review verdict",
+  "description": "The verdict one Claude Code review pass returns (plan C6). Every key is required and no other key is allowed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent", "verdict", "checklist", "findings", "summary"],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "enum": ["security-reviewer", "test-engineer"]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["APPROVE", "CHANGES_REQUESTED"]
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item", "status", "evidence"],
+        "properties": {
+          "item": { "type": "string" },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "N/A"] },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "title", "file", "line", "detail"],
+        "properties": {
+          "id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["BLOCKER", "MAJOR", "MINOR"] },
+          "title": { "type": "string" },
+          "file": { "type": "string" },
+          "line": { "anyOf": [{ "type": "integer" }, { "type": "null" }] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "summary": { "type": "string" }
+  }
+}

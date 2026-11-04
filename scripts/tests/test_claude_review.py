@@ -43,6 +43,11 @@ def values_after(argv, flag):
     return argv[start:end]
 
 
+def lowered(headers):
+    """HTTP header names are case-insensitive: compare them in lower case."""
+    return {name.lower(): value for name, value in headers.items()}
+
+
 def read_calls(log):
     path = Path(log) / "calls.jsonl"
     if not path.exists():
@@ -619,7 +624,7 @@ class CommentTests(unittest.TestCase):
         body = json.loads(posts[0]["body"])["body"]
         self.assertIn("<!-- policyforge-claude-review -->", body)
         self.assertIn("GATE: PASS (0 BLOCKER)", body)
-        self.assertEqual(posts[0]["headers"].get("Authorization"), f"Bearer {FAKE_TOKEN_VALUE}")
+        self.assertEqual(lowered(posts[0]["headers"]).get("authorization"), f"Bearer {FAKE_TOKEN_VALUE}")
 
     def test_github_updates_the_existing_marked_comment(self):
         """NFR-09.4: a second run edits the comment that carries the marker instead of adding another."""
@@ -661,7 +666,7 @@ class CommentTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr_text)
         posts = [r for r in server.requests if r["method"] == "POST"]
         self.assertEqual([r["path"] for r in posts], ["/api/v4/projects/42/merge_requests/9/notes"])
-        self.assertEqual(posts[0]["headers"].get("PRIVATE-TOKEN"), FAKE_TOKEN_VALUE)
+        self.assertEqual(lowered(posts[0]["headers"]).get("private-token"), FAKE_TOKEN_VALUE)
         self.assertIn("<!-- policyforge-claude-review -->", json.loads(posts[0]["body"])["body"])
         self.assertNotIn(FAKE_TOKEN_VALUE, proc.stdout_text + proc.stderr_text)
 
