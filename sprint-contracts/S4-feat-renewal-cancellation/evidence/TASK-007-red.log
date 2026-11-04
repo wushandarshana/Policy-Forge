@@ -1,0 +1,54 @@
+# TASK-007 red run (before the dashboard route exists and before baselines exist)
+## Vitest: npx vitest run src/App.test.tsx
+   ✓ App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate  1903ms
+   ✓ App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in  503ms
+   ✓ App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it  637ms
+   ✓ App shell routing > AC-01.1: the default route is the public Quote page and needs no sign-in 5ms
+   ✓ App shell routing for the policy pages (C9) > AC-05.1: #/policies renders My Policies behind the sign-in gate  543ms
+   ✓ App shell routing for the policy pages (C9) > AC-05.1: #/policies/<number> renders that policy detail  532ms
+   ✓ App shell routing for the policy pages (C9) > AC-05.1: the My Policies nav link reaches the list and a card link opens the detail page  655ms
+   ✓ App shell routing for the policy pages (C9) > AC-05.1: issuing from the Application Status page navigates to the new policy detail page  491ms
+   ✓ App shell routing for the policy pages (C9) > AC-06.1: #/policies/<number>/endorse renders the Endorse page for that policy  508ms
+   ✓ App shell routing for the policy pages (C9) > AC-06.1: the detail Endorse link opens the Endorse route and a confirmed endorsement returns to the detail page  1090ms
+   ✓ App shell routing for the policy pages (C9) > AC-06.1: an unknown policy route segment is still a gated detail page, not the Quote page  514ms
+   × App shell routing for the Admin Dashboard (C9) > AC-11.1: #/admin/dashboard renders the Admin Dashboard behind the sign-in gate 1021ms
+   × App shell routing for the Admin Dashboard (C9) > AC-11.1: the Dashboard nav link reaches the route and marks it as the current page 1013ms
+   × App shell routing for the Admin Dashboard (C9) > AC-11.5: a signed-in customer on the route sees the fixed not-authorised message and no tiles 1005ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/App.test.tsx > App shell routing for the Admin Dashboard (C9) > AC-11.1: #/admin/dashboard renders the Admin Dashboard behind the sign-in gate
+ FAIL  src/App.test.tsx > App shell routing for the Admin Dashboard (C9) > AC-11.1: the Dashboard nav link reaches the route and marks it as the current page
+ FAIL  src/App.test.tsx > App shell routing for the Admin Dashboard (C9) > AC-11.5: a signed-in customer on the route sees the fixed not-authorised message and no tiles
+ Test Files  1 failed (1)
+      Tests  3 failed | 11 passed (14)
+
+## Playwright: npx playwright test e2e/dashboard.spec.ts e2e/policy-lifecycle.spec.ts --grep 'AC-07.1|AC-07.5|AC-08.2|AC-08.4|AC-11' (both projects)
+  1) [desktop-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in one column on mobile and side by side on desktop 
+    Error: page.waitForResponse: Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  2) [desktop-chromium] › e2e\dashboard.spec.ts:72:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90 days before does not 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  3) [desktop-chromium] › e2e\dashboard.spec.ts:90:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  4) [desktop-chromium] › e2e\dashboard.spec.ts:104:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  5) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:216:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and the Renew panel shows the next term from expiry plus 1 at 6850.00 
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-renew-panel-offer-desktop-chromium-win32.png, writing actual.
+  6) [desktop-chromium] › e2e\policy-lifecycle.spec.ts:262:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab 
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-cancel-refund-preview-desktop-chromium-win32.png, writing actual.
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-refunds-tab-desktop-chromium-win32.png, writing actual.
+  7) [mobile-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in one column on mobile and side by side on desktop 
+    Error: page.waitForResponse: Test timeout of 30000ms exceeded.
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  8) [mobile-chromium] › e2e\dashboard.spec.ts:72:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90 days before does not 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  9) [mobile-chromium] › e2e\dashboard.spec.ts:90:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  10) [mobile-chromium] › e2e\dashboard.spec.ts:104:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures 
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+  11) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:216:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and the Renew panel shows the next term from expiry plus 1 at 6850.00 
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-renew-panel-offer-mobile-chromium-win32.png, writing actual.
+  12) [mobile-chromium] › e2e\policy-lifecycle.spec.ts:262:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab 
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-cancel-refund-preview-mobile-chromium-win32.png, writing actual.
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\policy-lifecycle.spec.ts-refunds-tab-mobile-chromium-win32.png, writing actual.
+  12 failed
+  4 passed (1.0m)

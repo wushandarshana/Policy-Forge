@@ -1,0 +1,38 @@
+# TASK-003 green run: ./mvnw verify -Dskip.frontend=true (BUILD SUCCESS: surefire 448 tests and failsafe 423 tests, 0 failures, 0 errors; ArchUnit green; JaCoCo overall and domain checks met)
+# IDs covered: NFR-04.1 (no WWW-Authenticate on any 401, fixed problem instance URN, marker never echoed, container error dispatch), AC-05.1 (issue), AC-05.2 (sequence exhausted),
+#   AC-06.1 (endorse and preview), AC-03.5 (application body), AC-09.4 (decision and override), AC-01.9 (quote risk inputs)
+# G-6 was VETOED at the checkpoint: no re-underwriting of sum-insured endorsements, no AC-06.8 test, no SUM_INSURED_REQUIRES_UNDERWRITING code (SG-1 is an accepted v1 limitation).
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.PolicyIssuanceIT
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.domain.policy.PolicyNumberFormatTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.EndorsementIT
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.SecurityChallengeIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.EndorsementLogCaptureIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.PolicyLogCaptureIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.ProblemJsonSecurityHandlerTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.ApplicationSubmissionIT
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.UnderwritingOverrideIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.EndorsementSecurityIT
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.UnderwritingDecisionIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.ApplicationLogCaptureIT
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[INFO] Tests run: 48, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.RoleBoundaryIT
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.domain.EchoedKeySanitiserTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.EndorsementPreviewIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 61, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.ProblemInstanceIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.PolicyNumberingIT
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, in com.horizon.policyforge.web.ErrorPathEndToEndIT
+[INFO] Tests run: 448, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 423, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
