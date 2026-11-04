@@ -132,13 +132,19 @@ function platformHasBaselines(snapshotFile: string): boolean {
   }
 }
 
-function recordMissingBaseline(snapshotName: string): void {
+function recordMissingBaseline(snapshotName: string, recordFile: string): void {
   const info = test.info();
   info.annotations.push({ type: 'visual-baseline-missing', description: snapshotName });
   console.warn(`[visual-baseline-missing] ${snapshotName}`);
-  const folder = info.project.outputDir;
-  mkdirSync(folder, { recursive: true });
-  appendFileSync(join(folder, MISSING_BASELINES_FILE), `${snapshotName}\n`);
+  mkdirSync(dirname(recordFile), { recursive: true });
+  appendFileSync(recordFile, `${snapshotName}\n`);
+}
+
+/** What applyVisualPolicy needs to decide: the baseline file, the PF_VISUAL_BASELINES value and the skip list. */
+export interface VisualPolicyContext {
+  snapshotFile: string;
+  mode: string | undefined;
+  recordFile: string;
 }
 
 /**
@@ -148,15 +154,31 @@ function recordMissingBaseline(snapshotName: string): void {
  */
 export async function expectVisual(locator: Locator, name: string, options: VisualOptions = {}): Promise<void> {
   const info = test.info();
-  const snapshotFile = info.snapshotPath(name);
-  const decision = decideVisualBaseline({
+  await applyVisualPolicy(locator, name, options, {
+    snapshotFile: info.snapshotPath(name),
     mode: process.env.PF_VISUAL_BASELINES,
-    baselineExists: exists(snapshotFile),
-    platformHasBaselines: platformHasBaselines(snapshotFile),
+    recordFile: join(info.project.outputDir, MISSING_BASELINES_FILE),
+  });
+}
+
+/**
+ * expectVisual with its inputs made explicit, so the self-check in `visual-baseline.spec.ts` can point it at a folder
+ * without baselines and at its own skip list. Specs call expectVisual.
+ */
+export async function applyVisualPolicy(
+  locator: Locator,
+  name: string,
+  options: VisualOptions,
+  context: VisualPolicyContext,
+): Promise<void> {
+  const decision = decideVisualBaseline({
+    mode: context.mode,
+    baselineExists: exists(context.snapshotFile),
+    platformHasBaselines: platformHasBaselines(context.snapshotFile),
   });
   if (decision.action === 'error') throw new Error(decision.message);
   if (decision.action === 'skip') {
-    recordMissingBaseline(basename(snapshotFile));
+    recordMissingBaseline(basename(context.snapshotFile), context.recordFile);
     return;
   }
   await expect(locator).toHaveScreenshot(name, options);
