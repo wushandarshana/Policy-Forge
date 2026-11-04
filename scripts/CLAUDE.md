@@ -19,4 +19,6 @@ Automation that drives Claude programmatically through the **Claude Agent SDK** 
   files, never receives a GitHub or GitLab token, and fails closed.
 - Tests live in `scripts/tests/` and run with `python -m unittest discover -s scripts/tests -v`. Each test's docstring
   starts with the ID it proves (`NFR-09.4: …`), and `ac_audit.py` counts it.
-- `requirements-ci.txt` pins the packages that only the tests and gates need (PyYAML, check-jsonschema).
+- `requirements-ci.txt` pins, with hashes, the packages that only the tests and gates need (PyYAML, check-jsonschema).
+  Install them first: `pip install --require-hashes -r scripts/requirements-ci.txt` (in `.venv`). Without them the CI
+  config tests and the `ci-schema` gate fail closed.
