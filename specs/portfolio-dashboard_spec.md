@@ -26,6 +26,8 @@ Definitions:
 - **Lapse forecast:** in-force policies whose renewal is unpaid and whose `termEnd < asOf`. They are in grace now and
   will lapse if unpaid.
 
+**Accepted v1 limitation (SG-6, user decision 2026-11-04, Sprint 5).** Terms, endorsement adjustments and refunds have no paid-date history, so `premiumCollected` sums every paid term premium, adjustment and refund stored when the request is made. It isn't cut at `asOf`. Active counts use each policy's current status, so `asOf` changes only the renewal pipeline and the lapse forecast.
+
 ## Acceptance Criteria
 
 - **AC-11.1** Given the seed portfolio, when an ADMIN loads the dashboard, then active counts per product equal the

@@ -65,6 +65,7 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
 | NFR-06 | Structured JSON logs with request correlation ID (`X-Correlation-Id`) | Filter test |
 | NFR-07 | `/actuator/health` returns 200 within 1 s of startup | Integration test |
 | NFR-08 | Architecture rules are automated tests | `backend/src/test/java/.../architecture/` |
+| NFR-09 | Every push to and pull or merge request into dev and main runs the same automated gates on GitHub Actions and GitLab CI, ending with a required Claude Code review | scripts/tests/ CI tests; actionlint; GitLab CI schema check; the pipelines |
 
 ### Acceptance Criteria (NFR, testable form)
 
@@ -95,6 +96,40 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   nothing is stored. The route is chosen on the **decoded, normalized** path that
   Spring Security and MVC route on, so encoded variants such as `/api/%71uotes` are capped like `/api/quotes`. Any
   path that doesn't match an allowance gets the 16 KB default. (Security re-review R-1.)
+- **NFR-08.1** Given the production classes, when any class other than `EndorsementService` calls
+  `PolicyTermEntity.repriceOffer`, then the ArchUnit suite fails. A negative fixture in which a class other than the
+  fixture's endorsement service calls it is rejected, and the fixture's endorsement service is not (Sprint 4
+  security review MINOR-A).
+- **NFR-09.1** Given `.github/workflows/ci.yml` and `.gitlab-ci.yml`, then each defines the jobs `build`,
+  `frontend-unit`, `e2e`, `quality-gates` and `claude-review` with the same gate commands. Each runs for pushes to
+  `dev` and `main` and for pull or merge requests into them. `claude-review` runs only after the other four jobs
+  pass and is never allowed to fail.
+- **NFR-09.2** Given the CI definitions and `.mcp.json`, then every GitHub action is pinned to a full 40-character
+  commit SHA, every container image to an exact version tag with an `@sha256:` digest, every downloaded tool to an
+  exact version with a SHA-256 checksum, and every npm package run by CI or MCP to an exact version. Nothing uses
+  `latest` or a floating tag. The Playwright image's version equals the `@playwright/test` version locked in
+  `frontend/package-lock.json`, and the CI Node version equals `frontend.node.version` in `backend/pom.xml`.
+- **NFR-09.3** Given the CI definitions, then the GitHub workflows default to `permissions: contents: read`, and
+  only `claude-review` adds `pull-requests: write`. No workflow uses `pull_request_target`, and every checkout sets
+  `persist-credentials: false`. No `run:` script contains a `${{ github.event.… }}` expression. `ANTHROPIC_API_KEY`
+  reaches only the review step, from the repository secret or the masked GitLab variable, and is never printed. No
+  CI file sets `NODE_TLS_REJECT_UNAUTHORIZED`. `redact_evidence.py` redacts an Anthropic API key (`sk-ant-…`) in
+  evidence and review output.
+- **NFR-09.4** Given a Claude review run, then each pass's prompt contains the body of
+  `.claude/agents/security-reviewer.md` or `.claude/agents/test-engineer.md` verbatim, and the pinned Claude Code CLI
+  runs in bare, read-only mode against the diff under review. The job fails when any finding has severity BLOCKER,
+  when a pass returns no structured verdict or one that fails the verdict schema, when the CLI exits non-zero or is
+  not the pinned version, or when `ANTHROPIC_API_KEY` is absent. With no BLOCKER it passes and still publishes every
+  MAJOR and MINOR finding. An empty diff passes without calling the CLI.
+- **NFR-09.5** Given an E2E run on a platform with no committed visual baselines, then each visual assertion is
+  skipped and recorded by name, and every functional assertion still runs. Given a platform with at least one
+  committed baseline, a missing or differing baseline fails the test. A run in update mode writes only the missing
+  baselines of its own platform.
+- **NFR-09.6** Given the quality gates, then the job fails when the offline AC audit reports any NOT COVERED or
+  PARENT-ONLY ID, when `redact_evidence.py --check` finds a credential in `sprint-contracts/`, `specs/reviews/` or
+  `docs/fix-loops/`, when the hook regression suite fails, when a `.claude/hooks/*.sh` file has a CR byte in the
+  index or the working tree, when the AC-08.5 oracle fixture differs from a fresh generation, or when actionlint or
+  the CI schema checks report an error. It runs every gate and reports each result before it fails.
 
 ## 6. Domain model (summary)
 
