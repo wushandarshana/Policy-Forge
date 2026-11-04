@@ -59,6 +59,19 @@ public class PolicyTermEntity {
         return new PolicyTermEntity(policyNumber, termNo, startDate, endDate, premium, paid);
     }
 
+    /**
+     * Red-step stub (AC-07.3): accepts the rule version a term is rated with but does not keep it yet.
+     */
+    public static PolicyTermEntity of(String policyNumber, int termNo, LocalDate startDate, LocalDate endDate,
+            BigDecimal premium, boolean paid, int ruleVersion) {
+        return of(policyNumber, termNo, startDate, endDate, premium, paid);
+    }
+
+    /** Red-step stub (AC-07.3): not stored yet. */
+    public int getRuleVersion() {
+        return 0;
+    }
+
     /** The only change a term allows: its premium has been paid. */
     public void markPaid() {
         this.paid = true;

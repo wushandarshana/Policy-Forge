@@ -80,6 +80,24 @@ public final class RuleSetFixtures {
         return render(tree);
     }
 
+    /**
+     * TERM_LIFE v1 edited so that the age band 31 to 40 has factor 1.30 instead of 1.20 (plan G-1, AC-07.3), so the
+     * AC-04.1 profile (age 35, 5,000,000.00) renews at 7400.00 instead of 6850.00: 5000 x 1.30 x 1.00 x 1.10 + 250.00.
+     * It is a test fixture, never a shipped rule file, and every test that publishes it does so in its own application
+     * context.
+     */
+    public static String termLifeV2BandFactor130(String effectiveFrom) {
+        ObjectNode tree = seedTree("term-life", 1);
+        tree.put("version", 2);
+        tree.put("effectiveFrom", effectiveFrom);
+        for (JsonNode band : tree.get("rating").get("baseRatePerThousand")) {
+            if (band.get("min").asInt() == 31 && band.get("max").asInt() == 40) {
+                ((ObjectNode) band).put("factor", "1.30");
+            }
+        }
+        return render(tree);
+    }
+
     /** The {@code underwriting.rules} array of a rule-set tree. */
     public static ArrayNode rules(ObjectNode tree) {
         return (ArrayNode) tree.get("underwriting").get("rules");
