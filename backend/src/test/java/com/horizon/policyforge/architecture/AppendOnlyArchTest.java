@@ -267,13 +267,13 @@ class AppendOnlyArchTest {
     }
 
     @Test
-    @DisplayName("NFR-02: the policy term entity has no public setters and changes only through markPaid")
+    @DisplayName("NFR-02: the policy term entity has no public setters and changes only through markPaid and, for an unpaid offer, repriceOffer (AC-07.7)")
     void policyTermEntityChangesOnlyThroughMarkPaid() {
         entityHasNoPublicSetters("PolicyTermEntity", "NFR-02").check(ArchSupport.production());
 
         assertThat(publicMutators("com.horizon.policyforge.repository.PolicyTermEntity"))
-                .as("public methods other than getters: one factory and the paid flag")
-                .containsExactly("markPaid", "of");
+                .as("public methods other than getters: one factory, the paid flag and the offer re-price of AC-07.7")
+                .containsExactly("markPaid", "of", "repriceOffer");
     }
 
     @Test
