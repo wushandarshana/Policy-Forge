@@ -326,6 +326,49 @@ class AppendOnlyArchTest {
         REPOSITORIES_HAVE_NO_DELETE_OR_UPDATE.check(ArchSupport.production());
     }
 
+    // ---- Refund records (AC-08.4, NFR-02): one immutable row per cancelled policy, never changed or removed ----
+
+    @Test
+    @Tag("AC-08")
+    @DisplayName("AC-08.4: the refund record entity exists, is an immutable JPA entity, has no public setters and one factory")
+    void refundRecordEntityIsImmutable() {
+        entityIsImmutable("RefundRecordEntity", "NFR-02").check(ArchSupport.production());
+        entityHasNoPublicSetters("RefundRecordEntity", "NFR-02").check(ArchSupport.production());
+        assertThat(publicMutators("com.horizon.policyforge.repository.RefundRecordEntity"))
+                .as("public methods other than getters: one factory, nothing that changes a stored refund")
+                .containsExactly("of");
+    }
+
+    @Test
+    @Tag("AC-08")
+    @DisplayName("AC-08.4: the refund record repository exists, extends Repository and declares only save and finder methods")
+    void refundRecordRepositoryHasOnlySaveAndFinders() {
+        repositoryIsNotCrud("RefundRecordRepository", "NFR-02").check(ArchSupport.production());
+        repositoryHasNoDeleteOrUpdate("RefundRecordRepository", "NFR-02").check(ArchSupport.production());
+        JavaClass repository = ArchSupport.production().get("com.horizon.policyforge.repository.RefundRecordRepository");
+        List<String> declared = repository.getMethods().stream().map(JavaMethod::getName).sorted().toList();
+        assertThat(declared).as("the repository's methods").isNotEmpty().contains("save")
+                .allMatch(name -> name.equals("save") || name.startsWith("find"));
+    }
+
+    @Test
+    @Tag("AC-08")
+    @DisplayName("AC-08.4: the set-wide append-only rules cover RefundRecordEntity and RefundRecordRepository, which both exist")
+    void appendOnlyRulesCoverRefundRecords() {
+        assertThat(APPEND_ONLY_ENTITIES).contains("RefundRecordEntity");
+        assertThat(APPEND_ONLY_REPOSITORIES).contains("RefundRecordRepository");
+        JavaClass entity = ArchSupport.production().get("com.horizon.policyforge.repository.RefundRecordEntity");
+        JavaClass repository = ArchSupport.production().get("com.horizon.policyforge.repository.RefundRecordRepository");
+        assertThat(APPEND_ONLY_ENTITY.test(entity)).as("the entity is matched by the set-wide entity rules").isTrue();
+        assertThat(APPEND_ONLY_REPOSITORY.test(repository)).as("the repository is matched by the set-wide repository rules")
+                .isTrue();
+        ENTITIES_ARE_IMMUTABLE.check(ArchSupport.production());
+        ENTITIES_HAVE_NO_PUBLIC_SETTERS.check(ArchSupport.production());
+        ENTITIES_HAVE_NO_PUBLIC_FIELDS.check(ArchSupport.production());
+        REPOSITORIES_ARE_NOT_CRUD.check(ArchSupport.production());
+        REPOSITORIES_HAVE_NO_DELETE_OR_UPDATE.check(ArchSupport.production());
+    }
+
     /** The public methods of a production class that are neither getters ({@code get*}, {@code is*}) nor toString. */
     private static List<String> publicMutators(String className) {
         JavaClass entity = ArchSupport.production().get(className);
