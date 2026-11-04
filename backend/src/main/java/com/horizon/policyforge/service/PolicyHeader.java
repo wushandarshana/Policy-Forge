@@ -8,12 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * The summary of a policy as its owner sees it (C1): identity, status, the dates of the current term, and the sum
+ * The summary of a policy as its owner sees it (C1): identity, status, the dates of the current paid term (G-5), and the sum
  * insured and premium of the current version. It carries no KYC field (P-9).
  *
- * @param effectiveDate      the start of the current term
- * @param expiryDate         the last day of the current term
- * @param nextPremiumDueDate the current term's end date + 1 day
+ * @param effectiveDate      the start of the current paid term
+ * @param expiryDate         the last day of the current paid term
+ * @param nextPremiumDueDate the current paid term's end date + 1 day
  * @param endorsementCount   how many endorsements the policy has had
  */
 public record PolicyHeader(
@@ -30,7 +30,7 @@ public record PolicyHeader(
         LocalDate nextPremiumDueDate,
         int endorsementCount) {
 
-    /** The header of a policy from its row, its current version and its current term. */
+    /** The header of a policy from its row, its current version and its current paid term (G-5). */
     static PolicyHeader of(PolicyEntity policy, PolicyVersionEntity current, PolicyTermEntity term,
             int endorsementCount) {
         return new PolicyHeader(

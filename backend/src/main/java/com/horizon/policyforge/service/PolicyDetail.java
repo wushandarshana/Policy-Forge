@@ -10,16 +10,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A policy with its history as the owner (or an ADMIN) sees it (C3): the header, every version, every status transition
- * and every term. All of it is built from allow-lists (P-9): the risk inputs of a version are the product's declared
- * inputs without the health inputs, and no KYC field is carried.
+ * A policy with its history as the owner (or an ADMIN) sees it (C3): the header, every version, every status transition,
+ * every term and the renewal offer waiting to be paid, if any. All of it is built from allow-lists (P-9): the risk inputs
+ * of a version are the product's declared inputs without the health inputs, and no KYC field is carried.
+ *
+ * @param pendingRenewal the unpaid renewal term of an in-force policy, or null when there is none (C5)
  */
 public record PolicyDetail(
         PolicyHeader policy,
         List<VersionView> versions,
         List<EndorsementView> endorsements,
         List<TransitionView> transitions,
-        List<TermView> terms) {
+        List<TermView> terms,
+        PendingRenewalView pendingRenewal) {
 
     public PolicyDetail {
         versions = List.copyOf(versions);
@@ -75,7 +78,16 @@ public record PolicyDetail(
             Instant at) {
     }
 
-    /** One cover term, ascending by number. */
-    public record TermView(int termNo, LocalDate startDate, LocalDate endDate, BigDecimal premium, boolean paid) {
+    /** One cover term, ascending by number, with the rule version its premium was rated with. */
+    public record TermView(int termNo, LocalDate startDate, LocalDate endDate, BigDecimal premium, boolean paid,
+            int ruleVersion) {
+    }
+
+    /**
+     * The renewal offer an in-force policy can still pay (C5): the unpaid term above the current paid term, and the last
+     * day it can be paid, which is the current paid term's end plus its grace days.
+     */
+    public record PendingRenewalView(int termNo, LocalDate startDate, LocalDate endDate, BigDecimal premium,
+            int ruleVersion, LocalDate payableUntil) {
     }
 }

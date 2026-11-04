@@ -204,6 +204,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     "The application is not in a state that allows this action.";
             case ConflictException.POLICY_UPDATE_CONFLICT ->
                     "The policy was changed by another request. Review it and try again.";
+            case ConflictException.NO_PENDING_RENEWAL -> "There is no renewal offer to pay for this policy.";
+            case ConflictException.RENEWAL_PAYMENT_WINDOW_CLOSED ->
+                    "The period in which this renewal can be paid has ended.";
             default -> "The request conflicts with the current state of the resource.";
         };
     }

@@ -132,7 +132,7 @@ public class PolicyIssuanceService {
                 quote.getSumInsured(), quote.getAnnualPremium(), quote.getRiskInputsJson(), addressOf(application),
                 NO_NOMINEES_JSON, quote.getRuleVersion(), effectiveDate, expiryDate, now));
         PolicyTermEntity term = terms.save(PolicyTermEntity.of(policyNumber, FIRST_TERM, effectiveDate, expiryDate,
-                quote.getAnnualPremium(), true));
+                quote.getAnnualPremium(), true, quote.getRuleVersion()));
         transitions.save(PolicyStatusTransitionEntity.of(policyNumber, null, PolicyStatus.ACTIVE, ISSUANCE_REASON,
                 customerId, now));
         audit.recordStatusChange(customerId, ISSUED_ACTION, ApplicationService.ENTITY_TYPE,

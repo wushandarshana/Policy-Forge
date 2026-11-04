@@ -33,12 +33,10 @@ import com.horizon.policyforge.repository.PolicyVersionEntity;
 import com.horizon.policyforge.repository.PolicyVersionRepository;
 import com.horizon.policyforge.service.ValidationFailedException.FieldViolation;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,9 +74,6 @@ public class EndorsementService {
     };
     private static final TypeReference<List<Nominee>> NOMINEES = new TypeReference<>() {
     };
-    /** The SQL state of a unique-key violation, in H2 and in PostgreSQL. */
-    private static final String UNIQUE_VIOLATION = "23505";
-
     private final PolicyRepository policies;
     private final PolicyVersionRepository versions;
     private final PolicyTermRepository terms;
@@ -90,6 +85,7 @@ public class EndorsementService {
     private final EndorsementPremiumAdjuster adjuster;
     private final PremiumCalculator calculator;
     private final EndorsementViews views;
+    private final PolicyTerms policyTerms;
     private final ObjectMapper mapper;
     private final Clock clock;
 
@@ -97,7 +93,7 @@ public class EndorsementService {
             PolicyTermRepository terms, PolicyStatusTransitionRepository transitions,
             EndorsementRepository endorsements, RuleSetService ruleSets, EndorsementRequestParser parser,
             EndorsementValidator validator, EndorsementPremiumAdjuster adjuster, PremiumCalculator calculator,
-            EndorsementViews views, ObjectMapper mapper, Clock clock) {
+            EndorsementViews views, PolicyTerms policyTerms, ObjectMapper mapper, Clock clock) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
@@ -109,6 +105,7 @@ public class EndorsementService {
         this.adjuster = adjuster;
         this.calculator = calculator;
         this.views = views;
+        this.policyTerms = policyTerms;
         this.mapper = mapper;
         this.clock = clock;
     }
@@ -153,7 +150,7 @@ public class EndorsementService {
         } catch (ConcurrencyFailureException lostRace) {
             throw new ConflictException(ConflictException.POLICY_UPDATE_CONFLICT);
         } catch (DataIntegrityViolationException failure) {
-            if (isUniqueViolation(failure)) {
+            if (WriteConflicts.isUniqueViolation(failure)) {
                 throw new ConflictException(ConflictException.POLICY_UPDATE_CONFLICT);
             }
             throw failure;
@@ -208,10 +205,9 @@ public class EndorsementService {
                 .findByPolicyNumberAndVersionNo(policy.getPolicyNumber(), policy.getCurrentVersionNo())
                 .orElseThrow(() -> new IllegalStateException("Policy has no current version: policyNumber="
                         + policy.getPolicyNumber()));
-        PolicyTermEntity term = terms.findByPolicyNumberOrderByTermNoAsc(policy.getPolicyNumber()).stream()
-                .max(Comparator.comparingInt(PolicyTermEntity::getTermNo))
-                .orElseThrow(() -> new IllegalStateException("Policy has no term: policyNumber="
-                        + policy.getPolicyNumber()));
+        // The current paid term (G-5): an unpaid renewal offer does not move the endorsement window or basis.
+        PolicyTermEntity term = policyTerms.requireCurrentPaid(
+                terms.findByPolicyNumberOrderByTermNoAsc(policy.getPolicyNumber()), policy.getPolicyNumber());
         EndorsementEntity last = endorsements.findFirstByPolicyNumberOrderBySequenceNoDesc(policy.getPolicyNumber())
                 .orElse(null);
         RuleSetVersion rules = ruleSets.version(productCode, current.getRuleVersion());
@@ -295,19 +291,6 @@ public class EndorsementService {
             components.put(key, Money.finalAmount(new BigDecimal(String.valueOf(value))));
         }
         return components;
-    }
-
-    /** Whether the failure is a unique-key violation, as opposed to any other broken constraint. */
-    private static boolean isUniqueViolation(DataIntegrityViolationException failure) {
-        for (Throwable cause = failure; cause != null; cause = cause.getCause()) {
-            if (cause instanceof SQLException sql && UNIQUE_VIOLATION.equals(sql.getSQLState())) {
-                return true;
-            }
-            if (cause.getCause() == cause) {
-                break;
-            }
-        }
-        return false;
     }
 
     private String write(Object value) {
