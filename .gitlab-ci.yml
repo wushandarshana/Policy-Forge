@@ -1,0 +1,205 @@
+# GitLab CI for merge requests into dev or main and for pushes to them (NFR-09.1 to NFR-09.3, NFR-09.6).
+# .github/workflows/ci.yml runs the same five jobs with the same commands. Every image is pinned to a tag and digest and
+# every downloaded file to a SHA-256 (NFR-09.2). Nothing else starts a pipeline, so a branch with a merge request does not
+# run twice.
+#
+# Variables to set in the project (docs/harness-setup.md): ANTHROPIC_API_KEY (masked and protected, and the feat/*, fix/*
+# and chore/* branches protected, or merge request pipelines receive no key and the review fails closed). Optional:
+# PF_GITLAB_REVIEW_TOKEN (masked, protected) to post the review as a merge request note, PF_REVIEW_MAX_BUDGET_USD.
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main")'
+    - if: '$CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main")'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+stages:
+  - build
+  - test
+  - e2e
+  - review
+
+build:
+  stage: build
+  image: eclipse-temurin:21.0.13_9-jdk-noble@sha256:114cabb73033ca4ce7ceec3deb62396bc1b716282bae051ed3c1d82e38fcab2d
+  timeout: 40 minutes
+  variables:
+    MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  cache:
+    - key:
+        files:
+          - backend/pom.xml
+      paths:
+        - .m2/repository
+    - key:
+        files:
+          - frontend/package-lock.json
+      paths:
+        - .npm
+  script:
+    - cd backend && ./mvnw -B verify
+  # One archive per job on GitLab, so the JAR is kept as long as the reports (14 days; GitHub keeps the JAR for 7).
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - backend/target/policyforge-*.jar
+      - backend/target/site/jacoco/
+      - backend/target/surefire-reports/
+      - backend/target/failsafe-reports/
+
+frontend-unit:
+  stage: test
+  needs: []
+  image: node:22.11.0-bookworm@sha256:ec878c763e9fad09d22aae86e2edcb7a05b397dfe8411c16e2b90158d595e2ce
+  timeout: 15 minutes
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  cache:
+    key:
+      files:
+        - frontend/package-lock.json
+    paths:
+      - .npm
+  script:
+    - cd frontend && npm ci && npm test && npm run build
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - frontend/coverage/lcov.info
+
+quality-gates:
+  stage: test
+  needs: []
+  image: python:3.14.10-trixie@sha256:72628634e335b4b0a40727f398a73ae7ba983c319ca901fc034f92a216f7a781
+  timeout: 20 minutes
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    key:
+      files:
+        - scripts/requirements-ci.txt
+    paths:
+      - .cache/pip
+  script:
+    - pip install -r scripts/requirements-ci.txt
+    - python scripts/ci/quality_gates.py --report ci-out/quality-gates/report.md
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - ci-out/quality-gates/
+
+e2e:
+  stage: e2e
+  needs:
+    - build
+  image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+  timeout: 45 minutes
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  cache:
+    key:
+      files:
+        - frontend/package-lock.json
+    paths:
+      - .npm
+  script:
+    - curl -fsSL -o /tmp/temurin-jre.tar.gz "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_x64_linux_hotspot_21.0.13_9.tar.gz"
+    - echo "a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd  /tmp/temurin-jre.tar.gz" | sha256sum -c -
+    - mkdir -p /opt/temurin-jre && tar -xzf /tmp/temurin-jre.tar.gz -C /opt/temurin-jre --strip-components=1
+    - export JAVA_HOME=/opt/temurin-jre PATH="/opt/temurin-jre/bin:$PATH"
+    - export PF_E2E_JAR="$(ls "$CI_PROJECT_DIR"/backend/target/policyforge-*.jar)"
+    - cd frontend && npm ci && npx playwright test
+  after_script:
+    - |
+      if [ -f frontend/test-results/visual-baselines-missing.txt ]; then
+        echo "visual-baseline-missing: visual assertions skipped, this platform has no baselines yet"
+        cat frontend/test-results/visual-baselines-missing.txt
+        wc -l < frontend/test-results/visual-baselines-missing.txt
+      else
+        echo "visual-baseline-missing: none"
+      fi
+  # Always kept: it holds visual-baselines-missing.txt. On a failure it also holds the report and the traces.
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - frontend/playwright-report/
+      - frontend/test-results/
+
+# Manual, never blocks the pipeline. Writes only the missing -linux baselines (NFR-09.5). Download the PNGs from the job
+# artifacts, look at every image and commit them in their own commit.
+e2e-update-linux-snapshots:
+  stage: e2e
+  needs:
+    - build
+  when: manual
+  allow_failure: true
+  image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+  timeout: 45 minutes
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
+    PF_VISUAL_BASELINES: update
+  cache:
+    key:
+      files:
+        - frontend/package-lock.json
+    paths:
+      - .npm
+  script:
+    - curl -fsSL -o /tmp/temurin-jre.tar.gz "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_x64_linux_hotspot_21.0.13_9.tar.gz"
+    - echo "a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd  /tmp/temurin-jre.tar.gz" | sha256sum -c -
+    - mkdir -p /opt/temurin-jre && tar -xzf /tmp/temurin-jre.tar.gz -C /opt/temurin-jre --strip-components=1
+    - export JAVA_HOME=/opt/temurin-jre PATH="/opt/temurin-jre/bin:$PATH"
+    - export PF_E2E_JAR="$(ls "$CI_PROJECT_DIR"/backend/target/policyforge-*.jar)"
+    - cd frontend && npm ci && npx playwright test --update-snapshots=missing
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - frontend/e2e/__snapshots__/*-linux.png
+      - frontend/playwright-report/
+
+claude-review:
+  stage: review
+  needs:
+    - build
+    - frontend-unit
+    - e2e
+    - quality-gates
+  allow_failure: false
+  image: node:22.11.0-bookworm@sha256:ec878c763e9fad09d22aae86e2edcb7a05b397dfe8411c16e2b90158d595e2ce
+  timeout: 40 minutes
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    # The clone URL may carry the job token. The review reads files, so it must not be able to find a token in .git/config.
+    - git remote set-url origin "${CI_PROJECT_URL}.git"
+    - npm install -g @anthropic-ai/claude-code@2.1.311
+    - |
+      case "$CI_PIPELINE_SOURCE" in
+        merge_request_event)
+          event=merge_request
+          base="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+          ;;
+        push)
+          event=push
+          base="$CI_COMMIT_BEFORE_SHA"
+          ;;
+        *)
+          event=manual
+          base=""
+          ;;
+      esac
+      status=0
+      python3 scripts/ci/claude_review.py run --base "$base" --head "$CI_COMMIT_SHA" --event "$event" --out ci-out/review || status=$?
+      python3 scripts/ci/claude_review.py comment --platform gitlab --report ci-out/review/claude-review.md
+      exit "$status"
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - ci-out/review/
