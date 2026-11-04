@@ -109,4 +109,18 @@ class RenewalPolicyTest {
         assertThat(policy.isPaymentAllowed(List.of(term1()), 30, today)).isFalse();
         assertThat(policy.isPaymentAllowed(List.of(term1(), term2(true)), 30, today)).isFalse();
     }
+
+    @Test
+    @Tag("AC-07.8")
+    @DisplayName("AC-07.8: today 2027-10-01: the job date 2027-09-01 (today - 30) and 2027-10-01 are allowed, 2027-08-31 (today - 31), 2027-10-02 and 2207-10-01 are not")
+    void theJobDateIsBounded() {
+        LocalDate today = LocalDate.of(2027, 10, 1);
+        assertThat(policy.isJobDateAllowed(LocalDate.of(2027, 9, 1), today)).isTrue();
+        assertThat(policy.isJobDateAllowed(today, today)).isTrue();
+        assertThat(policy.isJobDateAllowed(LocalDate.of(2027, 8, 31), today)).isFalse();
+        assertThat(policy.isJobDateAllowed(LocalDate.of(2027, 10, 2), today)).isFalse();
+        assertThat(policy.isJobDateAllowed(LocalDate.of(2207, 10, 1), today)).isFalse();
+        assertThat(policy.isJobDateAllowed(LocalDate.MAX, today)).isFalse();
+        assertThat(policy.isJobDateAllowed(LocalDate.MIN, today)).isFalse();
+    }
 }

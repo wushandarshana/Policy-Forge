@@ -31,7 +31,11 @@ export default defineConfig({
     { name: 'mobile-chromium', use: { ...iphone13, browserName: 'chromium' } },
   ],
   webServer: {
-    command: isWindows ? '.\\mvnw.cmd spring-boot:run' : './mvnw spring-boot:run',
+    // The browser tests run the renewal job for dates around today, so they lift the job's date bound (AC-07.8) with a
+    // command-line argument. Production and the packaged demo never set it.
+    command: isWindows
+      ? '.\\mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--policyforge.jobs.renewal-cycle.any-date=true"'
+      : "./mvnw spring-boot:run '-Dspring-boot.run.arguments=--policyforge.jobs.renewal-cycle.any-date=true'",
     cwd: '../backend',
     url: 'http://localhost:8080/actuator/health',
     reuseExistingServer: !process.env.CI,

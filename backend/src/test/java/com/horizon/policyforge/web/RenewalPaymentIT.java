@@ -232,4 +232,47 @@ class RenewalPaymentIT extends RenewalTestSupport {
         assertThat(PolicyRows.transitions(jdbc, number)).hasSize(2);
         assertThat(PolicyRows.terms(jdbc, number).get(1).get("PAID")).isEqualTo(true);
     }
+
+    @Test
+    @DisplayName("AC-07.5: two payments of the same offer sent at the same moment give exactly one 200 and one 409, and leave one paid term 2, exactly one RENEWED version (version 2) and one RENEWAL_PAID transition")
+    void twoConcurrentPaymentsRenewOnce() throws Exception {
+        String number = issued("TERM_LIFE");
+        renewals.jobOk("2027-10-01");
+        at("2027-11-10");
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        CountDownLatch ready = new CountDownLatch(2);
+        CountDownLatch start = new CountDownLatch(1);
+        List<Integer> statuses = new ArrayList<>();
+        try {
+            List<Future<MvcResult>> futures = new ArrayList<>();
+            for (int i = 0; i < 2; i++) {
+                futures.add(pool.submit(() -> {
+                    ready.countDown();
+                    start.await();
+                    return renewals.pay("customer1", number, new LinkedHashMap<>());
+                }));
+            }
+            assertThat(ready.await(20, TimeUnit.SECONDS)).isTrue();
+            start.countDown();
+            for (Future<MvcResult> future : futures) {
+                MvcResult result = future.get(60, TimeUnit.SECONDS);
+                statuses.add(result.getResponse().getStatus());
+                if (result.getResponse().getStatus() != 200) {
+                    assertThat(problem(result, 409).get("code").asText())
+                            .isIn("POLICY_UPDATE_CONFLICT", "NO_PENDING_RENEWAL");
+                }
+            }
+        } finally {
+            pool.shutdownNow();
+        }
+
+        assertThat(statuses).as("one 200 and one 409").containsExactlyInAnyOrder(200, 409);
+        assertThat(RenewalRows.status(jdbc, number)).isEqualTo("RENEWED");
+        List<Map<String, Object>> versions = PolicyRows.versions(jdbc, number);
+        assertThat(versions).as("exactly one RENEWED version").hasSize(2);
+        assertThat(((Number) versions.get(1).get("VERSION_NO")).intValue()).isEqualTo(2);
+        assertThat(PolicyRows.transitions(jdbc, number).stream().filter(t -> "RENEWED".equals(t.get("TO_STATUS")))
+                .count()).isEqualTo(1);
+        assertThat(PolicyRows.terms(jdbc, number).get(1).get("PAID")).isEqualTo(true);
+    }
 }

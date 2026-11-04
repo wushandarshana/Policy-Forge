@@ -133,4 +133,17 @@ class PortfolioRulesTest {
         assertThat(rules.inLapseForecast(PolicyStatus.ACTIVE, paidTermEnding(20), AS_OF)).isFalse();
         assertThat(rules.inLapseForecast(PolicyStatus.ACTIVE, paidTermEnding(0), AS_OF)).isFalse();
     }
+
+    @Test
+    @Tag("AC-11.6")
+    @DisplayName("AC-11.6: asOf 2000-01-01 and 2100-12-31 are supported, 1999-12-31, 2101-01-01, +999999999-12-31 and -999999999-01-01 are not")
+    void asOfIsBounded() {
+        assertThat(rules.isSupportedAsOf(LocalDate.of(2000, 1, 1))).isTrue();
+        assertThat(rules.isSupportedAsOf(LocalDate.of(2100, 12, 31))).isTrue();
+        assertThat(rules.isSupportedAsOf(AS_OF)).isTrue();
+        assertThat(rules.isSupportedAsOf(LocalDate.of(1999, 12, 31))).isFalse();
+        assertThat(rules.isSupportedAsOf(LocalDate.of(2101, 1, 1))).isFalse();
+        assertThat(rules.isSupportedAsOf(LocalDate.MAX)).isFalse();
+        assertThat(rules.isSupportedAsOf(LocalDate.MIN)).isFalse();
+    }
 }

@@ -71,4 +71,12 @@ public final class RenewalPolicy {
                 .map(current -> !today.isAfter(payableUntil(current.endDate(), graceDays)))
                 .orElse(false);
     }
+
+    /** How many days before today the admin job may run for (AC-07.8). */
+    public static final int JOB_DATE_MAX_DAYS_BACK = 30;
+
+    /** Whether the admin job may run for {@code date}: {@code today - 30 <= date <= today} (AC-07.8). */
+    public boolean isJobDateAllowed(LocalDate date, LocalDate today) {
+        return true; // red stub
+    }
 }

@@ -80,6 +80,11 @@ public class PolicyTermEntity {
         this.paid = true;
     }
 
+    /** Re-prices an unpaid renewal offer (AC-07.7). */
+    public void repriceOffer(BigDecimal newPremium) {
+        // red stub
+    }
+
     public Long getId() {
         return id;
     }

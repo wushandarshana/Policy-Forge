@@ -55,4 +55,31 @@ class PolicyTermEntityTest {
     void theStringFormShowsIdsOnly() {
         assertThat(term(false, 2).toString()).contains("PF-TL-2026-000001").doesNotContain("7400");
     }
+
+    @Test
+    @Tag("AC-07.7")
+    @DisplayName("AC-07.7: an unpaid offer at 6850.00 is re-priced to 9490.00 with its dates and rule version unchanged and still unpaid")
+    void anUnpaidOfferIsRepriced() {
+        PolicyTermEntity offer = PolicyTermEntity.of("PF-TL-2026-000001", 2, LocalDate.parse("2027-11-01"),
+                LocalDate.parse("2028-10-31"), new BigDecimal("6850.00"), false, 1);
+
+        offer.repriceOffer(new BigDecimal("9490.00"));
+
+        assertThat(offer.getPremium()).isEqualByComparingTo("9490.00");
+        assertThat(offer.getStartDate()).isEqualTo(LocalDate.parse("2027-11-01"));
+        assertThat(offer.getEndDate()).isEqualTo(LocalDate.parse("2028-10-31"));
+        assertThat(offer.getRuleVersion()).isEqualTo(1);
+        assertThat(offer.isPaid()).isFalse();
+    }
+
+    @Test
+    @Tag("AC-07.7")
+    @DisplayName("AC-07.7: a paid term is never re-priced, and its premium stays as it was")
+    void aPaidTermIsNeverRepriced() {
+        PolicyTermEntity paid = term(true, 1);
+
+        assertThatThrownBy(() -> paid.repriceOffer(new BigDecimal("9490.00")))
+                .isInstanceOf(IllegalStateException.class);
+        assertThat(paid.getPremium()).isEqualByComparingTo("7400.00");
+    }
 }

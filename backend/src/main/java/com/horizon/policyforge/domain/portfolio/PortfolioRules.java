@@ -18,6 +18,11 @@ public final class PortfolioRules {
 
     private final RenewalPolicy renewalPolicy = new RenewalPolicy();
 
+    /** Whether the dashboard can be computed as of {@code asOf}: 2000-01-01..2100-12-31 (AC-11.6). */
+    public boolean isSupportedAsOf(LocalDate asOf) {
+        return true; // red stub
+    }
+
     /**
      * Premium collected for one product: the sum of paid term premiums plus the signed endorsement adjustments minus the
      * refunds, exact at scale 2.
