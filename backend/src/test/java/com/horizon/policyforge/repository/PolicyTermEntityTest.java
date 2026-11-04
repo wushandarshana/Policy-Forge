@@ -51,7 +51,8 @@ class PolicyTermEntityTest {
     }
 
     @Test
-    @DisplayName("AC-07.3: the string form of a term shows the policy number and term number only")
+    @Tag("NFR-03")
+    @DisplayName("NFR-03.1: the string form of a term shows the policy number and term number only, never the premium")
     void theStringFormShowsIdsOnly() {
         assertThat(term(false, 2).toString()).contains("PF-TL-2026-000001").doesNotContain("7400");
     }

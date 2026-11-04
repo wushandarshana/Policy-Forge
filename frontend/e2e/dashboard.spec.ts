@@ -49,10 +49,9 @@ test('AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard 
     await expect(page.getByTestId(`product-${code}-premium`)).toHaveText(dashboard.premiumCollected[code]);
   }
 
-  const tiles = page.getByTestId('kpi-tiles').locator('.kpi-tile');
-  await expect(tiles).toHaveCount(2);
-  const first = await tiles.nth(0).boundingBox();
-  const second = await tiles.nth(1).boundingBox();
+  await expect(page.getByTestId('kpi-tiles').locator('[data-testid^="kpi-tile-"]')).toHaveCount(2);
+  const first = await page.getByTestId('kpi-tile-active').boundingBox();
+  const second = await page.getByTestId('kpi-tile-premium').boundingBox();
   expect(first).not.toBeNull();
   expect(second).not.toBeNull();
   if (testInfo.project.name === 'mobile-chromium') {
