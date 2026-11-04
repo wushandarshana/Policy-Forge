@@ -52,6 +52,9 @@ public class DashboardService {
     static final String TOTAL = "total";
     /** The most policy numbers in one IN list, so a large portfolio never builds an unbounded query. */
     private static final int BATCH = 500;
+    /** The fixed message of every refused {@code asOf} (AC-11.1, AC-11.6); it never echoes the value. */
+    private static final String AS_OF_RULE = "must be a date in the format YYYY-MM-DD from "
+            + PortfolioRules.EARLIEST_AS_OF + " to " + PortfolioRules.LATEST_AS_OF;
 
     private final PolicyRepository policies;
     private final PolicyTermRepository terms;
@@ -76,7 +79,8 @@ public class DashboardService {
      * The dashboard as of a date.
      *
      * @param asOfText the raw {@code asOf} query parameter, or null for today
-     * @throws ValidationFailedException (400) naming {@code asOf} when it is not a date in the format YYYY-MM-DD
+     * @throws ValidationFailedException (400) naming {@code asOf} when it is not a date in the format YYYY-MM-DD, or
+     *                                   is outside 2000-01-01..2100-12-31 (AC-11.6)
      */
     @Transactional(readOnly = true)
     public PortfolioDashboard dashboard(String asOfText) {
@@ -171,11 +175,16 @@ public class DashboardService {
         if (asOfText == null) {
             return LocalDate.now(clock);
         }
+        LocalDate asOf;
         try {
-            return LocalDate.parse(asOfText);
+            asOf = LocalDate.parse(asOfText);
         } catch (DateTimeParseException unreadable) {
-            throw new ValidationFailedException(
-                    List.of(new FieldViolation("asOf", "must be a date in the format YYYY-MM-DD")));
+            throw new ValidationFailedException(List.of(new FieldViolation("asOf", AS_OF_RULE)));
         }
+        // AC-11.6: a date outside the supported range is the same fixed 400, never a date-arithmetic 500.
+        if (!portfolioRules.isSupportedAsOf(asOf)) {
+            throw new ValidationFailedException(List.of(new FieldViolation("asOf", AS_OF_RULE)));
+        }
+        return asOf;
     }
 }

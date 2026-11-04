@@ -77,6 +77,8 @@ public final class RenewalPolicy {
 
     /** Whether the admin job may run for {@code date}: {@code today - 30 <= date <= today} (AC-07.8). */
     public boolean isJobDateAllowed(LocalDate date, LocalDate today) {
-        return true; // red stub
+        Objects.requireNonNull(date, "date");
+        Objects.requireNonNull(today, "today");
+        return !date.isAfter(today) && !date.isBefore(today.minusDays(JOB_DATE_MAX_DAYS_BACK));
     }
 }

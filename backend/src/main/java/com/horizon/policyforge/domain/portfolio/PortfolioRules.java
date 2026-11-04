@@ -16,11 +16,16 @@ public final class PortfolioRules {
     /** How many days ahead of asOf a term may end and still be in the renewal pipeline. */
     public static final int PIPELINE_DAYS = 60;
 
+    /** The first and last {@code asOf} the dashboard computes for (AC-11.6). */
+    public static final LocalDate EARLIEST_AS_OF = LocalDate.of(2000, 1, 1);
+    public static final LocalDate LATEST_AS_OF = LocalDate.of(2100, 12, 31);
+
     private final RenewalPolicy renewalPolicy = new RenewalPolicy();
 
     /** Whether the dashboard can be computed as of {@code asOf}: 2000-01-01..2100-12-31 (AC-11.6). */
     public boolean isSupportedAsOf(LocalDate asOf) {
-        return true; // red stub
+        Objects.requireNonNull(asOf, "asOf");
+        return !asOf.isBefore(EARLIEST_AS_OF) && !asOf.isAfter(LATEST_AS_OF);
     }
 
     /**

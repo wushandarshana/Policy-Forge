@@ -7,9 +7,10 @@ import org.springframework.data.repository.Repository;
 
 /**
  * Access to policies. They are a mutable aggregate (only the status and the current version number change, through the
- * entity), but they are never deleted: {@code save} and finders only, no delete, no update query (NFR-02).
+ * entity), but they are never deleted: {@code save} and finders only, no delete, no update query (NFR-02). The
+ * {@link PolicyLocking} fragment bumps the optimistic-lock version only.
  */
-public interface PolicyRepository extends Repository<PolicyEntity, Long> {
+public interface PolicyRepository extends Repository<PolicyEntity, Long>, PolicyLocking {
 
     /**
      * Saves and flushes, so a duplicate application (one policy per application) or a lost optimistic-lock race

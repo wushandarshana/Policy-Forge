@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,14 @@ public class RenewalService {
     static final String LAPSE_REASON = "GRACE_PERIOD_EXPIRED";
     static final String PAID_REASON = "RENEWAL_PAID";
 
+    /**
+     * Lifts the admin job's date bound (AC-07.8). Off by default; only the test and browser-test configurations turn
+     * it on, never production or the packaged demo.
+     */
+    public static final String ANY_DATE_PROPERTY = "policyforge.jobs.renewal-cycle.any-date";
+    private static final String JOB_DATE_RULE = "must be a date in the format YYYY-MM-DD from "
+            + RenewalPolicy.JOB_DATE_MAX_DAYS_BACK + " days ago up to today";
+
     private static final TypeReference<LinkedHashMap<String, Object>> INPUTS = new TypeReference<>() {
     };
     private static final List<String> IN_FORCE_STATUSES = Arrays.stream(PolicyStatus.values())
@@ -108,12 +117,14 @@ public class RenewalService {
     private final Clock clock;
     private final TransactionTemplate transaction;
     private final PolicyStateMachine stateMachine = new PolicyStateMachine();
+    private final boolean anyJobDate;
 
     public RenewalService(PolicyRepository policies, PolicyVersionRepository versions, PolicyTermRepository terms,
             PolicyStatusTransitionRepository transitions, EndorsementRepository endorsements, RuleSetService ruleSets,
             PremiumCalculator calculator, RenewalPolicy renewalPolicy, GracePeriodPolicy gracePolicy,
             PolicyTerms policyTerms, AuditService audit, ObjectMapper mapper, Clock clock,
-            PlatformTransactionManager transactionManager) {
+            PlatformTransactionManager transactionManager,
+            @Value("${" + ANY_DATE_PROPERTY + ":false}") boolean anyJobDate) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
@@ -128,23 +139,30 @@ public class RenewalService {
         this.mapper = mapper;
         this.clock = clock;
         this.transaction = new TransactionTemplate(transactionManager);
+        this.anyJobDate = anyJobDate;
     }
 
     // ---- the cycle ----
 
     /**
      * The admin job (contract C1): validates the request, then runs the cycle for the date (default today) as the admin.
+     * Unless {@link #ANY_DATE_PROPERTY} is on, the date must satisfy {@code today - 30 <= date <= today} (AC-07.8).
      *
-     * @throws ValidationFailedException (400) for an unknown body key or a malformed {@code date}, reported together
+     * @throws ValidationFailedException (400) for an unknown body key, or a malformed or out-of-bound {@code date},
+     *                                   reported together; nothing runs
      */
     public RenewalCycleResult runCycle(RunCycleCommand command) {
         List<FieldViolation> problems = new ArrayList<>();
         command.unknownKeys().stream().map(EchoedKeySanitiser::sanitise).distinct()
                 .forEach(key -> problems.add(new FieldViolation(key, "is not an accepted field")));
-        LocalDate runDate = LocalDate.now(clock);
+        LocalDate today = LocalDate.now(clock);
+        LocalDate runDate = today;
         if (command.date() != null) {
             try {
                 runDate = LocalDate.parse(command.date());
+                if (!anyJobDate && !renewalPolicy.isJobDateAllowed(runDate, today)) {
+                    problems.add(new FieldViolation("date", JOB_DATE_RULE));
+                }
             } catch (DateTimeParseException unreadable) {
                 problems.add(new FieldViolation("date", "must be a date in the format YYYY-MM-DD"));
             }
@@ -251,6 +269,10 @@ public class RenewalService {
         int termNo = existing.stream().mapToInt(PolicyTermEntity::getTermNo).max().orElse(0) + 1;
         PolicyTermEntity offer = terms.save(PolicyTermEntity.of(number, termNo, dates.startDate(), dates.endDate(),
                 priced.annualPremium(), false, active.version()));
+        // MINOR-2: the offer takes the policy's optimistic lock. A cancel, endorsement or payment of the same policy that
+        // committed since the policy was read makes this fail (the cycle skips the policy and keeps no term), and one
+        // still in flight fails later on the bumped version. No unpaid term is left on a policy cancelled meanwhile.
+        policies.bumpVersion(policy);
         LOG.info("Renewal offered policyNumber={} termNo={} ruleVersion={}", number, termNo, active.version());
         return Optional.of(offer);
     }

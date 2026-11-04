@@ -8,12 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * One cover term of a policy (AC-05.1, AC-07): term 1 runs from the effective date to the expiry date and is paid at
  * issuance, and a renewal term is offered unpaid and paid later. The term records the rule version its premium was
- * rated with, fixed at construction (AC-07.3). A mutable aggregate in one respect only: {@link #markPaid} sets the
- * paid flag, one way (a paid term never becomes unpaid, and is never paid twice). There are no setters.
+ * rated with, fixed at construction (AC-07.3). A mutable aggregate in two intention-revealing respects only:
+ * {@link #markPaid} sets the paid flag, one way (a paid term never becomes unpaid, and is never paid twice), and
+ * {@link #repriceOffer} re-quotes the premium of an unpaid offer (AC-07.7). There are no setters.
  */
 @Entity
 @Table(name = "policy_term")
@@ -35,7 +37,7 @@ public class PolicyTermEntity {
     @Column(name = "end_date", nullable = false, updatable = false)
     private LocalDate endDate;
 
-    @Column(name = "premium", nullable = false, updatable = false, precision = 19, scale = 2)
+    @Column(name = "premium", nullable = false, precision = 19, scale = 2)
     private BigDecimal premium;
 
     @Column(name = "paid", nullable = false)
@@ -80,9 +82,19 @@ public class PolicyTermEntity {
         this.paid = true;
     }
 
-    /** Re-prices an unpaid renewal offer (AC-07.7). */
+    /**
+     * The one change an unpaid renewal offer allows besides being paid: its premium is re-quoted because a
+     * CHANGE_SUM_INSURED endorsement changed the rated inputs while the offer was pending (AC-07.7). The dates and the
+     * rule version never change.
+     *
+     * @throws IllegalStateException when the term is paid (a paid term's premium never changes)
+     */
     public void repriceOffer(BigDecimal newPremium) {
-        // red stub
+        Objects.requireNonNull(newPremium, "newPremium");
+        if (paid) {
+            throw new IllegalStateException("A paid term is never re-priced");
+        }
+        this.premium = newPremium;
     }
 
     public Long getId() {

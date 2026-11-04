@@ -127,7 +127,7 @@ function Loaded({ data }: { data: Dashboard }) {
       </p>
 
       <div className="kpi-grid" data-testid="kpi-tiles">
-        <section className="kpi-tile" aria-labelledby="kpi-active-label">
+        <section className="kpi-tile" data-testid="kpi-tile-active" aria-labelledby="kpi-active-label">
           <h2 id="kpi-active-label" className="kpi-label">
             Active policies
           </h2>
@@ -135,7 +135,7 @@ function Loaded({ data }: { data: Dashboard }) {
             {active}
           </p>
         </section>
-        <section className="kpi-tile" aria-labelledby="kpi-premium-label">
+        <section className="kpi-tile" data-testid="kpi-tile-premium" aria-labelledby="kpi-premium-label">
           <h2 id="kpi-premium-label" className="kpi-label">
             Premium collected
           </h2>

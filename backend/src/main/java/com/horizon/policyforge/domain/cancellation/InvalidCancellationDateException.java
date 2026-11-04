@@ -2,7 +2,7 @@ package com.horizon.policyforge.domain.cancellation;
 
 import com.horizon.policyforge.domain.PolicyForgeDomainException;
 
-/** The cancellation date is outside the current paid term (AC-08.1). Names the offending request field. */
+/** The cancellation date is outside the current paid term or before today (AC-08.1, AC-08.6). Names the field. */
 public class InvalidCancellationDateException extends PolicyForgeDomainException {
 
     /** The machine code of this failure. */
