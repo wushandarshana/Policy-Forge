@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { AC_04_2_PROFILE, AC_04_3_PROFILE, createApplication, signIn } from './support';
+import { AC_04_2_PROFILE, AC_04_3_PROFILE, createApplication, signIn, expectVisual } from './support';
 import type { User } from './support';
 
 // Every test makes its own application and finds it by ID (P-8). The seed and other tests' rows may be in the queue.
@@ -31,7 +31,7 @@ test('AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and
   await expect(detail).toBeVisible();
   await expect(page.getByTestId('case-aadhaar')).toHaveText('**********1234');
   await expect(page.getByTestId('case-pan')).toHaveText('******234F');
-  await expect(detail).toHaveScreenshot('workbench-case-detail.png', {
+  await expectVisual(detail, 'workbench-case-detail.png', {
     mask: [detail.locator('h2')],
     animations: 'disabled',
   });

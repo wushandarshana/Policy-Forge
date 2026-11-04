@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { AC_04_1_PROFILE, AC_04_2_PROFILE, createQuote, fillKyc, signIn } from './support';
+import { AC_04_1_PROFILE, AC_04_2_PROFILE, createQuote, fillKyc, signIn, expectVisual } from './support';
 import type { TermLifeProfile } from './support';
 
 /** Quotes through the Quote page, then follows its Apply link, so the shell routing is on the path. */
@@ -26,7 +26,7 @@ test('AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED
   await signIn(page, 'customer1');
   await expect(page.getByTestId('apply-quote-id')).toHaveText(quoteId);
   await fillKyc(page, AC_04_1_PROFILE.age);
-  await expect(page.getByTestId('apply-form')).toHaveScreenshot('apply-form.png', {
+  await expectVisual(page.getByTestId('apply-form'), 'apply-form.png', {
     mask: [page.getByTestId('apply-quote-id'), page.getByTestId('input-dateOfBirth')],
     animations: 'disabled',
   });
@@ -36,7 +36,7 @@ test('AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED
   await expect(page.getByTestId('status-badge')).toHaveText('APPROVED');
   await expect(page.getByTestId('application-decision')).toHaveText('AUTO_BIND');
   await expect(page.getByTestId('reason-item-UW-OK')).toContainText('No underwriting rule fired');
-  await expect(page.getByTestId('application-details')).toHaveScreenshot('application-status.png', {
+  await expectVisual(page.getByTestId('application-details'), 'application-status.png', {
     mask: [
       page.getByTestId('application-id'),
       page.getByTestId('application-quote-id'),
