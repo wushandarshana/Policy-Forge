@@ -58,10 +58,20 @@ class RefundRecordMigrationTest {
         jdbc = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * A bare policy row. Its own foreign key to an application is switched off for the insert only, so the test does not
+     * have to build a quote and an application; it is back on before any refund row is written, so the refund's foreign
+     * key to the policy is the one under test.
+     */
     private void insertPolicy(String number) {
-        jdbc.update("insert into policy (policy_number, application_id, product_code, customer_id, status,"
-                + " current_version_no, version, issued_at) values (?, ?, 'TERM_LIFE', 'customer1', 'ACTIVE', 1, 0,"
-                + " current_timestamp)", number, "A-" + number);
+        jdbc.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        try {
+            jdbc.update("insert into policy (policy_number, application_id, product_code, customer_id, status,"
+                    + " current_version_no, version, issued_at) values (?, ?, 'TERM_LIFE', 'customer1', 'ACTIVE', 1, 0,"
+                    + " current_timestamp)", number, "A-" + number);
+        } finally {
+            jdbc.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        }
     }
 
     private void insertRefund(String number, String premium, String fee, String amount) {

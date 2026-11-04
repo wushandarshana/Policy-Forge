@@ -14,6 +14,7 @@ import com.horizon.policyforge.repository.PolicyTermEntity;
 import com.horizon.policyforge.repository.PolicyTermRepository;
 import com.horizon.policyforge.repository.PolicyVersionEntity;
 import com.horizon.policyforge.repository.PolicyVersionRepository;
+import com.horizon.policyforge.repository.RefundRecordRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,7 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The policy read use cases (AC-05.1): a customer's own policies (C2) and one policy's detail (C3). A customer reads
+ * The policy read use cases (AC-05.1): a customer's own policies (C2) and one policy's detail (C3), with its refund
+ * records once it is cancelled (C5). A customer reads
  * only their own policies and an ADMIN reads any; everyone else gets the same not-found answer as for an unknown number.
  * Every view is built from an allow-list (P-9): the risk inputs of a version are the product's declared inputs minus
  * the health inputs, and no KYC field is ever carried.
@@ -47,6 +49,7 @@ public class PolicyQueryService {
     private final PolicyTermRepository terms;
     private final PolicyStatusTransitionRepository transitions;
     private final EndorsementRepository endorsements;
+    private final RefundRecordRepository refunds;
     private final EndorsementViews endorsementViews;
     private final RuleSetService ruleSets;
     private final PolicyTerms policyTerms;
@@ -54,13 +57,14 @@ public class PolicyQueryService {
 
     public PolicyQueryService(PolicyRepository policies, PolicyVersionRepository versions, PolicyTermRepository terms,
             PolicyStatusTransitionRepository transitions, EndorsementRepository endorsements,
-            EndorsementViews endorsementViews, RuleSetService ruleSets, PolicyTerms policyTerms,
-            ObjectMapper mapper) {
+            RefundRecordRepository refunds, EndorsementViews endorsementViews, RuleSetService ruleSets,
+            PolicyTerms policyTerms, ObjectMapper mapper) {
         this.policies = policies;
         this.versions = versions;
         this.terms = terms;
         this.transitions = transitions;
         this.endorsements = endorsements;
+        this.refunds = refunds;
         this.endorsementViews = endorsementViews;
         this.ruleSets = ruleSets;
         this.policyTerms = policyTerms;
@@ -125,8 +129,11 @@ public class PolicyQueryService {
         List<PolicyDetail.EndorsementView> endorsementViewList = endorsementEntities.stream()
                 .map(endorsementViews::view)
                 .toList();
+        List<PolicyDetail.RefundView> refundViews = refunds.findByPolicyNumberOrderByIdAsc(policyNumber).stream()
+                .map(PolicyDetail.RefundView::of)
+                .toList();
         return new PolicyDetail(header(policy, allVersions, allTerms, endorsementEntities.size()), versionViews,
-                endorsementViewList, transitionViews, termViews, pendingRenewal(policy, allTerms));
+                endorsementViewList, transitionViews, termViews, pendingRenewal(policy, allTerms), refundViews);
     }
 
     /**
