@@ -98,8 +98,27 @@ public class PolicyIssuanceService {
     public PolicyHeader issue(IssuePolicyCommand command) {
         LocalDate today = LocalDate.now(clock);
         LocalDate effectiveDate = resolveEffectiveDate(command, today);
-        ApplicationEntity application = loadOwned(command);
+        ApplicationEntity application = loadOwned(command.applicationId(), command.customerId());
+        return issueFor(application, command.customerId(), effectiveDate, today);
+    }
 
+    /**
+     * Issues the customer's APPROVED application with an effective date that may lie in the past (AC-11.1): the way the
+     * synthetic sample portfolio gets policies that are already part-way through their term. The public {@link #issue}
+     * refuses such a date (AC-05.1) and keeps refusing it. This path has package visibility on purpose: only the
+     * service layer can call it, no web class can reach it, and an ArchUnit rule says so. The application checks, the
+     * writes and the audit entry are exactly the issue path's.
+     */
+    @Transactional
+    PolicyHeader issueBackdated(String customerId, String applicationId, LocalDate effectiveDate) {
+        LocalDate today = LocalDate.now(clock);
+        ApplicationEntity application = loadOwned(applicationId, customerId);
+        return issueFor(application, customerId, effectiveDate, today);
+    }
+
+    /** The one issuing sequence, after the effective date is settled and the application is loaded and owned. */
+    private PolicyHeader issueFor(ApplicationEntity application, String customerId, LocalDate effectiveDate,
+            LocalDate today) {
         try {
             application.applyTransition(ApplicationStatus.ISSUED);
         } catch (InvalidApplicationStateException notApproved) {
@@ -118,7 +137,6 @@ public class PolicyIssuanceService {
         LocalDate expiryDate = IssuanceDates.expiryDate(effectiveDate, rules.lifecycle().termMonths());
         String policyNumber = numbers.next(quote.getProductCode(), today.getYear());
         Instant now = Instant.now(clock);
-        String customerId = command.customerId();
 
         PolicyEntity policy = PolicyEntity.issue(policyNumber, application.getApplicationId(),
                 quote.getProductCode(), customerId, now);
@@ -175,14 +193,13 @@ public class PolicyIssuanceService {
     }
 
     /** P-5 step 2: an unknown, malformed or another customer's application all look the same: 404. */
-    private ApplicationEntity loadOwned(IssuePolicyCommand command) {
-        String applicationId = command.applicationId();
+    private ApplicationEntity loadOwned(String applicationId, String customerId) {
         if (applicationId == null || !UnderwritingService.APPLICATION_ID.matcher(applicationId).matches()) {
             throw new ResourceNotFoundException("Application not found");
         }
         ApplicationEntity application = applications.findByApplicationId(applicationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
-        if (!application.getCustomerId().equals(command.customerId())) {
+        if (!application.getCustomerId().equals(customerId)) {
             throw new ResourceNotFoundException("Application not found");
         }
         return application;

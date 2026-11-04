@@ -59,7 +59,14 @@ class RuleSetSeedLoaderIT {
     @DisplayName("NFR-05 seed: a seed file whose row is missing is inserted, and rows that exist are not touched")
     void insertsOnlyWhereAbsent() throws Exception {
         long motorId = jdbc.queryForObject("select id from rule_set_version where product_code = 'MOTOR'", Long.class);
-        jdbc.update("delete from rule_set_version where product_code = 'MOTOR'");
+        // The portfolio seed (P-15) has quoted and issued MOTOR policies against that rule version, so the bare delete
+        // needs referential integrity off; it is back on before the loader runs, and the loader re-inserts the row.
+        jdbc.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        try {
+            jdbc.update("delete from rule_set_version where product_code = 'MOTOR'");
+        } finally {
+            jdbc.execute("SET REFERENTIAL_INTEGRITY TRUE");
+        }
 
         assertThat(loader.load()).isEqualTo(1);
 

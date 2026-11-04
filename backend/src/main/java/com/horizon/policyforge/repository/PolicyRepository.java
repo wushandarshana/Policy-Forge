@@ -22,6 +22,9 @@ public interface PolicyRepository extends Repository<PolicyEntity, Long> {
     /** The policies whose status is any of the given names, ordered by policy number (the renewal cycle's worklist). */
     List<PolicyEntity> findByStatusInOrderByPolicyNumberAsc(Collection<String> statuses);
 
+    /** Every policy, ordered by policy number (the admin dashboard's worklist). */
+    List<PolicyEntity> findAllByOrderByPolicyNumberAsc();
+
     /** The customer's policies, newest first. The ID breaks ties between policies issued at the same instant. */
     List<PolicyEntity> findByCustomerIdOrderByIssuedAtDescIdDesc(String customerId);
 }

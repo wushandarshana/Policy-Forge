@@ -47,6 +47,17 @@ class ApplicationSeedIT {
     @Autowired
     private ApplicationContext context;
 
+    /** The REFERRED applications of an application list, as an array node. */
+    private JsonNode referredOf(JsonNode applications) {
+        com.fasterxml.jackson.databind.node.ArrayNode referred = json.createArrayNode();
+        applications.forEach(application -> {
+            if ("REFERRED".equals(application.get("status").asText())) {
+                referred.add(application);
+            }
+        });
+        return referred;
+    }
+
     private int applications() {
         return jdbc.queryForObject("select count(*) from application", Integer.class);
     }
@@ -56,7 +67,9 @@ class ApplicationSeedIT {
     void startupSeedsAReferredApplicationForCustomer2() throws Exception {
         ApplicationApi api = new ApplicationApi(mvc, json);
 
-        JsonNode seeded = api.bodyOf(api.mine("customer2"));
+        // The portfolio seed (P-15) adds three ISSUED applications for each customer; the underwriting seed is the one
+        // REFERRED application in the context.
+        JsonNode seeded = referredOf(api.bodyOf(api.mine("customer2")));
 
         assertThat(seeded).hasSize(1);
         JsonNode application = seeded.get(0);
@@ -65,14 +78,16 @@ class ApplicationSeedIT {
         assertThat(application.get("decision").asText()).isEqualTo("MANUAL_REVIEW");
         assertThat(texts(application.get("reasonCodes"))).containsExactly("UW-TL-002");
         assertThat(application.get("ruleVersion").asInt()).isEqualTo(1);
-        assertThat(api.bodyOf(api.mine("customer1"))).isEmpty();
+        assertThat(referredOf(api.bodyOf(api.mine("customer1")))).isEmpty();
+        api.bodyOf(api.mine("customer1")).forEach(
+                other -> assertThat(other.get("status").asText()).as("only the portfolio seed's applications").isEqualTo("ISSUED"));
     }
 
     @Test
     @DisplayName("AC-09.7: the seeded application is a smoker with sum insured 12,000,000.00, with a RULES decision row by system and the two U-12 audit entries")
     void seedWentThroughTheRealSubmissionPath() throws Exception {
         ApplicationApi api = new ApplicationApi(mvc, json);
-        String applicationId = api.bodyOf(api.mine("customer2")).get(0).get("applicationId").asText();
+        String applicationId = referredOf(api.bodyOf(api.mine("customer2"))).get(0).get("applicationId").asText();
 
         Map<String, Object> quote = jdbc.queryForMap(
                 "select q.sum_insured, q.risk_inputs_json from quote q join application a on a.quote_id = q.quote_id"
@@ -103,7 +118,7 @@ class ApplicationSeedIT {
     @DisplayName("AC-09.7: the seeded quote is owned by customer2 (P-8), so only customer2 can apply for it")
     void seedQuoteIsOwnedByCustomer2() throws Exception {
         ApplicationApi api = new ApplicationApi(mvc, json);
-        String applicationId = api.bodyOf(api.mine("customer2")).get(0).get("applicationId").asText();
+        String applicationId = referredOf(api.bodyOf(api.mine("customer2"))).get(0).get("applicationId").asText();
 
         String owner = jdbc.queryForObject(
                 "select q.owner_id from quote q join application a on a.quote_id = q.quote_id"
@@ -122,6 +137,8 @@ class ApplicationSeedIT {
         seeder.run(noArguments);
         seeder.run(noArguments);
 
-        assertThat(applications()).isEqualTo(before).isEqualTo(1);
+        assertThat(applications()).isEqualTo(before);
+        assertThat(jdbc.queryForObject("select count(*) from application where kyc_aadhaar = 'XXXX-XXXX-0002'",
+                Integer.class)).as("the underwriting seed's own application, once").isEqualTo(1);
     }
 }
