@@ -1,13 +1,18 @@
 import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import type { APIRequestContext, Page } from '@playwright/test';
 import {
   AC_04_1_PROFILE,
+  basic,
   createApplication,
   createPolicy,
   expectNoHorizontalScroll,
   openPolicy,
+  policyExpiry,
+  runRenewalCycle,
+  shiftDate,
   signIn,
+  withRenewalLock,
 } from './support';
 
 /** Hides policy numbers and dates in the visual snapshots (see the file for why it is not `mask`). */
@@ -196,4 +201,122 @@ test('AC-01.13: a signed-in customer quote request carries an Authorization head
   await page.getByTestId('nav-quote').click();
   const signedIn = await requestQuote();
   expect(signedIn['authorization']).toMatch(/^Basic /);
+});
+
+/** Creates a policy and runs the cycle on its own expiry minus 30 days, the first day its offer is made (P-12). */
+async function policyWithOffer(request: APIRequestContext) {
+  return withRenewalLock(async () => {
+    const { policyNumber } = await createPolicy(request, AC_04_1_PROFILE);
+    const expiry = await policyExpiry(request, policyNumber);
+    const run = await runRenewalCycle(request, shiftDate(expiry, -30));
+    return { policyNumber, expiry, run };
+  });
+}
+
+test('AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and the Renew panel shows the next term from expiry plus 1 at 6850.00', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(120_000);
+  const { policyNumber, expiry, run } = await policyWithOffer(request);
+
+  expect(run.runDate).toBe(shiftDate(expiry, -30));
+  expect(run.offersCreated).toContain(policyNumber);
+  expect(run.lapsed).not.toContain(policyNumber);
+
+  await openPolicy(page, policyNumber);
+  await expect(page.getByTestId('renew-panel')).toBeVisible();
+  await expect(page.getByTestId('renew-start')).toHaveText(shiftDate(expiry, 1));
+  await expect(page.getByTestId('renew-premium')).toHaveText('6850.00');
+  await expect(page.getByTestId('policy-status-badge')).toHaveText('ACTIVE');
+  await expectNoHorizontalScroll(page);
+  await expect(page.getByTestId('renew-panel')).toHaveScreenshot('renew-panel-offer.png', {
+    stylePath: SNAPSHOT_MASK,
+    animations: 'disabled',
+  });
+});
+
+test('AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status tab with RENEWAL_PAID and adds version 2', async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(120_000);
+  const { policyNumber } = await policyWithOffer(request);
+  await openPolicy(page, policyNumber);
+  await expect(page.getByTestId('renew-panel')).toBeVisible();
+
+  await page.getByTestId('renew-pay').click();
+
+  await expect(page.getByTestId('policy-status-badge')).toHaveText('RENEWED');
+  await expect(page.getByTestId('renew-panel')).toHaveCount(0);
+  await page.getByTestId('tab-status').click();
+  await expect(page.locator('[data-testid^="transition-row-"]')).toHaveCount(2);
+  await expect(page.getByTestId('transition-1-to')).toHaveText('RENEWED');
+  await expect(page.getByTestId('transition-1-reason')).toHaveText('RENEWAL_PAID');
+  await page.getByTestId('tab-versions').click();
+  await expect(page.getByTestId('version-row-2')).toBeVisible();
+  await expect(page.getByTestId('version-2-premium')).toHaveText('6850.00');
+  await expectNoHorizontalScroll(page);
+});
+
+test('AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab', async ({
+  page,
+  request,
+}) => {
+  const { policyNumber } = await createPolicy(request, AC_04_1_PROFILE);
+  await openPolicy(page, policyNumber);
+
+  await page.getByTestId('cancel-reason').selectOption('NO_LONGER_NEEDED');
+  await page.getByTestId('cancel-preview').click();
+
+  await expect(page.getByTestId('refund-preview-amount')).toHaveText('6850.00');
+  await expect(page.getByTestId('refund-preview-fee')).toHaveText('0.00');
+  await expect(page.getByTestId('refund-preview-cooling-off')).toHaveText('true');
+  await expectNoHorizontalScroll(page);
+  await expect(page.getByTestId('refund-preview')).toHaveScreenshot('cancel-refund-preview.png', {
+    stylePath: SNAPSHOT_MASK,
+    animations: 'disabled',
+  });
+
+  await page.getByTestId('cancel-confirm').click();
+  await expect(page.getByTestId('policy-status-badge')).toHaveText('CANCELLED');
+  await page.getByTestId('tab-refunds').click();
+  await expect(page.locator('[data-testid^="refund-row-"]')).toHaveCount(1);
+  await expect(page.getByTestId('refund-1-amount')).toHaveText('6850.00');
+  await expect(page.getByTestId('refund-1-fee')).toHaveText('0.00');
+  await expectNoHorizontalScroll(page);
+  await expect(page.getByTestId('tabpanel-refunds')).toHaveScreenshot('refunds-tab.png', {
+    stylePath: SNAPSHOT_MASK,
+    animations: 'disabled',
+  });
+});
+
+test('AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second cancel gets 409 and the Refunds tab keeps one row', async ({
+  page,
+  request,
+}) => {
+  const { policyNumber } = await createPolicy(request, AC_04_1_PROFILE);
+  const cancel = () =>
+    request.post(`/api/policies/${policyNumber}/cancel`, {
+      headers: { Authorization: basic('customer1') },
+      data: { reason: 'NO_LONGER_NEEDED' },
+    });
+  expect((await cancel()).status()).toBe(201);
+
+  await openPolicy(page, policyNumber);
+  await expect(page.getByTestId('policy-status-badge')).toHaveText('CANCELLED');
+  await expect(page.getByTestId('cancel-panel')).toHaveCount(0);
+  await expect(page.getByTestId('renew-panel')).toHaveCount(0);
+  await expect(page.getByTestId('policy-endorse-link')).toHaveCount(0);
+
+  expect((await cancel()).status()).toBe(409);
+
+  // Hash navigation keeps the in-memory session, so going out and back loads the detail again.
+  await page.getByTestId('nav-policies').click();
+  await page.getByTestId(`policy-card-${policyNumber}-link`).click();
+  await expect(page.getByTestId('policy-number')).toHaveText(policyNumber);
+  await expect(page.getByTestId('policy-status-badge')).toHaveText('CANCELLED');
+  await page.getByTestId('tab-refunds').click();
+  await expect(page.locator('[data-testid^="refund-row-"]')).toHaveCount(1);
+  await expect(page.getByTestId('refund-1-amount')).toHaveText('6850.00');
 });

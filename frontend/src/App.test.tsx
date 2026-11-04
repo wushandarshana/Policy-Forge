@@ -3,10 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 import {
+  ADMIN,
   application,
   basic,
   calls,
   CUSTOMER,
+  dashboard,
   header,
   installFetch,
   jsonResponse,
@@ -232,5 +234,54 @@ describe('App shell routing for the policy pages (C9)', () => {
 
     expect(await screen.findByTestId('policy-not-found')).toBeInTheDocument();
     expect(screen.queryByTestId('quote-form')).not.toBeInTheDocument();
+  });
+});
+
+describe('App shell routing for the Admin Dashboard (C9)', () => {
+  const dashboardHandler: Handler = (url) => {
+    if (url.endsWith('/api/products')) return jsonResponse(200, PRODUCTS);
+    if (url.includes('/api/admin/dashboard')) return jsonResponse(200, dashboard());
+    return jsonResponse(404, {});
+  };
+
+  it('AC-11.1: #/admin/dashboard renders the Admin Dashboard behind the sign-in gate', async () => {
+    const { fetchMock, user } = renderAt('#/admin/dashboard', dashboardHandler);
+
+    expect(await screen.findByTestId('signin-form')).toBeInTheDocument();
+    expect(screen.queryByTestId('kpi-tiles')).not.toBeInTheDocument();
+    expect(calls(fetchMock).some((call) => call.url.includes('/api/admin/dashboard'))).toBe(false);
+
+    await signInAs(user, ADMIN);
+
+    expect(await screen.findByTestId('kpi-tiles')).toBeInTheDocument();
+    expect(screen.getByTestId('kpi-active')).toHaveTextContent('7');
+    const call = calls(fetchMock).find((candidate) => candidate.url.includes('/api/admin/dashboard'));
+    expect(call).toBeDefined();
+    expect(header(call!, 'Authorization')).toBe(basic(ADMIN));
+  });
+
+  it('AC-11.1: the Dashboard nav link reaches the route and marks it as the current page', async () => {
+    const { user } = renderAt('', dashboardHandler);
+
+    const link = await screen.findByTestId('nav-dashboard');
+    expect(link).not.toHaveAttribute('aria-current');
+    await user.click(link);
+    expect(window.location.hash).toBe('#/admin/dashboard');
+    await signInAs(user, ADMIN);
+
+    expect(await screen.findByTestId('kpi-tiles')).toBeInTheDocument();
+    expect(screen.getByTestId('nav-dashboard')).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByTestId('nav-quote')).not.toHaveAttribute('aria-current');
+  });
+
+  it('AC-11.5: a signed-in customer on the route sees the fixed not-authorised message and no tiles', async () => {
+    const { user } = renderAt('#/admin/dashboard', (url) =>
+      url.includes('/api/admin/dashboard') ? jsonResponse(403, { title: 'Forbidden', status: 403 }) : jsonResponse(200, PRODUCTS),
+    );
+
+    await signInAs(user, CUSTOMER);
+
+    expect(await screen.findByTestId('dashboard-error')).toHaveTextContent('You are not authorised to view the portfolio dashboard.');
+    expect(screen.queryByTestId('kpi-tiles')).not.toBeInTheDocument();
   });
 });
