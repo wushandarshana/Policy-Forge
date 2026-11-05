@@ -68,8 +68,11 @@ requests into them.
   `PF_REVIEW_MAX_BUDGET_USD` sets the cap per review pass (default `5.00`).
 - **GitLab:**
   - Create the protected environments `claude-review` (deployment approval required) and `claude-review-comment`.
-  - Add `ANTHROPIC_API_KEY` (masked, protected), scoped to `claude-review`.
-  - Optionally add `PF_GITLAB_REVIEW_TOKEN` (a project access token, Reporter role, scope `api`, masked, protected),
+  - Add `ANTHROPIC_API_KEY` (masked, **not** protected), with environment scope `claude-review`. Protected
+    variables never reach merge request pipelines of unprotected branches; the protected environment's approval is
+    what guards the key.
+  - Optionally add `PF_GITLAB_REVIEW_TOKEN` (a project access token, Reporter role, scope `api`, with an expiry date;
+    masked, not protected),
     scoped to `claude-review-comment`.
   - Don't protect the feature branches for this.
 - Never set `NODE_TLS_REJECT_UNAUTHORIZED=0` (KD-015). A PR from a fork gets no secrets, so its review fails closed. A
