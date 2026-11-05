@@ -16,7 +16,9 @@
 # - Optional: PF_REVIEW_MAX_BUDGET_USD.
 # - claude-review installs bubblewrap (bwrap), which the Claude Code CLI needs to scrub its subprocess environment.
 #   The runner must allow user namespaces for bwrap (or run the job in privileged mode); otherwise the bwrap smoke test,
-#   and with it the review, fails closed.
+#   and with it the review, fails closed. This job runs no sysctl and keeps scrubbing on. The GitLab runner must allow
+#   unprivileged user namespaces: a shell or VM executor with kernel.apparmor_restrict_unprivileged_userns set to 0, or
+#   a privileged Docker executor. Otherwise the review fails closed by design.
 # - The required check is ci-gate (stage gate): it fails unless the five gate jobs each wrote their status file.
 
 workflow:
