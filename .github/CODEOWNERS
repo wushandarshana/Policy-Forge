@@ -1,0 +1,11 @@
+# Code owners (NFR-09.7). With "Require review from Code Owners" on the dev and main rulesets, a change to the CI
+# definitions, the CI and review scripts or the reviewer agents needs the owner's review, because the code under
+# review can otherwise change its own gate.
+* @wushandarshana
+
+/.github/** @wushandarshana
+/.gitlab-ci.yml @wushandarshana
+/scripts/ci/** @wushandarshana
+/scripts/redact_evidence.py @wushandarshana
+/scripts/ac_audit.py @wushandarshana
+/.claude/agents/** @wushandarshana

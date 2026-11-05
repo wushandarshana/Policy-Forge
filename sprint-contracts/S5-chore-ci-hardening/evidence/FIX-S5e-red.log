@@ -1,0 +1,114 @@
+# FIX-S5e red: the CLI runs in a disposable worktree (expected failures)
+..........................................................................................FFFF.F.....FFF......................................F....................................unknown gate(s): no-such-gate; known: ac-audit, redact-evidence, hook-tests, hook-line-endings, ci-script-tests, oracle-fixture, actionlint, ci-schema
+..........
+======================================================================
+FAIL: test_a_deleted_tracked_file_in_the_worktree_fails_closed (test_claude_review.DisposableWorktreeTests.test_a_deleted_tracked_file_in_the_worktree_fails_closed)
+NFR-09.4: a pass that deletes a tracked file of the worktree makes the run exit 2, naming the file.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 724, in test_a_deleted_tracked_file_in_the_worktree_fails_closed
+    self.assertTrue((Path(repo) / "CLAUDE.md").exists())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_modified_tracked_file_in_the_worktree_fails_closed (test_claude_review.DisposableWorktreeTests.test_a_modified_tracked_file_in_the_worktree_fails_closed)
+NFR-09.4: a pass that modifies a tracked file of the worktree makes the run exit 2 before the second pass,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 713, in test_a_modified_tracked_file_in_the_worktree_fails_closed
+    self.assertIn("tracked", proc.stderr_text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'tracked' not found in 'ERROR: security-reviewer: the working tree changed during the pass (scripts/redact_evidence.py); the review fails closed and no later step runs\r\n# Claude Code review\r\n\r\nRange: `2a1d61096599428d7be2786cb28a2150e4c86165..ffc164ff415faeadb59e83b0b6b814026f15d515` (1 changed file(s))\r\n\r\n## Failure\r\n\r\nsecurity-reviewer: the working tree changed during the pass (scripts/redact_evidence.py); the review fails closed and no later step runs\r\n\r\nGATE: FAIL (error: security-reviewer: the working tree changed during the pass (scripts/redact_evidence.py); the review fails closed and no later step runs)\r\n'
+
+======================================================================
+FAIL: test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full (test_claude_review.DisposableWorktreeTests.test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full)
+NFR-09.7: empty files the sandbox creates in the worktree (.env, .npmrc, .gitmodules and more than ten in
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 693, in test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full
+    self.assertEqual(proc.returncode, 0, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : ERROR: security-reviewer: the working tree changed during the pass (.bashrc, .env, .env.development, .env.development.local, .env.local, .env.production, .env.production.local, .env.test, .env.test.local, .gitmodules and 3 more); the review fails closed and no later step runs
+# Claude Code review
+
+Range: `a41c24f14ab627e51b2fb85659f2cd64e8338fae..a8bdc915fac3344dec91c03f1a6ce0fe47672834` (1 changed file(s))
+
+## Failure
+
+security-reviewer: the working tree changed during the pass (.bashrc, .env, .env.development, .env.development.local, .env.local, .env.production, .env.production.local, .env.test, .env.test.local, .gitmodules and 3 more); the review fails closed and no later step runs
+
+GATE: FAIL (error: security-reviewer: the working tree changed during the pass (.bashrc, .env, .env.development, .env.development.local, .env.local, .env.production, .env.production.local, .env.test, .env.test.local, .g)
+
+
+======================================================================
+FAIL: test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout (test_claude_review.DisposableWorktreeTests.test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout)
+NFR-09.7: each pass starts the CLI in the same worktree, which is not the checkout or inside it, holds the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 678, in test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout
+    self.assertNotEqual(cwd, real)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-pmuu5s7u') == WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-pmuu5s7u')
+
+======================================================================
+FAIL: test_the_worktree_is_removed_when_the_cli_fails (test_claude_review.DisposableWorktreeTests.test_the_worktree_is_removed_when_the_cli_fails)
+NFR-09.4: when the CLI exits 1 after dropping a placeholder, the run exits 2 and the worktree is gone.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 733, in test_the_worktree_is_removed_when_the_cli_fails
+    self.assert_worktree_removed(repo)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 664, in assert_worktree_removed
+    self.assertFalse(Path(cwd).exists(), f"the worktree {cwd} was not removed")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : the worktree C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-test-3umxnxb_ was not removed
+
+======================================================================
+FAIL: test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder (test_claude_review.ReviewInputTests.test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder) (pass_number=2)
+NFR-09.7: before each pass ci-out/review/input/ holds diff.patch (git diff base head), log.txt (the commit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 440, in test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder
+    self.assertNotEqual(Path(call["cwd"]).resolve(), self.repo.resolve(),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "the CLI runs in a disposable worktree, not in the checkout")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-saoh_u76') == WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-saoh_u76') : the CLI runs in a disposable worktree, not in the checkout
+
+======================================================================
+FAIL: test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder (test_claude_review.ReviewInputTests.test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder) (pass_number=3)
+NFR-09.7: before each pass ci-out/review/input/ holds diff.patch (git diff base head), log.txt (the commit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 440, in test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder
+    self.assertNotEqual(Path(call["cwd"]).resolve(), self.repo.resolve(),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "the CLI runs in a disposable worktree, not in the checkout")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-saoh_u76') == WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/pf-ci-test-saoh_u76') : the CLI runs in a disposable worktree, not in the checkout
+
+======================================================================
+FAIL: test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder (test_claude_review.ReviewInputTests.test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder)
+NFR-09.7: before each pass ci-out/review/input/ holds diff.patch (git diff base head), log.txt (the commit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 442, in test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder
+    self.assertFalse((self.repo / INPUT_DIR).exists(), "the input files go to the worktree, not the checkout")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : the input files go to the worktree, not the checkout
+
+======================================================================
+FAIL: test_a_long_list_of_changed_paths_is_reported_in_full (test_claude_review.UnchangedTreeTests.test_a_long_list_of_changed_paths_is_reported_in_full)
+NFR-09.7: when more than ten paths of the real checkout change, the error names every one of them, with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 592, in test_a_long_list_of_changed_paths_is_reported_in_full
+    self.assertIn(name, proc.stderr_text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'src/escaped-10.txt' not found in 'ERROR: security-reviewer: the working tree changed during the pass (src/escaped-00.txt, src/escaped-01.txt, src/escaped-02.txt, src/escaped-03.txt, src/escaped-04.txt, src/escaped-05.txt, src/escaped-06.txt, src/escaped-07.txt, src/escaped-08.txt, src/escaped-09.txt and 4 more); the review fails closed and no later step runs\r\n# Claude Code review\r\n\r\nRange: `f0fbc17faf3193afcfba16752dfb98bddb2cdfb5..83cb4504b103a73e98aac9fb4cd8106b0cfc4839` (1 changed file(s))\r\n\r\n## Failure\r\n\r\nsecurity-reviewer: the working tree changed during the pass (src/escaped-00.txt, src/escaped-01.txt, src/escaped-02.txt, src/escaped-03.txt, src/escaped-04.txt, src/escaped-05.txt, src/escaped-06.txt, src/escaped-07.txt, src/escaped-08.txt, src/escaped-09.txt and 4 more); the review fails closed and no later step runs\r\n\r\nGATE: FAIL (error: security-reviewer: the working tree changed during the pass (src/escaped-00.txt, src/escaped-01.txt, src/escaped-02.txt, src/escaped-03.txt, src/escaped-04.txt, src/escaped-05.txt, src/escaped-06.txt,)\r\n'
+
+----------------------------------------------------------------------
+Ran 187 tests in 111.386s
+
+FAILED (failures=9)

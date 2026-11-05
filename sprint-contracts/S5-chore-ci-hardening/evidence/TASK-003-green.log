@@ -1,0 +1,231 @@
+TASK-003 green log (NFR-09.5 visual-baseline policy, packaged-JAR server option, local Playwright runs)
+started: 2026-11-04T13:34:15Z
+
+=== npm test (vitest run --coverage), includes noMoneyArithmetic and NFR-09.5
+ ✓ src/noMoneyArithmetic.test.ts (1 test) 6ms
+ ✓ src/visualBaselinePolicy.test.ts (25 tests) 5ms
+ Test Files  17 passed (17)
+      Tests  173 passed (173)
+Statements   : 96.5% ( 2735/2834 )
+Branches     : 89.23% ( 655/734 )
+Lines        : 96.5% ( 2735/2834 )
+npm test exit=0
+
+=== npm run build (tsc --noEmit && vite build)
+> policyforge-frontend@0.1.0 build
+> tsc --noEmit && vite build
+
+[36mvite v6.4.5 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 58 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  0.41 kB[22m[1m[22m[2m │ gzip:  0.28 kB[22m
+[2mdist/[22m[35massets/index-B-sjZ0Y5.css  [39m[1m[2m  6.98 kB[22m[1m[22m[2m │ gzip:  1.81 kB[22m
+[2mdist/[22m[36massets/index-JDWy5faI.js   [39m[1m[2m209.15 kB[22m[1m[22m[2m │ gzip: 62.07 kB[22m
+[32m✓ built in 586ms[39m
+build exit=0
+
+=== git status --short after npm test and build, and git ls-files frontend/coverage
+ M e2e/apply-underwrite.spec.ts
+ M e2e/dashboard.spec.ts
+ M e2e/policy-lifecycle.spec.ts
+ M e2e/support.ts
+ M e2e/visual-baseline-policy.ts
+ M e2e/workbench.spec.ts
+ M playwright.config.ts
+tracked under frontend/coverage: 0
+
+=== RUN 1: npx playwright test (both projects, default webServer = mvnw.cmd spring-boot:run), PF_VISUAL_BASELINES unset (auto)
+  ok  4 [desktop-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figure
+  ok  7 [desktop-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok  1 [desktop-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in o
+  ok  3 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does
+  ok  5 [desktop-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 9
+  ok  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok  8 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My
+  ok  6 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the 
+  ok 11 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with U
+  ok 10 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 
+  ok 13 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and
+  ok 18 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok  9 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second 
+  ok 21 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-00
+  ok 20 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 17 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a secon
+  ok 22 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 16 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then conf
+  ok 14 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Statu
+  ok 19 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPR
+  ok 15 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and
+  ok 12 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and
+  ok 24 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 32 [mobile-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures
+  ok 23 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW
+  ok 31 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does 
+  ok 28 [mobile-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok 25 [mobile-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90
+  ok 35 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and 
+  ok 29 [mobile-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in on
+  ok 26 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My 
+  ok 27 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the o
+  ok 39 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 36 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and 
+  ok 33 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second e
+  ok 42 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 38 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confi
+  ok 30 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9
+  ok 43 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002
+  ok 41 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPRO
+  ok 40 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second
+  ok 44 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 34 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 
+  ok 37 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status
+  44 passed 
+exit=0
+test-results/visual-baselines-missing.txt: ls: cannot access 'test-results/visual-baselines-missing.txt': No such file or directory
+git status --short (PNG/other changes) after run 1: []
+
+=== JAR build: ./mvnw -B -DskipTests package (SPA packaged)
+[INFO] Building jar: C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar
+[INFO] BUILD SUCCESS
+[INFO] Total time:  16.086 s
+static/index.html in jar: 1
+
+=== RUN 2 (PF_E2E_JAR=../backend/target/policyforge-0.1.0-SNAPSHOT.jar, both projects, first start of the fresh JAR): FAILED, 1 flaky failure, recorded as found
+  x   9 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its
+    Error: expect(locator).toHaveScreenshot(expected) failed
+  1 failed
+  43 passed 
+    Error: expect(locator).toHaveScreenshot(expected) failed
+      Expected an image 410px by 289px, received 410px by 290px. 
+      - Expected an image 410px by 289px, received 410px by 290px.
+
+=== RUN 3 (same JAR, same command, immediately after run 2): all pass
+  ok  3 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does
+  ok  9 [desktop-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figure
+  ok  4 [desktop-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in o
+  ok  7 [desktop-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok  1 [desktop-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 9
+  ok  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 10 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the 
+  ok  5 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My
+  ok 13 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and
+  ok 11 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with U
+  ok  8 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 
+  ok 18 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok  6 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second 
+  ok 14 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and
+  ok 16 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then conf
+  ok 17 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a secon
+  ok 21 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-00
+  ok 20 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 22 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 19 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPR
+  ok 12 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and
+  ok 15 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Statu
+  ok 23 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does 
+  ok 24 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW
+  ok 25 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 32 [mobile-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures
+  ok 27 [mobile-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in on
+  ok 35 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and 
+  ok 28 [mobile-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok 29 [mobile-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90
+  ok 26 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the o
+  ok 36 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and 
+  ok 31 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My 
+  ok 40 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 30 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 
+  ok 33 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9
+  ok 43 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002
+  ok 38 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confi
+  ok 34 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second e
+  ok 39 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second
+  ok 37 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status
+  ok 42 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 44 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 41 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPRO
+  44 passed 
+
+=== RUN 4 (same JAR, same command): all pass
+  ok  6 [desktop-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figure
+  ok  3 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does
+  ok  4 [desktop-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok  7 [desktop-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in o
+  ok  5 [desktop-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 9
+  ok  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 10 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the 
+  ok  1 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with U
+  ok  8 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My
+  ok  9 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 
+  ok 13 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and
+  ok 18 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 11 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second 
+  ok 14 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and
+  ok 20 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 17 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a secon
+  ok 22 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 16 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then conf
+  ok 21 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-00
+  ok 19 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPR
+  ok 12 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and
+  ok 15 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Statu
+  ok 31 [mobile-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures
+  ok 24 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does 
+  ok 26 [mobile-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in on
+  ok 25 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 
+  ok 23 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW
+  ok 28 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My 
+  ok 30 [mobile-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast 
+  ok 27 [mobile-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90
+  ok 34 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and 
+  ok 29 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the o
+  ok 39 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 
+  ok 35 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status
+  ok 43 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002
+  ok 42 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 38 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second
+  ok 33 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9
+  ok 37 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confi
+  ok 36 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and 
+  ok 44 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 40 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPRO
+  ok 32 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 
+  ok 41 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second e
+  44 passed 
+
+after runs 3 and 4: git status --short = [], visual-baselines-missing.txt: ls: cannot access 'test-results/visual-baselines-missing.txt': No such file or directory
+
+=== DEMO 1: all 20 -win32 baselines moved out (win32 has none), PF_E2E_JAR, npx playwright test workbench.spec.ts (auto mode)
+[visual-baseline-missing] workbench.spec.ts-workbench-case-detail-desktop-chromium-win32.png
+  ok 2 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+[visual-baseline-missing] workbench.spec.ts-workbench-case-detail-mobile-chromium-win32.png
+  ok 8 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 5 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 7 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 3 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 4 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 1 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  ok 6 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  8 passed 
+exit as above; visual-baselines-missing.txt content:
+workbench.spec.ts-workbench-case-detail-desktop-chromium-win32.png
+workbench.spec.ts-workbench-case-detail-mobile-chromium-win32.png
+restored 20 baselines, git status --short = []
+
+=== DEMO 2: only the two workbench-case-detail -win32 baselines moved out, 18 remain (win32 is baselined), PF_E2E_JAR, workbench.spec.ts (auto mode)
+  ok 4 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 6 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows 
+  ok 7 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 1 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 
+  ok 5 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  ok 3 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED 
+  x  8 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+  x  2 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED 
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\workbench.spec.ts-workbench-case-detail-desktop-chromium-win32.png, writing actual.
+    Error: A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\workbench.spec.ts-workbench-case-detail-mobile-chromium-win32.png, writing actual.
+  2 failed
+  6 passed 
+visual-baselines-missing.txt after demo 2: absent (the assertion ran, so nothing was skipped)
+files Playwright wrote at the missing baseline paths were deleted, originals restored, git status --short = []

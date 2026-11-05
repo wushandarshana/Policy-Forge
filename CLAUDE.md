@@ -42,7 +42,7 @@ This file holds the rules for the whole repository. More specific rules live in 
 | Persistence | H2 (file/in-memory), Spring Data JPA, Flyway migrations |
 | Frontend | React 18 + Vite + TypeScript, served by Spring Boot in the packaged app |
 | Tests | JUnit 5, AssertJ, Spring Boot Test, ArchUnit, JaCoCo; Vitest; Playwright |
-| CI | GitLab CI (`.gitlab-ci.yml`, added in Sprint 5) with a Claude Code review stage |
+| CI | GitHub Actions (`.github/workflows/ci.yml`, runs on origin) and GitLab CI (`.gitlab-ci.yml`) with the same jobs: build, frontend-unit, e2e, quality-gates, a required Claude Code review and the `ci-gate` aggregator (`docs/harness-setup.md`) |
 | MCP | Playwright MCP (`.mcp.json`), used by the evaluator for live UI checks |
 
 ## Architecture (see `docs/architecture.md`)
@@ -64,7 +64,8 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 2. Use TDD (`docs/tdd.md`): commit a failing AC-tagged test (`test: red …`), then the implementation
    (`feat: green …`), then cleanup (`refactor: …`).
 3. The evaluator runs `./mvnw verify`, `npm test` and Playwright MCP against the running app.
-4. The `security-reviewer` and `test-engineer` agents review the work, then `/sprint-archive` and `/pr` merge.
+4. The `security-reviewer` and `test-engineer` agents review the work, then `/sprint-archive` and `/pr` open the PR.
+   It merges only when every CI job is green, including `claude-review` and `ci-gate`.
 5. Record recurring mistakes in `docs/knowledge-deposits.md` and encode them into a hook, skill or CLAUDE.md rule.
 
 ## Commands
@@ -76,6 +77,8 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 | Frontend unit tests | `cd frontend && npm test` |
 | E2E tests | `cd frontend && npx playwright test` |
 | AC coverage audit | `/ac-coverage`, or `python scripts/ac_audit.py` |
+| All CI quality gates | `python scripts/ci/quality_gates.py` (after `pip install --require-hashes -r scripts/requirements-ci.txt`) |
+| CI script tests | `python -m unittest discover -s scripts/tests -v` |
 
 ## Debugging: environment first
 

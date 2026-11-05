@@ -73,6 +73,17 @@ cancellation date, which is no earlier than the request.
 Effects, in one transaction: append a `RefundRecord` (policyNumber, termNo, amount, unexpiredDays, termDays, fee,
 formula string, createdAt, actorId) and the transition → **CANCELLED**. Refund records are append-only.
 
+## Accepted v1 limitations (user decision 2026-11-04, Sprint 5)
+- **Renewal re-rates the stored inputs unchanged (SG-3).** The refreshed premium re-quotes the current version's
+  stored risk inputs with the active rule version. Ages (TERM_LIFE `age`, MOTOR `driverAge` and `vehicleAgeYears`,
+  HOUSEHOLD `propertyAgeYears`) are not advanced, and underwriting is not re-run at renewal.
+- **An early renewal payment closes the rest of the old term (SG-5).** The current paid term becomes the renewal term
+  as soon as it is paid (G-5). After an early payment, the remainder of the previous term can no longer be endorsed
+  or cancelled, and only the renewal term's premium is refundable.
+- **A policy that the active rule version rejects gets no offer (SG-7).** When the active rule version rejects a
+  policy's stored risk inputs, the cycle creates no offer and logs only the policy number. Such a policy never has an
+  unpaid renewal term, so the cycle never lapses it.
+
 ## Acceptance Criteria
 
 - **AC-07.1** Given an ACTIVE TERM_LIFE policy with term 2026-11-01..2027-10-31 and `renewalOfferDaysBeforeExpiry = 30`,

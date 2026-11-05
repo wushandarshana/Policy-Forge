@@ -14,7 +14,8 @@ Scope: `$ARGUMENTS` (default `all`, meaning every `specs/*_spec.md`).
    the ID, spec file and a 10-word summary.
 2. **Collect test references.** Grep for `AC-\d{2}(\.\d+)?` and `NFR-\d{2}(\.\d+)?` in:
    - `backend/src/test/java/**` (`@Tag("AC-NN")`, `@DisplayName("AC-NN.M: …")`, parameterised names);
-   - `frontend/src/**/*.test.ts(x)` and `frontend/e2e/**/*.spec.ts` (test titles).
+   - `frontend/src/**/*.test.ts(x)` and `frontend/e2e/**/*.spec.ts` (test titles);
+   - `scripts/tests/test_*.py` (each test's docstring starts with the ID).
    A test tagged only `AC-NN` (no `.M`) counts as covering **any** `AC-NN.M` only if its DisplayName or a parameter row
    names the sub-ID. Otherwise mark it as **parent-only**.
 3. **Build the matrix:** `AC id | spec | tests (file:line) | level (domain/service/web/e2e/ui) | status`. Status is

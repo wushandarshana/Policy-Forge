@@ -1,8 +1,9 @@
-import { mkdirSync, rmSync, statSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { expect } from '@playwright/test';
-import type { APIRequestContext, Page } from '@playwright/test';
+import { basename, dirname, join } from 'node:path';
+import { expect, test } from '@playwright/test';
+import type { APIRequestContext, Locator, Page } from '@playwright/test';
+import { decideVisualBaseline } from './visual-baseline-policy';
 
 // Synthetic data only (root CLAUDE.md rule 4). The seeded users share one dummy password (SecurityConfig).
 export const PASSWORD = 'password';
@@ -110,6 +111,85 @@ export async function openPolicy(page: Page, policyNumber: string): Promise<void
   await page.goto(`/#/policies/${policyNumber}`);
   await signIn(page, 'customer1');
   await expect(page.getByTestId('policy-number')).toHaveText(policyNumber);
+}
+
+/** The options the specs pass to a visual assertion (the ones `toHaveScreenshot` is called with). */
+export interface VisualOptions {
+  mask?: Locator[];
+  stylePath?: string | string[];
+  animations?: 'disabled' | 'allow';
+}
+
+/** Where a skipped visual assertion is listed. Playwright's output folder is `test-results/` next to the config. */
+const MISSING_BASELINES_FILE = 'visual-baselines-missing.txt';
+
+function platformHasBaselines(snapshotFile: string): boolean {
+  try {
+    const suffix = `-${process.platform}.png`;
+    return readdirSync(dirname(snapshotFile)).some((name) => name.endsWith(suffix));
+  } catch {
+    return false;
+  }
+}
+
+function recordMissingBaseline(snapshotName: string, recordFile: string): void {
+  const info = test.info();
+  info.annotations.push({ type: 'visual-baseline-missing', description: snapshotName });
+  console.warn(`[visual-baseline-missing] ${snapshotName}`);
+  mkdirSync(dirname(recordFile), { recursive: true });
+  appendFileSync(recordFile, `${snapshotName}\n`);
+}
+
+/** What applyVisualPolicy needs to decide: the baseline file, the PF_VISUAL_BASELINES value and the skip list. */
+export interface VisualPolicyContext {
+  snapshotFile: string;
+  mode: string | undefined;
+  recordFile: string;
+}
+
+/**
+ * The only way a spec makes a visual assertion (NFR-09.5): never call `toHaveScreenshot` directly. It resolves the
+ * baseline path from the running test, asks the policy in `visual-baseline-policy.ts` (PF_VISUAL_BASELINES) whether
+ * this platform asserts, and on a skip records the test, so functional assertions after it still run.
+ */
+export async function expectVisual(locator: Locator, name: string, options: VisualOptions = {}): Promise<void> {
+  const info = test.info();
+  await applyVisualPolicy(locator, name, options, {
+    snapshotFile: info.snapshotPath(name),
+    mode: process.env.PF_VISUAL_BASELINES,
+    recordFile: join(info.project.outputDir, MISSING_BASELINES_FILE),
+  });
+}
+
+/**
+ * expectVisual with its inputs made explicit, so the self-check in `visual-baseline.spec.ts` can point it at a folder
+ * without baselines and at its own skip list. Specs call expectVisual.
+ */
+export async function applyVisualPolicy(
+  locator: Locator,
+  name: string,
+  options: VisualOptions,
+  context: VisualPolicyContext,
+): Promise<void> {
+  const decision = decideVisualBaseline({
+    mode: context.mode,
+    baselineExists: exists(context.snapshotFile),
+    platformHasBaselines: platformHasBaselines(context.snapshotFile),
+  });
+  if (decision.action === 'error') throw new Error(decision.message);
+  if (decision.action === 'skip') {
+    recordMissingBaseline(basename(context.snapshotFile), context.recordFile);
+    return;
+  }
+  await expect(locator).toHaveScreenshot(name, options);
+}
+
+function exists(file: string): boolean {
+  try {
+    return statSync(file).isFile();
+  } catch {
+    return false;
+  }
 }
 
 /** The page must never scroll sideways (spec UI section: no horizontal scrolling at 375px). */

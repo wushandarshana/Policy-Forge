@@ -64,6 +64,8 @@ ArchUnit enforces these rules (`backend/src/test/java/com/horizon/policyforge/ar
   (NFR-02).
 - `ControllerPlacementArchTest`: `@RestController` classes live only in `..web..`, and their names end in
   `Controller`.
+- `RepriceOfferCallerArchTest`: only `EndorsementService` calls `PolicyTermEntity.repriceOffer`, the one mutator an
+  unpaid renewal offer has besides `markPaid` (NFR-08.1, AC-07.7; Sprint 4 security review MINOR-A).
 
 ## 3. Quote-to-bind sequence
 

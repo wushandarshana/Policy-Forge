@@ -1,0 +1,112 @@
+# Generates the -linux visual baselines in CI, because no Linux machine is available locally (NFR-09.5, plan G-1, C2, C9).
+# It runs when the label update-linux-snapshots is added to a pull request into dev or main, or by hand once this file is
+# on the default branch. It builds the packaged JAR without tests and runs Playwright in the same image and against the
+# same kind of server as the e2e job of ci.yml, with PF_VISUAL_BASELINES=update and --update-snapshots=missing. That
+# writes only the missing baselines of this platform and never rewrites an existing one. The files are uploaded as the
+# artifact linux-snapshot-baselines; a person downloads them, looks at every image and commits them in their own commit.
+# This workflow reads no repository secret and has read-only permissions.
+name: Linux snapshots
+
+on:
+  pull_request:
+    types: [labeled]
+    branches: [dev, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-jar:
+    name: build-jar
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-linux-snapshots'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Temurin 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 21.0.13+9
+          cache: maven
+      - name: Cache the npm download cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Package the JAR with the SPA, tests skipped
+        run: cd backend && ./mvnw -B -DskipTests package
+      - name: Upload the packaged JAR
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: policyforge-jar
+          path: backend/target/policyforge-*.jar
+          if-no-files-found: error
+          retention-days: 1
+
+  linux-snapshots:
+    name: linux-snapshots
+    needs: build-jar
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-linux-snapshots'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --ipc=host
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download the packaged JAR
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: policyforge-jar
+          path: policyforge-jar
+      - name: Set up a Temurin 21 JRE
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 21.0.13+9
+          java-package: jre
+      - name: Cache the npm download cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Point PF_E2E_JAR at the packaged JAR
+        run: |
+          jars=(policyforge-jar/policyforge-*.jar)
+          test "${#jars[@]}" -eq 1
+          echo "PF_E2E_JAR=$PWD/${jars[0]}" >> "$GITHUB_ENV"
+      - name: Write the missing Linux baselines
+        env:
+          PF_VISUAL_BASELINES: update
+        run: cd frontend && npm ci && npx playwright test --update-snapshots=missing
+      - name: Upload the Linux baselines
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-snapshot-baselines
+          path: frontend/e2e/__snapshots__/*-linux.png
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload the Playwright report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-snapshot-report
+          path: frontend/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

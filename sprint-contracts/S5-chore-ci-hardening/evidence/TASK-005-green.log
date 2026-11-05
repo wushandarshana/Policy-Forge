@@ -1,0 +1,579 @@
+
+===== 0. environment and git state =====
+Wed Nov  4 14:14:30 UTC 2026
+chore/ci-hardening
+status-lines: 0
+d9a5694017b5fb0b9f50a07623c1f477f12caa35
+8e265d6e5f05ebb5b768562fe82db25273fc37e7
+7c7fdf316876d5c54259f9cc43a1b055872c8fa3
+d9a5694017b5fb0b9f50a07623c1f477f12caa35	refs/heads/dev
+8e265d6e5f05ebb5b768562fe82db25273fc37e7	refs/heads/main
+1a019defddd636d66243ed8226bcfb36ed3d6e30	refs/tags/v0.1.0
+8e265d6e5f05ebb5b768562fe82db25273fc37e7	refs/tags/v0.1.0^{}
+  origin/HEAD -> origin/main
+  origin/chore/branching-strategy
+  origin/chore/gh-pr-workflow
+  origin/chore/release-v0.1.0
+  origin/chore/release-v0.1.0-addendum
+  origin/dev
+  origin/feat/application-underwriting
+  origin/feat/catalog-quote
+  origin/feat/issuance-endorsement
+  origin/feat/renewal-cancellation
+  origin/feat/substrate
+  origin/fix/hook-quoted-separators
+  origin/main
+port 8080: no LISTENING socket
+no java process
+Python 3.14.7
+v24.20.0
+11.19.0
+
+===== 1. ./mvnw -B verify (backend, SPA packaged, frontend not skipped) =====
+command: cd backend && ./mvnw -B verify   (JAVA_HOME=Temurin 21.0.12.1, started 2026-11-04 19:44:42 SLST, exit 0)
+--- digest of the Maven reactor (JSON application log lines filtered out; full raw output not kept) ---
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] Running 'npm ci --no-audit --no-fund' in C:\Users\wdarshana\Downloads\PolicyForge\backend\..\frontend
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Running 'npm run build' in C:\Users\wdarshana\Downloads\PolicyForge\backend\..\frontend
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Copying 3 resources from ..\frontend\dist to target\classes\static
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.491 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.573 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.209 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Running com.horizon.policyforge.architecture.RepriceOfferCallerArchTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.073 s -- in com.horizon.policyforge.architecture.RepriceOfferCallerArchTest
+[INFO] Running com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s -- in com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.153 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Running com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.horizon.policyforge.architecture.BackdatedIssuanceArchTest
+[INFO] Running com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Running com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Running com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Results:
+[INFO] Tests run: 490, Failures: 0, Errors: 0, Skipped: 0
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Running com.horizon.policyforge.web.RenewalRepriceRaceIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.975 s -- in com.horizon.policyforge.web.RenewalRepriceRaceIT
+[INFO] Results:
+[INFO] Tests run: 570, Failures: 0, Errors: 0, Skipped: 0
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] All coverage checks have been met.
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Total time:  07:29 min
+[INFO] Finished at: 2026-11-04T19:52:17+05:30
+--- backend/pom.xml versus d9a5694 ---
+(empty above = unchanged; exit 0)
+227:                  <element>BUNDLE</element>
+230:                      <counter>LINE</counter>
+231:                      <value>COVEREDRATIO</value>
+232:                      <minimum>${jacoco.overall.line.minimum}</minimum>
+251:                  <element>BUNDLE</element>
+254:                      <counter>LINE</counter>
+255:                      <value>COVEREDRATIO</value>
+256:                      <minimum>${jacoco.domain.line.minimum}</minimum>
+--- git status after verify ---
+status lines: 0
+--- packaged jar contains the SPA ---
+        0  2026-11-04 19:44   BOOT-INF/classes/static/assets/
+   194481  2026-11-03 23:28   BOOT-INF/classes/static/assets/index-a2tXNydu.js
+     6978  2026-11-04 19:44   BOOT-INF/classes/static/assets/index-B-sjZ0Y5.css
+   209085  2026-11-04 06:41   BOOT-INF/classes/static/assets/index-B7Gh9GM6.js
+     6457  2026-11-03 23:28   BOOT-INF/classes/static/assets/index-BNIooKbH.css
+   172244  2026-11-03 20:30   BOOT-INF/classes/static/assets/index-BxY7DAEI.js
+   152340  2026-10-28 16:17   BOOT-INF/classes/static/assets/index-CFohW7Oi.js
+     5335  2026-11-03 20:30   BOOT-INF/classes/static/assets/index-CHzohit4.css
+     4966  2026-10-29 09:07   BOOT-INF/classes/static/assets/index-CjzArUXD.css
+   152374  2026-10-29 09:07   BOOT-INF/classes/static/assets/index-D4ILNjzD.js
+26:    <jacoco.domain.line.minimum>0.80</jacoco.domain.line.minimum>
+27:    <jacoco.overall.line.minimum>0.70</jacoco.overall.line.minimum>
+31:    <frontend.node.version>v22.11.0</frontend.node.version>
+118:              <nodeVersion>${frontend.node.version}</nodeVersion>
+232:                      <minimum>${jacoco.overall.line.minimum}</minimum>
+256:                      <minimum>${jacoco.domain.line.minimum}</minimum>
+
+===== 2. npm test, npm run build, git cleanliness =====
+git ls-files frontend/coverage (before): []
+   ✓ App shell routing for the Admin Dashboard (C9) > AC-11.5: a signed-in customer on the route sees the fixed not-authorised message and no tiles  496ms
+ ✓ src/pages/PolicyDetailPage.test.tsx (11 tests) 500ms
+ ✓ src/pages/QuotePageCredentials.test.tsx (11 tests) 4249ms
+   ✓ QuotePage credentials > AC-01.13: a signed-in quote request carries the Basic Authorization header  748ms
+   ✓ QuotePage credentials > AC-01.13: a signed-out quote request carries no Authorization header  701ms
+   ✓ QuotePage credentials > AC-01.13: a 401 on quote creation shows a fixed sign-in-again message and is never retried anonymously  668ms
+   ✓ QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-out quote request from the page sends credentials: 'omit' and no Authorization header  690ms
+   ✓ QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a signed-in quote request from the page sends credentials: 'omit' and only the app's Basic header  686ms
+   ✓ QuotePage credentials: browser-held credentials are never sent (security review S3 MINOR-1) > AC-01.13: a 401 on a signed-in quote request clears the session and keeps the fixed sign-in-again message  734ms
+ ✓ src/pages/QuotePage.test.tsx (6 tests) 4204ms
+   ✓ QuotePage > AC-01.1: shows the premium 6850.00 verbatim with rule version 1  739ms
+   ✓ QuotePage > AC-01.11: health declarations are normalised to codes  1395ms
+   ✓ QuotePage > AC-01.11: an empty health declarations field sends an empty array  830ms
+   ✓ QuotePage > AC-01.7: shows each per-field error next to the input it names  364ms
+   ✓ QuotePage > AC-01.8: renders every breakdown factor returned, in order  691ms
+ ✓ src/pages/AdminDashboardPage.test.tsx (11 tests) 807ms
+   ✓ AdminDashboardPage > AC-11.1: the optional As-of input sends asOf only when given, and the load button reloads  328ms
+ ✓ src/pages/PolicyDetailPage.renew.test.tsx (11 tests) 660ms
+ ✓ src/pages/ApplyPage.test.tsx (7 tests) 9289ms
+   ✓ ApplyPage > AC-03.1: posts exactly the C1 body with the Basic header and reports the new application ID  1533ms
+   ✓ ApplyPage > AC-03.2: shows each errors[] entry next to its PAN, Aadhaar and postcode input and does not navigate  1435ms
+   ✓ ApplyPage > AC-03.3: shows the fixed QUOTE_EXPIRED message  1541ms
+   ✓ ApplyPage > AC-03.4: shows the fixed KYC_AGE_MISMATCH message at the date of birth input  1542ms
+   ✓ ApplyPage > AC-03.6: shows the fixed QUOTE_NOT_FOUND message  1549ms
+   ✓ ApplyPage > AC-03.7: shows the fixed QUOTE_ALREADY_APPLIED message after a 409  1500ms
+ ✓ src/pages/ApplicationStatusPage.issue.test.tsx (6 tests) 746ms
+ ✓ src/pages/QuotePageForm.test.tsx (4 tests) 1179ms
+   ✓ QuotePage dynamic form > AC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected  833ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx (4 tests) 69ms
+ ✓ src/pages/MyPoliciesPage.test.tsx (3 tests) 49ms
+ ✓ src/visualBaselinePolicy.test.ts (25 tests) 6ms
+ ✓ src/auth/SessionContext.test.tsx (2 tests) 555ms
+   ✓ session > NFR-04.1: the sign-in form holds credentials in memory only, never in storage, cookies or the URL  553ms
+ ✓ src/noMoneyArithmetic.test.ts (1 test) 4ms
+ Test Files  17 passed (17)
+      Tests  173 passed (173)
+   Start at  19:52:55
+   Duration  58.87s (transform 1.01s, setup 268ms, collect 2.41s, tests 53.40s, environment 520ms, prepare 82ms)
+ % Coverage report from v8
+=============================== Coverage summary ===============================
+Statements   : 96.5% ( 2735/2834 )
+Branches     : 89.23% ( 655/734 )
+Functions    : 96.85% ( 154/159 )
+Lines        : 96.5% ( 2735/2834 )
+================================================================================
+npm test exit: 0
+> policyforge-frontend@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 58 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:  0.28 kB
+dist/assets/index-B-sjZ0Y5.css    6.98 kB │ gzip:  1.81 kB
+dist/assets/index-JDWy5faI.js   209.15 kB │ gzip: 62.07 kB
+✓ built in 571ms
+npm run build exit: 0
+--- git status after npm test and build ---
+status lines: 0
+git ls-files frontend/coverage: []
+coverage/lcov.info
+.gitignore:16:frontend/coverage/	coverage/lcov.info
+
+===== 3. fresh packaged JAR (clean package, SPA included) =====
+[INFO] --- clean:3.4.1:clean (default-clean) @ policyforge ---
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] Copying node binary from C:\Users\wdarshana\Downloads\PolicyForge\backend\target\frontend-node\node\tmp\node-v22.11.0-win-x64\node.exe to C:\Users\wdarshana\Downloads\PolicyForge\backend\target
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 17 resources from src\main\resources to target\classes
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Copying 3 resources from ..\frontend\dist to target\classes\static
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] Copying 2 resources from src\test\resources to target\test-classes
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] BUILD SUCCESS
+[INFO] Total time:  01:19 min
+-rw-r--r-- 1 WILEY+wdarshana 4096 63721823 Nov  4 19:55 target/policyforge-0.1.0-SNAPSHOT.jar
+assets in jar:
+     6978  2026-11-04 19:55   BOOT-INF/classes/static/assets/index-B-sjZ0Y5.css
+   209150  2026-11-04 19:55   BOOT-INF/classes/static/assets/index-JDWy5faI.js
+      412  2026-11-04 19:55   BOOT-INF/classes/static/index.html
+status lines: 0
+
+===== 4a. Playwright desktop-chromium, PF_E2E_JAR (fresh JAR) =====
+PF_E2E_JAR=C:/Users/wdarshana/Downloads/PolicyForge/backend/target/policyforge-0.1.0-SNAPSHOT.jar  PF_VISUAL_BASELINES=<unset>  platform=win32
+Wed Nov  4 19:55:48 SLST 2026
+  ok 20 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (1.4s)
+  ok 21 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (1.2s)
+  ok 16 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab (2.0s)
+  ok 22 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (1.2s)
+  ok 17 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second cancel gets 409 and the Refunds tab keeps one row (2.0s)
+  ok 19 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (1.8s)
+  ok 12 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 (3.4s)
+  ok 15 [desktop-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status tab with RENEWAL_PAID and adds version 2 (3.6s)
+  22 passed (21.5s)
+playwright exit: 0
+--- after desktop ---
+status lines: 0
+ls: cannot access 'test-results/visual-baselines-missing.txt': No such file or directory
+port 8080 free
+
+===== 4b. Playwright mobile-chromium, PF_E2E_JAR (same fresh JAR) =====
+Wed Nov  4 19:56:21 SLST 2026
+Running 22 tests using 11 workers
+  ok  3 [mobile-chromium] › e2e\dashboard.spec.ts:103:1 › AC-11.5: customer1 on the dashboard route sees the not-authorised message and no figures (2.3s)
+  ok  1 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (2.4s)
+  ok  2 [mobile-chromium] › e2e\dashboard.spec.ts:31:1 › AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard response, in one column on mobile and side by side on desktop (2.4s)
+  ok  4 [mobile-chromium] › e2e\dashboard.spec.ts:89:1 › AC-11.4: asOf one day after the term end lists the policy in the lapse forecast (2.4s)
+  ok  6 [mobile-chromium] › e2e\dashboard.spec.ts:71:1 › AC-11.3: asOf 20 days before the term end lists the policy in the renewal pipeline and 90 days before does not (2.1s)
+  ok  5 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (2.7s)
+  ok  7 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:77:1 › AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 with the old address and v2 with the new one (2.9s)
+  ok 11 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (3.1s)
+  ok  8 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:43:1 › AC-05.1: customer1 issues an approved application and sees an ACTIVE policy in My Policies and on its detail page (2.7s)
+  ok 13 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:177:1 › AC-01.13: a signed-in customer quote request carries an Authorization header and a signed-out one does not (1.2s)
+  ok  9 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:97:1 › AC-06.2: a sum insured change to 7000000.00 effective on the term start previews 9490.00 and 2640.00 and stores that adjustment (3.4s)
+  ok 18 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (719ms)
+  ok 10 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:132:1 › AC-06.5: nominees of 80% then 30% show the share-exceeded message and no second endorsement is added (3.7s)
+  ok 14 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:217:1 › AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreated and the Renew panel shows the next term from expiry plus 1 at 6850.00 (1.9s)
+  ok 21 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (1.2s)
+  ok 20 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (1.4s)
+  ok 17 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:295:1 › AC-08.4: after cancelling no Cancel, Renew or Endorse action is offered, a second cancel gets 409 and the Refunds tab keeps one row (2.0s)
+  ok 16 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:263:1 › AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, then confirms to CANCELLED with one 6850.00 row in the Refunds tab (2.2s)
+  ok 22 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (1.3s)
+  ok 19 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (1.9s)
+  ok 12 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:158:1 › AC-06.6: three endorsements show sequence 1, 2 and 3 linked to versions 2, 3 and 4 (3.3s)
+  ok 15 [mobile-chromium] › e2e\policy-lifecycle.spec.ts:240:1 › AC-07.5: paying the renewal shows RENEWED, hides the Renew panel, ends the Status tab with RENEWAL_PAID and adds version 2 (3.0s)
+  22 passed (20.8s)
+playwright exit: 0
+--- after mobile ---
+status lines: 0
+ls: cannot access 'test-results/visual-baselines-missing.txt': No such file or directory
+20
+20
+0
+port 8080 free
+
+===== 5. python scripts/ci/quality_gates.py (all eight gates, .venv interpreter) =====
+Wed Nov  4 19:56:52 SLST 2026
+Python 3.14.7
+ac-audit             python scripts/ac_audit.py --offline --no-write
+redact-evidence      python scripts/redact_evidence.py --check sprint-contracts specs/reviews docs/fix-loops
+hook-tests           python .claude/hooks/tests/test_hooks.py
+hook-line-endings    python scripts/ci/check_line_endings.py '.claude/hooks/*.sh'
+ci-script-tests      python -m unittest discover -s scripts/tests -v
+oracle-fixture       python scripts/gen_refund_oracle_cases.py --check
+actionlint           actionlint -shellcheck shellcheck .github/workflows/*.yml
+ci-schema            python -m check_jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yml && python -m check_jsonschema --builtin-schema vendor.gitlab-ci --data-transform gitlab-ci .gitlab-ci.yml
+test_committed_evidence_directories_are_still_clean (test_redact_evidence.RedactApiKeyTests.test_committed_evidence_directories_are_still_clean)
+NFR-09.3: --check over sprint-contracts, specs/reviews and docs/fix-loops exits 0. ... ok
+test_every_key_in_a_file_is_counted (test_redact_evidence.RedactApiKeyTests.test_every_key_in_a_file_is_counted)
+NFR-09.3: two keys in one file are both found and counted. ... ok
+test_existing_patterns_keep_their_behaviour (test_redact_evidence.RedactApiKeyTests.test_existing_patterns_keep_their_behaviour)
+NFR-09.3: Basic, Bearer and generated-password redaction are unchanged by the new pattern. ... ok
+test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered)
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files. ... ok
+test_redact_replaces_an_anthropic_key_with_a_marker (test_redact_evidence.RedactApiKeyTests.test_redact_replaces_an_anthropic_key_with_a_marker)
+NFR-09.3: redact_evidence.py rewrites a sk-ant- key as <redacted-api-key> and exits 0. ... ok
+test_short_look_alikes_are_not_keys (test_redact_evidence.RedactApiKeyTests.test_short_look_alikes_are_not_keys)
+NFR-09.3: sk-ant- followed by fewer than 20 key characters is prose, not a key. ... ok
+
+----------------------------------------------------------------------
+Ran 138 tests in 52.760s
+
+OK
+--- ci-script-tests: exit 0 (PASS)
+=== gate: oracle-fixture ===
+oracle fixture OK: 1000 rows equal a fresh generation (backend/src/test/resources/oracle/ac-08-5-refund-cases.csv)
+--- oracle-fixture: exit 0 (PASS)
+=== gate: actionlint ===
+--- actionlint: exit 0 (PASS)
+=== gate: ci-schema ===
+ok -- validation done
+ok -- validation done
+--- ci-schema: exit 0 (PASS)
+
+| gate | command | exit | result |
+|---|---|---|---|
+| ac-audit | python scripts/ac_audit.py --offline --no-write | 0 | PASS |
+| redact-evidence | python scripts/redact_evidence.py --check sprint-contracts specs/reviews docs/fix-loops | 0 | PASS |
+| hook-tests | python .claude/hooks/tests/test_hooks.py | 0 | PASS |
+| hook-line-endings | python scripts/ci/check_line_endings.py '.claude/hooks/*.sh' | 0 | PASS |
+| ci-script-tests | python -m unittest discover -s scripts/tests -v | 0 | PASS |
+| oracle-fixture | python scripts/gen_refund_oracle_cases.py --check | 0 | PASS |
+| actionlint | actionlint -shellcheck shellcheck .github/workflows/*.yml | 0 | PASS |
+| ci-schema | python -m check_jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yml && python -m check_jsonschema --builtin-schema vendor.gitlab-ci --data-transform gitlab-ci .gitlab-ci.yml | 0 | PASS |
+
+8/8 gates passed
+quality_gates exit: 0
+status lines: 0
+
+===== 6. python -m unittest discover -s scripts/tests -v =====
+--- .venv interpreter (has PyYAML 6.0.3 and check-jsonschema 0.39.0, as CI installs them) ---
+exit: 0
+ok-lines: 137
+----------------------------------------------------------------------
+Ran 138 tests in 51.962s
+
+OK
+--- system python (no PyYAML): informational ---
+ModuleNotFoundError: No module named 'yaml'
+AssertionError: PyYAML is not installed (pip install -r scripts/requirements-ci.txt)
+
+----------------------------------------------------------------------
+Ran 138 tests in 46.566s
+
+FAILED (failures=22)
+status lines: 0
+
+===== 7. python scripts/ac_audit.py --offline --no-write =====
+exit: 0
+**Covered 92 / 92 ACs (100%)** � parent-only 0 � not covered (incl. parent-only) 0
+...
+...
+**Covered 92 / 92 ACs (100%)** � parent-only 0 � not covered (incl. parent-only) 0
+status lines: 0
+
+===== 7b. per-ID status of the sprint IDs (same functions as ac_audit.py --offline, read-only) =====
+NFR-08.1  COVERED      exact=11 parent=27 first=backend/src/test/java/com/horizon/policyforge/architecture/RepriceOfferCallerArchTest.java:20
+NFR-09.1  COVERED      exact=11 parent=0 first=scripts/tests/test_ci_config.py:3
+NFR-09.2  COVERED      exact=10 parent=0 first=scripts/tests/test_ci_config.py:3
+NFR-09.3  COVERED      exact=24 parent=0 first=scripts/tests/test_ci_config.py:3
+NFR-09.4  COVERED      exact=56 parent=0 first=scripts/tests/test_ac_audit_globs.py:28
+NFR-09.5  COVERED      exact=12 parent=0 first=frontend/src/visualBaselinePolicy.test.ts:5
+NFR-09.6  COVERED      exact=51 parent=0 first=scripts/tests/test_ac_audit_globs.py:16
+AC-07.7   COVERED      exact=18 parent=16 first=backend/src/test/java/com/horizon/policyforge/architecture/AppendOnlyArchTest.java:270
+AC-08.5   COVERED      exact=6 parent=15 first=backend/src/test/java/com/horizon/policyforge/domain/cancellation/ProRataRefundOracleCrossCheckTest.java:19
+total=92 covered=92 parent_only=0 missing=0 orphans=0
+**Covered 92 / 92 ACs (100%)** · parent-only 0 · not covered (incl. parent-only) 0
+status lines: 0
+
+===== 8. git history checks (d9a5694..chore/ci-hardening) =====
+     1	4730168 spec: Sprint 5 CI criteria NFR-08.1 and NFR-09.1-09.6, accepted v1 limitations SG-3, SG-5, SG-6 and SG-7 (plan G-5, approved at the Sprint 5 checkpoint)
+     2	f9a1664 chore(substrate): pin @playwright/mcp 0.0.84, repriceOffer caller rule, lcov not committed, visual-baseline policy, CI script rules (Sprint 5 plan, approved at th
+     3	1e26f7f test(red): NFR-08.1 only EndorsementService may call PolicyTermEntity.repriceOffer, negative fixture fails against a stubbed rule that allows every caller
+     4	ed11eb6 feat(green): NFR-08.1 RepriceOfferCallerArchTest rule rejects any caller of PolicyTermEntity.repriceOffer other than EndorsementService, plus a non-vacuity guard
+     5	2b307af chore(ci): pin CI-only Python packages and ignore .ci-tools/ and ci-out/ (Sprint 5 TASK-002)
+     6	49a588e test: AC-07.7 a re-pricing endorsement racing the payment of the same renewal offer, exactly one wins, the loser gets 409 POLICY_UPDATE_CONFLICT and writes nothin
+     7	9e9b20c test(red): NFR-09.3, NFR-09.4, NFR-09.6 CI script tests with a stub Claude CLI; scripts/ci stubs fail them (97 failures, 21 errors, 15 vacuous passes in red)
+     8	588feb0 feat(green): AC-08.5 NFR-09.6 gen_refund_oracle_cases.py writes the 1,000-case refund fixture from the premium_check.py oracle, --check fails on a hand edit
+     9	79a53e6 test: AC-08.5 the production calculator equals the premium_check.py oracle on 1,000 generated cases (characterisation, mutation proofs in the TASK-001 red log)
+    10	11fd0f9 feat(green): NFR-09.3 redact_evidence redacts Anthropic sk-ant- API keys; NFR-09.6 ac_audit counts scripts/tests/test_*.py
+    11	12dc531 feat(green): NFR-09.6 check_line_endings.py LF gate, fetch_tools.py pinned checksum-verified actionlint and shellcheck, quality_gates.py runner of the eight C11 g
+    12	10fae5e feat(green): NFR-09.3 NFR-09.4 claude_review.py runs the two pinned-CLI review passes with a verdict schema, BLOCKER gate, redaction and token-free child environm
+    13	3da04da feat(green): NFR-09.6 quality_gates.py prints gate output as UTF-8 so a Windows pipe cannot fail a gate
+    14	61f20f3 feat(green): NFR-09.3 NFR-09.4 NFR-09.6 scripts/README.md documents the CI scripts and drops the stale --report-only and full-audit-in-claude-review text; comment
+    15	9b434d1 chore: stop tracking frontend/coverage/lcov.info, ignore frontend/coverage/ (CI publishes it as an artifact; Sprint 4 follow-up)
+    16	8647f54 chore: pin @playwright/test to the exact 1.64.1 so the lock and the CI Playwright image cannot drift (NFR-09.2, P-14)
+    17	6d26416 test(red): NFR-09.5 visual-baseline policy table test, 11 of 25 fail against a stub that always asserts
+    18	59420aa feat(green): NFR-09.5 visual-baseline policy and expectVisual helper replace the 10 direct toHaveScreenshot calls; PF_E2E_JAR starts the packaged JAR as the E2E s
+    19	54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 of 27 fail on an assertion because .github/workflows/ and .gitlab-ci.yml are absen
+    20	2ecaea2 ci: NFR-09.1 backend/mvnw is mode 100755 so ./mvnw runs on a Linux runner and in the Temurin image (git update-index --chmod=+x, content unchanged)
+    21	693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, frontend-unit, e2e (Playwright image, packaged JAR), quality-gates and claude-review (ke
+    22	c2886b8 ci: NFR-09.5 NFR-09.2 NFR-09.3 Linux snapshots workflow, label update-linux-snapshots or manual dispatch, read-only, packaged JAR built without tests, Playwright 
+    23	600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, stages build, test, e2e and review, images pinned by digest, JRE tarball checked w
+    24	7c7fdf3 ci: NFR-09.3 GitLab claude-review runs in the environment claude-review, so an environment-scoped ANTHROPIC_API_KEY reaches only that job (GitLab gives every job 
+
+--- first two commits (amendments) ---
+4730168 spec: Sprint 5 CI criteria NFR-08.1 and NFR-09.1-09.6, accepted v1 limitations SG-3, SG-5, S
+f9a1664 chore(substrate): pin @playwright/mcp 0.0.84, repriceOffer caller rule, lcov not committed, 
+--- files per amendment ---
+
+ specs/app_spec.md                  | 35 +++++++++++++++++++++++++++++++++++
+ specs/portfolio-dashboard_spec.md  |  2 ++
+ specs/renewal-cancellation_spec.md | 11 +++++++++++
+ 3 files changed, 48 insertions(+)
+f9a1664
+
+ .mcp.json              |  2 +-
+ docs/architecture.md   |  2 ++
+ frontend/CLAUDE.md     |  3 ++-
+ frontend/e2e/CLAUDE.md | 10 ++++++++--
+ scripts/CLAUDE.md      | 15 ++++++++++++++-
+ 5 files changed, 27 insertions(+), 5 deletions(-)
+--- every non-substrate commit is after f9a1664 ---
+2
+f9a1664 is ancestor of 2b307af (first TASK-002 commit)
+--- commits touching code paths before f9a1664 ---
+1
+--- per-ID red-before-green ---
+[NFR-08.1]
+  4730168 spec: Sprint 5 CI criteria NFR-08.1 and NFR-09.1-09.6, accepted v1 limitations S
+  1e26f7f test(red): NFR-08.1 only EndorsementService may call PolicyTermEntity.repriceOff
+  ed11eb6 feat(green): NFR-08.1 RepriceOfferCallerArchTest rule rejects any caller of Poli
+[NFR-09.1]
+  4730168 spec: Sprint 5 CI criteria NFR-08.1 and NFR-09.1-09.6, accepted v1 limitations S
+  54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 
+  2ecaea2 ci: NFR-09.1 backend/mvnw is mode 100755 so ./mvnw runs on a Linux runner and in
+  693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, fronte
+  600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, 
+[NFR-09.2]
+  8647f54 chore: pin @playwright/test to the exact 1.64.1 so the lock and the CI Playwrigh
+  54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 
+  693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, fronte
+  c2886b8 ci: NFR-09.5 NFR-09.2 NFR-09.3 Linux snapshots workflow, label update-linux-snap
+  600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, 
+[NFR-09.3]
+  9e9b20c test(red): NFR-09.3, NFR-09.4, NFR-09.6 CI script tests with a stub Claude CLI; 
+  11fd0f9 feat(green): NFR-09.3 redact_evidence redacts Anthropic sk-ant- API keys; NFR-09
+  10fae5e feat(green): NFR-09.3 NFR-09.4 claude_review.py runs the two pinned-CLI review p
+  61f20f3 feat(green): NFR-09.3 NFR-09.4 NFR-09.6 scripts/README.md documents the CI scrip
+  54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 
+  693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, fronte
+  c2886b8 ci: NFR-09.5 NFR-09.2 NFR-09.3 Linux snapshots workflow, label update-linux-snap
+  600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, 
+  7c7fdf3 ci: NFR-09.3 GitLab claude-review runs in the environment claude-review, so an e
+[NFR-09.4]
+  9e9b20c test(red): NFR-09.3, NFR-09.4, NFR-09.6 CI script tests with a stub Claude CLI; 
+  10fae5e feat(green): NFR-09.3 NFR-09.4 claude_review.py runs the two pinned-CLI review p
+  61f20f3 feat(green): NFR-09.3 NFR-09.4 NFR-09.6 scripts/README.md documents the CI scrip
+[NFR-09.5]
+  6d26416 test(red): NFR-09.5 visual-baseline policy table test, 11 of 25 fail against a s
+  59420aa feat(green): NFR-09.5 visual-baseline policy and expectVisual helper replace the
+  54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 
+  c2886b8 ci: NFR-09.5 NFR-09.2 NFR-09.3 Linux snapshots workflow, label update-linux-snap
+[NFR-09.6]
+  9e9b20c test(red): NFR-09.3, NFR-09.4, NFR-09.6 CI script tests with a stub Claude CLI; 
+  588feb0 feat(green): AC-08.5 NFR-09.6 gen_refund_oracle_cases.py writes the 1,000-case r
+  11fd0f9 feat(green): NFR-09.3 redact_evidence redacts Anthropic sk-ant- API keys; NFR-09
+  12dc531 feat(green): NFR-09.6 check_line_endings.py LF gate, fetch_tools.py pinned check
+  3da04da feat(green): NFR-09.6 quality_gates.py prints gate output as UTF-8 so a Windows 
+  61f20f3 feat(green): NFR-09.3 NFR-09.4 NFR-09.6 scripts/README.md documents the CI scrip
+  54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 
+  693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, fronte
+  600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, 
+[AC-07.7]
+  49a588e test: AC-07.7 a re-pricing endorsement racing the payment of the same renewal of
+[AC-08.5]
+  588feb0 feat(green): AC-08.5 NFR-09.6 gen_refund_oracle_cases.py writes the 1,000-case r
+  79a53e6 test: AC-08.5 the production calculator equals the premium_check.py oracle on 1,
+f9a1664 chore(substrate): pin @playwright/mcp 0.0.84, repriceOffer caller rule, lcov not committed, visual-baseline poli
+ frontend/CLAUDE.md     |  3 ++-
+ frontend/e2e/CLAUDE.md | 10 ++++++++--
+ scripts/CLAUDE.md      | 15 ++++++++++++++-
+ 3 files changed, 24 insertions(+), 4 deletions(-)
+(frontend/CLAUDE.md etc are substrate docs matched by the path filter)
+--- red-log mutation proofs for AC-07.7 and AC-08.5 ---
+86:=== AC-07.7 MUTATION PROOF 1 (never committed): WriteConflicts.isUniqueViolation always returns false, so a request that loses on the unique version key is n
+114:=== AC-07.7 MUTATION PROOF 2 (never committed): EndorsementService no longer calls repriceOffer, so a won endorsement leaves the offer at the stale premium 
+117:+                // MUTATION: the offer is no longer re-priced
+139:=== AC-08.5 MUTATION PROOF 1: the final rounding is HALF_EVEN (never committed) ===
+158:=== AC-08.5 MUTATION PROOF 2: the cooling-off boundary uses <= instead of < (never committed) ===
+178:=== AC-08.5 MUTATION PROOF 3: a cooling-off refund reports the cancellation fee instead of 0.00 (never committed) ===
+--- migration/rules diff and src/main diff vs d9a5694 ---
+[migration+rules diff-stat: empty = 0 lines]
+[backend/src/main diff-stat lines: 0]
+0
+--- whole-sprint file list by area ---
+ 53 files changed, 6574 insertions(+), 4215 deletions(-)
+     10 scripts/tests
+      9 backend/src
+      7 frontend/e2e
+      5 scripts/ci
+      2 .github/workflows
+      1 specs/renewal-cancellation_spec.md
+      1 specs/portfolio-dashboard_spec.md
+      1 specs/app_spec.md
+      1 scripts/requirements-ci.txt
+      1 scripts/redact_evidence.py
+      1 scripts/gen_refund_oracle_cases.py
+      1 scripts/ac_audit.py
+      1 scripts/README.md
+      1 scripts/CLAUDE.md
+      1 frontend/src
+      1 frontend/playwright.config.ts
+      1 frontend/package.json
+      1 frontend/package-lock.json
+      1 frontend/coverage
+      1 frontend/CLAUDE.md
+
+===== 9. pins in ci.yml, linux-snapshots.yml, .gitlab-ci.yml and .mcp.json versus plan C3 =====
+| Item | C3 pin | Found in | Result |
+|---|---|---|---|
+| actions/checkout | `3d3c42e5aac5ba805825da76410c181273ba90b1` # v7.0.1 | ci.yml, linux-snapshots.yml (7 uses) | EQUAL |
+| actions/setup-java | `b843ebf9b913146b38da2eaa7aeddf76074ae1ad` # v6.1.0 | ci.yml, linux-snapshots.yml (4 uses) | EQUAL |
+| actions/setup-node | `949feb2413d6458794dcd2491c4babbbce0c15c1` # v7.1.0 | ci.yml (2 uses) | EQUAL |
+| actions/setup-python | `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0` # v7.1.0 | ci.yml (1 uses) | EQUAL |
+| actions/cache | `55cc8345863c7cc4c66a329aec7e433d2d1c52a9` # v6.1.0 | ci.yml, linux-snapshots.yml (4 uses) | EQUAL |
+| actions/upload-artifact | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` # v7.0.2 | ci.yml, linux-snapshots.yml (12 uses) | EQUAL |
+| actions/download-artifact | `9000827ccba6bdab643e8b6fd33ac0654aef8333` # v8.0.2 | ci.yml, linux-snapshots.yml (2 uses) | EQUAL |
+| any other action | none allowed | none | EQUAL |
+| Claude Code CLI | `@anthropic-ai/claude-code@2.1.311` | ci.yml, .gitlab-ci.yml | EQUAL |
+| Playwright MCP | `@playwright/mcp@0.0.84` | .mcp.json | EQUAL |
+| Playwright image | `mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f` | ci.yml, linux-snapshots.yml, .gitlab-ci.yml | EQUAL |
+| Temurin JDK image | `eclipse-temurin:21.0.13_9-jdk-noble@sha256:114cabb73033ca4ce7ceec3deb62396bc1b716282bae051ed3c1d82e38fcab2d` | .gitlab-ci.yml | EQUAL |
+| Temurin JRE tarball URL | `https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_x64_linux_hotspot_21.0.13_9.tar.gz` | .gitlab-ci.yml | EQUAL |
+| Temurin JRE sha256 | `a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd` | .gitlab-ci.yml | EQUAL |
+| GitLab Node image | `node:22.11.0-bookworm@sha256:ec878c763e9fad09d22aae86e2edcb7a05b397dfe8411c16e2b90158d595e2ce` | .gitlab-ci.yml | EQUAL |
+| GitLab Python image | `python:3.14.10-trixie@sha256:72628634e335b4b0a40727f398a73ae7ba983c319ca901fc034f92a216f7a781` | .gitlab-ci.yml | EQUAL |
+| GitHub runner | `ubuntu-24.04` | ci.yml, linux-snapshots.yml | EQUAL |
+| setup-java Temurin version | `java-version: 21.0.13+9` | ci.yml, linux-snapshots.yml | EQUAL |
+| setup-java distribution | `distribution: temurin` | ci.yml, linux-snapshots.yml | EQUAL |
+| setup-node version | `node-version: 22.11.0` | ci.yml | EQUAL |
+| setup-python version | `python-version: 3.14.10` | ci.yml | EQUAL |
+| floating tags (latest, @main, ubuntu-latest) | none allowed | all four files | EQUAL (none found) |
+| @playwright/test lock = package.json = image tag | 1.64.1 | lock=1.64.1, package.json=1.64.1, image v1.64.1 | EQUAL |
+| CI Node = pom frontend.node.version | v22.11.0 | pom=v22.11.0; CI 22.11.0 | EQUAL |
+| PyYAML / check-jsonschema | 6.0.3 / 0.39.0 | requirements-ci.txt | EQUAL |
+| actionlint 1.7.12 linux sha256 | `8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8` | scripts/ci/fetch_tools.py | EQUAL |
+| actionlint 1.7.12 windows sha256 | `6e7241b51e6817ea6a047693d8e6fed13b31819c9a0dd6c5a726e1592d22f6e9` | scripts/ci/fetch_tools.py | EQUAL |
+| shellcheck v0.11.0 linux sha256 | `8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198` | scripts/ci/fetch_tools.py | EQUAL |
+| shellcheck v0.11.0 windows sha256 | `8a4e35ab0b331c85d73567b12f2a444df187f483e5079ceffa6bda1faa2e740e` | scripts/ci/fetch_tools.py | EQUAL |
+
+TOTAL MISMATCHES: 0
+NODE_TLS_REJECT_UNAUTHORIZED in a CI file: False
+.mcp.json: {"mcpServers": {"playwright": {"command": "npx", "args": ["-y", "@playwright/mcp@0.0.84"]}}}
+
+===== 10. remote and GitHub state (read-only) =====
+local dev=d9a5694017b5fb0b9f50a07623c1f477f12caa35 main=8e265d6e5f05ebb5b768562fe82db25273fc37e7
+d9a5694017b5fb0b9f50a07623c1f477f12caa35	refs/heads/dev
+8e265d6e5f05ebb5b768562fe82db25273fc37e7	refs/heads/main
+ls-remote chore/ci-hardening matches: 0
+0
+--- gh auth (status only) ---
+github.com
+  ✓ Logged in to github.com account wushandarshana (keyring)
+  - Active account: true
+  - Git operations protocol: https
+  - Token: <hidden>
+--- labels ---
+accessibility	Barrier affecting people with disabilities
+bug	Something isn't working
+documentation	Improvements or additions to documentation
+duplicate	This issue or pull request already exists
+enhancement	New feature or request
+good first issue	Good for newcomers
+help wanted	Extra attention is needed
+invalid	This doesn't seem right
+question	Further information is requested
+wontfix	This will not be worked on
+--- secrets (names only) ---
+--- variables ---
+--- workflows ---
+--- open PRs from the branch ---
+--- ruleset 26032911 ---
+{"conditions":{"ref_name":{"exclude":[],"include":["refs/heads/main","refs/heads/dev"]}},"enforcement":"active","name":"Safety Guard Rails","rules":["deletion","non_fast_forward","pull_request"],"target":"branch","updated_at":"2026-10-28T16:36:23.073+05:30"}
+[{"id":26032911,"name":"Safety Guard Rails","updated_at":"2026-10-28T16:36:23.073+05:30"}]
+{"can_approve_pull_request_reviews":false,"default_workflow_permissions":"read"}
+
+===== 11. redaction and key literals =====
+total: 0
+quality-gates
+total: 0
+exit: 0
+--- git grep sk-ant- literal of 20+ characters ---
+git grep exit: 1 (1 = no match)
+--- also in untracked workspace logs ---
+(none listed above = none)
+
+===== 12. end state =====
+7c7fdf316876d5c54259f9cc43a1b055872c8fa3
+d9a5694017b5fb0b9f50a07623c1f477f12caa35
+8e265d6e5f05ebb5b768562fe82db25273fc37e7
+status lines: 0
+port 8080 free; no java process; redact_evidence --check over sprint-progress and ci-out: total 0; git grep sk-ant- 20+: no match

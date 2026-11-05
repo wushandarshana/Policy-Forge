@@ -1,0 +1,180 @@
+# TASK-004 green log (NFR-09.1, NFR-09.2, NFR-09.3, NFR-09.5, NFR-09.6)
+# date: 2026-11-04  branch: chore/ci-hardening  HEAD: 7c7fdf3
+# interpreter: Python 3.14.7 (.venv, has PyYAML and check-jsonschema); system python has neither
+
+## 1. git ls-files -s backend/mvnw
+100755 19529ddf8c6eaa08c5c75ff80652d21ce4b72f8c 0	backend/mvnw
+
+## 2. test_ci_config.py (27 tests), verbose
+test_artifacts_of_the_five_jobs_are_published (test_ci_config.JobDefinitionTests.test_artifacts_of_the_five_jobs_are_published)
+NFR-09.1: the GitHub jobs upload the C4 artifacts with the right condition and retention, and the GitLab ... ok
+test_backend_mvnw_is_executable_in_the_index (test_ci_config.JobDefinitionTests.test_backend_mvnw_is_executable_in_the_index)
+NFR-09.1: backend/mvnw has mode 100755, so ./mvnw runs on a Linux runner. ... ok
+test_both_platforms_run_the_same_gate_commands (test_ci_config.JobDefinitionTests.test_both_platforms_run_the_same_gate_commands)
+NFR-09.1: each of the five jobs runs the plan C1 commands, with the same text on GitHub and on GitLab. ... ok
+test_claude_review_needs_the_other_four_jobs_and_cannot_fail (test_ci_config.JobDefinitionTests.test_claude_review_needs_the_other_four_jobs_and_cannot_fail)
+NFR-09.1: claude-review needs build, frontend-unit, e2e and quality-gates, and is never allowed to fail: ... ok
+test_concurrency_cancels_only_superseded_pull_request_runs (test_ci_config.JobDefinitionTests.test_concurrency_cancels_only_superseded_pull_request_runs)
+NFR-09.1: pull request runs of one ref share a concurrency group and cancel older runs; a push to dev or ... ok
+test_e2e_runs_the_packaged_jar_in_the_playwright_image (test_ci_config.JobDefinitionTests.test_e2e_runs_the_packaged_jar_in_the_playwright_image)
+NFR-09.1: e2e needs the build job's JAR and runs Playwright in the pinned Playwright image with a Temurin ... ok
+test_github_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_github_ci_defines_the_five_jobs)
+NFR-09.1: .github/workflows/ci.yml is named CI and defines exactly build, frontend-unit, e2e, ... ok
+test_gitlab_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_gitlab_ci_defines_the_five_jobs)
+NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e and review and the same five jobs, plus the ... ok
+test_triggers_are_pushes_and_pull_requests_into_dev_and_main (test_ci_config.JobDefinitionTests.test_triggers_are_pushes_and_pull_requests_into_dev_and_main)
+NFR-09.1: ci.yml runs for push to dev and main, pull_request into dev and main and manual dispatch; ... ok
+test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them (test_ci_config.LinuxSnapshotGeneratorTests.test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them)
+NFR-09.5: the Linux snapshots workflow runs on the update-linux-snapshots label or by hand, has no ... ok
+test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline (test_ci_config.LinuxSnapshotGeneratorTests.test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline)
+NFR-09.5: e2e-update-linux-snapshots is manual, may fail, runs the e2e server in update mode with ... ok
+test_api_key_reaches_only_the_review_step_and_is_never_printed (test_ci_config.PermissionAndSecretTests.test_api_key_reaches_only_the_review_step_and_is_never_printed)
+NFR-09.3: ANTHROPIC_API_KEY is referenced in exactly one place, the env of the review step of the ... ok
+test_no_api_key_literal_is_tracked (test_ci_config.PermissionAndSecretTests.test_no_api_key_literal_is_tracked)
+NFR-09.3: git grep finds no sk-ant- literal of 20 or more characters in any tracked file. ... ok
+test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks (test_ci_config.PermissionAndSecretTests.test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks)
+NFR-09.3: no CI file has `set -x`, echoes ANTHROPIC_API_KEY, dumps the environment, turns on a debug ... ok
+test_no_pull_request_target_and_every_checkout_drops_credentials (test_ci_config.PermissionAndSecretTests.test_no_pull_request_target_and_every_checkout_drops_credentials)
+NFR-09.3: no workflow uses pull_request_target or workflow_run, and every actions/checkout sets ... ok
+test_no_run_script_interpolates_an_event_expression (test_ci_config.PermissionAndSecretTests.test_no_run_script_interpolates_an_event_expression)
+NFR-09.3: no `run:` script contains a ${{ github.event... }} expression (or another attacker-controlled ... ok
+test_permissions_are_read_only_except_for_claude_review (test_ci_config.PermissionAndSecretTests.test_permissions_are_read_only_except_for_claude_review)
+NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review job of ci.yml ... ok
+test_ci_node_version_equals_the_pom (test_ci_config.PinTests.test_ci_node_version_equals_the_pom)
+NFR-09.2: the Node version of setup-node and of the Node images equals frontend.node.version in ... ok
+test_every_action_is_pinned_to_a_full_sha_with_a_version_comment (test_ci_config.PinTests.test_every_action_is_pinned_to_a_full_sha_with_a_version_comment)
+NFR-09.2: every `uses:` is owner/repo@<40 hex> with a `# vX.Y.Z` comment and equals the verified C3 pin. ... ok
+test_every_downloaded_file_has_a_sha256_next_to_it (test_ci_config.PinTests.test_every_downloaded_file_has_a_sha256_next_to_it)
+NFR-09.2: every curl or wget download is followed by a sha256sum -c check of a 64-hex digest before the ... ok
+test_every_image_is_an_exact_tag_with_a_digest (test_ci_config.PinTests.test_every_image_is_an_exact_tag_with_a_digest)
+NFR-09.2: every container image is tag@sha256:<64 hex>, and each equals the verified C3 image. ... ok
+test_java_and_python_versions_are_exact_and_equal_on_both_platforms (test_ci_config.PinTests.test_java_and_python_versions_are_exact_and_equal_on_both_platforms)
+NFR-09.2: Temurin 21.0.13+9 and Python 3.14.10 are named exactly, and GitHub and GitLab use the same. ... ok
+test_nothing_uses_a_floating_reference (test_ci_config.PinTests.test_nothing_uses_a_floating_reference)
+NFR-09.2: the strings @latest, :latest and ubuntu-latest occur in none of the CI files or .mcp.json, ... ok
+test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact (test_ci_config.PinTests.test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact)
+NFR-09.2: the Claude Code CLI is @anthropic-ai/claude-code@2.1.311 (the runner's pinned version), ... ok
+test_playwright_image_equals_the_locked_playwright_version (test_ci_config.PinTests.test_playwright_image_equals_the_locked_playwright_version)
+NFR-09.2: the Playwright image tag is v + the @playwright/test version in package-lock.json, and ... ok
+test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate (test_ci_config.QualityGateWiringTests.test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate)
+NFR-09.6: the quality-gates job of GitHub and of GitLab installs scripts/requirements-ci.txt and runs ... ok
+test_the_quality_gates_report_is_kept_even_when_a_gate_fails (test_ci_config.QualityGateWiringTests.test_the_quality_gates_report_is_kept_even_when_a_gate_fails)
+NFR-09.6: the runner writes its report under ci-out/quality-gates/, and both platforms keep it as an ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.648s
+
+OK
+# exit: 0
+
+## 3. actionlint 1.7.12 with shellcheck v0.11.0 on .github/workflows/
+1.7.12
+installed by downloading from release page
+built with go1.26.1 compiler for windows/amd64
+ShellCheck - shell script analysis tool
+version: 0.11.0
+# actionlint exit: 0 (0 findings)
+## 3b. actionlint is live: a throw-away workflow with an unquoted variable is rejected
+.github/workflows/bad.yml:7:9: shellcheck reported issue in this script: SC2086:info:1:21: Double quote to prevent globbing and word splitting [shellcheck]
+  |
+7 |       - run: echo $FOO && rm -rf $DIR/*
+  |         ^~~~
+.github/workflows/bad.yml:7:9: shellcheck reported issue in this script: SC2086:info:1:6: Double quote to prevent globbing and word splitting [shellcheck]
+  |
+7 |       - run: echo $FOO && rm -rf $DIR/*
+  |         ^~~~
+.github/workflows/bad.yml:7:9: shellcheck reported issue in this script: SC2115:warning:1:21: Use "${var:?}" to ensure this never expands to /*  [shellcheck]
+  |
+7 |       - run: echo $FOO && rm -rf $DIR/*
+  |         ^~~~
+# mutant exit: 1
+
+## 4. check-jsonschema 0.39.0
+python -m check_jsonschema, version 0.39.0
+$ check-jsonschema --builtin-schema vendor.github-workflows .github/workflows/ci.yml .github/workflows/linux-snapshots.yml
+ok -- validation done
+# exit: 0
+$ check-jsonschema --builtin-schema vendor.gitlab-ci --data-transform gitlab-ci .gitlab-ci.yml
+ok -- validation done
+# exit: 0
+
+## 5. mutation proofs: a temporary, never committed fault in a CI file makes the named test fail; the file is restored afterwards
+[ci.yml: one action SHA changed] unittest exit=1, failing: test_every_action_is_pinned_to_a_full_sha_with_a_version_comment 
+[ci.yml: claude-review continue-on-error] unittest exit=1, failing: test_claude_review_needs_the_other_four_jobs_and_cannot_fail 
+[ci.yml: event expression in run] unittest exit=1, failing: test_no_run_script_interpolates_an_event_expression 
+[ci.yml: persist-credentials removed] unittest exit=1, failing: test_no_pull_request_target_and_every_checkout_drops_credentials 
+[ci.yml: image digest removed] unittest exit=1, failing: test_e2e_runs_the_packaged_jar_in_the_playwright_image test_every_image_is_an_exact_tag_with_a_digest test_playwright_image_equals_the_locked_playwright_version 
+[ci.yml: key also in the comment step] unittest exit=1, failing: test_api_key_reaches_only_the_review_step_and_is_never_printed 
+[ci.yml: pull_request_target] unittest exit=1, failing: test_no_pull_request_target_and_every_checkout_drops_credentials test_triggers_are_pushes_and_pull_requests_into_dev_and_main 
+[ci.yml: set -x] unittest exit=1, failing: test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks 
+[linux-snapshots.yml: not update mode] unittest exit=1, failing: test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them 
+[.gitlab-ci.yml: claude-review allow_failure true] unittest exit=1, failing: test_claude_review_needs_the_other_four_jobs_and_cannot_fail 
+[.gitlab-ci.yml: sha256sum check removed] unittest exit=1, failing: test_every_downloaded_file_has_a_sha256_next_to_it 
+[.gitlab-ci.yml: gates limited with --only] unittest exit=1, failing: test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate 
+[.gitlab-ci.yml: environment scope removed] unittest exit=1, failing: test_api_key_reaches_only_the_review_step_and_is_never_printed 
+# after the mutations: git status --short -> '' (clean), tests: OK
+
+## 6. python scripts/ci/quality_gates.py --report ci-out/quality-gates/report.md (.venv interpreter), exit 0
+=== gate: ac-audit ===
+**Covered 92 / 92 ACs (100%)** Â· parent-only 0 Â· not covered (incl. parent-only) 0
+--- ac-audit: exit 0 (PASS)
+=== gate: redact-evidence ===
+--- redact-evidence: exit 0 (PASS)
+=== gate: hook-tests ===
+ALL PASSED
+--- hook-tests: exit 0 (PASS)
+=== gate: hook-line-endings ===
+OK: 6 file(s) matched, all LF-only
+--- hook-line-endings: exit 0 (PASS)
+=== gate: ci-script-tests ===
+Ran 138 tests in 50.017s
+OK
+--- ci-script-tests: exit 0 (PASS)
+=== gate: oracle-fixture ===
+oracle fixture OK: 1000 rows equal a fresh generation (backend/src/test/resources/oracle/ac-08-5-refund-cases.csv)
+--- oracle-fixture: exit 0 (PASS)
+=== gate: actionlint ===
+--- actionlint: exit 0 (PASS)
+=== gate: ci-schema ===
+ok -- validation done
+ok -- validation done
+--- ci-schema: exit 0 (PASS)
+
+| gate | command | exit | result |
+|---|---|---|---|
+| ac-audit | python scripts/ac_audit.py --offline --no-write | 0 | PASS |
+| redact-evidence | python scripts/redact_evidence.py --check sprint-contracts specs/reviews docs/fix-loops | 0 | PASS |
+| hook-tests | python .claude/hooks/tests/test_hooks.py | 0 | PASS |
+| hook-line-endings | python scripts/ci/check_line_endings.py '.claude/hooks/*.sh' | 0 | PASS |
+| ci-script-tests | python -m unittest discover -s scripts/tests -v | 0 | PASS |
+| oracle-fixture | python scripts/gen_refund_oracle_cases.py --check | 0 | PASS |
+| actionlint | actionlint -shellcheck shellcheck .github/workflows/*.yml | 0 | PASS |
+| ci-schema | python -m check_jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yml && python -m check_jsonschema --builtin-schema vendor.gitlab-ci --data-transform gitlab-ci .gitlab-ci.yml | 0 | PASS |
+
+8/8 gates passed
+
+## 7. python scripts/ac_audit.py --offline --no-write (headline)
+**Covered 92 / 92 ACs (100%)** · parent-only 0 · not covered (incl. parent-only) 0
+
+## 8. git state
+  (empty = clean)
+chore/ci-hardening
+7c7fdf3 ci: NFR-09.3 GitLab claude-review runs in the environment claude-review, so an environment-scoped ANTHROPIC_API_KEY reaches only that job (GitLab gives every job the project variables); test_ci_config.py asserts it (edit after the red commit, found in the security review of the CI files)
+600d257 ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 .gitlab-ci.yml with the same five jobs, stages build, test, e2e and review, images pinned by digest, JRE tarball checked with sha256sum, claude-review needs four jobs with allow_failure false, manual e2e-update-linux-snapshots; the CI config tests are green
+c2886b8 ci: NFR-09.5 NFR-09.2 NFR-09.3 Linux snapshots workflow, label update-linux-snapshots or manual dispatch, read-only, packaged JAR built without tests, Playwright image in update mode with --update-snapshots=missing, uploads only the -linux PNGs and the report (plan G-1)
+693b60a ci: NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.6 GitHub Actions ci.yml with build, frontend-unit, e2e (Playwright image, packaged JAR), quality-gates and claude-review (key in one step's env, pull-requests write on that job only), every action SHA-pinned
+2ecaea2 ci: NFR-09.1 backend/mvnw is mode 100755 so ./mvnw runs on a Linux runner and in the Temurin image (git update-index --chmod=+x, content unchanged)
+54896b1 test(red): NFR-09.1 NFR-09.2 NFR-09.3 NFR-09.5 NFR-09.6 CI definition tests, 26 of 27 fail on an assertion because .github/workflows/ and .gitlab-ci.yml are absent and backend/mvnw is mode 100644
+59420aa feat(green): NFR-09.5 visual-baseline policy and expectVisual helper replace the 10 direct toHaveScreenshot calls; PF_E2E_JAR starts the packaged JAR as the E2E server; update-mode comment
+6d26416 test(red): NFR-09.5 visual-baseline policy table test, 11 of 25 fail against a stub that always asserts
+8647f54 chore: pin @playwright/test to the exact 1.64.1 so the lock and the CI Playwright image cannot drift (NFR-09.2, P-14)
+61f20f3 feat(green): NFR-09.3 NFR-09.4 NFR-09.6 scripts/README.md documents the CI scripts and drops the stale --report-only and full-audit-in-claude-review text; comment API calls never follow a redirect (test added with a mutation proof)
+3da04da feat(green): NFR-09.6 quality_gates.py prints gate output as UTF-8 so a Windows pipe cannot fail a gate
+10fae5e feat(green): NFR-09.3 NFR-09.4 claude_review.py runs the two pinned-CLI review passes with a verdict schema, BLOCKER gate, redaction and token-free child environment; comment posts the report to the PR or MR (test_claude_review.py compares header names case-insensitively)
+12dc531 feat(green): NFR-09.6 check_line_endings.py LF gate, fetch_tools.py pinned checksum-verified actionlint and shellcheck, quality_gates.py runner of the eight C11 gates
+11fd0f9 feat(green): NFR-09.3 redact_evidence redacts Anthropic sk-ant- API keys; NFR-09.6 ac_audit counts scripts/tests/test_*.py
+588feb0 feat(green): AC-08.5 NFR-09.6 gen_refund_oracle_cases.py writes the 1,000-case refund fixture from the premium_check.py oracle, --check fails on a hand edit
+9e9b20c test(red): NFR-09.3, NFR-09.4, NFR-09.6 CI script tests with a stub Claude CLI; scripts/ci stubs fail them (97 failures, 21 errors, 15 vacuous passes in red)
+4730168 spec: Sprint 5 CI criteria NFR-08.1 and NFR-09.1-09.6, accepted v1 limitations SG-3, SG-5, SG-6 and SG-7 (plan G-5, approved at the Sprint 5 checkpoint)
+dev=d9a5694 main=8e265d6
+port 8080 listeners: 0

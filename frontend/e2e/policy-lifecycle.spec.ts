@@ -13,6 +13,7 @@ import {
   shiftDate,
   signIn,
   withRenewalLock,
+  expectVisual,
 } from './support';
 
 /** Hides policy numbers and dates in the visual snapshots (see the file for why it is not `mask`). */
@@ -67,7 +68,7 @@ test('AC-05.1: customer1 issues an approved application and sees an ACTIVE polic
   await expect(page.getByTestId(`policy-card-${policyNumber}-sum-insured`)).toHaveText('5000000.00');
   await expect(page.getByTestId(`policy-card-${policyNumber}-endorsements`)).toHaveText('0');
   await expectNoHorizontalScroll(page);
-  await expect(card).toHaveScreenshot('my-policies-card.png', {
+  await expectVisual(card, 'my-policies-card.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
@@ -87,7 +88,7 @@ test('AC-06.1: an address change shows ENDORSED and the Versions tab keeps v1 wi
   await expect(page.getByTestId('version-1-address')).toHaveText('1 Demo Street, Pune, 411001');
   await expect(page.getByTestId('version-2-address')).toHaveText('99 New Road, Mumbai, 400001');
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('tabpanel-versions')).toHaveScreenshot('policy-versions-tab.png', {
+  await expectVisual(page.getByTestId('tabpanel-versions'), 'policy-versions-tab.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
@@ -113,7 +114,7 @@ test('AC-06.2: a sum insured change to 7000000.00 effective on the term start pr
   await expect(page.getByTestId('preview-new-premium')).toHaveText('9490.00');
   await expect(page.getByTestId('preview-adjustment')).toHaveText('2640.00');
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('endorse-form')).toHaveScreenshot('endorse-sum-insured-preview.png', {
+  await expectVisual(page.getByTestId('endorse-form'), 'endorse-sum-insured-preview.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
@@ -230,7 +231,7 @@ test('AC-07.1: the cycle on expiry minus 30 days lists the policy in offersCreat
   await expect(page.getByTestId('renew-premium')).toHaveText('6850.00');
   await expect(page.getByTestId('policy-status-badge')).toHaveText('ACTIVE');
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('renew-panel')).toHaveScreenshot('renew-panel-offer.png', {
+  await expectVisual(page.getByTestId('renew-panel'), 'renew-panel-offer.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
@@ -273,7 +274,7 @@ test('AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, the
   await expect(page.getByTestId('refund-preview-fee')).toHaveText('0.00');
   await expect(page.getByTestId('refund-preview-cooling-off')).toHaveText('true');
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('refund-preview')).toHaveScreenshot('cancel-refund-preview.png', {
+  await expectVisual(page.getByTestId('refund-preview'), 'cancel-refund-preview.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
@@ -285,7 +286,7 @@ test('AC-08.2: a same-day cancel previews 6850.00, fee 0.00 and cooling-off, the
   await expect(page.getByTestId('refund-1-amount')).toHaveText('6850.00');
   await expect(page.getByTestId('refund-1-fee')).toHaveText('0.00');
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('tabpanel-refunds')).toHaveScreenshot('refunds-tab.png', {
+  await expectVisual(page.getByTestId('tabpanel-refunds'), 'refunds-tab.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });

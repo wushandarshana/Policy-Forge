@@ -12,9 +12,8 @@ node_modules/
 frontend/dist/
 frontend/test-results/
 frontend/playwright-report/
-# ignore everything in coverage/ except the committed lcov report (a dir-level ignore would block the exception)
-frontend/coverage/*
-!frontend/coverage/lcov.info
+# Vitest coverage output (CI publishes lcov.info as an artifact, it is not committed)
+frontend/coverage/
 
 # H2 file databases
 *.mv.db
@@ -28,6 +27,10 @@ frontend/coverage/*
 # Python
 __pycache__/
 .venv/
+
+# CI tooling (scripts/ci): pinned tool downloads and review/gate outputs
+.ci-tools/
+ci-out/
 
 # IDE / OS
 .idea/

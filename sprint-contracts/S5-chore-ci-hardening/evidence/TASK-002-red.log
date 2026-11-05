@@ -1,0 +1,1703 @@
+# TASK-002 red log: NFR-09.3, NFR-09.4, NFR-09.6 (test(red) commit, stubs for scripts/ci/*.py)
+# date: 2026-11-04  branch: chore/ci-hardening
+# command: python -m unittest discover -s scripts/tests -v
+
+test_a_docstring_id_in_a_script_test_counts_as_exact_coverage (test_ac_audit_globs.AcAuditGlobTests.test_a_docstring_id_in_a_script_test_counts_as_exact_coverage)
+NFR-09.6: a test whose docstring starts with NFR-09.6 is reported as covering NFR-09.6. ... FAIL
+test_existing_globs_are_unchanged (test_ac_audit_globs.AcAuditGlobTests.test_existing_globs_are_unchanged)
+NFR-09.6: the five pre-existing globs are still there, in order, before the new one. ... ok
+test_fixtures_directory_is_not_scanned (test_ac_audit_globs.AcAuditGlobTests.test_fixtures_directory_is_not_scanned)
+NFR-09.6: the stub CLI under scripts/tests/fixtures/ is never counted as a test. ... ok
+test_test_globs_include_the_python_script_tests (test_ac_audit_globs.AcAuditGlobTests.test_test_globs_include_the_python_script_tests)
+NFR-09.6: ac_audit.py scans scripts/tests/test_*.py, so the CI script tests count towards coverage. ... FAIL
+test_a_pattern_that_matches_no_file_fails (test_check_line_endings.LineEndingCheckTests.test_a_pattern_that_matches_no_file_fails)
+NFR-09.6: a pattern with no matching tracked file fails closed, so a typo cannot disable the gate. ... FAIL
+test_cr_byte_only_in_the_working_tree_fails (test_check_line_endings.LineEndingCheckTests.test_cr_byte_only_in_the_working_tree_fails)
+NFR-09.6: a file that is LF in the index but has a CR byte in the working tree fails. ... FAIL
+test_crlf_in_the_index_fails_and_names_the_file (test_check_line_endings.LineEndingCheckTests.test_crlf_in_the_index_fails_and_names_the_file)
+NFR-09.6: a hook file that is CRLF in the index (i/crlf) fails and is listed. ... FAIL
+test_every_offending_file_is_listed (test_check_line_endings.LineEndingCheckTests.test_every_offending_file_is_listed)
+NFR-09.6: with several offenders the output lists each one, not just the first. ... FAIL
+test_files_outside_the_pattern_are_ignored (test_check_line_endings.LineEndingCheckTests.test_files_outside_the_pattern_are_ignored)
+NFR-09.6: a CRLF file that the pattern does not match does not fail the check. ... ok
+test_lf_only_hook_files_pass (test_check_line_endings.LineEndingCheckTests.test_lf_only_hook_files_pass)
+NFR-09.6: hook files with LF endings in the index and the working tree pass the check. ... ok
+test_mixed_endings_in_the_index_fail (test_check_line_endings.LineEndingCheckTests.test_mixed_endings_in_the_index_fail)
+NFR-09.6: a file that is mixed (i/mixed) in the index fails. ... FAIL
+test_real_hook_files_are_lf_only (test_check_line_endings.LineEndingCheckTests.test_real_hook_files_are_lf_only)
+NFR-09.6: the committed .claude/hooks/*.sh of this repository pass the check. ... ok
+test_ci_scripts_never_use_a_shell (test_ci_script_hygiene.CiScriptHygieneTests.test_ci_scripts_never_use_a_shell)
+NFR-09.4: no scripts/ci/*.py starts a command through a shell (shell=True, os.system, os.popen). ... ok
+test_every_ci_script_imports_only_the_standard_library (test_ci_script_hygiene.CiScriptHygieneTests.test_every_ci_script_imports_only_the_standard_library)
+NFR-09.4: no scripts/ci/*.py imports a third-party or repository module. ... ok
+test_every_ci_script_parses_as_python_3_11 (test_ci_script_hygiene.CiScriptHygieneTests.test_every_ci_script_parses_as_python_3_11)
+NFR-09.4: every scripts/ci/*.py parses with feature_version (3, 11), the GitLab review image's Python. ... ok
+test_the_expected_ci_scripts_exist (test_ci_script_hygiene.CiScriptHygieneTests.test_the_expected_ci_scripts_exist)
+NFR-09.4: the four CI entry points of plan C1 are present in scripts/ci/. ... ok
+test_a_key_in_the_report_is_redacted_before_it_is_posted (test_claude_review.CommentTests.test_a_key_in_the_report_is_redacted_before_it_is_posted)
+NFR-09.3: a key-shaped string in the report never reaches the platform API. ... FAIL
+test_github_api_failure_is_a_warning_and_never_prints_the_token (test_claude_review.CommentTests.test_github_api_failure_is_a_warning_and_never_prints_the_token)
+NFR-09.4: a failed comment call warns and exits 0 (the gate is the job, not the comment). ... FAIL
+test_github_creates_one_comment_carrying_the_marker_and_the_report (test_claude_review.CommentTests.test_github_creates_one_comment_carrying_the_marker_and_the_report)
+NFR-09.4: on a pull_request event the report is posted as a new PR comment with the marker. ... FAIL
+test_github_does_nothing_outside_a_pull_request_or_without_a_token (test_claude_review.CommentTests.test_github_does_nothing_outside_a_pull_request_or_without_a_token)
+NFR-09.4: on a push event or with no GH_TOKEN the comment step makes no request and exits 0. ... ok
+test_github_updates_the_existing_marked_comment (test_claude_review.CommentTests.test_github_updates_the_existing_marked_comment)
+NFR-09.4: a second run edits the comment that carries the marker instead of adding another. ... FAIL
+test_gitlab_creates_a_merge_request_note_with_the_private_token_header (test_claude_review.CommentTests.test_gitlab_creates_a_merge_request_note_with_the_private_token_header)
+NFR-09.4: on GitLab the report is posted as an MR note, authenticated with PRIVATE-TOKEN. ... FAIL
+test_gitlab_does_nothing_without_a_token_or_a_merge_request (test_claude_review.CommentTests.test_gitlab_does_nothing_without_a_token_or_a_merge_request)
+NFR-09.4: without PF_GITLAB_REVIEW_TOKEN or CI_MERGE_REQUEST_IID nothing is posted and the exit is 0. ... ok
+test_gitlab_updates_the_existing_marked_note (test_claude_review.CommentTests.test_gitlab_updates_the_existing_marked_note)
+NFR-09.4: a rerun on GitLab edits the note with the marker. ... FAIL
+test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base (test_claude_review.DiffRangeTests.test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base)
+NFR-09.4: with no event given, an ancestor base is used as is and any other base gives the merge base. ... FAIL
+test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone)
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD. ... 
+  test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone) (ref='refs/remotes/origin/dev')
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD. ... FAIL
+  test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone) (ref='refs/remotes/origin/main')
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD. ... FAIL
+test_manual_run_uses_the_merge_base_with_origin_dev (test_claude_review.DiffRangeTests.test_manual_run_uses_the_merge_base_with_origin_dev)
+NFR-09.4: a manual run reviews merge-base(origin/dev, HEAD)..HEAD. ... FAIL
+test_manual_run_without_origin_dev_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_manual_run_without_origin_dev_falls_back_to_the_first_parent)
+NFR-09.4: with no origin/dev to compare with, a manual run reviews HEAD^1..HEAD. ... FAIL
+test_merge_request_is_an_alias_of_pull_request (test_claude_review.DiffRangeTests.test_merge_request_is_an_alias_of_pull_request)
+NFR-09.4: a GitLab merge request uses the same merge-base rule. ... FAIL
+test_pull_request_range_starts_at_the_merge_base (test_claude_review.DiffRangeTests.test_pull_request_range_starts_at_the_merge_base)
+NFR-09.4: a pull request reviews merge-base(base, head)..head, not the moved base tip. ... FAIL
+test_push_range_is_before_to_after (test_claude_review.DiffRangeTests.test_push_range_is_before_to_after)
+NFR-09.4: a push whose before is an ancestor of after reviews before..after. ... FAIL
+test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent)
+NFR-09.4: after a force push the old tip is not an ancestor, so the range is after^1..after. ... FAIL
+test_push_with_all_zero_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_all_zero_before_falls_back_to_the_first_parent)
+NFR-09.4: a push that creates a branch (before is all zeros) reviews after^1..after. ... FAIL
+test_push_with_an_unknown_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_an_unknown_before_falls_back_to_the_first_parent)
+NFR-09.4: a before commit that the checkout does not have falls back to the first parent. ... FAIL
+test_root_commit_is_compared_with_the_empty_tree (test_claude_review.DiffRangeTests.test_root_commit_is_compared_with_the_empty_tree)
+NFR-09.4: a commit without a parent is reviewed against the empty tree. ... FAIL
+test_unknown_head_is_an_error (test_claude_review.DiffRangeTests.test_unknown_head_is_an_error)
+NFR-09.4: a head that is not a commit stops the run instead of reviewing nothing. ... FAIL
+test_blank_cap_variables_use_the_defaults (test_claude_review.ReviewPromptTests.test_blank_cap_variables_use_the_defaults)
+NFR-09.4: an unset repository variable reaches the job as an empty string and means the default. ... FAIL
+test_caps_can_be_set_through_the_environment (test_claude_review.ReviewPromptTests.test_caps_can_be_set_through_the_environment)
+NFR-09.4: PF_REVIEW_MAX_TURNS and PF_REVIEW_MAX_BUDGET_USD set the caps of every pass. ... FAIL
+test_command_line_matches_the_contract (test_claude_review.ReviewPromptTests.test_command_line_matches_the_contract)
+NFR-09.4: the CLI argv has the exact flag set, the frontmatter model and both caps for each pass. ... FAIL
+test_each_pass_receives_the_agent_body_byte_for_byte (test_claude_review.ReviewPromptTests.test_each_pass_receives_the_agent_body_byte_for_byte)
+NFR-09.4: each pass sends the agent file body, unchanged, on stdin and never on the command line. ... FAIL
+test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started)
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI. ... 
+  test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_BUDGET_USD', value='5; rm -rf /')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI. ... FAIL
+  test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_TURNS', value='forty')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI. ... FAIL
+  test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_BUDGET_USD', value='-1')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI. ... FAIL
+test_models_come_from_the_agent_frontmatter (test_claude_review.ReviewPromptTests.test_models_come_from_the_agent_frontmatter)
+NFR-09.4: security-reviewer runs on its frontmatter model and test-engineer on its own. ... FAIL
+test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary (test_claude_review.ReviewPromptTests.test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary)
+NFR-09.4: the test-engineer prompt carries the offline AC-audit summary line, the other does not. ... ERROR
+test_permissions_are_never_skipped (test_claude_review.ReviewPromptTests.test_permissions_are_never_skipped)
+NFR-09.4: no pass uses --dangerously-skip-permissions or a bypass permission mode. ... FAIL
+test_preamble_states_the_range_the_rules_and_the_changed_files (test_claude_review.ReviewPromptTests.test_preamble_states_the_range_the_rules_and_the_changed_files)
+NFR-09.4: the preamble names the diff range and files, says read-only, and marks the diff untrusted. ... ERROR
+test_a_failed_pass_stops_the_review_before_the_second_pass (test_claude_review.ReviewVerdictTests.test_a_failed_pass_stops_the_review_before_the_second_pass)
+NFR-09.4: when the first pass fails the second is not started, so no more API money is spent. ... FAIL
+test_blank_api_key_counts_as_missing (test_claude_review.ReviewVerdictTests.test_blank_api_key_counts_as_missing)
+NFR-09.4: an empty ANTHROPIC_API_KEY (an unset GitHub secret renders as empty) is a missing key. ... FAIL
+test_blockers_from_both_passes_are_counted (test_claude_review.ReviewVerdictTests.test_blockers_from_both_passes_are_counted)
+NFR-09.4: BLOCKER findings of both passes count towards the gate. ... FAIL
+test_changes_requested_without_blocker_exits_zero_with_a_warning (test_claude_review.ReviewVerdictTests.test_changes_requested_without_blocker_exits_zero_with_a_warning)
+NFR-09.4: CHANGES_REQUESTED with no BLOCKER passes (plan G-4) but warns in the log and the report. ... FAIL
+test_cli_exit_status_one_fails (test_claude_review.ReviewVerdictTests.test_cli_exit_status_one_fails)
+NFR-09.4: a CLI that exits with status 1 fails the job with a non-zero exit. ... FAIL
+test_cli_reported_error_fails (test_claude_review.ReviewVerdictTests.test_cli_reported_error_fails)
+NFR-09.4: a result flagged is_error (for example a hit turn cap) has no verdict, so the job fails. ... FAIL
+test_empty_diff_passes_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_empty_diff_passes_without_calling_the_cli)
+NFR-09.4: an empty diff writes a no-changes report, exits 0 and never starts the CLI. ... FAIL
+test_last_fenced_json_block_is_used_when_structured_output_is_absent (test_claude_review.ReviewVerdictTests.test_last_fenced_json_block_is_used_when_structured_output_is_absent)
+NFR-09.4: without structured_output the last fenced json block of the result is the verdict. ... ERROR
+test_major_and_minor_findings_alone_exit_zero_and_are_published (test_claude_review.ReviewVerdictTests.test_major_and_minor_findings_alone_exit_zero_and_are_published)
+NFR-09.4: MAJOR and MINOR findings do not fail the job, and every one appears in claude-review.md. ... FAIL
+test_missing_api_key_fails_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_missing_api_key_fails_without_calling_the_cli)
+NFR-09.4: with ANTHROPIC_API_KEY unset the run exits 2 with a fixed message and never starts the CLI. ... FAIL
+test_missing_required_key_in_the_verdict_fails (test_claude_review.ReviewVerdictTests.test_missing_required_key_in_the_verdict_fails)
+NFR-09.4: a verdict that lacks a required key (summary) exits 2. ... FAIL
+test_no_structured_output_and_no_fenced_json_fails (test_claude_review.ReviewVerdictTests.test_no_structured_output_and_no_fenced_json_fails)
+NFR-09.4: a pass with neither structured_output nor a fenced JSON block fails closed (exit 2). ... FAIL
+test_one_blocker_exits_one (test_claude_review.ReviewVerdictTests.test_one_blocker_exits_one)
+NFR-09.4: a single BLOCKER finding fails the job with exit 1 and names the finding in the report. ... FAIL
+test_repository_defaults_to_the_working_directory (test_claude_review.ReviewVerdictTests.test_repository_defaults_to_the_working_directory)
+NFR-09.4: without --repo the runner reviews the repository it is started in, as the CI jobs do. ... FAIL
+test_schema_invalid_output_fails (test_claude_review.ReviewVerdictTests.test_schema_invalid_output_fails)
+NFR-09.4: output that fails the verdict schema (a verdict outside the enum) exits 2. ... FAIL
+test_two_approve_passes_exit_zero (test_claude_review.ReviewVerdictTests.test_two_approve_passes_exit_zero)
+NFR-09.4: two APPROVE passes exit 0, write both verdicts and a report ending in GATE: PASS. ... FAIL
+test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact)
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin. ... 
+  test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact) (version='2.1.3110')
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin. ... FAIL
+  test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact) (version='12.1.311')
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin. ... FAIL
+test_version_other_than_the_pinned_one_fails_before_any_pass (test_claude_review.ReviewVerdictTests.test_version_other_than_the_pinned_one_fails_before_any_pass)
+NFR-09.4: a CLI that is not 2.1.311 fails closed and no prompt is ever sent to it. ... FAIL
+test_child_environment_helper_removes_tokens_in_any_case (test_claude_review.SecretHandlingTests.test_child_environment_helper_removes_tokens_in_any_case)
+NFR-09.3: child_environment drops the token variables and sets the scrub flag. ... FAIL
+test_cli_child_environment_lacks_the_platform_tokens (test_claude_review.SecretHandlingTests.test_cli_child_environment_lacks_the_platform_tokens)
+NFR-09.3: the CLI child environment has none of GITHUB_TOKEN, GH_TOKEN, CI_JOB_TOKEN, GitLab token. ... FAIL
+test_fake_key_never_appears_in_stdout_stderr_or_any_output_file (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_in_stdout_stderr_or_any_output_file)
+NFR-09.3: after a normal run the API key is in no stream and no file the run produced. ... FAIL
+test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails)
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either. ... 
+  test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='exit1')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either. ... FAIL
+  test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='no_output')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either. ... FAIL
+  test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='invalid_schema')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either. ... FAIL
+test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output (test_claude_review.SecretHandlingTests.test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output)
+NFR-09.3: a key-shaped string that the CLI echoes is replaced by a marker in stdout, stderr and files. ... FAIL
+test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped (test_claude_review.SecretHandlingTests.test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped)
+NFR-09.3: the literal ANTHROPIC_API_KEY value is redacted wherever the CLI echoes it. ... FAIL
+test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected)
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... 
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='missing summary')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='extra top-level key')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='verdict outside the enum')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='severity outside the enum')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='line as a string')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='line as a boolean')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='extra finding key')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+  test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='checklist as an object')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... FAIL
+test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected)
+NFR-09.4: a list, a string or null is never a verdict. ... 
+  test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=[])
+NFR-09.4: a list, a string or null is never a verdict. ... FAIL
+  test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance='APPROVE')
+NFR-09.4: a list, a string or null is never a verdict. ... FAIL
+  test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=None)
+NFR-09.4: a list, a string or null is never a verdict. ... FAIL
+  test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=3)
+NFR-09.4: a list, a string or null is never a verdict. ... FAIL
+test_schema_file_defines_the_c6_shape (test_claude_review.VerdictSchemaTests.test_schema_file_defines_the_c6_shape)
+NFR-09.4: the schema requires every key, allows no others, and fixes the enums of C6. ... FAIL
+test_valid_verdict_has_no_errors (test_claude_review.VerdictSchemaTests.test_valid_verdict_has_no_errors)
+NFR-09.4: a complete verdict validates, including a null line number. ... ok
+test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing (test_fetch_tools.FetchBehaviourTests.test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing)
+NFR-09.6: a wrong SHA-256 fails the run, removes the download and never reaches extraction. ... FAIL
+test_a_tampered_copy_is_replaced_by_a_fresh_verified_download (test_fetch_tools.FetchBehaviourTests.test_a_tampered_copy_is_replaced_by_a_fresh_verified_download)
+NFR-09.6: if the extracted tool changed after verification, it is downloaded and verified again. ... ERROR
+test_a_verified_copy_is_reused_without_downloading_again (test_fetch_tools.FetchBehaviourTests.test_a_verified_copy_is_reused_without_downloading_again)
+NFR-09.6: a second run finds the verified copy and does not download. ... FAIL
+test_a_verified_download_is_extracted_and_its_path_is_printed (test_fetch_tools.FetchBehaviourTests.test_a_verified_download_is_extracted_and_its_path_is_printed)
+NFR-09.6: a download whose SHA-256 matches is extracted into the destination and the path is printed. ... FAIL
+test_an_archive_without_the_executable_fails_and_leaves_nothing (test_fetch_tools.FetchBehaviourTests.test_an_archive_without_the_executable_fails_and_leaves_nothing)
+NFR-09.6: a checksum-valid archive that lacks the tool is an error, and nothing is left behind. ... FAIL
+test_path_traversal_members_are_never_written (test_fetch_tools.FetchBehaviourTests.test_path_traversal_members_are_never_written)
+NFR-09.6: members with .. or absolute names are ignored; only the named executable is extracted. ... ERROR
+test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors)
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading. ... 
+  test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors) (argv=['nosuchtool', '--platform', 'linux-x86_64'])
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading. ... FAIL
+  test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors) (argv=['actionlint', '--platform', 'plan9-mips'])
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading. ... FAIL
+test_zip_and_nested_tar_xz_archives_are_supported (test_fetch_tools.FetchBehaviourTests.test_zip_and_nested_tar_xz_archives_are_supported)
+NFR-09.6: the Windows zip and the nested shellcheck tar.xz layouts both yield the executable. ... ERROR
+test_manifest_holds_the_c3_urls_and_sha256_values (test_fetch_tools.ManifestTests.test_manifest_holds_the_c3_urls_and_sha256_values)
+NFR-09.6: the manifest pins actionlint 1.7.12 and shellcheck v0.11.0 for linux and windows, with SHA-256. ... ERROR
+test_platform_names_are_detected_for_the_ci_machines (test_fetch_tools.ManifestTests.test_platform_names_are_detected_for_the_ci_machines)
+NFR-09.6: Linux x86_64 and Windows AMD64 map to the manifest's platform keys; others are rejected. ... FAIL
+test_the_default_downloader_passes_the_verifying_context_to_urlopen (test_fetch_tools.TransportTests.test_the_default_downloader_passes_the_verifying_context_to_urlopen)
+NFR-09.6: download_file hands the verifying SSL context to urlopen and writes what it reads. ... ERROR
+test_the_default_downloader_refuses_plain_http (test_fetch_tools.TransportTests.test_the_default_downloader_refuses_plain_http)
+NFR-09.6: only https URLs are downloaded. ... FAIL
+test_tls_verification_is_on (test_fetch_tools.TransportTests.test_tls_verification_is_on)
+NFR-09.6: the SSL context requires a valid certificate and host name, and nothing disables it. ... ERROR
+test_actionlint_gate_uses_the_fetched_tools_on_the_workflows (test_quality_gates.GateDefinitionTests.test_actionlint_gate_uses_the_fetched_tools_on_the_workflows)
+NFR-09.6: actionlint runs with the fetched shellcheck on every file under .github/workflows/. ... ERROR
+test_actionlint_gate_without_workflows_is_unavailable (test_quality_gates.GateDefinitionTests.test_actionlint_gate_without_workflows_is_unavailable)
+NFR-09.6: with no workflow file to lint the actionlint gate fails instead of passing vacuously. ... ERROR
+test_gate_list_and_order_equal_c11 (test_quality_gates.GateDefinitionTests.test_gate_list_and_order_equal_c11)
+NFR-09.6: the quality gates are the eight of plan C11, in that order. ... FAIL
+test_schema_gate_checks_both_platforms_with_the_c11_schemas (test_quality_gates.GateDefinitionTests.test_schema_gate_checks_both_platforms_with_the_c11_schemas)
+NFR-09.6: ci-schema runs check-jsonschema on the GitHub workflows and on .gitlab-ci.yml. ... ERROR
+test_schema_gate_without_check_jsonschema_is_unavailable (test_quality_gates.GateDefinitionTests.test_schema_gate_without_check_jsonschema_is_unavailable)
+NFR-09.6: an environment without check-jsonschema fails the gate instead of skipping it. ... ERROR
+test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11)
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... 
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='ac-audit')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='redact-evidence')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='hook-tests')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='hook-line-endings')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='ci-script-tests')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+  test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='oracle-fixture')
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ERROR
+test_a_gate_with_several_commands_fails_if_any_command_fails (test_quality_gates.GateRunTests.test_a_gate_with_several_commands_fails_if_any_command_fails)
+NFR-09.6: a gate made of two commands runs both and fails when either exits non-zero. ... FAIL
+test_a_missing_tool_fails_the_gate_and_the_run (test_quality_gates.GateRunTests.test_a_missing_tool_fails_the_gate_and_the_run)
+NFR-09.6: a tool that cannot be resolved is a failure, never a skip, and later gates still run. ... FAIL
+test_a_single_failure_exits_one_after_every_later_gate_has_run (test_quality_gates.GateRunTests.test_a_single_failure_exits_one_after_every_later_gate_has_run)
+NFR-09.6: a failing gate never stops the run; later gates still execute and are reported. ... FAIL
+test_all_gates_passing_exits_zero_and_runs_every_gate_in_order (test_quality_gates.GateRunTests.test_all_gates_passing_exits_zero_and_runs_every_gate_in_order)
+NFR-09.6: with every gate passing the exit code is 0 and all eight gates ran, in the C11 order. ... FAIL
+test_api_key_is_not_passed_to_the_gates (test_quality_gates.GateRunTests.test_api_key_is_not_passed_to_the_gates)
+NFR-09.6: the gate subprocesses run without ANTHROPIC_API_KEY, which only the review step may see. ... FAIL
+test_command_line_entry_point_lists_the_gates (test_quality_gates.GateRunTests.test_command_line_entry_point_lists_the_gates)
+NFR-09.6: `python scripts/ci/quality_gates.py --list` works as a program and exits 0. ... FAIL
+test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code (test_quality_gates.GateRunTests.test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code)
+NFR-09.6: the summary table has the columns gate, command, exit and result for every gate. ... ERROR
+test_list_prints_the_gates_without_running_them (test_quality_gates.GateRunTests.test_list_prints_the_gates_without_running_them)
+NFR-09.6: --list prints every gate name in order and runs nothing. ... FAIL
+test_only_runs_the_named_gates (test_quality_gates.GateRunTests.test_only_runs_the_named_gates)
+NFR-09.6: --only selects gates by name and unknown names are a usage error (exit 2). ... FAIL
+test_real_subprocess_exit_codes_are_captured (test_quality_gates.GateRunTests.test_real_subprocess_exit_codes_are_captured)
+NFR-09.6: with the default runner a command's real exit status and output reach the table. ... FAIL
+test_report_file_holds_the_summary_table (test_quality_gates.GateRunTests.test_report_file_holds_the_summary_table)
+NFR-09.6: --report writes the same table to a file, for the quality-gates-report artifact. ... ERROR
+test_check_reports_the_key_and_exits_one_without_changing_the_file (test_redact_evidence.RedactApiKeyTests.test_check_reports_the_key_and_exits_one_without_changing_the_file)
+NFR-09.3: --check finds the key, exits 1 and leaves the file untouched. ... FAIL
+test_committed_evidence_directories_are_still_clean (test_redact_evidence.RedactApiKeyTests.test_committed_evidence_directories_are_still_clean)
+NFR-09.3: --check over sprint-contracts, specs/reviews and docs/fix-loops exits 0. ... ok
+test_every_key_in_a_file_is_counted (test_redact_evidence.RedactApiKeyTests.test_every_key_in_a_file_is_counted)
+NFR-09.3: two keys in one file are both found and counted. ... FAIL
+test_existing_patterns_keep_their_behaviour (test_redact_evidence.RedactApiKeyTests.test_existing_patterns_keep_their_behaviour)
+NFR-09.3: Basic, Bearer and generated-password redaction are unchanged by the new pattern. ... ok
+test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered)
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files. ... 
+  test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered) (file='security-reviewer.json')
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files. ... FAIL
+  test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered) (file='claude-review.md')
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files. ... FAIL
+test_redact_replaces_an_anthropic_key_with_a_marker (test_redact_evidence.RedactApiKeyTests.test_redact_replaces_an_anthropic_key_with_a_marker)
+NFR-09.3: redact_evidence.py rewrites a sk-ant- key as <redacted-api-key> and exits 0. ... FAIL
+test_short_look_alikes_are_not_keys (test_redact_evidence.RedactApiKeyTests.test_short_look_alikes_are_not_keys)
+NFR-09.3: sk-ant- followed by fewer than 20 key characters is prose, not a key. ... ok
+
+======================================================================
+ERROR: test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary (test_claude_review.ReviewPromptTests.test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary)
+NFR-09.4: the test-engineer prompt carries the offline AC-audit summary line, the other does not.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 351, in test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary
+    security, test_engineer = (c["stdin"].decode("utf-8") for c in pass_calls(self.log))
+    ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 2, got 0)
+
+======================================================================
+ERROR: test_preamble_states_the_range_the_rules_and_the_changed_files (test_claude_review.ReviewPromptTests.test_preamble_states_the_range_the_rules_and_the_changed_files)
+NFR-09.4: the preamble names the diff range and files, says read-only, and marks the diff untrusted.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 272, in test_preamble_states_the_range_the_rules_and_the_changed_files
+    stdin = pass_calls(self.log)[0]["stdin"].decode("utf-8")
+            ~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_last_fenced_json_block_is_used_when_structured_output_is_absent (test_claude_review.ReviewVerdictTests.test_last_fenced_json_block_is_used_when_structured_output_is_absent)
+NFR-09.4: without structured_output the last fenced json block of the result is the verdict.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 182, in test_last_fenced_json_block_is_used_when_structured_output_is_absent
+    verdict = json.loads((self.out / "security-reviewer.json").read_text(encoding="utf-8"))
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\WDARSH~1\\AppData\\Local\\Temp\\pf-ci-review-l1wedou1\\out\\security-reviewer.json'
+
+======================================================================
+ERROR: test_a_tampered_copy_is_replaced_by_a_fresh_verified_download (test_fetch_tools.FetchBehaviourTests.test_a_tampered_copy_is_replaced_by_a_fresh_verified_download)
+NFR-09.6: if the extracted tool changed after verification, it is downloaded and verified again.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 162, in test_a_tampered_copy_is_replaced_by_a_fresh_verified_download
+    path.write_bytes(b"#!/bin/sh\necho tampered\n")
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'write_bytes'
+
+======================================================================
+ERROR: test_path_traversal_members_are_never_written (test_fetch_tools.FetchBehaviourTests.test_path_traversal_members_are_never_written)
+NFR-09.6: members with .. or absolute names are ignored; only the named executable is extracted.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 198, in test_path_traversal_members_are_never_written
+    self.assertEqual(path.read_bytes(), FAKE_EXE)
+                     ^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'read_bytes'
+
+======================================================================
+ERROR: test_zip_and_nested_tar_xz_archives_are_supported (test_fetch_tools.FetchBehaviourTests.test_zip_and_nested_tar_xz_archives_are_supported)
+NFR-09.6: the Windows zip and the nested shellcheck tar.xz layouts both yield the executable.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 172, in test_zip_and_nested_tar_xz_archives_are_supported
+    self.assertEqual(path.name, "actionlint.exe")
+                     ^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'name'
+
+======================================================================
+ERROR: test_manifest_holds_the_c3_urls_and_sha256_values (test_fetch_tools.ManifestTests.test_manifest_holds_the_c3_urls_and_sha256_values)
+NFR-09.6: the manifest pins actionlint 1.7.12 and shellcheck v0.11.0 for linux and windows, with SHA-256.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 101, in test_manifest_holds_the_c3_urls_and_sha256_values
+    self.assertEqual(manifest[tool]["version"], expected["version"])
+                     ~~~~~~~~^^^^^^
+KeyError: 'actionlint'
+
+======================================================================
+ERROR: test_the_default_downloader_passes_the_verifying_context_to_urlopen (test_fetch_tools.TransportTests.test_the_default_downloader_passes_the_verifying_context_to_urlopen)
+NFR-09.6: download_file hands the verifying SSL context to urlopen and writes what it reads.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 230, in test_the_default_downloader_passes_the_verifying_context_to_urlopen
+    self.assertEqual(target.read_bytes(), b"payload")
+                     ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\WDARSH~1\\AppData\\Local\\Temp\\pf-ci-fetch-_8i6ozo5\\download.bin'
+
+======================================================================
+ERROR: test_tls_verification_is_on (test_fetch_tools.TransportTests.test_tls_verification_is_on)
+NFR-09.6: the SSL context requires a valid certificate and host name, and nothing disables it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 216, in test_tls_verification_is_on
+    self.assertEqual(context.verify_mode, ssl.CERT_REQUIRED)
+                     ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'verify_mode'
+
+======================================================================
+ERROR: test_actionlint_gate_uses_the_fetched_tools_on_the_workflows (test_quality_gates.GateDefinitionTests.test_actionlint_gate_uses_the_fetched_tools_on_the_workflows)
+NFR-09.6: actionlint runs with the fetched shellcheck on every file under .github/workflows/.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 86, in test_actionlint_gate_uses_the_fetched_tools_on_the_workflows
+    (argv,) = gates["actionlint"].commands()
+              ~~~~~^^^^^^^^^^^^^^
+KeyError: 'actionlint'
+
+======================================================================
+ERROR: test_actionlint_gate_without_workflows_is_unavailable (test_quality_gates.GateDefinitionTests.test_actionlint_gate_without_workflows_is_unavailable)
+NFR-09.6: with no workflow file to lint the actionlint gate fails instead of passing vacuously.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 111, in test_actionlint_gate_without_workflows_is_unavailable
+    gates["actionlint"].commands()
+    ~~~~~^^^^^^^^^^^^^^
+KeyError: 'actionlint'
+
+======================================================================
+ERROR: test_schema_gate_checks_both_platforms_with_the_c11_schemas (test_quality_gates.GateDefinitionTests.test_schema_gate_checks_both_platforms_with_the_c11_schemas)
+NFR-09.6: ci-schema runs check-jsonschema on the GitHub workflows and on .gitlab-ci.yml.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 93, in test_schema_gate_checks_both_platforms_with_the_c11_schemas
+    github, gitlab = gates["ci-schema"].commands()
+                     ~~~~~^^^^^^^^^^^^^
+KeyError: 'ci-schema'
+
+======================================================================
+ERROR: test_schema_gate_without_check_jsonschema_is_unavailable (test_quality_gates.GateDefinitionTests.test_schema_gate_without_check_jsonschema_is_unavailable)
+NFR-09.6: an environment without check-jsonschema fails the gate instead of skipping it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 103, in test_schema_gate_without_check_jsonschema_is_unavailable
+    gates["ci-schema"].commands()
+    ~~~~~^^^^^^^^^^^^^
+KeyError: 'ci-schema'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='ac-audit')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'ac-audit'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='redact-evidence')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'redact-evidence'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='hook-tests')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'hook-tests'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='hook-line-endings')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'hook-line-endings'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='ci-script-tests')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'ci-script-tests'
+
+======================================================================
+ERROR: test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11) (gate='oracle-fixture')
+NFR-09.6: each static gate runs the C11 command with the current interpreter.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 79, in test_static_gate_commands_equal_c11
+    argvs = gates[name].commands()
+            ~~~~~^^^^^^
+KeyError: 'oracle-fixture'
+
+======================================================================
+ERROR: test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code (test_quality_gates.GateRunTests.test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code)
+NFR-09.6: the summary table has the columns gate, command, exit and result for every gate.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 165, in test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code
+    header = next(line for line in output.splitlines() if line.startswith("| gate"))
+StopIteration
+
+======================================================================
+ERROR: test_report_file_holds_the_summary_table (test_quality_gates.GateRunTests.test_report_file_holds_the_summary_table)
+NFR-09.6: --report writes the same table to a file, for the quality-gates-report artifact.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 225, in test_report_file_holds_the_summary_table
+    text = report.read_text(encoding="utf-8")
+  File "C:\Python314\Lib\pathlib\__init__.py", line 787, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\WDARSH~1\\AppData\\Local\\Temp\\pf-ci-gates-x8ys2ctr\\out\\quality-gates.md'
+
+======================================================================
+FAIL: test_a_docstring_id_in_a_script_test_counts_as_exact_coverage (test_ac_audit_globs.AcAuditGlobTests.test_a_docstring_id_in_a_script_test_counts_as_exact_coverage)
+NFR-09.6: a test whose docstring starts with NFR-09.6 is reported as covering NFR-09.6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ac_audit_globs.py", line 23, in test_a_docstring_id_in_a_script_test_counts_as_exact_coverage
+    self.assertTrue([loc for loc in criterion.exact if loc.startswith("scripts/tests/test_")],
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "no scripts/tests reference was counted for NFR-09.6")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : no scripts/tests reference was counted for NFR-09.6
+
+======================================================================
+FAIL: test_test_globs_include_the_python_script_tests (test_ac_audit_globs.AcAuditGlobTests.test_test_globs_include_the_python_script_tests)
+NFR-09.6: ac_audit.py scans scripts/tests/test_*.py, so the CI script tests count towards coverage.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ac_audit_globs.py", line 17, in test_test_globs_include_the_python_script_tests
+    self.assertIn("scripts/tests/test_*.py", self.audit.TEST_GLOBS)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'scripts/tests/test_*.py' not found in ['backend/src/test/java/**/*Test.java', 'backend/src/test/java/**/*IT.java', 'frontend/src/**/*.test.ts', 'frontend/src/**/*.test.tsx', 'frontend/e2e/**/*.spec.ts']
+
+======================================================================
+FAIL: test_a_pattern_that_matches_no_file_fails (test_check_line_endings.LineEndingCheckTests.test_a_pattern_that_matches_no_file_fails)
+NFR-09.6: a pattern with no matching tracked file fails closed, so a typo cannot disable the gate.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_check_line_endings.py", line 80, in test_a_pattern_that_matches_no_file_fails
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_cr_byte_only_in_the_working_tree_fails (test_check_line_endings.LineEndingCheckTests.test_cr_byte_only_in_the_working_tree_fails)
+NFR-09.6: a file that is LF in the index but has a CR byte in the working tree fails.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_check_line_endings.py", line 54, in test_cr_byte_only_in_the_working_tree_fails
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_crlf_in_the_index_fails_and_names_the_file (test_check_line_endings.LineEndingCheckTests.test_crlf_in_the_index_fails_and_names_the_file)
+NFR-09.6: a hook file that is CRLF in the index (i/crlf) fails and is listed.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_check_line_endings.py", line 37, in test_crlf_in_the_index_fails_and_names_the_file
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_every_offending_file_is_listed (test_check_line_endings.LineEndingCheckTests.test_every_offending_file_is_listed)
+NFR-09.6: with several offenders the output lists each one, not just the first.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_check_line_endings.py", line 63, in test_every_offending_file_is_listed
+    self.assertEqual(proc.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_mixed_endings_in_the_index_fail (test_check_line_endings.LineEndingCheckTests.test_mixed_endings_in_the_index_fail)
+NFR-09.6: a file that is mixed (i/mixed) in the index fails.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_check_line_endings.py", line 46, in test_mixed_endings_in_the_index_fail
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_a_key_in_the_report_is_redacted_before_it_is_posted (test_claude_review.CommentTests.test_a_key_in_the_report_is_redacted_before_it_is_posted)
+NFR-09.3: a key-shaped string in the report never reaches the platform API.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 699, in test_a_key_in_the_report_is_redacted_before_it_is_posted
+    self.assertIn("<redacted-api-key>", sent)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '<redacted-api-key>' not found in ''
+
+======================================================================
+FAIL: test_github_api_failure_is_a_warning_and_never_prints_the_token (test_claude_review.CommentTests.test_github_api_failure_is_a_warning_and_never_prints_the_token)
+NFR-09.4: a failed comment call warns and exits 0 (the gate is the job, not the comment).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 652, in test_github_api_failure_is_a_warning_and_never_prints_the_token
+    self.assertIn("403", proc.stderr_text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '403' not found in ''
+
+======================================================================
+FAIL: test_github_creates_one_comment_carrying_the_marker_and_the_report (test_claude_review.CommentTests.test_github_creates_one_comment_carrying_the_marker_and_the_report)
+NFR-09.4: on a pull_request event the report is posted as a new PR comment with the marker.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 617, in test_github_creates_one_comment_carrying_the_marker_and_the_report
+    self.assertEqual(len(posts), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_github_updates_the_existing_marked_comment (test_claude_review.CommentTests.test_github_updates_the_existing_marked_comment)
+NFR-09.4: a second run edits the comment that carries the marker instead of adding another.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 635, in test_github_updates_the_existing_marked_comment
+    self.assertEqual([(r["method"], r["path"]) for r in writes],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("PATCH", "/repos/octo/demo/issues/comments/55")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [('PATCH', '/repos/octo/demo/issues/comments/55')]
+
+Second list contains 1 additional elements.
+First extra element 0:
+('PATCH', '/repos/octo/demo/issues/comments/55')
+
+- []
++ [('PATCH', '/repos/octo/demo/issues/comments/55')]
+
+======================================================================
+FAIL: test_gitlab_creates_a_merge_request_note_with_the_private_token_header (test_claude_review.CommentTests.test_gitlab_creates_a_merge_request_note_with_the_private_token_header)
+NFR-09.4: on GitLab the report is posted as an MR note, authenticated with PRIVATE-TOKEN.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 663, in test_gitlab_creates_a_merge_request_note_with_the_private_token_header
+    self.assertEqual([r["path"] for r in posts], ["/api/v4/projects/42/merge_requests/9/notes"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['/api/v4/projects/42/merge_requests/9/notes']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'/api/v4/projects/42/merge_requests/9/notes'
+
+- []
++ ['/api/v4/projects/42/merge_requests/9/notes']
+
+======================================================================
+FAIL: test_gitlab_updates_the_existing_marked_note (test_claude_review.CommentTests.test_gitlab_updates_the_existing_marked_note)
+NFR-09.4: a rerun on GitLab edits the note with the marker.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 678, in test_gitlab_updates_the_existing_marked_note
+    self.assertEqual([(r["method"], r["path"]) for r in writes],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     [("PUT", "/api/v4/projects/42/merge_requests/9/notes/77")])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [('PUT', '/api/v4/projects/42/merge_requests/9/notes/77')]
+
+Second list contains 1 additional elements.
+First extra element 0:
+('PUT', '/api/v4/projects/42/merge_requests/9/notes/77')
+
+- []
++ [('PUT', '/api/v4/projects/42/merge_requests/9/notes/77')]
+
+======================================================================
+FAIL: test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base (test_claude_review.DiffRangeTests.test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base)
+NFR-09.4: with no event given, an ancestor base is used as is and any other base gives the merge base.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 422, in test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base
+    self.assertEqual(self.resolve("auto", self.m1, self.m2), (self.m1, self.m2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]a2c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '37ee46fabdd4e48442bb118419454c4a51d7ca2c')
+
+======================================================================
+FAIL: test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone) (ref='refs/remotes/origin/dev')
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 440, in test_manual_run_on_dev_or_main_reviews_the_head_commit_alone
+    self.assertEqual(self.resolve("manual", "", self.merge), (self.m2, self.merge))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('37ee46fabdd4e48442bb118419454c4a51d7ca2c[41 chars]05e')
+
+First differing element 0:
+None
+'37ee46fabdd4e48442bb118419454c4a51d7ca2c'
+
+- (None, None)
++ ('37ee46fabdd4e48442bb118419454c4a51d7ca2c',
++  'b2682d7adab92d1eefd39ac05451ad2a1026b05e')
+
+======================================================================
+FAIL: test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone) (ref='refs/remotes/origin/main')
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 440, in test_manual_run_on_dev_or_main_reviews_the_head_commit_alone
+    self.assertEqual(self.resolve("manual", "", self.merge), (self.m2, self.merge))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('37ee46fabdd4e48442bb118419454c4a51d7ca2c[41 chars]05e')
+
+First differing element 0:
+None
+'37ee46fabdd4e48442bb118419454c4a51d7ca2c'
+
+- (None, None)
++ ('37ee46fabdd4e48442bb118419454c4a51d7ca2c',
++  'b2682d7adab92d1eefd39ac05451ad2a1026b05e')
+
+======================================================================
+FAIL: test_manual_run_uses_the_merge_base_with_origin_dev (test_claude_review.DiffRangeTests.test_manual_run_uses_the_merge_base_with_origin_dev)
+NFR-09.4: a manual run reviews merge-base(origin/dev, HEAD)..HEAD.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 430, in test_manual_run_uses_the_merge_base_with_origin_dev
+    self.assertEqual(self.resolve("manual", "", self.f2), (self.m1, self.f2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]05c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '2586814528bed6e083702a72dab7649c32d4d05c')
+
+======================================================================
+FAIL: test_manual_run_without_origin_dev_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_manual_run_without_origin_dev_falls_back_to_the_first_parent)
+NFR-09.4: with no origin/dev to compare with, a manual run reviews HEAD^1..HEAD.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 446, in test_manual_run_without_origin_dev_falls_back_to_the_first_parent
+    self.assertEqual(self.resolve("manual", "", self.f2), (self.f1, self.f2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('f1044017d8aaa8e1de45697a6bcdc20c8b119725[41 chars]05c')
+
+First differing element 0:
+None
+'f1044017d8aaa8e1de45697a6bcdc20c8b119725'
+
+- (None, None)
++ ('f1044017d8aaa8e1de45697a6bcdc20c8b119725',
++  '2586814528bed6e083702a72dab7649c32d4d05c')
+
+======================================================================
+FAIL: test_merge_request_is_an_alias_of_pull_request (test_claude_review.DiffRangeTests.test_merge_request_is_an_alias_of_pull_request)
+NFR-09.4: a GitLab merge request uses the same merge-base rule.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 396, in test_merge_request_is_an_alias_of_pull_request
+    self.assertEqual(self.resolve("merge_request", self.m2, self.f2), (self.m1, self.f2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]05c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '2586814528bed6e083702a72dab7649c32d4d05c')
+
+======================================================================
+FAIL: test_pull_request_range_starts_at_the_merge_base (test_claude_review.DiffRangeTests.test_pull_request_range_starts_at_the_merge_base)
+NFR-09.4: a pull request reviews merge-base(base, head)..head, not the moved base tip.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 392, in test_pull_request_range_starts_at_the_merge_base
+    self.assertEqual(self.resolve("pull_request", self.m2, self.f2), (self.m1, self.f2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]05c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '2586814528bed6e083702a72dab7649c32d4d05c')
+
+======================================================================
+FAIL: test_push_range_is_before_to_after (test_claude_review.DiffRangeTests.test_push_range_is_before_to_after)
+NFR-09.4: a push whose before is an ancestor of after reviews before..after.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 400, in test_push_range_is_before_to_after
+    self.assertEqual(self.resolve("push", self.m1, self.m2), (self.m1, self.m2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]a2c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '37ee46fabdd4e48442bb118419454c4a51d7ca2c')
+
+======================================================================
+FAIL: test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent)
+NFR-09.4: after a force push the old tip is not an ancestor, so the range is after^1..after.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 410, in test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent
+    self.assertEqual(self.resolve("push", self.o1, self.m2), (self.m1, self.m2))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('409e8ce023319be172310735387f4ad04cb99e50[41 chars]a2c')
+
+First differing element 0:
+None
+'409e8ce023319be172310735387f4ad04cb99e50'
+
+- (None, None)
++ ('409e8ce023319be172310735387f4ad04cb99e50',
++  '37ee46fabdd4e48442bb118419454c4a51d7ca2c')
+
+======================================================================
+FAIL: test_push_with_all_zero_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_all_zero_before_falls_back_to_the_first_parent)
+NFR-09.4: a push that creates a branch (before is all zeros) reviews after^1..after.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 405, in test_push_with_all_zero_before_falls_back_to_the_first_parent
+    self.assertEqual(self.resolve("push", "0" * 40, self.merge), (self.m2, self.merge))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('37ee46fabdd4e48442bb118419454c4a51d7ca2c[41 chars]05e')
+
+First differing element 0:
+None
+'37ee46fabdd4e48442bb118419454c4a51d7ca2c'
+
+- (None, None)
++ ('37ee46fabdd4e48442bb118419454c4a51d7ca2c',
++  'b2682d7adab92d1eefd39ac05451ad2a1026b05e')
+
+======================================================================
+FAIL: test_push_with_an_unknown_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_an_unknown_before_falls_back_to_the_first_parent)
+NFR-09.4: a before commit that the checkout does not have falls back to the first parent.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 414, in test_push_with_an_unknown_before_falls_back_to_the_first_parent
+    self.assertEqual(self.resolve("push", "1" * 40, self.merge), (self.m2, self.merge))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('37ee46fabdd4e48442bb118419454c4a51d7ca2c[41 chars]05e')
+
+First differing element 0:
+None
+'37ee46fabdd4e48442bb118419454c4a51d7ca2c'
+
+- (None, None)
++ ('37ee46fabdd4e48442bb118419454c4a51d7ca2c',
++  'b2682d7adab92d1eefd39ac05451ad2a1026b05e')
+
+======================================================================
+FAIL: test_root_commit_is_compared_with_the_empty_tree (test_claude_review.DiffRangeTests.test_root_commit_is_compared_with_the_empty_tree)
+NFR-09.4: a commit without a parent is reviewed against the empty tree.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 418, in test_root_commit_is_compared_with_the_empty_tree
+    self.assertEqual(self.resolve("push", "0" * 40, self.m0), (EMPTY_TREE, self.m0))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (None, None) != ('4b825dc642cb6eb9a060e54bf8d69288fbd0f2d'[40 chars]af5')
+
+First differing element 0:
+None
+'4b825dc642cb6eb9a060e54bf8d69288fbd0f2d'
+
+- (None, None)
++ ('4b825dc642cb6eb9a060e54bf8d69288fbd0f2d',
++  '7b8fdd05f7edaba7bc3b9e3225105a322b453af5')
+
+======================================================================
+FAIL: test_unknown_head_is_an_error (test_claude_review.DiffRangeTests.test_unknown_head_is_an_error)
+NFR-09.4: a head that is not a commit stops the run instead of reviewing nothing.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 450, in test_unknown_head_is_an_error
+    with self.assertRaises(self.review.ReviewError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ReviewError not raised
+
+======================================================================
+FAIL: test_blank_cap_variables_use_the_defaults (test_claude_review.ReviewPromptTests.test_blank_cap_variables_use_the_defaults)
+NFR-09.4: an unset repository variable reaches the job as an empty string and means the default.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 329, in test_blank_cap_variables_use_the_defaults
+    self.assertEqual(len(pass_calls(self.log)), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_caps_can_be_set_through_the_environment (test_claude_review.ReviewPromptTests.test_caps_can_be_set_through_the_environment)
+NFR-09.4: PF_REVIEW_MAX_TURNS and PF_REVIEW_MAX_BUDGET_USD set the caps of every pass.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 321, in test_caps_can_be_set_through_the_environment
+    self.assertEqual(len(pass_calls(self.log)), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_command_line_matches_the_contract (test_claude_review.ReviewPromptTests.test_command_line_matches_the_contract)
+NFR-09.4: the CLI argv has the exact flag set, the frontmatter model and both caps for each pass.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 283, in test_command_line_matches_the_contract
+    self.assertIsNotNone(schema, "review-verdict.schema.json is missing")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : review-verdict.schema.json is missing
+
+======================================================================
+FAIL: test_each_pass_receives_the_agent_body_byte_for_byte (test_claude_review.ReviewPromptTests.test_each_pass_receives_the_agent_body_byte_for_byte)
+NFR-09.4: each pass sends the agent file body, unchanged, on stdin and never on the command line.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 261, in test_each_pass_receives_the_agent_body_byte_for_byte
+    self.assertEqual(len(calls), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_BUDGET_USD', value='5; rm -rf /')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 340, in test_malformed_caps_fail_before_the_cli_is_started
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_TURNS', value='forty')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 340, in test_malformed_caps_fail_before_the_cli_is_started
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started) (name='PF_REVIEW_MAX_BUDGET_USD', value='-1')
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 340, in test_malformed_caps_fail_before_the_cli_is_started
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_models_come_from_the_agent_frontmatter (test_claude_review.ReviewPromptTests.test_models_come_from_the_agent_frontmatter)
+NFR-09.4: security-reviewer runs on its frontmatter model and test-engineer on its own.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 305, in test_models_come_from_the_agent_frontmatter
+    self.assertEqual(models, [agent_parts("security-reviewer")[0], agent_parts("test-engineer")[0]])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['opus', 'sonnet']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'opus'
+
+- []
++ ['opus', 'sonnet']
+
+======================================================================
+FAIL: test_permissions_are_never_skipped (test_claude_review.ReviewPromptTests.test_permissions_are_never_skipped)
+NFR-09.4: no pass uses --dangerously-skip-permissions or a bypass permission mode.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 311, in test_permissions_are_never_skipped
+    self.assertEqual(len(pass_calls(self.log)), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_a_failed_pass_stops_the_review_before_the_second_pass (test_claude_review.ReviewVerdictTests.test_a_failed_pass_stops_the_review_before_the_second_pass)
+NFR-09.4: when the first pass fails the second is not started, so no more API money is spent.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 210, in test_a_failed_pass_stops_the_review_before_the_second_pass
+    self.assertEqual(len(pass_calls(self.log)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_blank_api_key_counts_as_missing (test_claude_review.ReviewVerdictTests.test_blank_api_key_counts_as_missing)
+NFR-09.4: an empty ANTHROPIC_API_KEY (an unset GitHub secret renders as empty) is a missing key.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 236, in test_blank_api_key_counts_as_missing
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_blockers_from_both_passes_are_counted (test_claude_review.ReviewVerdictTests.test_blockers_from_both_passes_are_counted)
+NFR-09.4: BLOCKER findings of both passes count towards the gate.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 151, in test_blockers_from_both_passes_are_counted
+    self.assertEqual(proc.returncode, 1, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_changes_requested_without_blocker_exits_zero_with_a_warning (test_claude_review.ReviewVerdictTests.test_changes_requested_without_blocker_exits_zero_with_a_warning)
+NFR-09.4: CHANGES_REQUESTED with no BLOCKER passes (plan G-4) but warns in the log and the report.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 167, in test_changes_requested_without_blocker_exits_zero_with_a_warning
+    self.assertIn("WARNING", proc.stderr_text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'WARNING' not found in ''
+
+======================================================================
+FAIL: test_cli_exit_status_one_fails (test_claude_review.ReviewVerdictTests.test_cli_exit_status_one_fails)
+NFR-09.4: a CLI that exits with status 1 fails the job with a non-zero exit.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 204, in test_cli_exit_status_one_fails
+    self.assertNotEqual(proc.returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_cli_reported_error_fails (test_claude_review.ReviewVerdictTests.test_cli_reported_error_fails)
+NFR-09.4: a result flagged is_error (for example a hit turn cap) has no verdict, so the job fails.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 199, in test_cli_reported_error_fails
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_empty_diff_passes_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_empty_diff_passes_without_calling_the_cli)
+NFR-09.4: an empty diff writes a no-changes report, exits 0 and never starts the CLI.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 244, in test_empty_diff_passes_without_calling_the_cli
+    report = self.report()
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-cy87brzc\out
+
+======================================================================
+FAIL: test_major_and_minor_findings_alone_exit_zero_and_are_published (test_claude_review.ReviewVerdictTests.test_major_and_minor_findings_alone_exit_zero_and_are_published)
+NFR-09.4: MAJOR and MINOR findings do not fail the job, and every one appears in claude-review.md.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 158, in test_major_and_minor_findings_alone_exit_zero_and_are_published
+    report = self.report()
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-mg3ys2_r\out
+
+======================================================================
+FAIL: test_missing_api_key_fails_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_missing_api_key_fails_without_calling_the_cli)
+NFR-09.4: with ANTHROPIC_API_KEY unset the run exits 2 with a fixed message and never starts the CLI.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 229, in test_missing_api_key_fails_without_calling_the_cli
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_missing_required_key_in_the_verdict_fails (test_claude_review.ReviewVerdictTests.test_missing_required_key_in_the_verdict_fails)
+NFR-09.4: a verdict that lacks a required key (summary) exits 2.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 194, in test_missing_required_key_in_the_verdict_fails
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_no_structured_output_and_no_fenced_json_fails (test_claude_review.ReviewVerdictTests.test_no_structured_output_and_no_fenced_json_fails)
+NFR-09.4: a pass with neither structured_output nor a fenced JSON block fails closed (exit 2).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 174, in test_no_structured_output_and_no_fenced_json_fails
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_one_blocker_exits_one (test_claude_review.ReviewVerdictTests.test_one_blocker_exits_one)
+NFR-09.4: a single BLOCKER finding fails the job with exit 1 and names the finding in the report.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 142, in test_one_blocker_exits_one
+    self.assertEqual(proc.returncode, 1, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_repository_defaults_to_the_working_directory (test_claude_review.ReviewVerdictTests.test_repository_defaults_to_the_working_directory)
+NFR-09.4: without --repo the runner reviews the repository it is started in, as the CI jobs do.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 252, in test_repository_defaults_to_the_working_directory
+    self.assertEqual(len(pass_calls(self.log)), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_schema_invalid_output_fails (test_claude_review.ReviewVerdictTests.test_schema_invalid_output_fails)
+NFR-09.4: output that fails the verdict schema (a verdict outside the enum) exits 2.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 189, in test_schema_invalid_output_fails
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_two_approve_passes_exit_zero (test_claude_review.ReviewVerdictTests.test_two_approve_passes_exit_zero)
+NFR-09.4: two APPROVE passes exit 0, write both verdicts and a report ending in GATE: PASS.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 129, in test_two_approve_passes_exit_zero
+    report = self.report()
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-j0u4xj1b\out
+
+======================================================================
+FAIL: test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact) (version='2.1.3110')
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 224, in test_version_match_is_exact
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact) (version='12.1.311')
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 224, in test_version_match_is_exact
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_version_other_than_the_pinned_one_fails_before_any_pass (test_claude_review.ReviewVerdictTests.test_version_other_than_the_pinned_one_fails_before_any_pass)
+NFR-09.4: a CLI that is not 2.1.311 fails closed and no prompt is ever sent to it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 215, in test_version_other_than_the_pinned_one_fails_before_any_pass
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_child_environment_helper_removes_tokens_in_any_case (test_claude_review.SecretHandlingTests.test_child_environment_helper_removes_tokens_in_any_case)
+NFR-09.3: child_environment drops the token variables and sets the scrub flag.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 759, in test_child_environment_helper_removes_tokens_in_any_case
+    self.assertEqual(sorted(env), ["ANTHROPIC_API_KEY", "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB", "PATH"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB', 'PATH']
+
+Second list contains 3 additional elements.
+First extra element 0:
+'ANTHROPIC_API_KEY'
+
+- []
++ ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB', 'PATH']
+
+======================================================================
+FAIL: test_cli_child_environment_lacks_the_platform_tokens (test_claude_review.SecretHandlingTests.test_cli_child_environment_lacks_the_platform_tokens)
+NFR-09.3: the CLI child environment has none of GITHUB_TOKEN, GH_TOKEN, CI_JOB_TOKEN, GitLab token.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 710, in test_cli_child_environment_lacks_the_platform_tokens
+    self.assertEqual(len(calls), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_fake_key_never_appears_in_stdout_stderr_or_any_output_file (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_in_stdout_stderr_or_any_output_file)
+NFR-09.3: after a normal run the API key is in no stream and no file the run produced.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 723, in test_fake_key_never_appears_in_stdout_stderr_or_any_output_file
+    self.assertIn("SEC-MAJOR-1", self.report())
+                                 ~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-89x8h4ec\out
+
+======================================================================
+FAIL: test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='exit1')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 731, in test_fake_key_never_appears_when_the_run_fails
+    self.assertEqual(proc.returncode, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='no_output')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 731, in test_fake_key_never_appears_when_the_run_fails
+    self.assertEqual(proc.returncode, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails) (scenario='invalid_schema')
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 731, in test_fake_key_never_appears_when_the_run_fails
+    self.assertEqual(proc.returncode, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output (test_claude_review.SecretHandlingTests.test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output)
+NFR-09.3: a key-shaped string that the CLI echoes is replaced by a marker in stdout, stderr and files.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 740, in test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output
+    self.assertIn("<redacted-api-key>", self.report())
+                                        ~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-o7xzn_il\out
+
+======================================================================
+FAIL: test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped (test_claude_review.SecretHandlingTests.test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped)
+NFR-09.3: the literal ANTHROPIC_API_KEY value is redacted wherever the CLI echoes it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 750, in test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped
+    self.assertIn("<redacted-api-key>", self.report())
+                                        ~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 113, in report
+    self.assertTrue(path.exists(), f"claude-review.md was not written to {self.out}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : claude-review.md was not written to C:\Users\WDARSH~1\AppData\Local\Temp\pf-ci-review-dkug2yni\out
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='missing summary')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : missing summary was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='extra top-level key')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : extra top-level key was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='verdict outside the enum')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : verdict outside the enum was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='severity outside the enum')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : severity outside the enum was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='line as a string')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : line as a string was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='line as a boolean')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : line as a boolean was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='extra finding key')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : extra finding key was accepted
+
+======================================================================
+FAIL: test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected) (case='checklist as an object')
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 529, in test_missing_extra_and_mistyped_keys_are_rejected
+    self.assertTrue(self.errors(instance), f"{label} was accepted")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true : checklist as an object was accepted
+
+======================================================================
+FAIL: test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=[])
+NFR-09.4: a list, a string or null is never a verdict.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 535, in test_non_object_verdicts_are_rejected
+    self.assertTrue(self.errors(instance))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance='APPROVE')
+NFR-09.4: a list, a string or null is never a verdict.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 535, in test_non_object_verdicts_are_rejected
+    self.assertTrue(self.errors(instance))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=None)
+NFR-09.4: a list, a string or null is never a verdict.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 535, in test_non_object_verdicts_are_rejected
+    self.assertTrue(self.errors(instance))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected) (instance=3)
+NFR-09.4: a list, a string or null is never a verdict.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 535, in test_non_object_verdicts_are_rejected
+    self.assertTrue(self.errors(instance))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_schema_file_defines_the_c6_shape (test_claude_review.VerdictSchemaTests.test_schema_file_defines_the_c6_shape)
+NFR-09.4: the schema requires every key, allows no others, and fixes the enums of C6.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 478, in test_schema_file_defines_the_c6_shape
+    self.assertEqual(schema.get("type"), "object")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'object'
+
+======================================================================
+FAIL: test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing (test_fetch_tools.FetchBehaviourTests.test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing)
+NFR-09.6: a wrong SHA-256 fails the run, removes the download and never reaches extraction.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 141, in test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing
+    self.assertNotEqual(code, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_a_verified_copy_is_reused_without_downloading_again (test_fetch_tools.FetchBehaviourTests.test_a_verified_copy_is_reused_without_downloading_again)
+NFR-09.6: a second run finds the verified copy and does not download.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 152, in test_a_verified_copy_is_reused_without_downloading_again
+    self.assertEqual(len(self.downloads), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_a_verified_download_is_extracted_and_its_path_is_printed (test_fetch_tools.FetchBehaviourTests.test_a_verified_download_is_extracted_and_its_path_is_printed)
+NFR-09.6: a download whose SHA-256 matches is extracted into the destination and the path is printed.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 125, in test_a_verified_download_is_extracted_and_its_path_is_printed
+    self.assertTrue(printed.is_file(), f"printed path {out!r} is not a file")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : printed path '' is not a file
+
+======================================================================
+FAIL: test_an_archive_without_the_executable_fails_and_leaves_nothing (test_fetch_tools.FetchBehaviourTests.test_an_archive_without_the_executable_fails_and_leaves_nothing)
+NFR-09.6: a checksum-valid archive that lacks the tool is an error, and nothing is left behind.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 188, in test_an_archive_without_the_executable_fails_and_leaves_nothing
+    self.assertNotEqual(code, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors) (argv=['nosuchtool', '--platform', 'linux-x86_64'])
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 208, in test_unknown_tool_and_unknown_platform_are_usage_errors
+    self.assertEqual(code, 2, err)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors) (argv=['actionlint', '--platform', 'plan9-mips'])
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 208, in test_unknown_tool_and_unknown_platform_are_usage_errors
+    self.assertEqual(code, 2, err)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_platform_names_are_detected_for_the_ci_machines (test_fetch_tools.ManifestTests.test_platform_names_are_detected_for_the_ci_machines)
+NFR-09.6: Linux x86_64 and Windows AMD64 map to the manifest's platform keys; others are rejected.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 111, in test_platform_names_are_detected_for_the_ci_machines
+    self.assertEqual(detect("Linux", "x86_64"), "linux-x86_64")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 'linux-x86_64'
+
+======================================================================
+FAIL: test_the_default_downloader_refuses_plain_http (test_fetch_tools.TransportTests.test_the_default_downloader_refuses_plain_http)
+NFR-09.6: only https URLs are downloaded.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_fetch_tools.py", line 237, in test_the_default_downloader_refuses_plain_http
+    with self.assertRaises(self.fetch_tools.FetchError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: FetchError not raised
+
+======================================================================
+FAIL: test_gate_list_and_order_equal_c11 (test_quality_gates.GateDefinitionTests.test_gate_list_and_order_equal_c11)
+NFR-09.6: the quality gates are the eight of plan C11, in that order.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 72, in test_gate_list_and_order_equal_c11
+    self.assertEqual([g.name for g in gates], C11_NAMES)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['ac-audit', 'redact-evidence', 'hook-test[83 chars]ema']
+
+Second list contains 8 additional elements.
+First extra element 0:
+'ac-audit'
+
+- []
++ ['ac-audit',
++  'redact-evidence',
++  'hook-tests',
++  'hook-line-endings',
++  'ci-script-tests',
++  'oracle-fixture',
++  'actionlint',
++  'ci-schema']
+
+======================================================================
+FAIL: test_a_gate_with_several_commands_fails_if_any_command_fails (test_quality_gates.GateRunTests.test_a_gate_with_several_commands_fails_if_any_command_fails)
+NFR-09.6: a gate made of two commands runs both and fails when either exits non-zero.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 195, in test_a_gate_with_several_commands_fails_if_any_command_fails
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_a_missing_tool_fails_the_gate_and_the_run (test_quality_gates.GateRunTests.test_a_missing_tool_fails_the_gate_and_the_run)
+NFR-09.6: a tool that cannot be resolved is a failure, never a skip, and later gates still run.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 154, in test_a_missing_tool_fails_the_gate_and_the_run
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_a_single_failure_exits_one_after_every_later_gate_has_run (test_quality_gates.GateRunTests.test_a_single_failure_exits_one_after_every_later_gate_has_run)
+NFR-09.6: a failing gate never stops the run; later gates still execute and are reported.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 137, in test_a_single_failure_exits_one_after_every_later_gate_has_run
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_all_gates_passing_exits_zero_and_runs_every_gate_in_order (test_quality_gates.GateRunTests.test_all_gates_passing_exits_zero_and_runs_every_gate_in_order)
+NFR-09.6: with every gate passing the exit code is 0 and all eight gates ran, in the C11 order.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 128, in test_all_gates_passing_exits_zero_and_runs_every_gate_in_order
+    self.assertEqual(len(calls), 9)  # ci-schema runs two commands
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 0 != 9
+
+======================================================================
+FAIL: test_api_key_is_not_passed_to_the_gates (test_quality_gates.GateRunTests.test_api_key_is_not_passed_to_the_gates)
+NFR-09.6: the gate subprocesses run without ANTHROPIC_API_KEY, which only the review step may see.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 232, in test_api_key_is_not_passed_to_the_gates
+    self.assertNotIn("ANTHROPIC_API_KEY", env)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ANTHROPIC_API_KEY' unexpectedly found in {'ANTHROPIC_API_KEY': 'k', 'PATH': 'p'}
+
+======================================================================
+FAIL: test_command_line_entry_point_lists_the_gates (test_quality_gates.GateRunTests.test_command_line_entry_point_lists_the_gates)
+NFR-09.6: `python scripts/ci/quality_gates.py --list` works as a program and exits 0.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 240, in test_command_line_entry_point_lists_the_gates
+    self.assertEqual([line.split()[0] for line in proc.stdout_text.splitlines() if line.strip()], C11_NAMES)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['ac-audit', 'redact-evidence', 'hook-test[83 chars]ema']
+
+Second list contains 8 additional elements.
+First extra element 0:
+'ac-audit'
+
+- []
++ ['ac-audit',
++  'redact-evidence',
++  'hook-tests',
++  'hook-line-endings',
++  'ci-script-tests',
++  'oracle-fixture',
++  'actionlint',
++  'ci-schema']
+
+======================================================================
+FAIL: test_list_prints_the_gates_without_running_them (test_quality_gates.GateRunTests.test_list_prints_the_gates_without_running_them)
+NFR-09.6: --list prints every gate name in order and runs nothing.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 204, in test_list_prints_the_gates_without_running_them
+    self.assertEqual([line.split()[0] for line in output.splitlines() if line.strip()], C11_NAMES)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['ac-audit', 'redact-evidence', 'hook-test[83 chars]ema']
+
+Second list contains 8 additional elements.
+First extra element 0:
+'ac-audit'
+
+- []
++ ['ac-audit',
++  'redact-evidence',
++  'hook-tests',
++  'hook-line-endings',
++  'ci-script-tests',
++  'oracle-fixture',
++  'actionlint',
++  'ci-schema']
+
+======================================================================
+FAIL: test_only_runs_the_named_gates (test_quality_gates.GateRunTests.test_only_runs_the_named_gates)
+NFR-09.6: --only selects gates by name and unknown names are a usage error (exit 2).
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 213, in test_only_runs_the_named_gates
+    self.assertEqual([r[0] for r in self.table_rows(output)], ["hook-tests"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['hook-tests']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'hook-tests'
+
+- []
++ ['hook-tests']
+
+======================================================================
+FAIL: test_real_subprocess_exit_codes_are_captured (test_quality_gates.GateRunTests.test_real_subprocess_exit_codes_are_captured)
+NFR-09.6: with the default runner a command's real exit status and output reach the table.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_quality_gates.py", line 182, in test_real_subprocess_exit_codes_are_captured
+    self.assertEqual(code, 1, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_check_reports_the_key_and_exits_one_without_changing_the_file (test_redact_evidence.RedactApiKeyTests.test_check_reports_the_key_and_exits_one_without_changing_the_file)
+NFR-09.3: --check finds the key, exits 1 and leaves the file untouched.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_redact_evidence.py", line 37, in test_check_reports_the_key_and_exits_one_without_changing_the_file
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : total: 0
+
+
+
+======================================================================
+FAIL: test_every_key_in_a_file_is_counted (test_redact_evidence.RedactApiKeyTests.test_every_key_in_a_file_is_counted)
+NFR-09.3: two keys in one file are both found and counted.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_redact_evidence.py", line 47, in test_every_key_in_a_file_is_counted
+    self.assertEqual(proc.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered) (file='security-reviewer.json')
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_redact_evidence.py", line 56, in test_keys_in_json_and_markdown_reports_are_covered
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : total: 0
+
+
+
+======================================================================
+FAIL: test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered) (file='claude-review.md')
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_redact_evidence.py", line 56, in test_keys_in_json_and_markdown_reports_are_covered
+    self.assertEqual(proc.returncode, 1, proc.stdout_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : total: 0
+
+
+
+======================================================================
+FAIL: test_redact_replaces_an_anthropic_key_with_a_marker (test_redact_evidence.RedactApiKeyTests.test_redact_replaces_an_anthropic_key_with_a_marker)
+NFR-09.3: redact_evidence.py rewrites a sk-ant- key as <redacted-api-key> and exits 0.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_redact_evidence.py", line 30, in test_redact_replaces_an_anthropic_key_with_a_marker
+    self.assertEqual(path.read_text(encoding="utf-8"), "before <redacted-api-key> after\n")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'before <redacted-api-key> after\n' != 'before <redacted-api-key> after\n'
+- before <redacted-api-key> after
++ before <redacted-api-key> after
+
+
+----------------------------------------------------------------------
+Ran 110 tests in 17.386s
+
+FAILED (failures=97, errors=21)
+
+real	0m17.841s
+user	0m0.015s
+sys	0m0.031s

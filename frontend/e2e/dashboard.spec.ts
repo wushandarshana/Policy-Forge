@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { AC_04_1_PROFILE, createPolicy, expectNoHorizontalScroll, policyExpiry, shiftDate, signIn } from './support';
+import { AC_04_1_PROFILE, createPolicy, expectNoHorizontalScroll, policyExpiry, shiftDate, signIn, expectVisual } from './support';
 import type { User } from './support';
 
 /** Hides the dashboard figures in the visual snapshot (they change with every policy any test creates). */
@@ -62,7 +62,7 @@ test('AC-11.1: admin1 sees tiles and a per-product table equal to the dashboard 
     expect(second!.x).toBeGreaterThanOrEqual(first!.x + first!.width - 1);
   }
   await expectNoHorizontalScroll(page);
-  await expect(page.getByTestId('kpi-tiles')).toHaveScreenshot('dashboard-kpi-tiles.png', {
+  await expectVisual(page.getByTestId('kpi-tiles'), 'dashboard-kpi-tiles.png', {
     stylePath: SNAPSHOT_MASK,
     animations: 'disabled',
   });
