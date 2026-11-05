@@ -800,6 +800,8 @@ BWRAP_INSTALL = "apt-get install -y --no-install-recommends bubblewrap"
 BWRAP_SMOKE = "bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true"
 BWRAP_FAILED = "bwrap cannot create a sandbox on this runner"
 REVIEW_COMMAND = "claude_review.py run"
+USERNS_PROC = "/proc/sys/kernel/apparmor_restrict_unprivileged_userns"
+USERNS_SYSCTL = "sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0"
 
 
 class BubblewrapInstallTests(CiConfigTestCase):
@@ -839,6 +841,46 @@ class BubblewrapInstallTests(CiConfigTestCase):
         self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(step))
         self.assertNotIn("secrets.", json.dumps(step))
         self.assertNotIn(REVIEW_COMMAND, text)
+
+    def test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test(self):
+        """NFR-09.7: Ubuntu 24.04 denies bwrap its uid map through kernel.apparmor_restrict_unprivileged_userns, so the
+        GitHub bubblewrap step sets it to 0 with sudo sysctl, only when /proc/sys/kernel/<that name> exists, echoes the
+        resulting value and does so before the smoke test; a comment says the runner is an ephemeral VM; the step
+        still has no ANTHROPIC_API_KEY."""
+        jobs = self.workflow(GITHUB_CI)["jobs"]
+        steps = self.steps(jobs["claude-review"])
+        step = [s for s in steps if BWRAP_INSTALL in str(s.get("run"))][0]
+        text = step["run"]
+        guard = re.search(r'if \[ -f ' + re.escape(USERNS_PROC) + r' \]; then\n\s*' + re.escape(USERNS_SYSCTL)
+                          + r'\n[^\n]*' + re.escape(USERNS_PROC) + r'[^\n]*\n\s*fi', text)
+        self.assertIsNotNone(guard, "the sysctl runs only when the /proc file exists and the value is echoed")
+        self.assertIn("echo", guard.group(0))
+        self.assertLess(guard.start(), text.index(BWRAP_SMOKE), "the restriction is lifted before the smoke test")
+        self.assertEqual(text.count("sysctl -w"), 1)
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(step))
+        self.assertIn("ephemeral VM", self.read(GITHUB_CI))
+
+    def test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement(self):
+        """NFR-09.7: the GitLab claude-review job runs no sysctl; the header says the runner must allow unprivileged
+        user namespaces (a shell or VM executor with the sysctl at 0, or a privileged Docker executor), otherwise the
+        review fails closed by design."""
+        self.assertNotIn("sysctl -w", self.gitlab_job_script(self.gitlab()["_jobs"]["claude-review"]))
+        header = "\n".join(line.lstrip("# ").rstrip() for line in self.read(GITLAB_CI).splitlines()
+                           if line.startswith("#"))
+        flat = " ".join(header.split())
+        for fragment in ("unprivileged user namespaces", "kernel.apparmor_restrict_unprivileged_userns", "shell",
+                         "VM executor", "privileged Docker executor", "fails closed by design"):
+            self.assertIn(fragment, flat)
+
+    def test_env_scrubbing_is_never_turned_off_in_a_ci_file(self):
+        """NFR-09.7: no CI file sets CLAUDE_CODE_SUBPROCESS_ENV_SCRUB to 0, in a script or in a variables or env map."""
+        for rel, text in self.ci_text().items():
+            with self.subTest(file=rel):
+                self.assertNotRegex(text, r"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB\s*[:=]\s*[\"']?0")
+        github = json.dumps(self.workflow(GITHUB_CI))
+        gitlab = json.dumps(self.gitlab())
+        for rel, text in ((GITHUB_CI, github), (GITLAB_CI, gitlab)):
+            self.assertNotRegex(text, r'"CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "?0', rel)
 
     def test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review(self):
         """NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root),
