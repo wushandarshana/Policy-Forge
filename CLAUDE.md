@@ -61,8 +61,8 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 ## Workflow
 
 1. Read the relevant spec in `specs/`, then `/sprint specs/<feature>_spec.md` (agent-harness) to plan and get a contract.
-2. Use TDD (`docs/tdd.md`): commit a failing AC-tagged test (`test: red …`), then the implementation
-   (`feat: green …`), then cleanup (`refactor: …`).
+2. Use TDD (`docs/tdd.md`): commit a failing AC-tagged test (`test(red): AC-NN.M …`), then the implementation
+   (`feat(green): …` or `fix(green): …`), then cleanup (`refactor: …`).
 3. The evaluator runs `./mvnw verify`, `npm test` and Playwright MCP against the running app.
 4. The `security-reviewer` and `test-engineer` agents review the work, then `/sprint-archive` and `/pr` open the PR.
    It merges only when every CI job is green, including `claude-review` and `ci-gate`.

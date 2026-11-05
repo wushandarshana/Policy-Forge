@@ -8,9 +8,126 @@ across three products: Term Life, Motor and Household.
 > Claude Code agents. Humans author only specs, CLAUDE.md files, agent/skill/hook/command definitions
 > and other substrate. See [`CLAUDE.md`](CLAUDE.md) and [`AGENTS.md`](AGENTS.md).
 
+**Release:** [v1.0.0](docs/releases/RELEASE-v1.0.0.md) on `main` · **Coverage:** 93/93 acceptance criteria tagged ·
+**CI:** GitHub Actions with a required, sandboxed Claude Code review ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+
 ## Quick start
 
-_Filled in once Sprint 1 lands the application scaffold._
+**Prerequisite:** JDK 21 (Temurin). Node is not needed to run the app: the Maven build downloads Node 22 and builds
+the React SPA into the JAR.
+
+```bash
+cd backend
+./mvnw spring-boot:run          # Windows: mvnw.cmd spring-boot:run
+# → http://localhost:8080   (health: http://localhost:8080/actuator/health)
+```
+
+Or build once and run the packaged app:
+
+```bash
+cd backend && ./mvnw -DskipTests package
+java -jar target/policyforge-0.1.0-SNAPSHOT.jar
+```
+
+The H2 database, the Flyway migrations and the seed data are created on startup. Everything is synthetic:
+- **Products:** 3 products with versioned rule files, `rules/{term-life,motor,household}/v1.json`.
+- **Sample policies:** 6, two per product, dated relative to today:
+
+  | Seed | Customer | Product | State |
+  |---|---|---|---|
+  | S1 | customer1 | TERM_LIFE | Near renewal: the term ends in 20 days and an offer is pending |
+  | S2 | customer1 | MOTOR | In force |
+  | S3 | customer1 | HOUSEHOLD | In force |
+  | S4 | customer2 | TERM_LIFE | In force |
+  | S5 | customer2 | MOTOR | The term ended 5 days ago, the offer is unpaid, in grace |
+  | S6 | customer2 | HOUSEHOLD | In force |
+
+- **Underwriting queue:** 1 REFERRED TERM_LIFE application for customer2, waiting in the underwriter queue.
+
+**Sign-in users** (HTTP Basic). The password for all of them is `password`.
+
+| User | Roles |
+|---|---|
+| `customer1`, `customer2` | CUSTOMER |
+| `underwriter1` | UNDERWRITER |
+| `admin1` | ADMIN, UNDERWRITER, PRODUCT_MANAGER |
+
+### Demo walkthrough (about 10 minutes)
+1. **Quote** (no sign-in): Term Life, age 35, non-smoker, 20-year term, sum insured 5,000,000 → **6850.00**, with the
+   breakdown and the rule version.
+2. **Apply** as `customer1`. Synthetic KYC such as Aadhaar `XXXX-XXXX-1234` and PAN `ABCDE1234F` gives **AUTO_BIND** →
+   APPROVED.
+3. **Issue** from the application status page → policy `PF-TL-<year>-<6 digits>`, status **ACTIVE**.
+4. **Endorse** from the policy detail:
+   - **Address change:** status ENDORSED, with versions v1 and v2.
+   - **Sum insured 7,000,000:** the preview shows the new premium **9490.00** and the pro-rata adjustment before
+     Confirm.
+5. **Renew** seed S1 under **My Policies** with Renew → Pay → **RENEWED**.
+6. **Cancel** a policy: preview the refund (pro-rata, cooling-off and fee), then confirm → **CANCELLED**, with a row in
+   the Refunds tab.
+7. **Underwrite** as `underwriter1` in the **Workbench**. KYC is masked. Approve or decline the referred application
+   with reason codes.
+8. **Admin** as `admin1`:
+   - the **Dashboard**: active policies per product, premium collected, the renewal pipeline and the lapse forecast;
+   - overriding a DECLINE with a reason code, which writes an audit entry.
+
+### Tests
+
+| What | Command |
+|---|---|
+| Backend: unit, integration, ArchUnit and JaCoCo gates | `cd backend && ./mvnw verify` |
+| Frontend unit tests (Vitest) | `cd frontend && npm ci && npm test` |
+| E2E (Playwright, desktop and mobile, visual snapshots) | `cd frontend && npx playwright test` |
+| Acceptance-criteria coverage | `python scripts/ac_audit.py --offline --no-write` (93/93) |
+| Premium and refund oracle | `python .claude/skills/premium-calc-evaluator/premium_check.py spec-examples` |
+| All CI quality gates | `pip install --require-hashes -r scripts/requirements-ci.txt && python scripts/ci/quality_gates.py` |
+
+## Rubric map
+
+Where each item of the capstone brief lives. Paths that don't follow the brief's default names are marked **(path)**.
+
+### Claude Code specs and substrate
+| Item | Evidence |
+|---|---|
+| Root spec + feature specs with ACs | [`specs/app_spec.md`](specs/app_spec.md); `specs/{product-catalog,quote-engine,underwriting,policy-issuance,endorsement,renewal-cancellation,portfolio-dashboard}_spec.md` (93 `AC-NN.M` / `NFR-NN.M`, Given/When/Then) |
+| Layered CLAUDE.md, AGENTS.md as TOC | 14 `CLAUDE.md` files: root, `backend/`, `frontend/`, `frontend/e2e/`, `specs/`, `scripts/`, `.claude/hooks/`, the `domain`, `service`, `repository` and `web` packages, `rules/`, `db/migration/`, `architecture/`. The index is [`AGENTS.md`](AGENTS.md) |
+| Skills (≥3) | 6 in [`.claude/skills/`](.claude/skills/): premium-calc-evaluator (with `premium_check.py` oracle), policy-state-machine-generator, endorsement-validator, policy-version-validator, spec-to-test-generator, archtest-author |
+| Commands (≥2) | 5 in [`.claude/commands/`](.claude/commands/): `/ac-coverage`, `/new-product`, `/pr`, `/release`, `/sprint-archive` |
+| Hooks (≥2) | 6 in [`.claude/hooks/`](.claude/hooks/): premium-precision, policy-immutability, PII-redaction, no-direct-main-commit, AC-tag and spec-drift. Wired in `.claude/settings.json`. Regression suite: `.claude/hooks/tests/test_hooks.py` |
+| Agents (≥2) | 12 in [`.claude/agents/`](.claude/agents/): quote-engine, endorsement, renewal-orchestrator, policy-version-validator, archtest-author, migration-coherence, security-reviewer, test-engineer, ui-designer, design-critic, plus the bonus janitor and doc-writer |
+| Claude Agent SDK in `scripts/` | [`scripts/ac_audit.py`](scripts/ac_audit.py) (`claude_agent_sdk.query`). The recorded SDK run is in `specs/reviews/ac-audit-*.md` |
+| Own `plugin.json` | [`plugin.json`](plugin.json) and [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) |
+| Post-mortems (environment first) | [`docs/post-mortems/`](docs/post-mortems/) (JDK path, CrowdStrike TLS proxy) |
+| Playwright MCP | [`.mcp.json`](.mcp.json) (`@playwright/mcp@0.0.84`). The evaluator walkthroughs are in `specs/reviews/S*-sprint-eval.md` |
+| Harness plugin | The brief's "Claude Harness Engine" is not an Anthropic product, so the public **[bouob/agent-harness](docs/harness-setup.md)** (Planner → Generator → Evaluator, ratcheting) is used. Sprint contracts: [`sprint-contracts/S1..S5`](sprint-contracts/). Evaluations: `specs/reviews/S1..S5-sprint-eval.md`. Ratcheting example: `sprint-contracts/S2-feat-application-underwriting/run1/` (FAIL, then re-run PASS) |
+
+### Business understanding
+| Item | Evidence |
+|---|---|
+| Business case | [`docs/business-case.md`](docs/business-case.md) (problem, users, metrics, domain rules, value) |
+| ≥4 rule/validator files in the domain | **(path)** `backend/src/main/java/com/horizon/policyforge/domain/`: `KycValidator`, `EndorsementValidator`, `PolicyStateMachine`, `ProRataRefundCalculator`, `GracePeriodPolicy`, `CancellationDateRule`, `PortfolioRules`, the underwriting rule evaluator, rating models |
+| Responsive frontend | React + Vite in `frontend/src/pages/`, one 640 px breakpoint, verified at 375 px by the `mobile-chromium` Playwright project |
+| Testable ACs in ≥4 specs | 7 feature specs, all with `AC-NN.M` Given/When/Then |
+
+### Architecture and technical implementation
+| Item | Evidence |
+|---|---|
+| Architecture tests (≥3) | **(path)** `backend/src/test/java/com/horizon/policyforge/architecture/`: 7 ArchUnit classes (layering, domain purity, BigDecimal money, append-only, controller placement, backdated issuance, repriceOffer caller) |
+| TDD | [`docs/tdd.md`](docs/tdd.md). `git log --oneline --grep "^test(red)"` shows red commits before green ones. Red and green logs are in `sprint-contracts/*/evidence/` and `docs/fix-loops/*/` |
+| Architecture doc + diagrams | [`docs/architecture.md`](docs/architecture.md): 4 Mermaid diagrams (C4 context, layers, quote-to-bind sequence, state machine) |
+| UI tests + snapshots | `frontend/e2e/*.spec.ts`; [`frontend/e2e/__snapshots__/`](frontend/e2e/__snapshots__/) (20 `-win32` + 20 `-linux`) |
+| AC-tagged tests | Every AC has a test named `AC-NN.M: …` (`@DisplayName` / Vitest and Playwright titles). Check with `python scripts/ac_audit.py --offline --no-write` |
+| Coverage artefact | [`coverage/backend/jacoco.xml`](coverage/backend/jacoco.xml) (JaCoCo, `backend/pom.xml`; gates 80% domain / 70% overall). Frontend lcov is a CI artifact (`frontend-coverage`) |
+
+### CI/CD and history
+| Item | Evidence |
+|---|---|
+| Pipeline | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on GitHub: `build`, `frontend-unit`, `e2e`, `quality-gates`, `claude-review`, `claude-review-comment` and `ci-gate`. [`.gitlab-ci.yml`](.gitlab-ci.yml) is the GitLab equivalent with the same jobs; it hasn't run on a GitLab project yet. Setup: [`docs/harness-setup.md`](docs/harness-setup.md#ci-pipelines-sprint-5) |
+| Claude Code in CI | The `claude-review` job is the **equivalent of the Claude Code Action**: the pinned Claude Code CLI runs through [`scripts/ci/claude_review.py`](scripts/ci/claude_review.py), with two passes using the project's security-reviewer and test-engineer agents. The official action can't run on `push` events (KD-016). The key is in a protected environment, and the CLI is sandboxed (NFR-09.7) |
+| PR-driven merges, no direct commits | GitHub PRs #1–#8, all merged with merge commits. #8 is the `dev` → `main` release. `main` and `dev` require a PR, the `ci-gate` check and merge commits only. The PR records are in [`docs/prs/`](docs/prs/README.md) |
+| Fix loops | [`docs/fix-loops/`](docs/fix-loops/) (reproduce → red → fix → green → PR) |
+| Knowledge deposits | [`docs/knowledge-deposits.md`](docs/knowledge-deposits.md) (KD-001..KD-033, each encoded into a rule, hook, skill or test) |
+| Releases | [`docs/releases/`](docs/releases/) (v0.1.0, v1.0.0) |
 
 ## Repository map
 

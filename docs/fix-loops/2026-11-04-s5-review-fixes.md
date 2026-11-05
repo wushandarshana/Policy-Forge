@@ -208,3 +208,6 @@ real checkout is what later steps run code from. The worktree is thrown away, so
 another step. Still to prove on the next real run: the CLI works from a worktree under `RUNNER_TEMP`
 (`/home/runner/work/_temp`, inside the home folder, so the home credential files are denied one by one), and both
 passes finish.
+
+## Pull request
+Landed in [PR-011](../prs/PR-011.md) = GitHub [#5](https://github.com/wushandarshana/Policy-Forge/pull/5) (`chore/ci-hardening` → `dev`), merge commit `f3a5bc9`. The real CI rounds 2 to 5 above ran on that PR, and its first fully green run was 41983857770. The `-linux` baselines followed in [#6](https://github.com/wushandarshana/Policy-Forge/pull/6) (`943359a`).
