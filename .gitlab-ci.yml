@@ -222,17 +222,24 @@ claude-review:
         merge_request_event)
           event=merge_request
           base="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+          # Merged-results pipelines check out the merge commit: review the source branch head (NFR-09.7).
+          head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"
+          if [ -n "$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA" ]; then
+            export PF_REVIEW_HEAD_SHA="$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA"
+          fi
           ;;
         push)
           event=push
           base="$CI_COMMIT_BEFORE_SHA"
+          head="$CI_COMMIT_SHA"
           ;;
         *)
           event=manual
           base=""
+          head="$CI_COMMIT_SHA"
           ;;
       esac
-      python3 scripts/ci/claude_review.py run --base "$base" --head "$CI_COMMIT_SHA" --event "$event" --out ci-out/review
+      python3 scripts/ci/claude_review.py run --base "$base" --head "$head" --event "$event" --out ci-out/review
     - mkdir -p "$CI_PROJECT_DIR/ci-out/status" && echo "$CI_PIPELINE_ID" > "$CI_PROJECT_DIR/ci-out/status/claude-review.ok"
   artifacts:
     when: always
