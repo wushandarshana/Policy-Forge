@@ -1,0 +1,27 @@
+TASK-007 per-ID red/green evidence (generated 2026-10-28 after a fresh ./mvnw -B -ntp clean verify, exit 0)
+PASS/FAIL/SKIP counts are read from backend/target/surefire-reports and failsafe-reports of that run, matched on the test display name.
+RED-LOG column lists TASK-001..006 red logs that name the ID. GREEN-LOG column lists green logs that name the ID.
+An ID is also credited to a green log whose header names a range covering it (TASK-005 'AC-01.1 to AC-01.8', TASK-003 'AC-02.1 to AC-02.7') -- shown as range:.
+
+ID        PASS   FAIL   SKIP   | RED-LOG (failed first)             | GREEN-LOG (passed after)
+AC-01.1   3      0      0      | TASK-002,TASK-005,TASK-006         | TASK-002,TASK-005,TASK-006
+AC-01.2   4      0      0      | TASK-002,TASK-005,TASK-006         | TASK-002,TASK-006,TASK-005(range)
+AC-01.3   2      0      0      | TASK-002,TASK-005,TASK-006         | TASK-006,TASK-005(range)
+AC-01.4   1      0      0      | TASK-005                           | TASK-005(range)
+AC-01.5   2      0      0      | TASK-005                           | TASK-005(range)
+AC-01.6   2      0      0      | TASK-005,TASK-006                  | TASK-006,TASK-005(range)
+AC-01.7   16     0      0      | TASK-002,TASK-005,TASK-006         | TASK-002,TASK-005,TASK-006
+AC-01.8   3      0      0      | TASK-002,TASK-005                  | TASK-002,TASK-005
+AC-02.1   3      0      0      | TASK-003                           | TASK-003
+AC-02.2   3      0      0      | TASK-003                           | TASK-003
+AC-02.3   2      0      0      | TASK-003                           | TASK-003
+AC-02.4   5      0      0      | TASK-003                           | TASK-003
+AC-02.5   16     0      0      | TASK-003                           | TASK-003
+AC-02.6   7      0      0      | TASK-003,TASK-004                  | TASK-003,TASK-004
+AC-02.7   1      0      0      | TASK-003                           | TASK-003
+NFR-04.2  3      0      0      | TASK-006                           | TASK-006
+NFR-06.1  1      0      0      | TASK-001,TASK-003                  | TASK-001,TASK-003
+NFR-06.2  1      0      0      | TASK-001,TASK-003                  | TASK-001,TASK-003
+NFR-07.1  1      0      0      | TASK-001,TASK-003                  | TASK-001,TASK-003
+
+IDs with a gap: 0

@@ -1,0 +1,1014 @@
+
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel offers an optional date input and a required reason select with the four reasons 1041ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Preview shows amount 4473.29, fee, days, cooling-off flag and formula verbatim, from the C3 call with the date 1010ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: with no date, Preview sends no date parameter 1010ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Confirm is enabled only after a preview, and editing the date or the reason clears the preview 1004ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Preview without a reason shows a required message at the reason and calls nothing 1016ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Confirm posts exactly {reason, cancellationDate}, then reloads the detail, which shows CANCELLED and no panel 1009ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: with no date, Confirm posts exactly {reason} 1010ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a 400 on the preview date shows the server message at the date input and keeps Confirm disabled 1008ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a 400 on cancellationDate at confirm shows the server message at the date input and keeps the panel 1008ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a CANCELLATION_DATE_OUT_OF_TERM with no field entry shows a fixed message at the date input 1015ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.2: a cooling-off preview shows 6850.00, fee 0.00 and the cooling-off flag 1012ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.3: a last-day preview whose fee exceeds the pro-rata amount shows 0.00 1007ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: after a cancellation the Refunds tab shows one row with every refund field verbatim, and no Cancel panel 61ms
+   → Unable to find an element by: [data-testid="/^refund-row-\d+$/"]
+
+Ignored nodes: comments, script, style
+...
+ ✓ src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: the Refunds tab keeps its empty state when there are no refunds 66ms
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: a 409 on confirm (a second cancel) shows the fixed message and requests no second cancel 1011ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 409 POLICY_UPDATE_CONFLICT on confirm shows a fixed message 1004ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 409 with no code on confirm shows a fixed message 1013ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 403 on confirm shows a fixed message 1005ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force ACTIVE policy 1017ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force ENDORSED policy 1008ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force RENEWED policy 1013ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ✓ src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-10.3: a LAPSED policy shows neither a Renew nor a Cancel panel, even with an offer on record 15ms
+ × src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-10.3: a cancel refused with the invalid-policy-state problem shows the 409 message and keeps the panel 1004ms
+   → Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: loads the dashboard without asOf, and shows the active tile as the sum of the three counts and the per-product table 1012ms
+   → Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: the active tile shows 0 when no product has an in-force policy 1012ms
+   → Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: the optional As-of input sends asOf only when given, and the load button reloads 1016ms
+   → Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: a 400 on asOf shows the server message at the As-of input and no page error 1012ms
+   → Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.2: premium collected per product and the total are shown verbatim 1010ms
+   → Unable to find an element by: [data-testid="kpi-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.2: an exact decimal total is shown as sent, with no rounding drift 1005ms
+   → Unable to find an element by: [data-testid="kpi-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.3: the renewal pipeline lists number, term end, renewal premium and paid state, and shows No offer yet for a null premium 1005ms
+   → Unable to find an element by: [data-testid="pipeline-row-PF-TL-2026-000001"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.3: an empty pipeline shows an empty state 1006ms
+   → Unable to find an element by: [data-testid="pipeline-empty"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.4: the lapse forecast shows its count and every policy number 1006ms
+   → Unable to find an element by: [data-testid="forecast-count"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.4: an empty forecast shows count 0 and an empty state 1006ms
+   → Unable to find an element by: [data-testid="forecast-count"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.5: a 403 shows the fixed not-authorised message and none of the dashboard 1007ms
+   → Unable to find an element by: [data-testid="dashboard-error"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: the Renew panel shows the offered term dates, premium, rule version and payable-until date verbatim 1017ms
+   → Unable to find an element by: [data-testid="renew-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: the Renew panel shows a rule version 2 offer at its own premium while the header keeps the current premium 1021ms
+   → Unable to find an element by: [data-testid="renew-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ✓ src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: no Renew panel when there is no offer 11ms
+ ✓ src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: no Renew panel on a CANCELLED policy even with an offer on record 15ms
+ ✓ src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: no Renew panel on a LAPSED policy even with an offer on record 7ms
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: Pay posts exactly {} with the caller credentials, then reloads the detail, which shows RENEWED and no panel 1015ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: a 409 RENEWAL_PAYMENT_WINDOW_CLOSED shows the fixed window-closed message and keeps the panel 1005ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 NO_PENDING_RENEWAL shows a fixed message 1015ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 invalid-policy-state (type only) shows a fixed message 1014ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 POLICY_UPDATE_CONFLICT shows a fixed message 1008ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ × src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 403 shows a fixed message 1010ms
+   → Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 40 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: loads the dashboard without asOf, and shows the active tile as the sum of the three counts and the per-product table
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:34:25
+     32|     const fetchMock = show();
+     33| 
+     34|     expect(await screen.findByTestId('kpi-active')).toHaveTextContent(…
+       |                         ^
+     35|     expect(screen.getByTestId('product-TERM_LIFE-active')).toHaveTextC…
+     36|     expect(screen.getByTestId('product-MOTOR-active')).toHaveTextConte…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: the active tile shows 0 when no product has an in-force policy
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:53:25
+     51|     show(dashboard({ activePoliciesByProduct: { TERM_LIFE: 0, MOTOR: 0…
+     52| 
+     53|     expect(await screen.findByTestId('kpi-active')).toHaveTextContent(…
+       |                         ^
+     54|     expect(screen.getByTestId('product-MOTOR-active')).toHaveTextConte…
+     55|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: the optional As-of input sends asOf only when given, and the load button reloads
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:60:18
+     58|     const user = userEvent.setup();
+     59|     const fetchMock = show();
+     60|     await screen.findByTestId('kpi-active');
+       |                  ^
+     61|     expect(screen.getByTestId('dashboard-asof')).toHaveValue('');
+     62| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.1: a 400 on asOf shows the server message at the As-of input and no page error
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-active"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:86:18
+     84|     });
+     85|     renderWithSession(<AdminDashboardPage />, ADMIN);
+     86|     await screen.findByTestId('kpi-active');
+       |                  ^
+     87| 
+     88|     await user.type(screen.getByTestId('dashboard-asof'), '2027-10-15'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.2: premium collected per product and the total are shown verbatim
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:98:25
+     96|     show();
+     97| 
+     98|     expect(await screen.findByTestId('kpi-premium')).toHaveTextContent…
+       |                         ^
+     99|     expect(screen.getByTestId('product-TERM_LIFE-premium')).toHaveText…
+    100|     expect(screen.getByTestId('product-MOTOR-premium')).toHaveTextCont…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.2: an exact decimal total is shown as sent, with no rounding drift
+TestingLibraryElementError: Unable to find an element by: [data-testid="kpi-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:107:25
+    105|     show(dashboard({ premiumCollected: { TERM_LIFE: '10557.56', MOTOR:…
+    106| 
+    107|     expect(await screen.findByTestId('kpi-premium')).toHaveTextContent…
+       |                         ^
+    108|     expect(screen.getByTestId('product-TERM_LIFE-premium')).toHaveText…
+    109|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.3: the renewal pipeline lists number, term end, renewal premium and paid state, and shows No offer yet for a null premium
+TestingLibraryElementError: Unable to find an element by: [data-testid="pipeline-row-PF-TL-2026-000001"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:122:18
+    120|     );
+    121| 
+    122|     await screen.findByTestId('pipeline-row-PF-TL-2026-000001');
+       |                  ^
+    123|     const rows = screen.getAllByTestId(/^pipeline-row-PF-/);
+    124|     expect(rows.map((row) => row.getAttribute('data-testid'))).toEqual…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.3: an empty pipeline shows an empty state
+TestingLibraryElementError: Unable to find an element by: [data-testid="pipeline-empty"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:141:25
+    139|     show(dashboard({ renewalPipeline: [] }));
+    140| 
+    141|     expect(await screen.findByTestId('pipeline-empty')).toBeInTheDocum…
+       |                         ^
+    142|     expect(screen.queryAllByTestId(/^pipeline-row-/)).toEqual([]);
+    143|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.4: the lapse forecast shows its count and every policy number
+TestingLibraryElementError: Unable to find an element by: [data-testid="forecast-count"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:148:25
+    146|     show(dashboard({ lapseForecast: { count: 2, policies: ['PF-MO-2026…
+    147| 
+    148|     expect(await screen.findByTestId('forecast-count')).toHaveTextCont…
+       |                         ^
+    149|     expect(screen.getByTestId('forecast-PF-MO-2026-000002')).toHaveTex…
+    150|     expect(screen.getByTestId('forecast-PF-HO-2026-000004')).toHaveTex…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.4: an empty forecast shows count 0 and an empty state
+TestingLibraryElementError: Unable to find an element by: [data-testid="forecast-count"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:156:25
+    154|     show(dashboard({ lapseForecast: { count: 0, policies: [] } }));
+    155| 
+    156|     expect(await screen.findByTestId('forecast-count')).toHaveTextCont…
+       |                         ^
+    157|     expect(screen.getByTestId('forecast-empty')).toBeInTheDocument();
+    158|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/40]⎯
+
+ FAIL  src/pages/AdminDashboardPage.test.tsx > AdminDashboardPage > AC-11.5: a 403 shows the fixed not-authorised message and none of the dashboard
+TestingLibraryElementError: Unable to find an element by: [data-testid="dashboard-error"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/AdminDashboardPage.test.tsx:164:32
+    162|     renderWithSession(<AdminDashboardPage />, CUSTOMER);
+    163| 
+    164|     const error = await screen.findByTestId('dashboard-error');
+       |                                ^
+    165|     expect(error).toHaveTextContent('You are not authorised to view th…
+    166|     expect(error).not.toHaveTextContent('Server text');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel offers an optional date input and a required reason select with the four reasons
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:98:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Preview shows amount 4473.29, fee, days, cooling-off flag and formula verbatim, from the C3 call with the date
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:114:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: with no date, Preview sends no date parameter
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:133:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Confirm is enabled only after a preview, and editing the date or the reason clears the preview
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:141:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Preview without a reason shows a required message at the reason and calls nothing
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:167:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: Confirm posts exactly {reason, cancellationDate}, then reloads the detail, which shows CANCELLED and no panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:176:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: with no date, Confirm posts exactly {reason}
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:192:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a 400 on the preview date shows the server message at the date input and keeps Confirm disabled
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:202:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a 400 on cancellationDate at confirm shows the server message at the date input and keeps the panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:215:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: a CANCELLATION_DATE_OUT_OF_TERM with no field entry shows a fixed message at the date input
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:232:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.2: a cooling-off preview shows 6850.00, fee 0.00 and the cooling-off flag
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:244:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.3: a last-day preview whose fee exceeds the pro-rata amount shows 0.00
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:269:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: after a cancellation the Refunds tab shows one row with every refund field verbatim, and no Cancel panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="/^refund-row-\d+$/"]
+
+Ignored nodes: comments, script, style
+...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:299:65
+    297|     await user.click(screen.getByTestId('tab-refunds'));
+    298| 
+    299|     const rows = within(screen.getByTestId('tabpanel-refunds')).getAll…
+       |                                                                 ^
+    300|     expect(rows.map((row) => row.getAttribute('data-testid'))).toEqual…
+    301|     expect(screen.getByTestId('refund-1-amount')).toHaveTextContent('4…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: a 409 on confirm (a second cancel) shows the fixed message and requests no second cancel
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:322:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 409 POLICY_UPDATE_CONFLICT on confirm shows a fixed message
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 409 with no code on confirm shows a fixed message
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.4: 403 on confirm shows a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:344:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force ACTIVE policy
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force ENDORSED policy
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-08.1: the Cancel panel is shown for an in-force RENEWED policy
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:360:27
+    358|       renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER}…
+    359| 
+    360|       expect(await screen.findByTestId('cancel-panel')).toBeInTheDocum…
+       |                           ^
+    361|     },
+    362|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.cancel.test.tsx > PolicyDetailPage cancel panel > AC-10.3: a cancel refused with the invalid-policy-state problem shows the 409 message and keeps the panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="cancel-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ open src/pages/PolicyDetailPage.cancel.test.tsx:85:16
+     83|   const fetchMock = install(responses);
+     84|   renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} />,…
+     85|   await screen.findByTestId('cancel-panel');
+       |                ^
+     86|   return { user, fetchMock };
+     87| }
+ ❯ src/pages/PolicyDetailPage.cancel.test.tsx:376:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: the Renew panel shows the offered term dates, premium, rule version and payable-until date verbatim
+TestingLibraryElementError: Unable to find an element by: [data-testid="renew-panel"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.renew.test.tsx:70:25
+     68|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+     69| 
+     70|     expect(await screen.findByTestId('renew-panel')).toBeInTheDocument…
+       |                         ^
+     71|     expect(screen.getByTestId('renew-start')).toHaveTextContent('2027-…
+     72|     expect(screen.getByTestId('renew-end')).toHaveTextContent('2028-10…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.1: the Renew panel shows a rule version 2 offer at its own premium while the header keeps the current premium
+TestingLibraryElementError: Unable to find an element by: [data-testid="renew-premium"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.renew.test.tsx:85:25
+     83|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+     84| 
+     85|     expect(await screen.findByTestId('renew-premium')).toHaveTextConte…
+       |                         ^
+     86|     expect(screen.getByTestId('renew-rule-version')).toHaveTextContent…
+     87|     expect(screen.getByTestId('policy-premium')).toHaveTextContent('68…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: Pay posts exactly {} with the caller credentials, then reloads the detail, which shows RENEWED and no panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.renew.test.tsx:117:35
+    115|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+    116| 
+    117|     await user.click(await screen.findByTestId('renew-pay'));
+       |                                   ^
+    118| 
+    119|     await waitFor(() => expect(screen.getByTestId('policy-status-badge…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: a 409 RENEWAL_PAYMENT_WINDOW_CLOSED shows the fixed window-closed message and keeps the panel
+TestingLibraryElementError: Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.renew.test.tsx:138:35
+    136|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+    137| 
+    138|     await user.click(await screen.findByTestId('renew-pay'));
+       |                                   ^
+    139| 
+    140|     const error = await screen.findByTestId('renew-error');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/40]⎯
+
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 NO_PENDING_RENEWAL shows a fixed message
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 invalid-policy-state (type only) shows a fixed message
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 409 POLICY_UPDATE_CONFLICT shows a fixed message
+ FAIL  src/pages/PolicyDetailPage.renew.test.tsx > PolicyDetailPage renewal panel > AC-07.5: 403 shows a fixed message
+TestingLibraryElementError: Unable to find an element by: [data-testid="renew-pay"]
+
+Ignored nodes: comments, script, style
+...
+
+Ignored nodes: comments, script, style
+...
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/PolicyDetailPage.renew.test.tsx:165:35
+    163|     renderWithSession(<PolicyDetailPage policyNumber={POLICY_NUMBER} /…
+    164| 
+    165|     await user.click(await screen.findByTestId('renew-pay'));
+       |                                   ^
+    166| 
+    167|     const error = await screen.findByTestId('renew-error');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/40]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  40 failed | 5 passed (45)
+   Start at  04:43:06
+   Duration  40.98s (transform 153ms, setup 207ms, collect 330ms, tests 39.60s, environment 511ms, prepare 83ms)
+

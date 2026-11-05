@@ -1,0 +1,109 @@
+=== TASK-006 GREEN: Vitest (npm test: vitest run --coverage, verbose) ===
+
+ RUN  v3.2.7 C:/Users/wdarshana/Downloads/PolicyForge/frontend
+      Coverage enabled with v8
+
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.1: lists queue rows in API order and shows the masked values exactly as received 224ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.2: approve posts the exact decision body and shows the new status 741ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.3: the admin override posts the exact override body 716ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 comment error at the comment field 488ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.4: shows a server 400 reasonCode error at the reason code field and checks only required fields locally 605ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.5: shows a fixed message after a 409 685ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: offers reason codes as U-10 pairs them and clears the code when the decision changes 345ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.6: the override form offers only UW-OVR-001 and UW-OVR-002 140ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: after a 403 on includeDeclined=true shows the plain queue and never renders Override 99ms
+ ✓ src/pages/WorkbenchPage.test.tsx > WorkbenchPage > AC-09.7: shows declined cases and the Override action when includeDeclined=true returns 200 124ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.1: shows the premium 6850.00 verbatim with rule version 1 735ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: health declarations are normalised to codes 1506ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.11: an empty health declarations field sends an empty array 838ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: shows each per-field error next to the input it names 335ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.7: lists an error whose field matches no input in the form summary 185ms
+ ✓ src/pages/QuotePage.test.tsx > QuotePage > AC-01.8: renders every breakdown factor returned, in order 653ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.1: posts exactly the C1 body with the Basic header and reports the new application ID 1479ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: shows each errors[] entry next to its PAN, Aadhaar and postcode input and does not navigate 1453ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.2: client-side checks cover required fields only and block the request 282ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.3: shows the fixed QUOTE_EXPIRED message 1446ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.4: shows the fixed KYC_AGE_MISMATCH message at the date of birth input 1530ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.6: shows the fixed QUOTE_NOT_FOUND message 1498ms
+ ✓ src/pages/ApplyPage.test.tsx > ApplyPage > AC-03.7: shows the fixed QUOTE_ALREADY_APPLIED message after a 409 1525ms
+ ✓ src/App.test.tsx > App shell routing > AC-03.1: #/apply?quoteId=Q-... renders the Apply page for that quote behind the sign-in gate 2180ms
+ ✓ src/App.test.tsx > App shell routing > AC-03.8: #/applications/<id> renders the Application Status page for that ID after sign-in 531ms
+ ✓ src/App.test.tsx > App shell routing > AC-09.1: #/workbench renders the Workbench behind the sign-in gate and the nav link reaches it 640ms
+ ✓ src/App.test.tsx > App shell routing > AC-01.1: the default route is the public Quote page and needs no sign-in 32ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.1: TERM_LIFE form shows exactly the six quote-spec risk inputs 89ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR form shows exactly the six quote-spec risk inputs 108ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.3: HOUSEHOLD form shows exactly the seven quote-spec risk inputs 109ms
+ ✓ src/pages/QuotePageForm.test.tsx > QuotePage dynamic form > AC-01.2: MOTOR submit sends vehicleValue as a string and enumerations as selected 840ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: renders the matching application from the caller list, with no KYC fields 14ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-03.8: shows a fixed not-found message for an ID that is not in the list 13ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.1: shows APPROVED, AUTO_BIND and UW-OK with its description 16ms
+ ✓ src/pages/ApplicationStatusPage.test.tsx > ApplicationStatusPage > AC-04.3: lists DECLINE reasons UW-TL-001 then UW-TL-004 in API order 16ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: the sign-in form holds credentials in memory only, never in storage, cookies or the URL 539ms
+ ✓ src/auth/SessionContext.test.tsx > session > NFR-04.1: protected calls carry the Basic Authorization header and public calls do not 4ms
+ ✓ src/noMoneyArithmetic.test.ts > money handling > NFR-01: no Number(), parseFloat or unary plus in production sources 4ms
+
+ Test Files  8 passed (8)
+      Tests  38 passed (38)
+   Start at  09:15:42
+   Duration  26.30s (transform 610ms, setup 255ms, collect 1.39s, tests 22.77s, environment 550ms, prepare 107ms)
+
+ % Coverage report from v8
+
+=============================== Coverage summary ===============================
+Statements   : 95.05% ( 1212/1275 )
+Branches     : 86.51% ( 295/341 )
+Functions    : 93.97% ( 78/83 )
+Lines        : 95.05% ( 1212/1275 )
+================================================================================
+
+=== TASK-006 GREEN: Playwright first run, baselines written (--update-snapshots=missing), both projects ===
+  ok  1 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (2.3s)
+  ok  5 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (2.2s)
+  ok  4 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (2.7s)
+  ok  3 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (2.8s)
+  ok  2 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (3.0s)
+  ok  7 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (2.3s)
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\apply-underwrite.spec.ts-apply-form-mobile-chromium-win32.png, writing actual.
+  ok  6 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (2.6s)
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\apply-underwrite.spec.ts-apply-form-desktop-chromium-win32.png, writing actual.
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\workbench.spec.ts-workbench-case-detail-desktop-chromium-win32.png, writing actual.
+  ok 10 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (2.8s)
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\apply-underwrite.spec.ts-application-status-mobile-chromium-win32.png, writing actual.
+  ok  8 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (3.4s)
+  ok 11 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (3.4s)
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\apply-underwrite.spec.ts-application-status-desktop-chromium-win32.png, writing actual.
+  ok  9 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (3.4s)
+  ok 12 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (665ms)
+  ok 16 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (1.5s)
+  ok 15 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (1.7s)
+  ok 13 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (2.1s)
+A snapshot doesn't exist at C:\Users\wdarshana\Downloads\PolicyForge\frontend\e2e\__snapshots__\workbench.spec.ts-workbench-case-detail-mobile-chromium-win32.png, writing actual.
+  ok 14 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (5.5s)
+  16 passed (36.6s)
+
+=== TASK-006 GREEN: Playwright second consecutive run, no snapshot update, both projects ===
+  ok  3 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (2.5s)
+  ok  7 [desktop-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (2.1s)
+  ok  5 [desktop-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (2.3s)
+  ok 11 [mobile-chromium] › e2e\apply-underwrite.spec.ts:62:1 › AC-03.2: an invalid PAN, Aadhaar and postcode show field errors and the page does not navigate (2.1s)
+  ok  8 [desktop-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (2.3s)
+  ok  6 [desktop-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (3.1s)
+  ok  2 [desktop-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (3.3s)
+  ok  9 [mobile-chromium] › e2e\apply-underwrite.spec.ts:49:1 › AC-04.2: a smoker with sum insured 12,000,000.00 is REFERRED with UW-TL-002 (3.1s)
+  ok 10 [mobile-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (2.8s)
+  ok  4 [desktop-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (2.9s)
+  ok  1 [desktop-chromium] › e2e\apply-underwrite.spec.ts:23:1 › AC-04.1: customer1 quotes the auto-bind profile, applies and sees APPROVED with UW-OK (3.5s)
+  ok 12 [mobile-chromium] › e2e\workbench.spec.ts:69:1 › AC-09.6: DECLINE offers only UW-MAN-010 and APPROVE offers only UW-MAN-001 and UW-MAN-002 (1.2s)
+  ok 13 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (849ms)
+  ok 16 [mobile-chromium] › e2e\workbench.spec.ts:50:1 › AC-09.3: admin1 overrides their own DECLINED case with UW-OVR-001 and it shows APPROVED (1.4s)
+  ok 15 [mobile-chromium] › e2e\workbench.spec.ts:86:1 › AC-09.7: the underwriter Workbench shows no Override action and no DECLINED rows (1.3s)
+  ok 14 [mobile-chromium] › e2e\workbench.spec.ts:22:1 › AC-09.2: underwriter1 approves their own REFERRED case with UW-MAN-001 and it shows APPROVED (4.6s)
+  16 passed (36.4s)
+
+=== TASK-006 GREEN: ./mvnw verify summary ===
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Tests run: 251, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 212, Failures: 0, Errors: 0, Skipped: 0
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] BUILD SUCCESS

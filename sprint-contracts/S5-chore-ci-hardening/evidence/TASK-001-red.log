@@ -1,0 +1,218 @@
+=== TASK-001 RED: NFR-08.1 (rule stubbed to allow every caller) ===
+branch: chore/ci-hardening  date: 2026-11-04T18:09:19+05:30
+$ ./mvnw -B test -Dskip.frontend=true -Dtest=RepriceOfferCallerArchTest -Djacoco.skip=true
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] argLine set to empty
+[INFO] 
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 17 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Skipping the execution.
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.architecture.RepriceOfferCallerArchTest
+18:09:29.195 [main] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 21.0.12.1
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.835 s <<< FAILURE! -- in com.horizon.policyforge.architecture.RepriceOfferCallerArchTest
+[ERROR] com.horizon.policyforge.architecture.RepriceOfferCallerArchTest.aCallerOtherThanTheEndorsementServiceIsRejected -- Time elapsed: 0.859 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting code to raise a throwable.
+	at com.horizon.policyforge.architecture.ArchSupport.assertRuleRejects(ArchSupport.java:43)
+	at com.horizon.policyforge.architecture.RepriceOfferCallerArchTest.aCallerOtherThanTheEndorsementServiceIsRejected(RepriceOfferCallerArchTest.java:54)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   RepriceOfferCallerArchTest.aCallerOtherThanTheEndorsementServiceIsRejected:54 
+Expecting code to raise a throwable.
+[INFO] 
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.517 s
+[INFO] Finished at: 2026-11-04T18:09:31+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project policyforge: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\wdarshana\Downloads\PolicyForge\backend\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+
+=== AC-07.7 MUTATION PROOF 1 (never committed): WriteConflicts.isUniqueViolation always returns false, so a request that loses on the unique version key is not translated to 409 ===
+branch: chore/ci-hardening  date: 2026-11-04T18:17:14+05:30
++        if (true) {
++            return false;
++        }
+{"@timestamp":"2026-11-04T18:17:58.0400762+05:30","@version":"1","message":"Unhandled error method=POST path=/api/policies/PF-TL-2026-000003/renewal/pay","logger_name":"com.horizon.policyforge.web.GlobalExceptionHandler","thread_name":"reprice-race-loser","level":"ERROR","level_value":40000,"stack_trace":"org.springframework.dao.DataIntegrityViolationException: could not execute statement [Unique index or primary key violation: \"PUBLIC.UQ_POLICY_VERSION_POLICY_VERSION_INDEX_3 ON PUBLIC.POLICY_V
+{"@timestamp":"2026-11-04T18:17:59.0521378+05:30","@version":"1","message":"Unhandled error method=POST path=/api/policies/PF-TL-2026-000004/endorsements","logger_name":"com.horizon.policyforge.web.GlobalExceptionHandler","thread_name":"reprice-race-loser","level":"ERROR","level_value":40000,"stack_trace":"org.springframework.dao.DataIntegrityViolationException: could not execute statement [Unique index or primary key violation: \"PUBLIC.UQ_POLICY_VERSION_POLICY_VERSION_INDEX_3 ON PUBLIC.POLICY_
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 15.48 s <<< FAILURE! -- in com.horizon.policyforge.web.RenewalRepriceRaceIT
+[ERROR] com.horizon.policyforge.web.RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing -- Time elapsed: 2.246 s <<< FAILURE!
+[{"type":"/problems/internal-error","title":"Internal server error","status":500,"detail":"An unexpected error occurred.","instance":"urn:policyforge:problem:internal-error"}] 
+expected: 409
+ but was: 500
+	at com.horizon.policyforge.web.RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing(RenewalRepriceRaceIT.java:231)
+[ERROR] com.horizon.policyforge.web.RenewalRepriceRaceIT.thePaymentWinsAndTheEndorsementWritesNothing -- Time elapsed: 0.938 s <<< FAILURE!
+[{"type":"/problems/internal-error","title":"Internal server error","status":500,"detail":"An unexpected error occurred.","instance":"urn:policyforge:problem:internal-error"}] 
+expected: 409
+ but was: 500
+	at com.horizon.policyforge.web.RenewalRepriceRaceIT.thePaymentWinsAndTheEndorsementWritesNothing(RenewalRepriceRaceIT.java:191)
+[ERROR] Failures: 
+[ERROR]   RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing:231->RenewalTestSupport.problem:84 [{"type":"/problems/internal-error","title":"Internal server error","status":500,"detail":"An unexpected error occurred.","instance":"urn:policyforge:problem:internal-error"}] 
+expected: 409
+ but was: 500
+[ERROR]   RenewalRepriceRaceIT.thePaymentWinsAndTheEndorsementWritesNothing:191->RenewalTestSupport.problem:84 [{"type":"/problems/internal-error","title":"Internal server error","status":500,"detail":"An unexpected error occurred.","instance":"urn:policyforge:problem:internal-error"}] 
+expected: 409
+ but was: 500
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+
+=== AC-07.7 MUTATION PROOF 2 (never committed): EndorsementService no longer calls repriceOffer, so a won endorsement leaves the offer at the stale premium ===
+branch: chore/ci-hardening  date: 2026-11-04T18:18:11+05:30
+-                prepared.pendingOffer().repriceOffer(prepared.repricedOfferPremium());
++                // MUTATION: the offer is no longer re-priced
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 15.27 s <<< FAILURE! -- in com.horizon.policyforge.web.RenewalRepriceRaceIT
+[ERROR] com.horizon.policyforge.web.RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing -- Time elapsed: 2.215 s <<< FAILURE!
+[the offer is re-priced] 
+expected: "9490.00"
+ but was: "6850.00"
+	at com.horizon.policyforge.web.RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing(RenewalRepriceRaceIT.java:237)
+[ERROR] Failures: 
+[ERROR]   RenewalRepriceRaceIT.theEndorsementWinsAndThePaymentWritesNothing:237 [the offer is re-priced] 
+expected: "9490.00"
+ but was: "6850.00"
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+
+=== AC-07.7 RESTORED: production unchanged (git diff -- backend/src/main is empty), the race IT passes ===
+branch: chore/ci-hardening  date: 2026-11-04T18:19:14+05:30
+git status --short (tracked changes):
+(empty above = clean)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.94 s -- in com.horizon.policyforge.web.RenewalRepriceRaceIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+=== AC-08.5 MUTATION PROOF 1: the final rounding is HALF_EVEN (never committed) ===
+branch: chore/ci-hardening  date: 2026-11-04T18:26:34+05:30
+-        BigDecimal amount = Money.finalAmount(proRata.subtract(fee).max(BigDecimal.ZERO));
++        BigDecimal amount = proRata.subtract(fee).max(BigDecimal.ZERO).setScale(2, RoundingMode.HALF_EVEN);
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.196 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase -- Time elapsed: 0.172 s <<< FAILURE!
+[amount, line 36 half-cent-tie-0-01 premium=0.01 fee=0.00 2026-11-01..2026-11-30 cancel=2026-11-16 firstTerm=false coolingOffDays=0] 
+expected: "0.01"
+ but was: "0.00"
+	at com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase(ProRataRefundOracleCrossCheckTest.java:89)
+[ERROR]   ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase:89 [amount, line 36 half-cent-tie-0-01 premium=0.01 fee=0.00 2026-11-01..2026-11-30 cancel=2026-11-16 firstTerm=false coolingOffDays=0] 
+expected: "0.01"
+ but was: "0.00"
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+restored: git status (tracked) -> [ M ../scripts/ac_audit.py
+ M ../scripts/ci/check_line_endings.py
+ M ../scripts/redact_evidence.py]
+
+=== AC-08.5 MUTATION PROOF 2: the cooling-off boundary uses <= instead of < (never committed) ===
+branch: chore/ci-hardening  date: 2026-11-04T18:27:00+05:30
+-        if (firstTerm && ChronoUnit.DAYS.between(policyEffectiveDate, cancellationDate) < coolingOffDays) {
++        if (firstTerm && ChronoUnit.DAYS.between(policyEffectiveDate, cancellationDate) <= coolingOffDays) {
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.161 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase -- Time elapsed: 0.137 s <<< FAILURE!
+[amount, line 2 term-first-day premium=6850.00 fee=500.00 2026-11-01..2027-10-31 cancel=2026-11-01 firstTerm=true coolingOffDays=0] 
+expected: "6350.00"
+ but was: "6850.00"
+	at com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase(ProRataRefundOracleCrossCheckTest.java:89)
+[ERROR]   ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase:89 [amount, line 2 term-first-day premium=6850.00 fee=500.00 2026-11-01..2027-10-31 cancel=2026-11-01 firstTerm=true coolingOffDays=0] 
+expected: "6350.00"
+ but was: "6850.00"
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+restored: git status (tracked) -> [ M ../scripts/ac_audit.py
+ M ../scripts/ci/check_line_endings.py
+ M ../scripts/ci/fetch_tools.py
+ M ../scripts/redact_evidence.py]
+
+=== AC-08.5 MUTATION PROOF 3: a cooling-off refund reports the cancellation fee instead of 0.00 (never committed) ===
+branch: chore/ci-hardening  date: 2026-11-04T18:27:27+05:30
+-            BigDecimal fee = Money.finalAmount(BigDecimal.ZERO);
++            BigDecimal fee = Money.finalAmount(cancellationFee);
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.190 s <<< FAILURE! -- in com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest
+[ERROR] com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase -- Time elapsed: 0.171 s <<< FAILURE!
+[fee, line 5 cooling-off-15-first-before-edge premium=6850.00 fee=500.00 2026-11-01..2027-10-31 cancel=2026-11-15 firstTerm=true coolingOffDays=15] 
+expected: "0.00"
+ but was: "500.00"
+	at com.horizon.policyforge.domain.cancellation.ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase(ProRataRefundOracleCrossCheckTest.java:95)
+[ERROR]   ProRataRefundOracleCrossCheckTest.theCalculatorEqualsTheOracleOnEveryGeneratedCase:95 [fee, line 5 cooling-off-15-first-before-edge premium=6850.00 fee=500.00 2026-11-01..2027-10-31 cancel=2026-11-15 firstTerm=true coolingOffDays=15] 
+expected: "0.00"
+ but was: "500.00"
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+restored: git status (tracked) -> [ M ../scripts/ac_audit.py
+ M ../scripts/ci/check_line_endings.py
+ M ../scripts/ci/fetch_tools.py
+ M ../scripts/redact_evidence.py]
+
+=== AC-08.5 RESTORED ===
+git status --short -- backend (tracked + untracked, excluding my new test and fixture until committed):
+?? backend/src/test/java/com/horizon/policyforge/domain/cancellation/ProRataRefundOracleCrossCheckTest.java
+?? backend/src/test/resources/oracle/
+git diff --stat -- backend/src/main: [] (empty = production unchanged)
+(other tracked changes under scripts/ belong to the parallel TASK-002)
+
+=== AC-07.7 DESIGN EXPERIMENT (not committed): the plan's hold point, the policy saveAndFlush, cannot let the other request win ===
+The first version of RenewalRepriceRaceIT held the loser at policyRepository.saveAndFlush, as RenewalRaceIT does. Both versions of the race then failed, because the held request has already inserted its own uncommitted policy_version n+1 row (IDENTITY ids insert at once) and the other request's insert of the same unique key waits for the H2 lock timeout and loses:
+{"@timestamp":"2026-11-04T18:14:46.1105151+05:30","@version":"1","message":"Timeout trying to lock table {0}; SQL statement:\ninsert into policy_version (address_city,address_line1,address_postcode,annual_premium,created_at,effect
+{"@timestamp":"2026-11-04T18:14:49.2251514+05:30","@version":"1","message":"Timeout trying to lock table {0}; SQL statement:\ninsert into policy_version (address_city,address_line1,address_postcode,annual_premium,created_at,effect
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 19.56 s <<< FAILURE! -- in com.horizon.policyforge.web.RenewalRepriceRaceIT
+expected: 201
+ but was: 409
+expected: 200
+ but was: 409
+expected: 201
+ but was: 409
+expected: 200
+ but was: 409
+Decision: hold the loser just before policyVersionRepository.save instead (test configuration only). The loser then has written no version row, the winner commits, and the loser fails on the unique version key with 409 POLICY_UPDATE_CONFLICT. See the progress file.

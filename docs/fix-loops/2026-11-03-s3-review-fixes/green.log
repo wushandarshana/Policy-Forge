@@ -1,0 +1,19 @@
+=== ./mvnw -o verify (full, JDK 21) ===
+[INFO] Tests run: 396, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 322, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+[INFO] Running com.horizon.policyforge.web.PolicyIssuanceIT
+{"@timestamp":"2026-11-03T23:26:30.6257536+05:30","@version":"1","message":"Could not detect default configuration classes for test class [com.horizon.policyforge.web.PolicyIssuanceIT]: PolicyIssuanceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.","logger_name":"org.springframework.test.context.support.AnnotationConfigContextLoaderUtils","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+
+=== npm test (Vitest + coverage) ===
+ ✓ src/pages/QuotePageCredentials.test.tsx (11 tests) 3956ms
+ Test Files  13 passed (13)
+      Tests  100 passed (100)
+
+=== npm run build ===
+tsc --noEmit && vite build: OK
+
+=== npx playwright test --update-snapshots=none (desktop + mobile) ===
+  28 passed (30.2s)

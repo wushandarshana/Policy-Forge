@@ -1,0 +1,27 @@
+# FIX-S5e green: the CLI runs in a disposable worktree
+## unittest
+Ran 187 tests in 142.811s
+OK
+## quality gates
+
+| gate | command | exit | result |
+|---|---|---|---|
+| ac-audit | python scripts/ac_audit.py --offline --no-write | 0 | PASS |
+| redact-evidence | python scripts/redact_evidence.py --check sprint-contracts specs/reviews docs/fix-loops | 0 | PASS |
+| hook-tests | python .claude/hooks/tests/test_hooks.py | 0 | PASS |
+| hook-line-endings | python scripts/ci/check_line_endings.py '.claude/hooks/*.sh' | 0 | PASS |
+| ci-script-tests | python -m unittest discover -s scripts/tests -v | 0 | PASS |
+| oracle-fixture | python scripts/gen_refund_oracle_cases.py --check | 0 | PASS |
+| actionlint | actionlint -shellcheck shellcheck .github/workflows/*.yml | 0 | PASS |
+| ci-schema | python -m check_jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yml && python -m check_jsonschema --builtin-schema vendor.gitlab-ci --data-transform gitlab-ci .gitlab-ci.yml | 0 | PASS |
+
+8/8 gates passed
+## ac audit
+**Covered 93 / 93 ACs (100%)** · parent-only 0 · not covered (incl. parent-only) 0
+## NFR-09.7 wording note (progress note only; specs/ not edited)
+- specs/app_spec.md NFR-09.7 already describes the disposable worktree, tolerated and logged untracked placeholders,
+  failing on a changed tracked file, and the real-checkout check. The implementation matches that wording.
+- Small differences the orchestrator may want to fix in the spec: (a) a *deleted* tracked file in the worktree also
+  fails closed; (b) the spec's allowlist omits LC_ALL, TEMP, TMP and SYSTEMROOT, which the code also passes;
+  (c) every git call (not only worktree add) runs with core.fsmonitor=false and core.hooksPath=<null device>.
+- git worktree list after the full run: only the main checkout, so no worktree leaked.

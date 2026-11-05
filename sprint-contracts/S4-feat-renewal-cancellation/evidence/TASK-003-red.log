@@ -1,0 +1,130 @@
+# TASK-003 red run: ./mvnw verify -Dskip.frontend=true -Djacoco.skip=true -Dmaven.test.failure.ignore=true (surefire 448 tests, 6 failures; failsafe 414 tests, 96 failures; 0 errors, all failures are assertions)
+# Production stubs: PolicyNumberFormat.nextSequence (no limit check), PolicyNumberSequenceExhaustedException (not thrown or mapped yet)
+# IDs covered: NFR-04.1 (no WWW-Authenticate, fixed problem instance, marker never echoed), AC-05.1 (issue sanitised key), AC-05.2 (sequence exhausted), AC-06.1 (endorse and preview sanitised key),
+#   AC-03.5 (application body), AC-09.4 (decision, override), AC-01.9 (quote risk inputs)
+[ERROR] Tests run: 45, Failures: 1, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.unknownKeysAreNamedSanitised <<< FAILURE!
+[ERROR] Tests run: 15, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.domain.policy.PolicyNumberFormatTest
+[ERROR] com.horizon.policyforge.domain.policy.PolicyNumberFormatTest.nextSequenceRefusesAnExhaustedCounter(int)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.policy.PolicyNumberFormatTest.nextSequenceRefusesAnExhaustedCounter(int)[2] <<< FAILURE!
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[ERROR] com.horizon.policyforge.domain.rating.RiskInputSchemaTest.unknownKeysAreNamedSanitised <<< FAILURE!
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.ProblemJsonSecurityHandlerTest
+[ERROR] com.horizon.policyforge.web.ProblemJsonSecurityHandlerTest.accessDeniedHandlerWritesAFixedInstance <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemJsonSecurityHandlerTest.entryPointWritesAFixedInstanceAndNoChallenge <<< FAILURE!
+[ERROR] Tests run: 22, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.ApplicationSubmissionIT
+[ERROR] com.horizon.policyforge.web.ApplicationSubmissionIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ApplicationSubmissionIT.unknownKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 15, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementIT
+[ERROR] com.horizon.policyforge.web.EndorsementIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.unknownKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementSecurityIT
+[ERROR] com.horizon.policyforge.web.EndorsementSecurityIT.anonymousRequestsAreRefused <<< FAILURE!
+[ERROR] Tests run: 14, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.PolicyIssuanceIT
+[ERROR] com.horizon.policyforge.web.PolicyIssuanceIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.PolicyIssuanceIT.unknownKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.PolicyNumberingIT
+[ERROR] Tests run: 61, Failures: 46, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.ProblemInstanceIT
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[7] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[8] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[9] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[10] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[12] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[14] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[15] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[16] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[17] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[19] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[21] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[22] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[23] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[24] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[26] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[28] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[29] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[30] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[31] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[33] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[35] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[36] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[37] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.aMarkerInThePathAndQueryIsNeverEchoed(Probe)[39] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.exhaustedSequenceHasItsCodeAndDetail <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[4] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[6] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[7] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[8] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[9] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[12] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[13] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[14] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[16] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[17] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[18] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.everyProblemHasTheFixedInstanceOfItsType(Case)[19] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ProblemInstanceIT.notAcceptableHasNoPathInstance <<< FAILURE!
+[ERROR] Tests run: 16, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.QuoteApiIT
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.aLongUnknownRiskInputKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.QuoteApiIT.unknownRiskInputKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 48, Failures: 12, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.RoleBoundaryIT
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[4] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[6] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[7] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[8] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[9] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[10] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[11] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.anonymousRequestsAreUnauthorised(Call)[12] <<< FAILURE!
+[ERROR] Tests run: 18, Failures: 6, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.SecurityBaselineIT
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[4] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityBaselineIT.otherApiPathsRequireAuthentication(String)[6] <<< FAILURE!
+[ERROR] Tests run: 19, Failures: 18, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.SecurityChallengeIT
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsOnQuoteCreationGetNoChallenge <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[4] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[6] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[7] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.badCredentialsGetNoChallenge(Call)[8] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.exceptionHandlerGetsNoChallenge <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[4] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[5] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[6] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[7] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.SecurityChallengeIT.anonymousRequestsGetNoChallenge(Call)[8] <<< FAILURE!
+[ERROR] Tests run: 33, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingDecisionIT
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingDecisionIT.unknownKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 26, Failures: 2, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.UnderwritingOverrideIT
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.aLongUnknownKeyIsEchoedOnlyInItsBoundedForm <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.UnderwritingOverrideIT.unknownKeysAreEchoedSanitised <<< FAILURE!
+[ERROR] Tests run: 448, Failures: 6, Errors: 0, Skipped: 0
+[ERROR] Tests run: 414, Failures: 96, Errors: 0, Skipped: 0
+# --- second red cycle: NFR-04.1 container error dispatch (the Boot error page echoes the request path of a firewall-refused path) ---
+# ./mvnw verify -Dskip.frontend=true -Dit.test=ErrorPathEndToEndIT -Djacoco.skip=true -Dmaven.test.failure.ignore=true (real embedded server; 9 tests, 4 failures, 0 errors)
+[ERROR] Tests run: 9, Failures: 4, Errors: 0, Skipped: 0, <<< FAILURE! -- in com.horizon.policyforge.web.ErrorPathEndToEndIT
+[ERROR] com.horizon.policyforge.web.ErrorPathEndToEndIT.aRefusedPathIsAFixedProblem(String)[1] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ErrorPathEndToEndIT.aRefusedPathIsAFixedProblem(String)[2] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ErrorPathEndToEndIT.aRefusedPathIsAFixedProblem(String)[3] <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.ErrorPathEndToEndIT.aRefusedPathIsAFixedProblem(String)[4] <<< FAILURE!

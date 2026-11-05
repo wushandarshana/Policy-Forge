@@ -16,10 +16,10 @@ This file holds the rules for the whole repository. More specific rules live in 
    then regenerate the code. Never change behaviour that a spec AC pins without updating the spec.
 3. **PR-only merge, branching strategy `feature → dev → main`.** `main` is production-ready and `dev` is the
    integration branch. Both are protected: never commit, rebase or force-push them. All work happens on `feat/*`,
-   `fix/*` or `chore/*` branches cut from `dev`. When a feature is done and the review agents pass, `/pr` merges it
-   into **`dev`** with `--no-ff`. After QA and all testing pass on `dev`, `/release` merges `dev` into **`main`** with
-   `--no-ff`. Remote: `origin` = https://github.com/wushandarshana/Policy-Forge. The `no-direct-main-commit.sh` hook
-   enforces all of this.
+   `fix/*` or `chore/*` branches cut from `dev`. When a feature is done and the review agents pass, `/pr` opens a
+   GitHub PR into **`dev`**. After QA and all testing pass on `dev`, `/release` opens a PR from `dev` into **`main`**. Remote: `origin` = https://github.com/wushandarshana/Policy-Forge. GitHub rulesets require **pull
+   requests** into `dev` and `main`. `/pr` and `/release` open them with `gh pr create`, and they are merged with
+   "Create a merge commit" only (no squash or rebase). The `no-direct-main-commit.sh` hook guards the local side.
 4. **Synthetic data only.** Use dummy names, IDs, Aadhaar/PAN-shaped values (e.g. `XXXX-XXXX-1234`, `ABCDE1234F`).
    Never use real customer or Virtusa data.
 5. **Money is fixed-point (NFR-01).** Use `BigDecimal` for premium, refund, sum insured, rates and fees, with scale 2
@@ -42,7 +42,7 @@ This file holds the rules for the whole repository. More specific rules live in 
 | Persistence | H2 (file/in-memory), Spring Data JPA, Flyway migrations |
 | Frontend | React 18 + Vite + TypeScript, served by Spring Boot in the packaged app |
 | Tests | JUnit 5, AssertJ, Spring Boot Test, ArchUnit, JaCoCo; Vitest; Playwright |
-| CI | GitLab CI (`.gitlab-ci.yml`, added in Sprint 5) with a Claude Code review stage |
+| CI | GitHub Actions (`.github/workflows/ci.yml`, runs on origin) and GitLab CI (`.gitlab-ci.yml`) with the same jobs: build, frontend-unit, e2e, quality-gates, a required Claude Code review and the `ci-gate` aggregator (`docs/harness-setup.md`) |
 | MCP | Playwright MCP (`.mcp.json`), used by the evaluator for live UI checks |
 
 ## Architecture (see `docs/architecture.md`)
@@ -64,7 +64,8 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 2. Use TDD (`docs/tdd.md`): commit a failing AC-tagged test (`test: red …`), then the implementation
    (`feat: green …`), then cleanup (`refactor: …`).
 3. The evaluator runs `./mvnw verify`, `npm test` and Playwright MCP against the running app.
-4. The `security-reviewer` and `test-engineer` agents review the work, then `/sprint-archive` and `/pr` merge.
+4. The `security-reviewer` and `test-engineer` agents review the work, then `/sprint-archive` and `/pr` open the PR.
+   It merges only when every CI job is green, including `claude-review` and `ci-gate`.
 5. Record recurring mistakes in `docs/knowledge-deposits.md` and encode them into a hook, skill or CLAUDE.md rule.
 
 ## Commands
@@ -76,9 +77,12 @@ web (controllers, DTOs)  →  service (use cases, transactions)  →  repository
 | Frontend unit tests | `cd frontend && npm test` |
 | E2E tests | `cd frontend && npx playwright test` |
 | AC coverage audit | `/ac-coverage`, or `python scripts/ac_audit.py` |
+| All CI quality gates | `python scripts/ci/quality_gates.py` (after `pip install --require-hashes -r scripts/requirements-ci.txt`) |
+| CI script tests | `python -m unittest discover -s scripts/tests -v` |
 
 ## Debugging: environment first
 
 When something fails, check the environment before changing code: JDK version and `JAVA_HOME`, `PATH`,
-line endings on `.sh` hooks (must be LF), ports in use, stale `target/`, and Node version. Record the resolution in
+line endings on `.sh` hooks (must be LF), ports in use, stale `target/`, Node version, and corporate TLS inspection
+(an API `UNABLE_TO_VERIFY_LEAF_SIGNATURE` error means a proxy CA must go in `NODE_EXTRA_CA_CERTS`; see KD-015). Record the resolution in
 `docs/post-mortems/`.

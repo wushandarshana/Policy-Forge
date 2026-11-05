@@ -44,7 +44,7 @@ fields (`sumInsured`, `age`).
 | UW-TL-004 | TERM_LIFE | REFER | bmi > 35 |
 | UW-TL-005 | TERM_LIFE | DECLINE | bmi > 45 |
 | UW-MO-001 | MOTOR | DECLINE | claimsLast3Years ≥ 3 |
-| UW-MO-002 | MOTOR | DECLINE | vehicleAgeYears > 15 |
+| UW-MO-002 | MOTOR | DECLINE | vehicleAgeYears > 15 (defence in depth: v1 quotes already reject > 15 with 400, so this is tested at domain level only; see quote spec, J8) |
 | UW-MO-003 | MOTOR | REFER | driverAge < 21 |
 | UW-MO-004 | MOTOR | REFER | vehicleUse = COMMERCIAL AND vehicleValue > 5,000,000 |
 | UW-HH-001 | HOUSEHOLD | DECLINE | propertyAgeYears > 100 |
@@ -69,6 +69,77 @@ Mapping to application status: AUTO_BIND → `APPROVED`, MANUAL_REVIEW → `REFE
   with `actorId`, `action`, `applicationId`, `reasonCode`, `comment`, `previousStatus`, `newStatus` and `timestamp`
   (NFR-04).
 
+## Clarifications (Sprint 2 planning, 2026-10-28)
+
+These rules settle the gaps the sections above leave open. Plans and code cite them by number. They are spec, not
+planner judgment.
+
+- **U-1 Request shape.** `POST /api/applications` takes exactly `{quoteId, kyc}`. The product comes from the stored
+  quote. An unknown key at any level gets 400 naming it (KD-008).
+- **U-2 Check order.** Nothing is stored on any failure. Checks run in this order:
+  1. Request shape and every KYC format error, all reported together.
+  2. The quote must exist and, if it has an owner, the owner must be the caller. Otherwise 400 `QUOTE_NOT_FOUND`,
+     naming `quoteId`. Another customer's owned quote looks exactly like a missing one, so its existence is never
+     revealed. Quote ownership is defined in [`quote-engine_spec.md`](quote-engine_spec.md).
+  3. The quote must be within `validUntil`, with that day counting as valid. Otherwise 400 `QUOTE_EXPIRED`.
+  4. The quote must not already have an application. Otherwise 409 `QUOTE_ALREADY_APPLIED`.
+  5. The KYC age must match. Otherwise 400 `KYC_AGE_MISMATCH`, naming `kyc.dateOfBirth`.
+  6. Risk inputs are re-validated against the active rule set. Otherwise 400 naming each risk field.
+
+  Every 400 carries `errors[]` of `{field, message}` with dotted paths (`kyc.pan`, `kyc.address.postcode`, …). Named
+  business errors also carry a top-level `code`. Messages and `detail` never contain submitted values.
+- **U-3 One application per quote** (app_spec §6, `Application 1─1 Quote`). A declined applicant needs a new quote.
+- **U-4 KYC details.**
+  - Age is in completed years on the injected clock's today, with zero tolerance. TERM_LIFE matches `age`, MOTOR
+    matches `driverAge`, and HOUSEHOLD has no age check.
+  - `dateOfBirth` must be a valid ISO date that isn't in the future.
+  - Maximum lengths: `fullName` 200, `address.line1` 200, `address.city` 100. Anything longer gets a 400, never a 500.
+- **U-5 Identifiers and derived fields.**
+  - Application IDs are `A-<UUIDv4>`.
+  - Underwriting uses the rule version **active at application time**, which can be newer than the quote's.
+  - The derived `sumInsured` is the quote's sum insured (MOTOR `vehicleValue`; HOUSEHOLD building + contents).
+- **U-6 Fail closed.** If a rule condition names a field that is absent or can't be compared, it raises a domain error.
+  It is never skipped.
+- **U-7 Response allow-lists (KD-008).**
+  - Owner responses carry **no** KYC fields.
+  - A queue item carries `kyc.fullName` and the masked `kyc.aadhaar` and `kyc.pan`, but no date of birth or address.
+    It includes the product's declared risk inputs, health inputs among them, because the underwriter must review
+    them. Undeclared keys never appear.
+  - The mask is `*` × (length − 4) followed by the last 4 characters: `XXXX-XXXX-1234` → `**********1234` and
+    `ABCDE1234F` → `******234F`.
+- **U-8 Reasons.** Responses carry `reasonCodes` (sorted codes) and `reasons` (`{code, description}`, same order). The
+  description of `UW-OK` is "No underwriting rule fired".
+- **U-9 Decision records.**
+  - `source` is `RULES` (the automated evaluation, actor `system`), `MANUAL` or `OVERRIDE`.
+  - Each row stores the outcome, reason codes, rule version, actor ID, comment and timestamp. Rows are never changed.
+  - The application status changes only through domain transitions, with an optimistic lock: of two concurrent
+    decisions, the second gets 409.
+- **U-10 Manual codes are paired with decisions.**
+  - `APPROVE` needs `UW-MAN-001` or `UW-MAN-002`. `DECLINE` needs `UW-MAN-010`.
+  - Override codes `UW-OVR-001` and `UW-OVR-002` are valid only on the override endpoint.
+  - The comment is trimmed and must be 10–2000 characters.
+  - A decision on a non-REFERRED application, or an override on a non-DECLINED one, gets 409
+    `INVALID_APPLICATION_STATE`. An unknown or malformed application ID gets 404.
+- **U-11 Queue access.** `includeDeclined=true` from a non-ADMIN gets **403**. It is never silently ignored.
+- **U-12 Audit trail.** Each status change appends an audit entry (entity type `APPLICATION`) with `previousStatus` and
+  `newStatus`:
+
+  | Action | Transition | Actor |
+  |---|---|---|
+  | `APPLICATION_SUBMITTED` | SUBMITTED→UNDERWRITING | customer |
+  | `UNDERWRITING_AUTO_DECISION` | UNDERWRITING→outcome | `system` |
+  | `UNDERWRITING_DECISION` | manual | underwriter |
+  | `UNDERWRITING_OVERRIDE` | override | admin |
+
+  The status columns are added by a **new** migration (V4 or later). V1–V3 are never edited.
+- **U-13 My applications.** `GET /api/applications/mine` (CUSTOMER) returns only the caller's applications, newest
+  first, in the submission response shape.
+- **U-14 Seed (app_spec §9).** Startup seeds one synthetic REFERRED TERM_LIFE application for `customer2` (smoker,
+  SI 12,000,000.00, UW-TL-002), so the workbench queue is never empty in a demo. Seeding is idempotent. Tests never
+  assume a queue length or position.
+- **U-15 Not in this sprint.** `GET /api/admin/audit` (audit is verified by tests), the Catalog Manager page,
+  `APPROVED → ISSUED` (policy issuance spec) and any v2 seed rule file (the AC-04.5 v2 rule set is a test fixture).
+
 ## Acceptance Criteria
 
 - **AC-03.1** Given a valid TERM_LIFE quote and valid KYC, when a CUSTOMER submits an application, then it is stored,
@@ -79,6 +150,18 @@ Mapping to application status: AUTO_BIND → `APPROVED`, MANUAL_REVIEW → `REFE
   `QUOTE_EXPIRED`.
 - **AC-03.4** Given a date of birth that gives age 40 for a quote priced at age 35, when submitted, then the response is
   400 `KYC_AGE_MISMATCH`.
+- **AC-03.5** Given an application body with an unknown key (top level, inside `kyc` or inside `kyc.address`), when
+  submitted, then the response is 400 naming each unknown key and nothing is stored (U-1).
+- **AC-03.6** Given an unknown `quoteId`, when submitted, then the response is 400 `QUOTE_NOT_FOUND` naming `quoteId`,
+  and nothing is stored (U-2).
+- **AC-03.7** Given a quote that already has an application, when a second application is submitted, then the response
+  is 409 `QUOTE_ALREADY_APPLIED` and no second application is stored (U-3).
+- **AC-03.9** Given a quote owned by `customer1`, when `customer2` submits an application for it, then the response is
+  400 `QUOTE_NOT_FOUND` naming `quoteId`, with a body identical to the unknown-quote case (AC-03.6), and nothing is
+  stored. When `customer1` submits, it is accepted. Given an anonymous quote, the first customer to apply claims it,
+  and a later applicant gets 409 `QUOTE_ALREADY_APPLIED` (AC-03.7).
+- **AC-03.8** Given applications by `customer1` and `customer2`, when `customer1` calls `GET /api/applications/mine`,
+  then only `customer1`'s applications are returned, newest first, with no KYC fields (U-7, U-13).
 - **AC-04.1** Given TERM_LIFE age 35, non-smoker, BMI 24, no declarations, SI 5,000,000, when underwritten, then the
   decision is AUTO_BIND with `["UW-OK"]`.
 - **AC-04.2** Given TERM_LIFE smoker with SI 12,000,000, when underwritten, then the decision is MANUAL_REVIEW with
@@ -103,8 +186,22 @@ Mapping to application status: AUTO_BIND → `APPROVED`, MANUAL_REVIEW → `REFE
   When the comment is missing or too short, then 400.
 - **AC-09.5** Given an APPROVED application, when override is called, then the response is 409 (only DECLINED can be
   overridden).
+- **AC-09.6** Given a REFERRED application, when an UNDERWRITER submits `APPROVE` with `UW-MAN-010`, `DECLINE` with
+  `UW-MAN-001`, or any `UW-OVR-*` code on the decision endpoint, then the response is 400 naming `reasonCode` and
+  nothing changes (U-10).
+- **AC-09.7** Given an UNDERWRITER without ADMIN, when they request the queue with `includeDeclined=true`, then the
+  response is 403 (U-11). Given the startup seed, when an UNDERWRITER loads the queue, then the seeded `customer2`
+  application is listed as REFERRED with `UW-TL-002` (U-14).
 
 ## UI
-- **Apply** page (from a quote): KYC form, then a status page showing the decision and reason codes.
-- **Underwriter Workbench:** queue table, a case detail panel, and approve/decline with reason code and comment.
-  ADMIN sees declined cases and an Override action.
+- **Apply** page (`#/apply?quoteId=…`, opened from the Quote page's Apply link): KYC form, then the **Application
+  Status** page (`#/applications/<id>`) showing the status, the decision and each reason code with its description.
+- **Underwriter Workbench** (`#/workbench`): queue table, a case detail panel (masked KYC exactly as received), and
+  approve/decline with reason code (offered according to U-10) and comment. ADMIN sees declined cases and an Override
+  action.
+- **Sign-in:** credentials are held in memory only (never localStorage, sessionStorage, cookies or URLs), so a reload
+  means signing in again. The SPA learns whether the user is an ADMIN from whether the `includeDeclined=true` queue
+  request succeeds (200) or is refused (403). After a 403 it never shows Override.
+- **Visual snapshots:** Playwright baselines are committed under `frontend/e2e/__snapshots__/` (configured
+  `snapshotPathTemplate`), with IDs, dates and timestamps masked. Baselines from this Windows machine are
+  platform-suffixed, and Linux CI baselines come in Sprint 5.

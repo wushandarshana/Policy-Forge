@@ -29,7 +29,7 @@ Customers see only their own applications and policies.
 |---|---|
 | [`product-catalog_spec.md`](product-catalog_spec.md) | AC-02 |
 | [`quote-engine_spec.md`](quote-engine_spec.md) | AC-01 |
-| [`underwriting_spec.md`](underwriting_spec.md) | AC-03, AC-04, AC-09 |
+| [`underwriting_spec.md`](underwriting_spec.md) | AC-03 (03.1–03.8), AC-04, AC-09 (09.1–09.7) |
 | [`policy-issuance_spec.md`](policy-issuance_spec.md) | AC-05, AC-10 |
 | [`endorsement_spec.md`](endorsement_spec.md) | AC-06 |
 | [`renewal-cancellation_spec.md`](renewal-cancellation_spec.md) | AC-07, AC-08 |
@@ -65,6 +65,7 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
 | NFR-06 | Structured JSON logs with request correlation ID (`X-Correlation-Id`) | Filter test |
 | NFR-07 | `/actuator/health` returns 200 within 1 s of startup | Integration test |
 | NFR-08 | Architecture rules are automated tests | `backend/src/test/java/.../architecture/` |
+| NFR-09 | Every push to and pull or merge request into dev and main runs the same automated gates on GitHub Actions and GitLab CI, ending with a required Claude Code review | scripts/tests/ CI tests; actionlint; GitLab CI schema check; the pipelines |
 
 ### Acceptance Criteria (NFR, testable form)
 
@@ -95,6 +96,69 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   nothing is stored. The route is chosen on the **decoded, normalized** path that
   Spring Security and MVC route on, so encoded variants such as `/api/%71uotes` are capped like `/api/quotes`. Any
   path that doesn't match an allowance gets the 16 KB default. (Security re-review R-1.)
+- **NFR-08.1** Given the production classes, when any class other than `EndorsementService` calls
+  `PolicyTermEntity.repriceOffer`, then the ArchUnit suite fails. A negative fixture in which a class other than the
+  fixture's endorsement service calls it is rejected, and the fixture's endorsement service is not (Sprint 4
+  security review MINOR-A).
+- **NFR-09.1** Given `.github/workflows/ci.yml` and `.gitlab-ci.yml`, then each defines the jobs `build`,
+  `frontend-unit`, `e2e`, `quality-gates` and `claude-review` with the same gate commands. Each runs for pushes to
+  `dev` and `main` and for pull or merge requests into them. `claude-review` runs only after the other four jobs
+  pass and is never allowed to fail.
+- **NFR-09.2** Given the CI definitions and `.mcp.json`, then every GitHub action is pinned to a full 40-character
+  commit SHA, every container image to an exact version tag with an `@sha256:` digest, every downloaded tool to an
+  exact version with a SHA-256 checksum, and every npm package run by CI or MCP to an exact version. Nothing uses
+  `latest` or a floating tag. The Playwright image's version equals the `@playwright/test` version locked in
+  `frontend/package-lock.json`, and the CI Node version equals `frontend.node.version` in `backend/pom.xml`.
+- **NFR-09.3** Given the CI definitions, then the GitHub workflows default to `permissions: contents: read`, and
+  only `claude-review` adds `pull-requests: write`. No workflow uses `pull_request_target`, and every checkout sets
+  `persist-credentials: false`. No `run:` script contains a `${{ github.event.… }}` expression. `ANTHROPIC_API_KEY`
+  reaches only the review step, from the secret of the GitHub Environment `claude-review` (which requires the owner's
+  approval before the job runs) or the masked GitLab variable scoped to the protected environment `claude-review`,
+  and is never printed. No repository-level copy of the key exists. No
+  CI file sets `NODE_TLS_REJECT_UNAUTHORIZED`. `redact_evidence.py` redacts an Anthropic API key (`sk-ant-…`) in
+  evidence and review output.
+- **NFR-09.4** Given a Claude review run, then each pass's prompt contains the body of
+  `.claude/agents/security-reviewer.md` or `.claude/agents/test-engineer.md` verbatim, and the pinned Claude Code CLI
+  runs in bare, read-only mode against the diff under review. The job fails when any finding has severity BLOCKER,
+  when a pass returns no structured verdict or one that fails the verdict schema, when the CLI exits non-zero or is
+  not the pinned version, or when `ANTHROPIC_API_KEY` is absent. With no BLOCKER it passes and still publishes every
+  MAJOR and MINOR finding. An empty diff passes without calling the CLI.
+- **NFR-09.5** Given an E2E run on a platform with no committed visual baselines, then each visual assertion is
+  skipped and recorded by name, and every functional assertion still runs. Given a platform with at least one
+  committed baseline, a missing or differing baseline fails the test. A run in update mode writes only the missing
+  baselines of its own platform.
+- **NFR-09.6** Given the quality gates, then the job fails when the offline AC audit reports any NOT COVERED or
+  PARENT-ONLY ID, when `redact_evidence.py --check` finds a credential in `sprint-contracts/`, `specs/reviews/` or
+  `docs/fix-loops/`, when the hook regression suite fails, when a `.claude/hooks/*.sh` file has a CR byte in the
+  index or the working tree, when the AC-08.5 oracle fixture differs from a fresh generation, or when actionlint or
+  the CI schema checks report an error. It runs every gate and reports each result before it fails.
+- **NFR-09.7** Given a Claude review run (Sprint 5 security review, user decision 2026-11-04), then:
+  - the CLI gets no Bash tool and runs in a disposable `git worktree` copy of the checkout, outside the repository,
+    which is removed afterwards. It receives the diff and the commit log as files it may `Read`, and `Read`, `Grep`
+    and `Glob` are limited to that copy (no `/proc`, no other path). New untracked files the CLI's sandbox creates in
+    the copy are tolerated and logged, but a changed tracked file in the copy fails the job;
+  - the CLI's environment is built from an allowlist (`PATH`, `HOME`, `LANG`, `TMPDIR`, `ANTHROPIC_API_KEY`,
+    `CLAUDE_*`), so no GitHub or GitLab token, registry password or token-bearing URL reaches it;
+  - after each pass the job fails closed if any tracked or untracked file outside `ci-out/` changed in the real
+    checkout;
+  - the PR or MR comment is posted by a separate job that holds the platform token, downloads only the report
+    artifact, and runs the comment code from the base branch, never from the code under review. It edits only a
+    comment written by its own bot user, and refuses any API URL that is not `https://`;
+    if the base branch has no comment code yet (the first PR that adds CI), it skips the comment with a notice, and
+    the report stays an artifact;
+  - the Claude Code CLI and the CI Python packages are installed from committed lockfiles with integrity hashes
+    (`npm ci`, `pip install --require-hashes`);
+  - a final required job fails unless every gate job succeeded, so a skipped review never counts as passing;
+  - `.github/CODEOWNERS` names the owner of `.github/**`, `.gitlab-ci.yml`, `scripts/ci/**`,
+    `scripts/redact_evidence.py`, `scripts/ac_audit.py` and `.claude/agents/**`. While the repository has a single
+    owner, code-owner review is not enforced (it would block the owner's own PRs). The owner's approval of the
+    `claude-review` environment is the enforced control, and the approver checks changes to those paths first.
+  **Accepted v1 limitation (Sprint 5 security re-review, user decision 2026-11-04).** On a same-repository PR the
+  workflow file comes from the PR, so a writer can change the jobs. The key is still released only after the
+  owner approves the `claude-review` environment, and the comment job's token adds no right a writer lacks. Treat
+  the Claude review as defence in depth, not as the merge authority.
+  A PR from a fork never receives the key, so its review fails closed. A maintainer re-pushes the branch to `origin`
+  to review it.
 
 ## 6. Domain model (summary)
 
@@ -131,6 +195,7 @@ AuditEntry (append-only: actorId, action, entityType, entityId, reasonCode, comm
 | GET | `/api/policies/mine` | CUSTOMER | issuance |
 | GET | `/api/policies/{number}` | owner / ADMIN | issuance |
 | POST | `/api/policies/{number}/endorsements` | owner | endorsement |
+| POST | `/api/policies/{number}/endorsements/preview` | owner | endorsement |
 | POST | `/api/policies/{number}/renewal/pay` | owner | renewal |
 | GET | `/api/policies/{number}/cancel/preview?date=` | owner | cancellation |
 | POST | `/api/policies/{number}/cancel` | owner | cancellation |
@@ -146,3 +211,5 @@ Errors use `application/problem+json` (RFC 7807). `InvalidPolicyStateException` 
 - Rule files `rules/term-life/v1.json`, `rules/motor/v1.json`, `rules/household/v1.json`.
 - Sample policies: at least 2 per product for `customer1`/`customer2`, plus 1 MANUAL_REVIEW application in the queue,
   1 policy near renewal and 1 policy past expiry within grace.
+- Delivery is staged with the features it depends on. The MANUAL_REVIEW application ships with underwriting (Sprint 2,
+  underwriting spec U-14). The sample policies ship with issuance and renewal (Sprints 3–4).

@@ -54,13 +54,17 @@ public class QuoteEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    /** The CUSTOMER who created the quote with valid credentials, or null for an anonymous quote (P-8). Set once. */
+    @Column(name = "owner_id", updatable = false)
+    private String ownerId;
+
     /** For JPA only. */
     protected QuoteEntity() {
     }
 
     private QuoteEntity(String quoteId, String productCode, int ruleVersion, BigDecimal sumInsured,
             BigDecimal annualPremium, String breakdownJson, String riskInputsJson, LocalDate validUntil,
-            Instant createdAt) {
+            Instant createdAt, String ownerId) {
         this.quoteId = quoteId;
         this.productCode = productCode;
         this.ruleVersion = ruleVersion;
@@ -70,13 +74,23 @@ public class QuoteEntity {
         this.riskInputsJson = riskInputsJson;
         this.validUntil = validUntil;
         this.createdAt = createdAt;
+        this.ownerId = ownerId;
     }
 
+    /** An anonymous quote: no owner. */
     public static QuoteEntity of(String quoteId, String productCode, int ruleVersion, BigDecimal sumInsured,
             BigDecimal annualPremium, String breakdownJson, String riskInputsJson, LocalDate validUntil,
             Instant createdAt) {
+        return of(quoteId, productCode, ruleVersion, sumInsured, annualPremium, breakdownJson, riskInputsJson,
+                validUntil, createdAt, null);
+    }
+
+    /** A quote owned by {@code ownerId} (null for none). The owner is fixed here and never changes (P-8). */
+    public static QuoteEntity of(String quoteId, String productCode, int ruleVersion, BigDecimal sumInsured,
+            BigDecimal annualPremium, String breakdownJson, String riskInputsJson, LocalDate validUntil,
+            Instant createdAt, String ownerId) {
         return new QuoteEntity(quoteId, productCode, ruleVersion, sumInsured, annualPremium, breakdownJson,
-                riskInputsJson, validUntil, createdAt);
+                riskInputsJson, validUntil, createdAt, ownerId);
     }
 
     public Long getId() {
@@ -117,5 +131,10 @@ public class QuoteEntity {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    /** The owning customer's ID, or null for an anonymous quote. Never part of any API response (NFR-04.2). */
+    public String getOwnerId() {
+        return ownerId;
     }
 }

@@ -1,7 +1,8 @@
 """Redact credentials from evidence logs before they are kept in the repository.
 
-Covers HTTP Basic/Bearer Authorization values (MockMvc header dumps, curl -v output) and
-Spring's ephemeral "generated security password" lines. Exit code 1 with --check if anything
+Covers HTTP Basic/Bearer Authorization values (MockMvc header dumps, curl -v output),
+Spring's ephemeral "generated security password" lines and Anthropic API keys (sk-ant-...; NFR-09.3: the
+Claude review output and CI logs are scrubbed with these patterns). Exit code 1 with --check if anything
 would be redacted, so it can gate CI and the /sprint-archive step.
 
 Usage:
@@ -34,6 +35,7 @@ PATTERNS = [
     (BASIC, _basic),
     (re.compile(r"(Bearer )[A-Za-z0-9._~+/=-]{16,}"), r"\1<redacted-token>"),
     (re.compile(r"(Using generated security password: )[0-9a-f-]{36}"), r"\1<redacted-ephemeral-dev-password>"),
+    (re.compile(r"sk-ant-[A-Za-z0-9_-]{20,}"), "<redacted-api-key>"),
 ]
 SUFFIXES = {".log", ".txt", ".md", ".json", ".xml"}
 

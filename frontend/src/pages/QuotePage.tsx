@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ApiError, createQuote, listProducts } from '../api';
 import type { FieldError, Product, Quote } from '../api';
+import { useSession } from '../auth/SessionContext';
 import { QuoteResult } from '../components/QuoteResult';
 import { RiskInputField } from '../components/RiskInputField';
+import { QUOTE_SIGN_IN_AGAIN_MESSAGE } from '../messages';
 import { buildRiskInputs, fieldsFor, initialValues } from './riskFields';
 import type { FormValues } from './riskFields';
 
@@ -13,6 +15,7 @@ function normaliseField(field: string): string {
 }
 
 export function QuotePage() {
+  const { credentials } = useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [productCode, setProductCode] = useState('');
@@ -66,11 +69,15 @@ export function QuotePage() {
     clearOutcome();
     setSubmitting(true);
     try {
-      const created = await createQuote({ productCode, riskInputs: buildRiskInputs(fields, values) });
+      const created = await createQuote({ productCode, riskInputs: buildRiskInputs(fields, values) }, credentials);
       setQuote(created);
     } catch (error) {
       if (error instanceof ApiError && error.status === 400 && error.fieldErrors.length > 0) {
         setFieldErrors(error.fieldErrors);
+      } else if (error instanceof ApiError && error.status === 401) {
+        // The credentials were not accepted. Never retry anonymously: that would defeat "invalid credentials never
+        // produce an anonymous quote" (P-8).
+        setRequestError(QUOTE_SIGN_IN_AGAIN_MESSAGE);
       } else if (error instanceof Error) {
         setRequestError(error.message);
       } else {

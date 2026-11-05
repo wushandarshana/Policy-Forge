@@ -1,0 +1,57 @@
+# FIX-S5c red: smoke test keeps the host network; comment job tolerates a missing report (expected failures)
+............FF......................FF.................................................................................................................................unknown gate(s): no-such-gate; known: ac-audit, redact-evidence, hook-tests, hook-line-endings, ci-script-tests, oracle-fixture, actionlint, ci-schema
+..........
+======================================================================
+FAIL: test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key (test_ci_config.BubblewrapInstallTests.test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key)
+NFR-09.7: the GitHub claude-review job has a step before the review step that runs sudo apt-get update,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 826, in test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key
+    self.assert_bwrap_script(text, GITHUB_CI)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 806, in assert_bwrap_script
+    self.assertRegex(text, r"if ! " + re.escape(BWRAP_SMOKE) + r"; then\n[^\n]*" + re.escape(BWRAP_FAILED) + r"[^\n]*\n\s*exit 1",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{where}: a failed smoke test stops the job with a message (fail closed)")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'if ! bwrap\\ \\-\\-ro\\-bind\\ /\\ /\\ \\-\\-dev\\ /dev\\ \\-\\-proc\\ /proc\\ \\-\\-unshare\\-all\\ \\-\\-share\\-net\\ true; then\\n[^\\n]*bwrap\\ cannot\\ create\\ a\\ sandbox\\ on\\ this\\ runner[^\\n]*\\n\\s*exit 1' not found in 'sudo apt-get update\nsudo apt-get install -y --no-install-recommends bubblewrap\ndpkg-query -W bubblewrap\nbwrap --version\nif ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then\n  echo "::error::bwrap cannot create a sandbox: the runner restricts unprivileged user namespaces. The Claude review fails closed."\n  exit 1\nfi\n' : .github/workflows/ci.yml: a failed smoke test stops the job with a message (fail closed)
+
+======================================================================
+FAIL: test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review (test_ci_config.BubblewrapInstallTests.test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review)
+NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root),
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 847, in test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review
+    self.assert_bwrap_script(text, GITLAB_CI)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 806, in assert_bwrap_script
+    self.assertRegex(text, r"if ! " + re.escape(BWRAP_SMOKE) + r"; then\n[^\n]*" + re.escape(BWRAP_FAILED) + r"[^\n]*\n\s*exit 1",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{where}: a failed smoke test stops the job with a message (fail closed)")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Regex didn't match: 'if ! bwrap\\ \\-\\-ro\\-bind\\ /\\ /\\ \\-\\-dev\\ /dev\\ \\-\\-proc\\ /proc\\ \\-\\-unshare\\-all\\ \\-\\-share\\-net\\ true; then\\n[^\\n]*bwrap\\ cannot\\ create\\ a\\ sandbox\\ on\\ this\\ runner[^\\n]*\\n\\s*exit 1' not found in 'apt-get update\napt-get install -y --no-install-recommends bubblewrap\ndpkg-query -W bubblewrap\nbwrap --version\nif ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then\n  echo "ERROR: bwrap cannot create a sandbox: the runner does not allow user namespaces (or privileged mode). The Claude review fails closed."\n  exit 1\nfi\n' : .gitlab-ci.yml: a failed smoke test stops the job with a message (fail closed)
+
+======================================================================
+FAIL: test_github_comment_job_tolerates_a_missing_review_artifact (test_ci_config.MissingReportTests.test_github_comment_job_tolerates_a_missing_review_artifact)
+NFR-09.7: in claude-review-comment the download step has an id and continue-on-error: true; the comment
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 867, in test_github_comment_job_tolerates_a_missing_review_artifact
+    self.assertIs(download.get("continue-on-error"), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not True
+
+======================================================================
+FAIL: test_gitlab_comment_job_tolerates_a_missing_review_report (test_ci_config.MissingReportTests.test_gitlab_comment_job_tolerates_a_missing_review_report)
+NFR-09.7: the GitLab claude-review-comment job prints a notice and exits 0 when
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 889, in test_gitlab_comment_job_tolerates_a_missing_review_report
+    self.assertIs(job.get("allow_failure"), True)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not True
+
+----------------------------------------------------------------------
+Ran 177 tests in 98.459s
+
+FAILED (failures=4)

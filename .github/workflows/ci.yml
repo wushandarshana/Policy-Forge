@@ -1,0 +1,372 @@
+# CI for pushes to dev and main and for pull requests into them (NFR-09.1 to NFR-09.3, NFR-09.6, NFR-09.7).
+# .gitlab-ci.yml runs the same five jobs with the same commands. Every action is pinned to a full commit SHA, every
+# image to a tag and digest (NFR-09.2). Job names equal their IDs so that the check names stay stable.
+#
+# Repository settings (docs/harness-setup.md):
+# - ANTHROPIC_API_KEY is a secret of the GitHub Environment claude-review, which has the owner as required reviewer,
+#   so every review run waits for the owner's approval. No repository-level copy of the key exists.
+# - The required status check is ci-gate. It fails unless the five gate jobs succeeded, so a skipped review never
+#   counts as passing.
+# - .github/CODEOWNERS with "Require review from Code Owners" covers the CI definitions and the review scripts.
+# - A pull request from a fork never receives the key, so its review fails closed. A maintainer pushes the branch to
+#   origin and opens the pull request from there to review it.
+name: CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+
+# Read-only by default. Only claude-review-comment widens this, on its own job, which holds no key.
+permissions:
+  contents: read
+
+# A newer run of the same pull request cancels the older one. A push to dev or main has a group of its own and is never
+# cancelled.
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Temurin 21
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 21.0.13+9
+          cache: maven
+      - name: Cache the npm download cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Verify the backend and package the SPA
+        run: cd backend && ./mvnw -B verify
+      - name: Upload the packaged JAR
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: policyforge-jar
+          path: backend/target/policyforge-*.jar
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload the JaCoCo report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload the surefire and failsafe reports
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: backend-test-reports
+          path: |
+            backend/target/surefire-reports/
+            backend/target/failsafe-reports/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  frontend-unit:
+    name: frontend-unit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22.11.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install, test with coverage and build
+        run: cd frontend && npm ci && npm test && npm run build
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/lcov.info
+          if-no-files-found: ignore
+          retention-days: 14
+
+  e2e:
+    name: e2e
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    # The image carries the browsers that match the locked @playwright/test. The app is the JAR of the build job.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --ipc=host
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download the packaged JAR
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: policyforge-jar
+          path: policyforge-jar
+      - name: Set up a Temurin 21 JRE
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 21.0.13+9
+          java-package: jre
+      - name: Cache the npm download cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Point PF_E2E_JAR at the packaged JAR
+        run: |
+          jars=(policyforge-jar/policyforge-*.jar)
+          test "${#jars[@]}" -eq 1
+          echo "PF_E2E_JAR=$PWD/${jars[0]}" >> "$GITHUB_ENV"
+      - name: Run Playwright on both projects
+        run: cd frontend && npm ci && npx playwright test
+      - name: List the visual assertions that were skipped
+        if: always()
+        run: |
+          file=frontend/test-results/visual-baselines-missing.txt
+          if [ -f "$file" ]; then
+            count="$(wc -l < "$file")"
+            echo "visual-baseline-missing: $count visual assertion(s) skipped, this platform has no baselines yet"
+            cat "$file"
+            {
+              echo "### Visual baselines missing: $count"
+              echo
+              sed 's/^/- /' "$file"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "visual-baseline-missing: none"
+          fi
+      - name: Upload the visual baselines that were missing
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-baselines-missing
+          path: frontend/test-results/visual-baselines-missing.txt
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload the Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-traces
+          path: frontend/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  quality-gates:
+    name: quality-gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: 3.14.10
+          cache: pip
+          cache-dependency-path: scripts/requirements-ci.txt
+      - name: Install the gate tools from the hashed requirements
+        run: pip install --require-hashes -r scripts/requirements-ci.txt
+      - name: Run every quality gate
+        run: python scripts/ci/quality_gates.py --report ci-out/quality-gates/report.md
+      - name: Upload the quality gates report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quality-gates-report
+          path: ci-out/quality-gates/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  claude-review:
+    name: claude-review
+    needs: [build, frontend-unit, e2e, quality-gates]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    # The key is a secret of this environment, which needs the owner's approval. This job has no write permission and
+    # no GitHub token in any step; the comment is posted by claude-review-comment from the uploaded report.
+    environment: claude-review
+    steps:
+      - name: Check out the repository with its full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22.11.0
+      - name: Install the pinned Claude Code CLI from its lockfile
+        run: npm ci --prefix scripts/ci/claude-cli
+      # The CLI scrubs the environment of its subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1), which needs
+      # bubblewrap. It comes from the runner's signed Ubuntu archive, so the installed version is recorded, not pinned
+      # (NFR-09.2). The smoke test keeps the host network (--share-net): the runner may not configure a loopback in a new network
+      # namespace, which says nothing about user namespaces.
+      - name: Install and smoke-test bubblewrap
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          dpkg-query -W bubblewrap
+          bwrap --version
+          # Ubuntu 24.04 denies unprivileged user namespaces through AppArmor (bwrap: "setting up uid map: Permission
+          # denied"). The GitHub-hosted runner is an ephemeral VM, destroyed after the job, so lifting the restriction
+          # affects only this run and keeps the CLI's full sandbox.
+          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+            echo "kernel.apparmor_restrict_unprivileged_userns=$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns)"
+          fi
+          if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true; then
+            echo "::error::bwrap cannot create a sandbox on this runner (user namespaces unavailable or restricted). The Claude review fails closed."
+            exit 1
+          fi
+      # The key is in the environment of this step only. Event values arrive through env, never as an expression
+      # inside the script. The runner gives the CLI an allowlisted environment and no shell (NFR-09.7).
+      - name: Claude review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PF_REVIEW_MAX_BUDGET_USD: ${{ vars.PF_REVIEW_MAX_BUDGET_USD }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          case "$EVENT_NAME" in
+            pull_request)
+              event=pull_request
+              base="$PR_BASE_SHA"
+              head="$PR_HEAD_SHA"
+              ;;
+            push)
+              event=push
+              base="$PUSH_BEFORE_SHA"
+              head="$GITHUB_SHA"
+              ;;
+            *)
+              event=manual
+              base=""
+              head="$GITHUB_SHA"
+              ;;
+          esac
+          python3 scripts/ci/claude_review.py run --base "$base" --head "$head" --event "$event" --out ci-out/review
+      - name: Upload the review report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: claude-review
+          path: ci-out/review/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Posts the report as a pull request comment (NFR-09.7). It holds the token and no key, takes only the report
+  # artifact, and runs the comment code of the base branch, never the code under review.
+  claude-review-comment:
+    name: claude-review-comment
+    needs: claude-review
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Check out the base branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.base_ref }}
+          persist-credentials: false
+      # claude-review may fail before it uploads a report. A missing artifact is then not an error of this job, which
+      # never decides the gate (ci-gate does not need it).
+      - name: Download the review report
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review
+          path: ${{ runner.temp }}/claude-review
+      - name: Comment on the pull request with the base branch's script
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT: ${{ runner.temp }}/claude-review/claude-review.md
+          DOWNLOAD_OUTCOME: ${{ steps.download.outcome }}
+        run: |
+          if [ "$DOWNLOAD_OUTCOME" != "success" ] || [ ! -f "$REPORT" ]; then
+            echo "::notice::claude-review uploaded no report (it failed before writing one), so no comment is posted. See the claude-review job log."
+            exit 0
+          fi
+          if [ ! -f scripts/ci/claude_review.py ]; then
+            echo "::notice::The base branch has no scripts/ci/claude_review.py yet, so no comment is posted. The review report is in the claude-review artifact."
+            exit 0
+          fi
+          python3 -I scripts/ci/claude_review.py comment --platform github --report "$REPORT"
+
+  # The one required check (NFR-09.7): it fails unless every gate job succeeded, so a skipped or cancelled job never
+  # passes the branch protection.
+  ci-gate:
+    name: ci-gate
+    needs: [build, frontend-unit, e2e, quality-gates, claude-review]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every gate job to have succeeded
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          FRONTEND_UNIT_RESULT: ${{ needs.frontend-unit.result }}
+          E2E_RESULT: ${{ needs.e2e.result }}
+          QUALITY_GATES_RESULT: ${{ needs.quality-gates.result }}
+          CLAUDE_REVIEW_RESULT: ${{ needs.claude-review.result }}
+        run: |
+          status=0
+          for pair in "build=$BUILD_RESULT" "frontend-unit=$FRONTEND_UNIT_RESULT" "e2e=$E2E_RESULT" \
+                      "quality-gates=$QUALITY_GATES_RESULT" "claude-review=$CLAUDE_REVIEW_RESULT"; do
+            name="${pair%%=*}"
+            result="${pair#*=}"
+            echo "$name: ${result:-missing}"
+            if [ "$result" != success ]; then
+              status=1
+            fi
+          done
+          if [ "$status" -ne 0 ]; then
+            echo "ci-gate: a gate job did not succeed"
+          fi
+          exit "$status"

@@ -19,6 +19,12 @@ policy version**, written atomically.
 Optional `effectiveDate`, default today. It must be within the current term and not before the latest endorsement's
 effective date.
 
+**Preview.** `POST /api/policies/{number}/endorsements/preview` (owner) takes the same body as the endorsement request
+and runs the same checks in the same order, but writes nothing. It returns 200 with `type`, `effectiveDate`,
+`currentAnnualPremium`, `newAnnualPremium`, `adjustment`, `unexpiredDays` and `termDays`. For a type that does not
+re-rate, `newAnnualPremium` equals the current premium and `adjustment` is `0.00`. The Endorse page calls it before
+confirming a sum-insured change.
+
 ## Validation rules (`EndorsementValidator`)
 - The policy status must be in force (ACTIVE, ENDORSED or RENEWED). Otherwise `InvalidPolicyStateException` (409).
 - `ADD_NOMINEE`: `TERM_LIFE` only (400 `NOMINEE_NOT_SUPPORTED` for other products). There can be at most 3 nominees.
@@ -27,6 +33,9 @@ effective date.
   MOTOR it replaces `vehicleValue`. For HOUSEHOLD the payload uses `newBuildingSumInsured` and/or
   `newContentsSumInsured`.
 - `CHANGE_ADDRESS`: the postcode must be 6 digits.
+- A sum-insured change does not re-run underwriting. This is an accepted v1 limitation (G-6, SG-1).
+- A `CHANGE_SUM_INSURED` applied while an unpaid renewal term exists also re-prices that term in the same transaction
+  (see the renewal spec, "Re-pricing a pending offer"; AC-07.7). The preview reports only the current-term adjustment.
 
 ## Premium adjustment (CHANGE_SUM_INSURED)
 - `newAnnualPremium` = re-quote with the modified risk inputs using the **policy's own rule version** (not the latest).

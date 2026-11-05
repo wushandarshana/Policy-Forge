@@ -1,0 +1,524 @@
+# TASK-005 green run: feat(green) AC-09.1 AC-09.2 AC-09.3 AC-09.4 AC-09.5 AC-09.6 AC-09.7 NFR-03.1 NFR-04.1 NFR-04.3 NFR-04.4 underwriter queue, manual decision, admin override, role boundary and body limits
+# command: ./mvnw verify -Dskip.frontend=true   (full run, JaCoCo enabled; BUILD SUCCESS, exit 0)
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.078 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.483 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.330 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.280 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.978 s -- in com.horizon.policyforge.config.ClockConfigTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.204 s -- in com.horizon.policyforge.domain.application.ApplicationLifecycleTest
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in com.horizon.policyforge.domain.application.KycValidatorTest
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in com.horizon.policyforge.domain.application.ManualDecisionRulesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s -- in com.horizon.policyforge.domain.PiiMaskerTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.613 s -- in com.horizon.policyforge.domain.rating.HealthDeclarationsRuleTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.140 s -- in com.horizon.policyforge.domain.rating.PremiumCalculatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaReviewViewTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.horizon.policyforge.domain.rating.RiskInputSchemaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in com.horizon.policyforge.domain.rating.RiskInputValidatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.horizon.policyforge.domain.ruleset.ActiveRuleSetResolverTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.horizon.policyforge.domain.ruleset.RuleSetValidatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.horizon.policyforge.domain.underwriting.ConditionEvaluatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingReasonCodeMatrixTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.horizon.policyforge.domain.underwriting.UnderwritingRuleEvaluatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.horizon.policyforge.service.RuleSetJsonParserTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s -- in com.horizon.policyforge.service.SeedRuleFilesTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.301 s -- in com.horizon.policyforge.web.RequestBodySizeLimitFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.819 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 251, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.51 s -- in com.horizon.policyforge.config.CorrelationIdIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.457 s -- in com.horizon.policyforge.config.HealthEndpointIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.906 s -- in com.horizon.policyforge.config.PersistenceConfigIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.797 s -- in com.horizon.policyforge.config.RuleSetSeedLoaderIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.743 s -- in com.horizon.policyforge.web.ApplicationBodyLimitIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.494 s -- in com.horizon.policyforge.web.ApplicationLogCaptureIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.502 s -- in com.horizon.policyforge.web.ApplicationRuleVersionIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.484 s -- in com.horizon.policyforge.web.ApplicationSeedIT
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.432 s -- in com.horizon.policyforge.web.ApplicationSubmissionIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.317 s -- in com.horizon.policyforge.web.ApplicationUnderwritingIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.349 s -- in com.horizon.policyforge.web.BodySizeLimitEndToEndIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.704 s -- in com.horizon.policyforge.web.ErrorMappingIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.604 s -- in com.horizon.policyforge.web.ProductCatalogReadIT
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.882 s -- in com.horizon.policyforge.web.QuoteApiIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.184 s -- in com.horizon.policyforge.web.QuoteHealthDeclarationsIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.934 s -- in com.horizon.policyforge.web.QuoteRuleVersionIT
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.154 s -- in com.horizon.policyforge.web.RoleBoundaryIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.66 s -- in com.horizon.policyforge.web.RuleSetPublishIT
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.967 s -- in com.horizon.policyforge.web.SecurityBaselineIT
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.796 s -- in com.horizon.policyforge.web.UnderwritingBodyLimitIT
+[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.20 s -- in com.horizon.policyforge.web.UnderwritingDecisionIT
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.932 s -- in com.horizon.policyforge.web.UnderwritingOverrideIT
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.661 s -- in com.horizon.policyforge.web.UnderwritingQueueIT
+[INFO] Tests run: 212, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: delete*, remove*, update* and @Modifying repository methods are rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a CRUD rule-set version repository is rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: CrudRepository, JpaRepository and non-Repository supertypes are rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: public setters on RuleSetVersionEntity and QuoteEntity are rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity that is not @Immutable is rejected
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: an append-only entity without @Immutable is rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: the checks fail when the rule-set version entity and repository are absent
+PASS  AppendOnlyArchTest :: NFR-02: the underwriting decision repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: NFR-02 audit: the audit entry entity is immutable with no public setters
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: the clean fixture passes every set-wide rule
+PASS  AppendOnlyArchTest :: AC-02.6: the rule-set version entity exists, is an immutable JPA entity and has no public setters
+PASS  AppendOnlyArchTest :: NFR-02 negative fixture: a public field on an append-only entity is rejected
+PASS  AppendOnlyArchTest :: NFR-02 audit: the audit entry repository has no delete or update methods
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version repository with a delete method is rejected
+PASS  AppendOnlyArchTest :: AC-02.6 negative fixture: a rule-set version entity with a public setter is rejected
+PASS  AppendOnlyArchTest :: NFR-02: the application entity has no public setters and its status changes only through applyTransition
+PASS  AppendOnlyArchTest :: NFR-02: the application repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: AC-02.6: the rule-set version repository exists and has no delete or update methods
+PASS  AppendOnlyArchTest :: NFR-02: the underwriting decision entity exists, is an immutable JPA entity and has no public setters
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesAreImmutable
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicSetters
+PASS  AppendOnlyArchTest :: appendOnlyEntitiesHaveNoPublicFields
+PASS  AppendOnlyArchTest :: appendOnlyRepositoriesAreNotCrud
+PASS  AppendOnlyArchTest :: appendOnlyRepositoriesHaveNoDeleteOrUpdate
+PASS  ControllerPlacementArchTest :: NFR-08 negative fixture: a controller whose name does not end in Controller is rejected
+PASS  ControllerPlacementArchTest :: NFR-08 negative fixture: a controller outside the web package is rejected
+PASS  ControllerPlacementArchTest :: controllersResideInWeb
+PASS  ControllerPlacementArchTest :: controllersAreNamedController
+PASS  DomainPurityArchTest :: NFR-08 negative fixture: any non-JDK library in the domain is rejected
+PASS  DomainPurityArchTest :: NFR-08 negative fixture: Spring, JPA and web dependencies in the domain are rejected
+PASS  DomainPurityArchTest :: domainHasNoFrameworkOrLayerDependencies
+PASS  DomainPurityArchTest :: domainDependsOnTheJdkOnly
+PASS  LayeredArchitectureTest :: NFR-08 negative fixture: web to repository or config is rejected
+PASS  LayeredArchitectureTest :: NFR-08 negative fixture: config may depend on any layer, so it is never reported
+PASS  LayeredArchitectureTest :: NFR-08 negative fixture: domain to service, repository, web or config is rejected
+PASS  LayeredArchitectureTest :: NFR-08 negative fixture: service to web or config is rejected
+PASS  LayeredArchitectureTest :: NFR-08 negative fixture: repository to service or web is rejected
+PASS  LayeredArchitectureTest :: layersFollowTheMatrix
+PASS  MoneyPrecisionArchTest :: NFR-01 negative fixture: BigDecimal built from or converted to a double is rejected
+PASS  MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float return types are rejected
+PASS  MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float parameters are rejected
+PASS  MoneyPrecisionArchTest :: NFR-01 negative fixture: double and float fields are rejected
+PASS  MoneyPrecisionArchTest :: noFloatingPointFields
+PASS  MoneyPrecisionArchTest :: noFloatingPointReturns
+PASS  MoneyPrecisionArchTest :: noFloatingPointParameters
+PASS  MoneyPrecisionArchTest :: noBigDecimalFloatingPointConversion
+PASS  ClockConfigTest :: NFR-08 clock: the Clock bean uses the configured time zone
+PASS  ClockConfigTest :: NFR-08 clock: production code never calls now() without a Clock
+PASS  PiiMaskerTest :: AC-09.1: PAN ABCDE1234F is masked to ******234F
+PASS  PiiMaskerTest :: maskIsStarsForAllButTheLastFour(String, String) AC-09.1: 12345 is masked to *2345
+PASS  PiiMaskerTest :: maskIsStarsForAllButTheLastFour(String, String) AC-09.1: 123456 is masked to **3456
+PASS  PiiMaskerTest :: maskIsStarsForAllButTheLastFour(String, String) AC-09.1: ABCDEFGHIJ is masked to ******GHIJ
+PASS  PiiMaskerTest :: AC-09.1: a missing value stays missing, so nothing is invented
+PASS  PiiMaskerTest :: AC-09.1: Aadhaar XXXX-XXXX-1234 is masked to **********1234
+PASS  PiiMaskerTest :: shortValuesAreNeverRevealed(String) AC-09.1: a value of 1234 characters or fewer is masked completely
+PASS  PiiMaskerTest :: shortValuesAreNeverRevealed(String) AC-09.1: a value of 123 characters or fewer is masked completely
+PASS  PiiMaskerTest :: shortValuesAreNeverRevealed(String) AC-09.1: a value of 1 characters or fewer is masked completely
+PASS  PiiMaskerTest :: shortValuesAreNeverRevealed(String) AC-09.1: a value of  characters or fewer is masked completely
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome is applied only to an application in UNDERWRITING[1] current=SUBMITTED
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome is applied only to an application in UNDERWRITING[2] current=APPROVED
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome is applied only to an application in UNDERWRITING[3] current=REFERRED
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome is applied only to an application in UNDERWRITING[4] current=DECLINED
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome is applied only to an application in UNDERWRITING[5] current=ISSUED
+PASS  ApplicationLifecycleTest :: AC-03.1: an outcome applied in UNDERWRITING maps AUTO_BIND, MANUAL_REVIEW, DECLINE to APPROVED, REFERRED, DECLINED
+PASS  ApplicationLifecycleTest :: AC-03.1: the six statuses are SUBMITTED, UNDERWRITING, APPROVED, REFERRED, DECLINED and ISSUED
+PASS  ApplicationLifecycleTest :: AC-03.1: a submitted application moves to UNDERWRITING before any outcome is applied
+PASS  ApplicationLifecycleTest :: AC-03.1: only a SUBMITTED application can start underwriting[1] current=UNDERWRITING
+PASS  ApplicationLifecycleTest :: AC-03.1: only a SUBMITTED application can start underwriting[2] current=APPROVED
+PASS  ApplicationLifecycleTest :: AC-03.1: only a SUBMITTED application can start underwriting[3] current=REFERRED
+PASS  ApplicationLifecycleTest :: AC-03.1: only a SUBMITTED application can start underwriting[4] current=DECLINED
+PASS  ApplicationLifecycleTest :: AC-03.1: only a SUBMITTED application can start underwriting[5] current=ISSUED
+PASS  ApplicationLifecycleTest :: AC-03.1: SUBMITTED cannot move directly to APPROVED, REFERRED or DECLINED[1] outcome=AUTO_BIND
+PASS  ApplicationLifecycleTest :: AC-03.1: SUBMITTED cannot move directly to APPROVED, REFERRED or DECLINED[2] outcome=MANUAL_REVIEW
+PASS  ApplicationLifecycleTest :: AC-03.1: SUBMITTED cannot move directly to APPROVED, REFERRED or DECLINED[3] outcome=DECLINE
+PASS  ApplicationLifecycleTest :: AC-03.1: APPROVED moves to ISSUED and nothing leaves ISSUED
+PASS  ApplicationLifecycleTest :: AC-03.1: a null current status or outcome fails with a domain exception, never a pass
+PASS  ApplicationLifecycleTest :: AC-03.1: the transition table is exactly the spec's: every other pair raises InvalidApplicationStateException
+PASS  KycValidatorTest :: AC-03.4: a date of birth giving age 40 against a quote age of 35 is KYC_AGE_MISMATCH
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[1] aadhaar=XXXX-XXXX-123X
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[2] aadhaar=XXXX-XXXX-12345
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[3] aadhaar=XXXXXXXXXXXX
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[4] aadhaar=xxxx-xxxx-1234
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[5] aadhaar=XXXX-XXXX-1234
+
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[6] aadhaar=
+PASS  KycValidatorTest :: AC-03.2: malformed Aadhaar values name kyc.aadhaar[7] aadhaar=XXXX-XXXX-١٢٣٤
+PASS  KycValidatorTest :: AC-03.2: violation messages never contain the submitted value
+PASS  KycValidatorTest :: AC-03.2: P-7 the string form of KYC types never shows name, date of birth, Aadhaar or PAN
+PASS  KycValidatorTest :: AC-03.4: the age check leaves an unparseable date of birth to the format check
+PASS  KycValidatorTest :: AC-03.2: maximum lengths are fullName 200, line1 200 and city 100 (U-4)
+PASS  KycValidatorTest :: AC-03.2: PAN abcde1234f, Aadhaar 1234-5678 and postcode 41100 give exactly three violations
+PASS  KycValidatorTest :: AC-03.2: the synthetic KYC XXXX-XXXX-1234, ABCDE1234F, 411001 gives no violation
+PASS  KycValidatorTest :: AC-03.2: a date of birth of today is accepted and a missing one is reported
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[1] pan=ABCDE1234
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[2] pan=ABCDE12345
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[3] pan=ABCD1234FG
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[4] pan=abcde1234f
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[5] pan=ABCDE1234F
+
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[6] pan=ABCDE1234FF
+PASS  KycValidatorTest :: AC-03.2: malformed PAN values name kyc.pan[7] pan=
+PASS  KycValidatorTest :: AC-03.2: blank or missing name, address line 1 and city are each reported
+PASS  KycValidatorTest :: AC-03.4: a leap-day birthday completes its year on 1 March in a common year
+PASS  KycValidatorTest :: AC-03.2: a missing address or missing kyc reports every address and identity field
+PASS  KycValidatorTest :: AC-03.4: MOTOR is checked against driverAge with zero tolerance and HOUSEHOLD has no age check
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[1] postcode=41100
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[2] postcode=4110011
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[3] postcode=41100A
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[4] postcode=41 001
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[5] postcode=411001
+
+PASS  KycValidatorTest :: AC-03.2: a postcode that is not exactly 6 digits names kyc.address.postcode[6] postcode=
+PASS  KycValidatorTest :: AC-03.4: the day before the 36th birthday matches age 35, and the day of it does not
+PASS  KycValidatorTest :: AC-03.4: a quote without the age input fails closed with a domain exception, not a pass
+PASS  KycValidatorTest :: AC-03.2: Aadhaar shapes with X or digits in the first two groups are accepted[1] aadhaar=0000-0000-1234
+PASS  KycValidatorTest :: AC-03.2: Aadhaar shapes with X or digits in the first two groups are accepted[2] aadhaar=XXXX-XXXX-1234
+PASS  KycValidatorTest :: AC-03.2: Aadhaar shapes with X or digits in the first two groups are accepted[3] aadhaar=XXXX-1234-5678
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[1] dob=
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[2] dob=02/04/1991
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[3] dob=1991-4-2
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[4] dob=1991-02-30
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[5] dob=2026-13-01
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[6] dob=not-a-date
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[7] dob=2026-10-29
+PASS  KycValidatorTest :: AC-03.2: a date of birth that is not a valid ISO date, or is in the future, names kyc.dateOfBirth[8] dob=1991-04-02T00:00:00
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[1] code=null
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[2] code=
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[3] code= 
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[4] code=UW-MAN-999
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[5] code=uw-man-001
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[6] code=UW-OK
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing or unknown reason code is rejected naming reasonCode, with no transition[7] code=UW-TL-001
+PASS  ManualDecisionRulesTest :: AC-09.6: APPROVE with UW-MAN-001 or UW-MAN-002 and DECLINE with UW-MAN-010 are accepted from REFERRED
+PASS  ManualDecisionRulesTest :: AC-09.6: a missing decision is rejected naming decision
+PASS  ManualDecisionRulesTest :: AC-09.5: a decision on any status except REFERRED raises the invalid-application-state exception
+PASS  ManualDecisionRulesTest :: AC-09.4: an override from DECLINED gives APPROVED with the trimmed comment
+PASS  ManualDecisionRulesTest :: AC-09.4: a missing, blank or 9-character comment (after trimming) is rejected naming comment[1] comment=null
+PASS  ManualDecisionRulesTest :: AC-09.4: a missing, blank or 9-character comment (after trimming) is rejected naming comment[2] comment=
+PASS  ManualDecisionRulesTest :: AC-09.4: a missing, blank or 9-character comment (after trimming) is rejected naming comment[3] comment=          
+PASS  ManualDecisionRulesTest :: AC-09.4: a missing, blank or 9-character comment (after trimming) is rejected naming comment[4] comment=123456789
+PASS  ManualDecisionRulesTest :: AC-09.4: a missing, blank or 9-character comment (after trimming) is rejected naming comment[5] comment=  123456789  
+PASS  ManualDecisionRulesTest :: AC-09.6: the override accepts UW-OVR-001 and UW-OVR-002 only, and rejects the manual codes
+PASS  ManualDecisionRulesTest :: AC-09.5: an override on APPROVED, REFERRED or UNDERWRITING raises the invalid-application-state exception
+PASS  ManualDecisionRulesTest :: AC-09.4: invalid input is reported before the application state (C3 order: 400, then 409)
+PASS  ManualDecisionRulesTest :: AC-09.4: a bad comment and a bad reason code are reported together, and violations never echo input
+PASS  ManualDecisionRulesTest :: AC-09.6: APPROVE with UW-MAN-010, DECLINE with UW-MAN-001 and a UW-OVR code are each rejected naming reasonCode
+PASS  ManualDecisionRulesTest :: AC-09.6: the catalogue has the spec's codes and descriptions
+PASS  ManualDecisionRulesTest :: AC-09.4: a 2001-character comment is rejected, 2000 characters and 10 characters are accepted
+PASS  HealthDeclarationsRuleTest :: AC-01.10: an empty list, [DIABETES, ASTHMA], a 64-character code and exactly 10 codes are accepted
+PASS  HealthDeclarationsRuleTest :: AC-01.10: objects, numbers, lower-case, 65-character codes and 11 entries are each one violation on healthDeclarations
+PASS  PremiumCalculatorTest :: AC-01.1: the facade selects the rating model by the rule set's ratingModel
+PASS  PremiumCalculatorTest :: AC-01.7: pricing invalid risk inputs throws with one violation per invalid field and prices nothing
+PASS  PremiumCalculatorTest :: AC-01.8: the TERM_LIFE breakdown lists every applied factor and recomputing from it alone gives the premium
+PASS  PremiumCalculatorTest :: AC-01.8: the HOUSEHOLD breakdown lists every applied factor and recomputing from it alone gives the premium
+PASS  PremiumCalculatorTest :: AC-01.5: bands are inclusive at both ends for every TERM_LIFE age band edge
+PASS  PremiumCalculatorTest :: AC-01.5: TERM_LIFE age 30 applies base rate 0.80 and age 31 applies 1.20, as the breakdown shows
+PASS  PremiumCalculatorTest :: AC-01.4: 100 quotes with the same product, inputs and rule version give 100 equal premiums
+PASS  PremiumCalculatorTest :: AC-01.3: HOUSEHOLD v1, building 6,000,000.00, contents 1,000,000.00, BRICK, LOW, security system prices at 11350.00
+PASS  PremiumCalculatorTest :: AC-01.1: TERM_LIFE v1, age 35, non-smoker, 5,000,000.00, 20-year term prices at 6850.00
+PASS  PremiumCalculatorTest :: AC-01.6: a MOTOR rule set with baseRate 0.030 prices the AC-01.2 input at 18150.00 with no code change
+PASS  PremiumCalculatorTest :: AC-01.8: the MOTOR breakdown lists every applied factor and recomputing from it alone gives the premium
+PASS  PremiumCalculatorTest :: AC-01.2: MOTOR v1, 800,000.00 vehicle, age 2, driver 30, 0 claims, 2 NCB years, PRIVATE prices at 15150.00
+PASS  RiskInputSchemaReviewViewTest :: AC-09.1: a declared input that is absent or null is left out, and a missing map gives an empty view
+PASS  RiskInputSchemaReviewViewTest :: AC-09.1: the TERM_LIFE review view holds the declared inputs in declared order, BMI and health declarations included
+PASS  RiskInputSchemaReviewViewTest :: AC-09.1: the MOTOR and HOUSEHOLD review views are exactly their declared inputs
+PASS  RiskInputSchemaReviewViewTest :: AC-09.1: a key the rating model does not declare never appears in the review view, whatever the stored map holds
+PASS  RiskInputSchemaTest :: NFR-04.2: the public view of TERM_LIFE inputs is the declared non-health keys only, even when the map holds extra or health keys
+PASS  RiskInputSchemaTest :: AC-01.9: each rating model declares exactly the spec inputs, and only TERM_LIFE has health inputs
+PASS  RiskInputSchemaTest :: AC-01.9: undeclared BMI, medicalHistory and aadhaar keys are one violation each, named by the key, and the quote is not priced
+PASS  RiskInputSchemaTest :: NFR-04.2: a schema whose health inputs are not declared is rejected
+PASS  RiskInputSchemaTest :: AC-01.9: a MOTOR or HOUSEHOLD request with an extra key is rejected naming that key
+PASS  RiskInputValidatorTest :: AC-01.7: several invalid fields at once are all reported, each exactly once
+PASS  RiskInputValidatorTest :: AC-01.7: a HOUSEHOLD component that is invalid is reported on its own field and the derived sum is not also flagged
+PASS  RiskInputValidatorTest :: AC-01.7: TERM_LIFE sum insured below the minimum or above the maximum is named as sumInsured
+PASS  RiskInputValidatorTest :: AC-01.7: messages name the problem but never repeat the submitted value
+PASS  RiskInputValidatorTest :: AC-01.7: sum insured exactly at the minimum and at the maximum is accepted for every product
+PASS  RiskInputValidatorTest :: AC-01.7: a single missing input is the only violation, and an empty healthDeclarations list is not missing
+PASS  RiskInputValidatorTest :: AC-01.7: a value outside every band is a violation naming the field, not a default factor
+PASS  RiskInputValidatorTest :: AC-01.7: wrongly typed values are violations: booleans, whole numbers, decimals and the declarations list
+PASS  RiskInputValidatorTest :: AC-01.7: every missing required input is its own violation, none is defaulted
+PASS  RiskInputValidatorTest :: AC-01.7: the spec's worked inputs for all three products have no violations
+PASS  RiskInputValidatorTest :: AC-01.7: enumerations are checked against the rule set's keys
+PASS  RiskInputValidatorTest :: AC-01.7: MOTOR names vehicleValue and HOUSEHOLD names the derived sumInsured when the amount is out of range
+PASS  ActiveRuleSetResolverTest :: AC-02.4: the highest effective version wins even when a later version has an earlier-effective peer
+PASS  ActiveRuleSetResolverTest :: AC-02.4: a version is active on its own effectiveFrom day and not the day before
+PASS  ActiveRuleSetResolverTest :: AC-02.4: no rule set when none is effective yet, regardless of the order the versions are given in
+PASS  ActiveRuleSetResolverTest :: AC-02.4: with MOTOR v2 effective in the future, today resolves to v1; on v2's effectiveFrom it resolves to v2
+PASS  RuleSetValidatorTest :: AC-02.5: a well-formed rule set has no violations
+PASS  RuleSetValidatorTest :: AC-02.5: required factor tables and keys are reported when absent
+PASS  RuleSetValidatorTest :: AC-02.5: underwriting rules need a product-prefixed code, a known outcome, a description and valid conditions
+PASS  RuleSetValidatorTest :: AC-02.5: band tables must be sorted, contiguous, inclusive and non-overlapping
+PASS  RuleSetValidatorTest :: AC-02.5: min greater than max, an unknown operator and duplicate rule codes are all reported in one pass
+PASS  RuleSetValidatorTest :: AC-02.5: missing required sections are each reported
+PASS  RuleSetValidatorTest :: AC-02.5: identity fields are checked: product code, name, version, effective date
+PASS  RuleSetValidatorTest :: AC-02.5: negative decimals are reported on rating factors, sum insured and the cancellation fee
+PASS  RuleSetValidatorTest :: AC-02.5: money with more than two decimal places and negative lifecycle days are reported
+PASS  RuleSetValidatorTest :: AC-02.5: an unknown rating model is reported
+PASS  ConditionEvaluatorTest :: U-6: values that cannot be compared raise a domain exception that never repeats the value
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: EQ on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: NEQ on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: GT on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: GTE on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: LT on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: LTE on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: IN on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: NOT_EMPTY on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-6: every operator raises a domain exception, and never reads as false, when the field is absent U-6: IS_TRUE on an absent field raises a domain exception
+PASS  ConditionEvaluatorTest :: U-5: GT, GTE, LT and LTE compare as BigDecimal across integers, strings and BigDecimal values
+PASS  ConditionEvaluatorTest :: U-5: IN holds when the value equals any listed operand
+PASS  ConditionEvaluatorTest :: U-5: NOT_EMPTY holds for a non-empty list, map or non-blank text, and IS_TRUE only for true
+PASS  ConditionEvaluatorTest :: U-5: EQ and NEQ compare numbers by value, booleans and strings by text
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-001 (TERM_LIFE) gives DECLINE with [UW-TL-001]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-002 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-002]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-003 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-003]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-004 (TERM_LIFE) gives MANUAL_REVIEW with [UW-TL-004]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-TL-005 (TERM_LIFE) gives DECLINE with [UW-TL-004, UW-TL-005]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-001 (MOTOR) gives DECLINE with [UW-MO-001]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-002 (MOTOR) gives DECLINE with [UW-MO-002]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-003 (MOTOR) gives MANUAL_REVIEW with [UW-MO-003]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-MO-004 (MOTOR) gives MANUAL_REVIEW with [UW-MO-004]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-001 (HOUSEHOLD) gives DECLINE with [UW-HH-001]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-002 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-002]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-003 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-003]
+PASS  UnderwritingReasonCodeMatrixTest :: eachRuleFiresAsSpecified(String, String, UnderwritingOutcome, List, RuleSetVersion, Map, Function) AC-04.6: UW-HH-004 (HOUSEHOLD) gives MANUAL_REVIEW with [UW-HH-004]
+PASS  UnderwritingReasonCodeMatrixTest :: AC-04.6: the matrix has one row for each of the 13 rules of the three v1 files
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.3: TERM_LIFE age 62 and BMI 37 is DECLINE with UW-TL-001 and UW-TL-004, decline beating refer
+PASS  UnderwritingRuleEvaluatorTest :: U-8: a rule set with no rules is AUTO_BIND with UW-OK and carries its version
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.4: MOTOR with 3 claims is DECLINE with UW-MO-001
+PASS  UnderwritingRuleEvaluatorTest :: U-6: an unknown rule outcome, a rule without conditions and a missing rules section fail closed
+PASS  UnderwritingRuleEvaluatorTest :: U-6: a rule that names an absent field makes the whole evaluation fail instead of being skipped
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.4: HOUSEHOLD with TIMBER construction is MANUAL_REVIEW with UW-HH-003
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.6: reasons come back sorted by code whatever the order of the rules in the rule set
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.1: TERM_LIFE age 35, non-smoker, BMI 24, no declarations, SI 5,000,000.00 is AUTO_BIND with UW-OK
+PASS  UnderwritingRuleEvaluatorTest :: U-5: the derived sum insured and age are added to a copy of the risk inputs
+PASS  UnderwritingRuleEvaluatorTest :: U-6: every condition of a rule is evaluated, so an absent field raises even when an earlier condition is false
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.5: with a TERM_LIFE v2 whose UW-TL-001 threshold is 65, age 62 is not DECLINE and the result references version 2
+PASS  UnderwritingRuleEvaluatorTest :: AC-04.2: TERM_LIFE smoker with SI 12,000,000.00 is MANUAL_REVIEW with UW-TL-002
+PASS  RuleSetJsonParserTest :: AC-02.5: a decimal written as a JSON number is a violation, because decimals must be strings
+PASS  RuleSetJsonParserTest :: AC-02.3: withVersion sets only the version field and keeps every other field and its order
+PASS  RuleSetJsonParserTest :: AC-02.5: malformed JSON, a non-object body and a repeated field name are unreadable, not a crash
+PASS  RuleSetJsonParserTest :: AC-02.5: a seed file parses into BigDecimal values with no violations from the parser or the validator
+PASS  RuleSetJsonParserTest :: AC-02.5: a bad date, a non-string operand and a non-whole number are each reported with their path
+PASS  SeedRuleFilesTest :: AC-02.5: each shipped v1 file is version 1, effective 2026-01-01, matches its folder and has no violations
+PASS  SeedRuleFilesTest :: AC-02.2: the shipped underwriting rules are exactly the underwriting spec's v1 codes
+PASS  SeedRuleFilesTest :: AC-02.2: the shipped lifecycle values are the catalog launch table's
+PASS  SeedRuleFilesTest :: AC-02.1: no seed file newer than v1 ships, so every product starts at active version 1 (J6)
+PASS  RequestBodySizeLimitFilterTest :: NFR-04.4.3: a Basic-authenticated POST /api/products/{code}/versions may send up to 64 KB, also on an encoded path, but not more
+PASS  RequestBodySizeLimitFilterTest :: NFR-04.4.2: a chunked body over 16 KB to an encoded path with no Content-Length is a 413
+PASS  RequestBodySizeLimitFilterTest :: AC-01.9: a chunked body of exactly 16 KB is passed on whole with its length
+PASS  RequestBodySizeLimitFilterTest :: AC-01.9: a chunked POST /api/quotes body over 16 KB with no Content-Length is a 413 problem+json and never reaches the controller
+PASS  RequestBodySizeLimitFilterTest :: AC-01.9: a declared Content-Length over 16 KB is a 413 before the body is read
+PASS  RequestBodySizeLimitFilterTest :: NFR-04.4.1: percent-encoded variants of /api/quotes get the 16 KB default
+PASS  RequestBodySizeLimitFilterTest :: NFR-04.4.4: every path is limited by default, including unmapped /api/** and non-api paths
+PASS  RequestBodySizeLimitFilterTest :: NFR-04.4.3: the 64 KB allowance needs Basic credentials, POST and the exact normalised route; anything else gets 16 KB
+PASS  CorrelationIdIT :: NFR-06 hardening: an unsafe X-Correlation-Id is replaced by a generated one, never echoed
+PASS  CorrelationIdIT :: NFR-06.1: a request without X-Correlation-Id gets a generated header and the same correlationId in every JSON log line
+PASS  CorrelationIdIT :: NFR-06.2: a supplied X-Correlation-Id abc-123 is echoed unchanged and used in the log lines
+PASS  HealthEndpointIT :: NFR-07.1: GET /actuator/health returns 200 with {"status":"UP"} in under 1000 ms after startup
+PASS  PersistenceConfigIT :: NFR-05 baseline: Flyway runs on startup against H2 with validate-on-migrate enabled
+PASS  PersistenceConfigIT :: NFR-05 baseline: Hibernate only validates the schema (no auto-DDL) and keeps no session open in views
+PASS  RuleSetSeedLoaderIT :: NFR-05 seed: running the loader again (a restart) inserts nothing and leaves every row unchanged
+PASS  RuleSetSeedLoaderIT :: NFR-05 seed: a seed file whose row is missing is inserted, and rows that exist are not touched
+PASS  RuleSetSeedLoaderIT :: AC-02.1: startup stores the three seed files in launch order, each exactly as shipped
+PASS  ApplicationBodyLimitIT :: NFR-04.4.1: a body over 16 KB to the percent-encoded path /api/%61pplications is a 413 and nothing is stored
+PASS  ApplicationBodyLimitIT :: NFR-04.4.1: a body over 16 KB to POST /api/applications is a 413 and nothing is stored, while the same body without padding is accepted
+PASS  ApplicationBodyLimitIT :: NFR-04.4.2: a chunked body (no Content-Length) over 16 KB to POST /api/applications is a 413 and nothing is stored
+PASS  ApplicationLogCaptureIT :: NFR-03.1: a valid TERM_LIFE submission with Aadhaar XXXX-XXXX-1234, PAN ABCDE1234F and a health declaration is referred, and no captured log line contains any of them, the full name or the date of birth
+PASS  ApplicationLogCaptureIT :: NFR-03.1: a queue read, a manual decision and an override log application IDs only, and no captured line contains an Aadhaar, a PAN, a health declaration, the full name, the date of birth or a comment
+PASS  ApplicationLogCaptureIT :: NFR-03.1: rejected decisions and overrides, an unreadable body and a refused role log none of the submitted values
+PASS  ApplicationLogCaptureIT :: NFR-03.1: a rejected invalid-KYC submission logs none of the submitted values, not even the invalid ones
+PASS  ApplicationRuleVersionIT :: AC-04.5: after a v2 rule set with the UW-TL-001 threshold at 65 is active, an age-62 application is not DECLINED and its stored decision references rule version 2
+PASS  ApplicationSeedIT :: AC-09.7: after startup customer2 has a REFERRED TERM_LIFE application with reason codes [UW-TL-002], and customer1 has none
+PASS  ApplicationSeedIT :: AC-09.7: running the seeding again adds no application, so a restart never duplicates the demo case (U-14)
+PASS  ApplicationSeedIT :: AC-09.7: the seeded application is a smoker with sum insured 12,000,000.00, with a RULES decision row by system and the two U-12 audit entries
+PASS  ApplicationSubmissionIT :: AC-03.3: the validUntil day itself is still valid and the application is accepted (U-2)
+PASS  ApplicationSubmissionIT :: AC-03.1: customer1 applies with a valid TERM_LIFE quote and valid KYC, and the stored application is linked to that quote and customer1
+PASS  ApplicationSubmissionIT :: AC-03.3: once the clock passes the quote's validUntil, the application is a 400 QUOTE_EXPIRED and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.4: a MOTOR quote is checked against driverAge, and a HOUSEHOLD quote has no age check (U-4)
+PASS  ApplicationSubmissionIT :: AC-03.3: an expired quote that already has an application is reported as QUOTE_EXPIRED, because expiry is checked before the duplicate check (U-2 order)
+PASS  ApplicationSubmissionIT :: AC-03.1: the APPLICATION_SUBMITTED entry (SUBMITTED to UNDERWRITING, actor customer1) is recorded before UNDERWRITING_AUTO_DECISION (UNDERWRITING to APPROVED, actor system)
+PASS  ApplicationSubmissionIT :: AC-03.6: a missing quoteId is a 400 naming quoteId, as a request shape error
+PASS  ApplicationSubmissionIT :: AC-03.5: each unknown key on its own, at any of the three levels, is a 400 naming just that key
+PASS  ApplicationSubmissionIT :: AC-03.7: a second application for the same quote is a 409 QUOTE_ALREADY_APPLIED and the quote still has exactly one application
+PASS  ApplicationSubmissionIT :: AC-03.2: PAN abcde1234f, Aadhaar 1234-5678 and postcode 41100 are a 400 naming kyc.pan, kyc.aadhaar and kyc.address.postcode, no application is stored and the body repeats none of the values
+PASS  ApplicationSubmissionIT :: NFR-04.1: anonymous requests to the application endpoints are 401 and an UNDERWRITER gets 403
+PASS  ApplicationSubmissionIT :: NFR-04.3: a text/plain POST to /api/applications with a valid JSON body is a 415 and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.4: a date of birth that gives age 40 for a quote priced at age 35 is a 400 KYC_AGE_MISMATCH naming kyc.dateOfBirth and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.6: an unknown quoteId is a 400 QUOTE_NOT_FOUND naming quoteId and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.1: the 201 body is the C1 allow-list and carries no KYC field or value
+PASS  ApplicationSubmissionIT :: AC-03.5: an unknown key and an invalid PAN are reported together (U-2 step 1)
+PASS  ApplicationSubmissionIT :: AC-03.2: a blank name and address, a future date of birth and over-long text are each named and are a 400, never a 500 (U-4)
+PASS  ApplicationSubmissionIT :: AC-03.5: unknown keys at the top level, inside kyc and inside kyc.address are a 400 naming each by its dotted path and nothing is stored
+PASS  ApplicationSubmissionIT :: AC-03.8: customer1 gets only its own applications from GET /api/applications/mine, newest first, in the submission shape with no KYC fields
+PASS  ApplicationSubmissionIT :: AC-03.4: an age mismatch and a KYC format error are not reported together, because the age check runs after the format checks (U-2)
+PASS  ApplicationUnderwritingIT :: AC-04.1: TERM_LIFE age 35, non-smoker, BMI 24, no declarations and sum insured 5,000,000.00 is APPROVED with AUTO_BIND and [UW-OK]
+PASS  ApplicationUnderwritingIT :: AC-04.4: a MOTOR quote with 3 claims is DECLINED with [UW-MO-001]
+PASS  ApplicationUnderwritingIT :: AC-04.4: a HOUSEHOLD quote with TIMBER construction is REFERRED with MANUAL_REVIEW and [UW-HH-003]
+PASS  ApplicationUnderwritingIT :: AC-04.1: the UW-OK reason carries the description "No underwriting rule fired" (U-8)
+PASS  ApplicationUnderwritingIT :: AC-04.3: TERM_LIFE age 62 and BMI 37 is DECLINED with DECLINE and [UW-TL-001, UW-TL-004]: decline beats refer and every fired code is listed
+PASS  ApplicationUnderwritingIT :: AC-04.4: the audit entry of the automatic decision records the outcome status, with actor system
+PASS  ApplicationUnderwritingIT :: AC-04.2: a TERM_LIFE smoker with sum insured 12,000,000.00 is REFERRED with MANUAL_REVIEW and [UW-TL-002]
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.4: an anonymous POST over 16 KB to an unmapped /api/** path is a 413 (default-deny), not a routing or auth answer
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.3: an authenticated PRODUCT_MANAGER publish of a valid rule set of about 40 KB is not refused for size
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.1: an anonymous POST to the percent-encoded path /api/%71uotes with a body over 16 KB is a 413 and no quote is stored
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.2: a chunked POST (no Content-Length) over 16 KB to the encoded path /api/%71uotes is a 413 and no quote is stored
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.3: an authenticated PRODUCT_MANAGER publish of a rule set over 64 KB is a 413 and no version is stored
+PASS  BodySizeLimitEndToEndIT :: NFR-04.4.1: an anonymous POST to the percent-encoded path /api/quote%73 with a body over 16 KB is a 413 and no quote is stored
+PASS  ErrorMappingIT :: Contract C3: a malformed JSON body is 400 problem+json
+PASS  ErrorMappingIT :: Contract C3: an unexpected exception is 500 problem+json without internal detail
+PASS  ErrorMappingIT :: Contract C3: bean validation failures are 400 problem+json with errors[] of {field, message}
+PASS  ErrorMappingIT :: Contract C3: constraint violations on request parameters are 400 with errors[]
+PASS  ErrorMappingIT :: Contract C3: validation errors never echo the submitted value
+PASS  ErrorMappingIT :: NFR-04 baseline: a signed-in user without the role is 403 problem+json (method security)
+PASS  ErrorMappingIT :: Contract C3: a ValidationFailedException from a service becomes 400 with errors[]
+PASS  ErrorMappingIT :: Contract C3: a ResourceNotFoundException is 404 problem+json
+PASS  ErrorMappingIT :: NFR-04 baseline: a user with the role passes @PreAuthorize
+PASS  ErrorMappingIT :: NFR-04 baseline: an anonymous request to a protected path is 401 problem+json
+PASS  ErrorMappingIT :: NFR-04 baseline: bad credentials are 401 problem+json
+PASS  ErrorMappingIT :: Contract C3: an unknown /api path for a signed-in user is 404 problem+json
+PASS  ProductCatalogReadIT :: AC-02.2: the three v1 rule sets differ in rating factors, underwriting code prefixes and lifecycle parameters
+PASS  ProductCatalogReadIT :: AC-02.1: GET /api/products returns exactly TERM_LIFE, MOTOR and HOUSEHOLD, each with active version 1 and a distinct rating model
+PASS  QuoteApiIT :: NFR-04.2: quote IDs are unguessable, so two identical quotes get different Q-UUIDv4 IDs
+PASS  QuoteApiIT :: AC-01.2: the MOTOR spec example quoted through the API is 15150.00 on rule version 1
+PASS  QuoteApiIT :: NFR-03: quoting logs the quote ID but never the risk inputs, BMI or health declaration text, for accepted and rejected requests
+PASS  QuoteApiIT :: NFR-04.2: an unknown quote ID is a 404 problem+json, for a well-formed ID and for garbage
+PASS  QuoteApiIT :: AC-01.1: an anonymous POST /api/quotes for TERM_LIFE age 35, non-smoker, 5,000,000.00, 20 years is a 201 with premium 6850.00 and ruleVersion 1
+PASS  QuoteApiIT :: AC-01.9: extra BMI and aadhaar keys in TERM_LIFE riskInputs are a 400 problem+json naming each key and no quote is stored
+PASS  QuoteApiIT :: NFR-04.2: the public read of a stored TERM_LIFE quote exposes exactly the declared non-health riskInputs keys age, smoker, sumInsured and termYears
+PASS  QuoteApiIT :: AC-01.7: a sum insured below the minimum, a missing termYears and a missing smoker are one 400 naming each field and no quote is stored
+PASS  QuoteApiIT :: NFR-04.3.2: an anonymous POST /api/quotes as text/plain with a valid JSON body is a 415 and no quote is stored
+PASS  QuoteApiIT :: AC-01.3: the HOUSEHOLD spec example quoted through the API is 11350.00 with sum insured building plus contents
+PASS  QuoteApiIT :: AC-01.7: a quote for an unknown product is a 404 problem+json and nothing is stored
+PASS  QuoteApiIT :: NFR-04.2: an anonymous GET of a stored TERM_LIFE quote with BMI and health declarations returns premium, breakdown, rule version and validity but no health inputs, and the ID is Q-UUIDv4
+PASS  QuoteApiIT :: AC-01.9: an anonymous POST /api/quotes with a body over 16 KB is a 413 and no quote is stored
+PASS  QuoteApiIT :: AC-01.7: a MOTOR vehicle value above the maximum is a 400 naming vehicleValue, and an absent riskInputs or productCode is a 400 too
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: healthDeclarations [DIABETES, ASTHMA] is accepted with 201 (guard)
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: illegal healthDeclarations is a 400 naming healthDeclarations and stores nothing AC-01.10: healthDeclarations with an object entry is a 400 naming healthDeclarations and stores nothing
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: illegal healthDeclarations is a 400 naming healthDeclarations and stores nothing AC-01.10: healthDeclarations with a numeric entry is a 400 naming healthDeclarations and stores nothing
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: illegal healthDeclarations is a 400 naming healthDeclarations and stores nothing AC-01.10: healthDeclarations with a lower-case code is a 400 naming healthDeclarations and stores nothing
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: illegal healthDeclarations is a 400 naming healthDeclarations and stores nothing AC-01.10: healthDeclarations with a 65-character code is a 400 naming healthDeclarations and stores nothing
+PASS  QuoteHealthDeclarationsIT :: AC-01.10: illegal healthDeclarations is a 400 naming healthDeclarations and stores nothing AC-01.10: healthDeclarations with 11 entries is a 400 naming healthDeclarations and stores nothing
+PASS  QuoteRuleVersionIT :: AC-01.6: after MOTOR v2 (baseRate 0.030, effective on or before today) is published, the AC-01.2 input quotes at 18150.00 with ruleVersion 2, while the earlier v1 quote still reads 15150.00
+PASS  RoleBoundaryIT :: NFR-04.1: only GET and POST handlers exist under /api/underwriting
+PASS  RoleBoundaryIT :: underwriterCannotCallCustomerEndpoints(Call) NFR-04.1: an UNDERWRITER calling POST /api/applications gets 403
+PASS  RoleBoundaryIT :: underwriterCannotCallCustomerEndpoints(Call) NFR-04.1: an UNDERWRITER calling GET /api/applications/mine gets 403
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: POST /api/applications with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: GET /api/applications/mine with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: GET /api/underwriting/queue with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: GET /api/underwriting/queue?includeDeclined=true with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/decision with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/override with a wrong password is 401
+PASS  RoleBoundaryIT :: wrongCredentialsAreUnauthorised(Call) NFR-04.1: POST /api/products/MOTOR/versions with a wrong password is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous POST /api/applications is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous GET /api/applications/mine is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous GET /api/underwriting/queue is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous GET /api/underwriting/queue?includeDeclined=true is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/decision is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/override is 401
+PASS  RoleBoundaryIT :: anonymousRequestsAreUnauthorised(Call) NFR-04.1: anonymous POST /api/products/MOTOR/versions is 401
+PASS  RoleBoundaryIT :: NFR-04.1: an UNDERWRITER calling the override endpoint gets 403, but admin1 is let through (404 for an unknown application, never 401 or 403)
+PASS  RoleBoundaryIT :: NFR-04.1: an UNDERWRITER and an ADMIN are let through to the queue and the decision endpoint (404 for an unknown application, never 401 or 403)
+PASS  RoleBoundaryIT :: NFR-04.1: the public endpoints do not answer 401: GET /api/products, GET /api/products/{code}/versions, POST /api/quotes and GET /api/quotes/{id}
+PASS  RoleBoundaryIT :: customerCannotCallUnderwriterEndpoints(Call) NFR-04.1: a CUSTOMER calling GET /api/underwriting/queue gets 403
+PASS  RoleBoundaryIT :: customerCannotCallUnderwriterEndpoints(Call) NFR-04.1: a CUSTOMER calling GET /api/underwriting/queue?includeDeclined=true gets 403
+PASS  RoleBoundaryIT :: customerCannotCallUnderwriterEndpoints(Call) NFR-04.1: a CUSTOMER calling POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/decision gets 403
+PASS  RoleBoundaryIT :: customerCannotCallUnderwriterEndpoints(Call) NFR-04.1: a CUSTOMER calling POST /api/underwriting/A-00000000-0000-4000-8000-000000000000/override gets 403
+PASS  RoleBoundaryIT :: NFR-04.1: every mapped handler under /api/underwriting declares its role with @PreAuthorize at the controller, and the actor never comes from the request
+PASS  RoleBoundaryIT :: NFR-04.1: the other verbs on the decision and override paths are 405 for an authorised caller, so the endpoints answer only the methods the spec lists
+PASS  RoleBoundaryIT :: adminCannotCallCustomerEndpoints(Call) NFR-04.1: an ADMIN calling POST /api/applications gets 403, because admin1 is not a CUSTOMER
+PASS  RoleBoundaryIT :: adminCannotCallCustomerEndpoints(Call) NFR-04.1: an ADMIN calling GET /api/applications/mine gets 403, because admin1 is not a CUSTOMER
+PASS  RuleSetPublishIT :: AC-02.3: a PRODUCT_MANAGER publish of a new MOTOR rule set is stored as version 2 and v1 is unchanged byte for byte, with an audit entry carrying the actor ID
+PASS  RuleSetPublishIT :: AC-02 new product: publishing version 1 for an unknown productCode creates the product when its ratingModel is known
+PASS  RuleSetPublishIT :: AC-02 new product: an unknown ratingModel on a new product is a 400 and nothing is stored
+PASS  RuleSetPublishIT :: AC-02.7: a CUSTOMER who posts to /api/products/MOTOR/versions gets 403 and nothing is stored
+PASS  RuleSetPublishIT :: NFR-04.3.1: a PRODUCT_MANAGER POST of a valid rule set to /api/products/MOTOR/versions as text/plain is a 415 and MOTOR still has only version 1
+PASS  RuleSetPublishIT :: AC-02.5: publishing a rule set with min greater than max, an unknown operator and duplicate rule codes is a 400 listing each violation and nothing is stored
+PASS  RuleSetPublishIT :: AC-02.4: a MOTOR v2 effective in the future is ignored until the clock reaches its effectiveFrom, and no rule set before v1 is a 404
+PASS  SecurityBaselineIT :: NFR-04.2: an anonymous GET of an unlisted path under /api/products is a 401, so only the two public GET paths are anonymous
+PASS  SecurityBaselineIT :: NFR-04.2: an unknown product's version list is a 404 problem+json whose detail does not echo the requested code
+PASS  SecurityBaselineIT :: NFR-04 baseline: the SPA entry point and static assets are not behind authentication
+PASS  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: customer1 authenticates with HTTP Basic
+PASS  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: customer2 authenticates with HTTP Basic
+PASS  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: underwriter1 authenticates with HTTP Basic
+PASS  SecurityBaselineIT :: syntheticUsersAuthenticate(String) NFR-04 baseline: admin1 authenticates with HTTP Basic
+PASS  SecurityBaselineIT :: NFR-04 baseline: users carry the roles from app_spec section 2
+PASS  SecurityBaselineIT :: NFR-04 baseline: wrong credentials are rejected with 401
+PASS  SecurityBaselineIT :: NFR-04 baseline: write methods on the public prefixes still require authentication
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/quotes is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/applications/mine is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/policies/mine is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/admin/dashboard is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/underwriting/queue is 401
+PASS  SecurityBaselineIT :: otherApiPathsRequireAuthentication(String) NFR-04 baseline: anonymous GET /api/anything-else is 401
+PASS  SecurityBaselineIT :: NFR-04 baseline: the public API paths are not behind authentication
+PASS  SecurityBaselineIT :: NFR-04 baseline: anonymous /actuator/health is allowed
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.1: a body over 16 KB to the percent-encoded decision and override paths is a 413 and nothing changes
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.2: a chunked body (no Content-Length) over 16 KB to the decision and override endpoints is a 413 and nothing changes
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.1: the queue read still works through the real server for an underwriter (control for the body-limit tests)
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.1: a decision body over 16 KB is a 413 and the application is unchanged, while the same body without padding is accepted
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.1: an oversized body is a 413 even from a caller who may not use the endpoint, because the limit runs before authentication
+PASS  UnderwritingBodyLimitIT :: NFR-04.4.1: an override body over 16 KB is a 413 and the application is unchanged, while the same body without padding is accepted
+PASS  UnderwritingDecisionIT :: AC-09.4: a missing or unrecognised decision is a 400 naming decision, and nothing changes
+PASS  UnderwritingDecisionIT :: AC-09.6: a missing reason code is a 400 naming reasonCode, and the paired codes are accepted: APPROVE with UW-MAN-001 or UW-MAN-002, DECLINE with UW-MAN-010
+PASS  UnderwritingDecisionIT :: AC-09.5: an invalid body is a 400 even for an APPROVED application, because body validation runs before the state check (C3)
+PASS  UnderwritingDecisionIT :: AC-09.5: a decision that loses the optimistic-lock race is a 409 INVALID_APPLICATION_STATE and appends nothing (U-9)
+PASS  UnderwritingDecisionIT :: AC-09.2: the comment is trimmed before it is stored in the decision row and the audit entry
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: APPROVE with UW-MAN-010 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: DECLINE with UW-MAN-001 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: DECLINE with UW-MAN-002 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: APPROVE with UW-OVR-001 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: DECLINE with UW-OVR-002 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: APPROVE with UW-MAN-999 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: unpairedReasonCodeIsRejected(String, String) AC-09.6: APPROVE with uw-man-001 on the decision endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingDecisionIT :: NFR-04.3: a form-encoded POST to the decision endpoint is a 415 and nothing changes
+PASS  UnderwritingDecisionIT :: AC-09.2: an UNDERWRITING_DECISION audit entry records actorId underwriter1, the application ID, the reason code, the comment, previousStatus REFERRED, newStatus APPROVED and a timestamp
+PASS  UnderwritingDecisionIT :: AC-09.5: deciding the same application twice, the second request is a 409 and only one MANUAL row and one UNDERWRITING_DECISION entry exist
+PASS  UnderwritingDecisionIT :: AC-09.4: a decision body with an unknown key, such as a forged actorId, is a 400 naming that key and nothing changes (KD-008)
+PASS  UnderwritingDecisionIT :: AC-09.4: a decision body that is not a JSON object is a 400 with a fixed detail and nothing changes
+PASS  UnderwritingDecisionIT :: AC-09.2: the actor is the authenticated principal, so admin1 deciding records admin1
+PASS  UnderwritingDecisionIT :: AC-09.5: of two simultaneous decisions on one application exactly one succeeds, the other is a 409, and one MANUAL row and one audit entry are written (U-9)
+PASS  UnderwritingDecisionIT :: AC-09.2: a MANUAL decision row is appended with the actor, reason, comment and rule version, and the original RULES row is kept unchanged
+PASS  UnderwritingDecisionIT :: AC-09.4: a missing, null, blank, 9-character or 2001-character comment on the decision endpoint is a 400 naming comment, and nothing changes
+PASS  UnderwritingDecisionIT :: AC-09.4: a comment of exactly 10 characters is accepted, and so is one of 2000
+PASS  UnderwritingDecisionIT :: AC-09.4: the comment problem never echoes the submitted text
+PASS  UnderwritingDecisionIT :: AC-09.2: a decided application leaves the queue, and its customer sees the new status beside the original MANUAL_REVIEW decision
+PASS  UnderwritingDecisionIT :: AC-09.2: underwriter1 declines a REFERRED application with UW-MAN-010, the status becomes DECLINED and the rows record DECLINE
+PASS  UnderwritingDecisionIT :: AC-09.5: a decision on an APPROVED or a DECLINED application is a 409 INVALID_APPLICATION_STATE with a fixed detail, and no row is appended
+PASS  UnderwritingDecisionIT :: NFR-04.3: a text/plain POST to the decision endpoint with a valid JSON body is a 415 and nothing changes
+PASS  UnderwritingDecisionIT :: AC-09.2: underwriter1 approves a REFERRED application with UW-MAN-001 and a comment, and the status becomes APPROVED
+PASS  UnderwritingDecisionIT :: AC-09.4: every problem of a bad body is reported together, sorted by field
+PASS  UnderwritingDecisionIT :: AC-09.4: an invalid body is a 400 even for an unknown application ID, because body validation runs before the lookup (C3)
+PASS  UnderwritingDecisionIT :: AC-09.5: an unknown application ID is a 404 with a fixed detail that does not echo the ID, and a malformed ID is the same 404
+PASS  UnderwritingOverrideIT :: AC-09.3: an UNDERWRITING_OVERRIDE audit entry records actorId admin1, the reason code, the comment, previousStatus DECLINED, newStatus APPROVED and a timestamp
+PASS  UnderwritingOverrideIT :: NFR-04.3: a text/plain POST to the override endpoint with a valid JSON body is a 415 and nothing changes
+PASS  UnderwritingOverrideIT :: AC-09.3: UW-OVR-002 is accepted too, and the comment is trimmed before it is stored
+PASS  UnderwritingOverrideIT :: AC-09.4: a CUSTOMER calling override gets 403 and nothing changes
+PASS  UnderwritingOverrideIT :: AC-09.5: an invalid override body is a 400 even for an APPROVED application, because body validation runs before the state check (C3)
+PASS  UnderwritingOverrideIT :: AC-09.5: overriding the same application twice, the second request is a 409 and only one OVERRIDE row exists
+PASS  UnderwritingOverrideIT :: AC-09.5: an override that loses the optimistic-lock race is a 409 INVALID_APPLICATION_STATE and appends nothing (U-9)
+PASS  UnderwritingOverrideIT :: AC-09.4: underwriter1 calling override gets 403 and nothing changes
+PASS  UnderwritingOverrideIT :: AC-09.5: an override on an APPROVED application is a 409 INVALID_APPLICATION_STATE with a fixed detail, the status is unchanged and no decision or audit row is appended
+PASS  UnderwritingOverrideIT :: AC-09.6: a missing reason code on the override endpoint is a 400 naming reasonCode
+PASS  UnderwritingOverrideIT :: AC-09.3: an application an underwriter declined by hand can be overridden too, and all three decision rows are kept
+PASS  UnderwritingOverrideIT :: AC-09.5: an override on a REFERRED application is a 409 too, because only a DECLINED application can be overridden
+PASS  UnderwritingOverrideIT :: AC-09.5: an unknown or malformed application ID on override is a 404 with a fixed detail that does not echo the ID
+PASS  UnderwritingOverrideIT :: AC-09.3: an OVERRIDE decision row is appended and the original RULES DECLINE row stays present and unchanged
+PASS  UnderwritingOverrideIT :: AC-09.4: admin1 with a missing, null, blank, 9-character or 2001-character comment gets 400 naming comment, and nothing changes
+PASS  UnderwritingOverrideIT :: AC-09.4: an override body with an unknown key, such as a forged actorId or decision, is a 400 naming each key and nothing changes (KD-008)
+PASS  UnderwritingOverrideIT :: AC-09.3: an overridden application leaves the admin's declined list
+PASS  UnderwritingOverrideIT :: AC-09.3: admin1 overrides a DECLINED application with UW-OVR-001 and the comment "Commercial exception signed off", and the status becomes APPROVED
+PASS  UnderwritingOverrideIT :: onlyOverrideCodesAreAccepted(String) AC-09.6: the code UW-MAN-001 on the override endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingOverrideIT :: onlyOverrideCodesAreAccepted(String) AC-09.6: the code UW-MAN-002 on the override endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingOverrideIT :: onlyOverrideCodesAreAccepted(String) AC-09.6: the code UW-MAN-010 on the override endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingOverrideIT :: onlyOverrideCodesAreAccepted(String) AC-09.6: the code UW-OVR-003 on the override endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingOverrideIT :: onlyOverrideCodesAreAccepted(String) AC-09.6: the code uw-ovr-001 on the override endpoint is a 400 naming reasonCode and nothing changes
+PASS  UnderwritingOverrideIT :: AC-09.4: an invalid override body is a 400 even for an unknown application ID, because body validation runs before the lookup (C3)
+PASS  UnderwritingQueueIT :: AC-09.1: the plain queue lists REFERRED applications only, never an APPROVED or a DECLINED one
+PASS  UnderwritingQueueIT :: AC-09.7: admin1 with includeDeclined=true sees the REFERRED and the DECLINED applications, oldest first, and still no APPROVED one
+PASS  UnderwritingQueueIT :: AC-09.1: two REFERRED applications submitted at different instants come back oldest first, whichever was stored first
+PASS  UnderwritingQueueIT :: AC-09.1: the queue shows Aadhaar **********1234 and PAN ******234F, and the body holds neither full value, no date of birth and no address
+PASS  UnderwritingQueueIT :: AC-09.1: a HOUSEHOLD item carries exactly the HOUSEHOLD declared risk inputs and nothing else
+PASS  UnderwritingQueueIT :: AC-09.7: an includeDeclined value that is neither true nor false is a 400 naming includeDeclined, never silently ignored (U-11)
+PASS  UnderwritingQueueIT :: AC-09.7: admin1 with includeDeclined=false, or no parameter, gets the plain queue without DECLINED applications
+PASS  UnderwritingQueueIT :: AC-09.7: the seeded customer2 application is listed as REFERRED with reason codes [UW-TL-002] in underwriter1's plain queue
+PASS  UnderwritingQueueIT :: AC-09.1: a queue item is built from the allow-list: the C4 fields, kyc with only fullName, aadhaar and pan, and the product's declared risk inputs with health inputs
+PASS  UnderwritingQueueIT :: AC-09.7: underwriter1 requesting includeDeclined=true gets 403, and the problem body does not echo the request

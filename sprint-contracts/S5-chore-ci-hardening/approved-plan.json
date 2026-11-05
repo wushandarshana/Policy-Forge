@@ -1,0 +1,145 @@
+{
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Backend hardening: the repriceOffer caller ArchUnit rule (NFR-08.1), the re-price versus pay race IT (AC-07.7) and the AC-08.5 premium_check.py oracle cross-check",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Confirms, before its first commit, that amendment A (`spec:`) and amendment B (`chore(substrate):`) exist after `d9a5694`. If either is missing, makes it first with exactly the plan's text adjusted for any checkpoint veto, touching only the files that amendment names. No other task commits substrate.",
+        "Adds RepriceOfferCallerArchTest (`@Tag(\"NFR-08\")`, production classes only) with a rule factory parameterised by owner class and allowed caller, whose `because` names NFR-08.1. The rule passes on the production code, where EndorsementService is the only caller.",
+        "Proves \"NFR-08.1 negative fixture: …\" with fixture classes under `com.horizon.archfixtures.reprice`. The rule rejects a non-endorsement class that calls the fixture's `repriceOffer`, and the message names it. It does not reject the fixture's endorsement service.",
+        "Shows NFR-08.1 red then green (P-3): a `test(red)` commit with the rule stubbed to allow every caller, so the negative-fixture test fails on its assertion, then a `feat(green)` commit with the real rule.",
+        "Adds a re-price versus pay race IT that holds one named thread at the policy `saveAndFlush`, in test configuration only, as RenewalRaceIT does. Production code has no hook. The setup is the AC-04.1 TERM_LIFE policy (6850.00, sum insured 5,000,000, term 2026-11-01..2027-10-31), offered on 2027-10-01. Both requests run on 2027-10-05: the payment, and CHANGE_SUM_INSURED 7,000,000 effective 2027-10-05.",
+        "Proves \"AC-07.7: …\" when the payment wins and the endorsement is held. The endorsement gets 409 `POLICY_UPDATE_CONFLICT` with a fixed detail, and writes no endorsement row. Term 2 is paid at 6850.00, with its dates and rule version unchanged. The status is RENEWED, and version 2 has premium 6850.00 and sum insured 5000000.00. There is no ENDORSED transition.",
+        "Proves \"AC-07.7: …\" when the endorsement wins and the payment is held. The payment gets 409 `POLICY_UPDATE_CONFLICT` and writes nothing. Term 2 is unpaid at 9490.00, with its dates and rule version unchanged. The status is ENDORSED, version 2 has sum insured 7000000.00 and premium 9490.00, and the endorsement adjustment is 195.29. There is no RENEWAL_PAID transition. A fresh payment on 2027-10-06 then gives 200, and version 3 is RENEWED at 9490.00, equal to term 2's premium.",
+        "Asserts in both race tests that exactly one of the two requests succeeds, and that every paid term's premium equals the premium of the version its payment appended. No paid term ever has a re-priced premium.",
+        "Adds `scripts/gen_refund_oracle_cases.py` (standard library only). It imports `refund()` read-only from `.claude/skills/premium-calc-evaluator/premium_check.py` and writes the C10 CSV: boundary rows first, then seeded random rows, 1,000 rows in total. `--check` exits 0 on the committed file and 1 with the first differing row after a one-row edit, which is reverted afterwards.",
+        "Adds an AC-08.5 cross-check test titled \"AC-08.5: the production calculator equals the premium_check.py oracle on 1,000 generated cases\". For each CSV row it asserts that ProRataRefundCalculator gives an amount string equal to the row's (scale 2), the same termDays, unexpiredDays and coolingOff, and fee 0.00 when cooling off or the row's fee otherwise. It also asserts the row count, and at least one cooling-off row, one renewal-term row and one floor-to-0.00 row. No expected value comes from production code, and the existing invariant test stays.",
+        "Shows the characterisation evidence of P-3 for AC-07.7 and AC-08.5. Commits them as `test: AC-NN.M …` when they pass against unchanged production code, and the red log holds each mutation proof: a temporary fault that makes the new test fail on a named assertion, then the restored pass and a clean `git status`. If a real defect is found, uses `test(red)` and `fix(green)` instead, and records it in the progress file.",
+        "Cross-checks three CSV rows (one cooling-off, one renewal-term, one floor-to-zero) with `python .claude/skills/premium-calc-evaluator/premium_check.py refund …`, and records `spec-examples` (all PASS) in the green log.",
+        "Changes nothing under `backend/src/main/` unless a recorded defect requires it. Adds no Flyway migration, edits no published rule file, and touches only `backend/src/test/**` and `scripts/gen_refund_oracle_cases.py`.",
+        "Saves `sprint-progress/TASK-001-red.log` and `TASK-001-green.log` naming NFR-08.1, AC-07.7 and AC-08.5.",
+        "Passes `./mvnw verify -Dskip.frontend=true` with ArchUnit green and the JaCoCo thresholds unchanged at 80% domain and 70% overall."
+      ]
+    },
+    {
+      "id": "TASK-002",
+      "title": "CI scripts: the Claude review runner and gate, the quality-gates runner, the pinned tool fetcher, the LF check, the API-key redaction, the AC audit's Python test glob and their unittest suite",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Touches only `scripts/**` (but not `scripts/gen_refund_oracle_cases.py`, which TASK-001 owns) plus two new `.gitignore` lines, `.ci-tools/` and `ci-out/`. Never commits substrate.",
+        "Adds `scripts/requirements-ci.txt` pinning exactly `PyYAML==6.0.3` and `check-jsonschema==0.39.0`, and installs it into the gitignored `.venv/`.",
+        "Adds `scripts/ci/fetch_tools.py` with a manifest of the C3 actionlint 1.7.12 and shellcheck v0.11.0 URLs and SHA-256 values for linux-x86_64 and windows-x86_64. It downloads to `.ci-tools/` with TLS verification on, verifies the checksum before extracting, deletes the download and exits non-zero on a mismatch, reuses a verified copy, and prints the tool path.",
+        "Adds `scripts/ci/check_line_endings.py`. It fails, listing each file, when a matched file has a CR byte in the working tree, or when `git ls-files --eol` reports `i/crlf` or `i/mixed`, and passes otherwise.",
+        "Adds `scripts/ci/quality_gates.py` implementing C11. It runs all eight gates in order with the current interpreter, never stops early, prints a summary table of gate, command, exit code and result, supports `--list` and `--only`, treats a missing tool as a failure, and exits 1 if any gate failed.",
+        "Adds the `sk-ant-[A-Za-z0-9_-]{20,}` pattern (→ `<redacted-api-key>`) to `scripts/redact_evidence.py`. Keeps its existing behaviour, and `--check sprint-contracts specs/reviews docs/fix-loops` still exits 0.",
+        "Adds `scripts/tests/test_*.py` to the TEST_GLOBS of `scripts/ac_audit.py` and changes nothing else in it.",
+        "Adds `scripts/ci/review-verdict.schema.json` (C6) and `scripts/ci/claude_review.py` implementing C5 (`run` and `comment`). It reads both agent files and their frontmatter `model`, builds the preamble and passes each agent body verbatim on stdin, sends the exact C5 flag set, removes the token variables of P-6 from the CLI's environment, and validates against C6 with a standard-library validator.",
+        "Proves \"NFR-09.4: …\" with `unittest` tests that use a stub CLI (`scripts/tests/fixtures/fake_claude.py` through `PF_CLAUDE_CLI`). Two APPROVE passes exit 0. One BLOCKER exits 1. MAJOR and MINOR findings alone exit 0, and every finding appears in `claude-review.md`. CHANGES_REQUESTED with no BLOCKER exits 0 with a warning. Each of these exits non-zero: no `structured_output` and no fenced JSON, schema-invalid output, a CLI exit of 1, a version other than 2.1.311, and a missing key (the CLI is never called). An empty diff exits 0 without calling the CLI.",
+        "Proves \"NFR-09.4: …\" that each pass's stdin contains the agent file's body byte for byte, and that the CLI argv contains `--bare`, `--json-schema`, `--permission-mode dontAsk`, the disallowed tools, the frontmatter model and both caps, and never `--dangerously-skip-permissions`. Proves the P-7 diff ranges, including the all-zeros and non-ancestor fallbacks to the first parent.",
+        "Proves \"NFR-09.3: …\": the CLI child environment lacks `GITHUB_TOKEN`, `GH_TOKEN`, `CI_JOB_TOKEN` and `PF_GITLAB_REVIEW_TOKEN`. A fake key never appears in stdout, stderr or any output file. A key-shaped string that the stub CLI echoes is redacted in the outputs. `redact_evidence.py` redacts the key pattern and `--check` reports it. Every fake key is built by concatenation.",
+        "Proves \"NFR-09.6: …\": with injected fake gates, all passing exits 0, and a single failure exits 1 after every later gate has still run. A missing tool fails. A CRLF hook file in a temporary git repository fails `check_line_endings.py`, and an LF one passes. The gate list and order equal C11.",
+        "Proves \"NFR-09.4: …\" that every `scripts/ci/*.py` file parses with `ast.parse(feature_version=(3, 11))` and imports only the standard library.",
+        "Starts every test docstring with its ID (P-4). `python -m unittest discover -s scripts/tests -v` passes.",
+        "Records in the progress file the output of `claude --version` and `--help` for the installed CLI, and for 2.1.311 if it can be fetched without sending a prompt (P-15). Lists any C5 flag that is missing and how the runner handles it.",
+        "Keeps `python .claude/hooks/tests/test_hooks.py` passing.",
+        "Updates `scripts/README.md` (not substrate) for the CI scripts, and removes its stale `--report-only` and \"full audit in claude-review\" text (P-10).",
+        "Shows a `test(red)` commit with the failing tests before the `feat(green)` commit. Saves `sprint-progress/TASK-002-red.log` and `TASK-002-green.log` naming NFR-09.3, NFR-09.4 and NFR-09.6."
+      ]
+    },
+    {
+      "id": "TASK-003",
+      "title": "Frontend and E2E: untrack lcov, the exact Playwright pin, the visual-baseline policy and helper (NFR-09.5), the packaged-JAR server option, and local Playwright runs",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [
+        "TASK-001"
+      ],
+      "acceptance_criteria": [
+        "Touches only `frontend/**` and the lcov lines of `.gitignore`. Never commits substrate.",
+        "Untracks lcov in a `chore:` commit: `git rm --cached frontend/coverage/lcov.info`, and the `.gitignore` exception lines replaced by `frontend/coverage/`. Afterwards `git ls-files frontend/coverage` is empty, and `npm test` leaves `git status` clean.",
+        "Pins `\"@playwright/test\": \"1.64.1\"` exactly in `package.json` (P-14). The lock still resolves 1.64.1, and the lock diff changes only the root dependency specifier.",
+        "Adds the pure C7 decision function in `frontend/e2e/visual-baseline-policy.ts`, with no Playwright imports. Proves \"NFR-09.5: …\" with a Vitest table test covering every C7 row, including a configuration error for an unknown mode.",
+        "Adds the helper in `frontend/e2e/support.ts`. It resolves the snapshot path from the test info, decides with the policy, and on a skip records the C7 annotation, file line and warning without throwing.",
+        "Replaces all 10 `toHaveScreenshot` calls with the helper, keeping the same names and options (`stylePath`, `animations`). Afterwards `grep toHaveScreenshot frontend/e2e/*.spec.ts` finds nothing, and only `support.ts` calls it.",
+        "Adds the C8 `PF_E2E_JAR` option to `playwright.config.ts`, leaving behaviour unchanged when the variable is unset, and a comment on the C7 update mode.",
+        "Passes `npm test` (`noMoneyArithmetic` included) and `npm run build` with no TypeScript errors.",
+        "Runs Playwright on both projects with the default `webServer`: everything passes against the `-win32` baselines, and `visual-baselines-missing.txt` is absent or empty.",
+        "Builds the packaged JAR with `./mvnw -B -DskipTests package` (SPA packaged). Runs both projects twice with `PF_E2E_JAR`: everything passes, no PNG is created or changed, and both runs are recorded.",
+        "Demonstrates both C7 `auto` paths with temporary moves that are never committed and are restored afterwards, with `git status` clean: - All 20 `-win32` baselines moved out, so win32 has none → `workbench.spec.ts` skips its visual assertion and lists it in `visual-baselines-missing.txt`, every functional assertion runs, and the test passes. - Only the two `workbench-case-detail` baselines moved out while the other 18 remain → that test fails as a missing baseline.",
+        "Saves `sprint-progress/TASK-003-red.log` (the failing NFR-09.5 Vitest) and `TASK-003-green.log` (Vitest, build, the three Playwright runs, both demonstrations), naming NFR-09.5. Shows a `test(red)` commit before the `feat(green)` commit.",
+        "Leaves port 8080 free and no Java process running at the end."
+      ]
+    },
+    {
+      "id": "TASK-004",
+      "title": "CI definitions: GitHub `ci.yml` and `linux-snapshots.yml`, `.gitlab-ci.yml`, the executable `mvnw`, the config tests (NFR-09.1–09.3) and a local lint plus quality-gates run",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "xhigh",
+      "depends_on": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003"
+      ],
+      "acceptance_criteria": [
+        "Commits `scripts/tests/test_ci_config.py` first, as `test(red)`. It fails because the CI files are absent. Its tests are titled per P-4 for NFR-09.1, NFR-09.2 and NFR-09.3, plus an NFR-09.6 test checking that both platforms run `scripts/ci/quality_gates.py`.",
+        "Adds `.github/workflows/ci.yml` (name `CI`) per C1, C2, C4, P-6, P-10, P-11 and P-12: - five jobs whose `name:` equals their ID, on `ubuntu-24.04`, with timeouts; - `e2e` in the C3 Playwright container with `--ipc=host`, a Temurin JRE and `PF_E2E_JAR`; - `claude-review` needing the other four, with job permissions `contents: read` and `pull-requests: write`, the key only in the runner step's `env`, and a separate comment step for `pull_request` that has `GH_TOKEN` only; - every artifact of C4.",
+        "Adds `.github/workflows/linux-snapshots.yml` (name `Linux snapshots`) per G-1, C2 and C9: no secrets, `contents: read`, a packaged-JAR build with tests skipped, the same container and server as `e2e`, `PF_VISUAL_BASELINES=update` with `--update-snapshots=missing`, and uploads of exactly `frontend/e2e/__snapshots__/*-linux.png` as `linux-snapshot-baselines` plus the HTML report.",
+        "Adds `.gitlab-ci.yml` with the C2 workflow rules and stages `build`, `test`, `e2e` and `review`. It has the same five jobs with the same commands, images pinned per C3, and the P-12 caches and C4 artifacts. `claude-review` needs four jobs with `allow_failure: false`. The `e2e` job installs the C3 JRE tarball after a `sha256sum -c` check. The manual `e2e-update-linux-snapshots` job has `allow_failure: true`. The file uses no `!reference` tags.",
+        "Sets `backend/mvnw` to mode 100755 with `git update-index --chmod=+x`, in a `ci:` commit.",
+        "Proves \"NFR-09.1: …\": - both files define the five jobs and the same C1 commands; - the C2 triggers are present; - `claude-review` needs the other four and can't fail (GitHub has no `continue-on-error`; GitLab has `allow_failure: false`); - `git ls-files -s backend/mvnw` shows 100755.",
+        "Proves \"NFR-09.2: …\": - every `uses:` is `owner/repo@<40 hex>` with a version comment; - every image is `tag@sha256:<64 hex>`; - the Playwright image tag equals `v` + the locked `@playwright/test` version, and `package.json` has no range for it; - the CI Node version equals the pom's `frontend.node.version`; - the CLI is `@anthropic-ai/claude-code@2.1.311`, and `.mcp.json` pins `@playwright/mcp@0.0.84`; - the strings `@latest`, `:latest` and `ubuntu-latest` occur nowhere; - every downloaded file has a SHA-256 next to it.",
+        "Proves \"NFR-09.3: …\": - top-level `permissions: contents: read`, and `pull-requests: write` only on `claude-review`; - no `pull_request_target`; - `persist-credentials: false` on every checkout; - no `${{ github.event` inside any `run:`; - `ANTHROPIC_API_KEY` is referenced only in the review step's `env` (GitHub) or the review job (GitLab); - no `set -x`, `echo $ANTHROPIC_API_KEY` or `NODE_TLS_REJECT_UNAUTHORIZED` in any CI file; - `git grep` finds no `sk-ant-` literal of 20 or more characters in tracked files.",
+        "Makes the config tests green in `ci:` commits whose messages name NFR-09.1, NFR-09.2 and NFR-09.3.",
+        "Runs actionlint 1.7.12 with shellcheck v0.11.0 (fetched through `fetch_tools.py`) on `.github/workflows/` with 0 findings. Runs check-jsonschema 0.39.0 with `vendor.github-workflows` on both workflows and with `vendor.gitlab-ci --data-transform gitlab-ci` on `.gitlab-ci.yml`, with no errors. Records the outputs.",
+        "Runs `python scripts/ci/quality_gates.py` locally with every one of the eight gates passing, the AC audit at 92/92 and 0 parent-only. Records the summary table.",
+        "Has the `security-reviewer` agent review the three CI files read-only, and resolves or records every finding in the progress file.",
+        "Never pushes, never runs a `gh` command that writes, and creates no label, secret or ruleset (P-16).",
+        "Saves `sprint-progress/TASK-004-red.log` and `TASK-004-green.log` naming NFR-09.1, NFR-09.2, NFR-09.3 and NFR-09.6."
+      ]
+    },
+    {
+      "id": "TASK-005",
+      "title": "Sprint-wide verification, the POST-PUSH runbook and the knowledge-deposit drafts",
+      "type": "code",
+      "model": "sonnet",
+      "effort": "high",
+      "depends_on": [
+        "TASK-004"
+      ],
+      "acceptance_criteria": [
+        "Passes a full `./mvnw verify` with the SPA packaged and the frontend not skipped. ArchUnit is green, and the JaCoCo thresholds in `backend/pom.xml` are unchanged from `d9a5694` (80% domain, 70% overall).",
+        "Passes `npm test` and `npm run build`, and confirms that `git status` is clean afterwards (lcov ignored) and that `git ls-files frontend/coverage` is empty.",
+        "Passes Playwright on `desktop-chromium` and `mobile-chromium` with `PF_E2E_JAR` against a freshly packaged JAR, with no created or changed PNG and no `visual-baseline-missing` entry on win32.",
+        "Passes `python scripts/ci/quality_gates.py` (all eight gates) and `python -m unittest discover -s scripts/tests -v`.",
+        "Reports COVERED, not PARENT-ONLY or MISSING, in `python scripts/ac_audit.py --offline --no-write` for NFR-08.1, NFR-09.1–09.6, AC-07.7 and AC-08.5, and 92/92 overall.",
+        "Confirms from `git log d9a5694..chore/ci-hardening` that amendment A and amendment B come before every code commit, and that each of NFR-08.1 and NFR-09.1–09.6 has a `test(red)` commit naming it before a `feat(green)`, `fix(green)` or `ci:` commit naming it. Also confirms that AC-07.7 and AC-08.5 have `test:` commits with mutation proofs in the TASK-001 red log, or recorded red and green commits.",
+        "Confirms that `git diff --stat d9a5694 -- backend/src/main/resources/db/migration backend/src/main/resources/rules` is empty, and lists every `backend/src/main` change with its justification (expected: none).",
+        "Confirms that every pin in the three CI files and `.mcp.json` equals C3 exactly, and records the table.",
+        "Confirms that `dev` is `d9a5694` and `main` is `8e265d6`, locally and in `git ls-remote origin`. Confirms that `origin/chore/ci-hardening` doesn't exist, and that GitHub shows no new label, secret or ruleset change (read-only `gh` calls).",
+        "Confirms that `python scripts/redact_evidence.py --check` exits 0 over `sprint-progress/` and `ci-out/` (if present), and that `git grep` finds no `sk-ant-` literal of 20 or more characters.",
+        "Writes into the progress file the POST-PUSH runbook (steps 1–13 above), with every placeholder that can be known locally filled in, and the expected 20 Linux baseline file names.",
+        "Writes into the progress file drafts of `docs/knowledge-deposits.md` rows from KD-016 onwards, in the file's table format, for the orchestrator to commit as amendment D: - the claude-code-action `push` limitation; - `workflow_dispatch` needing the default branch; - `mvnw` mode 100644; - Playwright's missing-snapshot modes; - GitLab protected variables on MR pipelines; - anything else learned in TASK-001 to TASK-004.",
+        "Records in the progress file every command run and its result, the spec gaps SG-8 to SG-13, the checkpoint outcome of G-1 to G-8, and that port 8080 is free.",
+        "Saves `sprint-progress/TASK-005-green.log` with the verify, npm, Playwright, quality-gate, audit and git-check outputs."
+      ]
+    }
+  ],
+  "parallel_batch": [
+    "TASK-001",
+    "TASK-002"
+  ],
+  "sequential_tasks": [
+    "TASK-003",
+    "TASK-004",
+    "TASK-005"
+  ]
+}

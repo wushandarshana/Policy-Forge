@@ -30,6 +30,7 @@ TEST_GLOBS = [
     "frontend/src/**/*.test.ts",
     "frontend/src/**/*.test.tsx",
     "frontend/e2e/**/*.spec.ts",
+    "scripts/tests/test_*.py",
 ]
 
 

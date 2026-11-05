@@ -46,5 +46,9 @@ Index only. Rules live in the linked files.
 - MCP: [`.mcp.json`](.mcp.json) (Playwright)
 
 ## CI
-- [`.gitlab-ci.yml`](.gitlab-ci.yml) (added in Sprint 5)
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): GitHub Actions on `origin` (build, frontend-unit, e2e, quality-gates, claude-review, claude-review-comment, ci-gate)
+- [`.github/workflows/linux-snapshots.yml`](.github/workflows/linux-snapshots.yml): generates `-linux` visual baselines (PR label `update-linux-snapshots`; manual dispatch once on `main`)
+- [`.gitlab-ci.yml`](.gitlab-ci.yml): the same jobs on GitLab CI
+- [`.github/CODEOWNERS`](.github/CODEOWNERS): CI files, CI scripts and reviewer agents
+- CI scripts: [`scripts/ci/`](scripts/ci/) · tests: [`scripts/tests/`](scripts/tests/)
 - Hook regression tests: [`.claude/hooks/tests/test_hooks.py`](.claude/hooks/tests/test_hooks.py)

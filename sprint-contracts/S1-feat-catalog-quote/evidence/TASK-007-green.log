@@ -1,0 +1,132 @@
+[WebServer] [INFO] Scanning for projects...
+[WebServer] [INFO] 
+[WebServer] [INFO] ----------------------< com.horizon:policyforge >-----------------------
+[WebServer] [INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[WebServer] [INFO]   from pom.xml
+[WebServer] [INFO] --------------------------------[ jar ]---------------------------------
+[WebServer] [INFO] 
+[WebServer] [INFO] >>> spring-boot:3.5.6:run (default-cli) > test-compile @ policyforge >>>
+[WebServer] [INFO] 
+[WebServer] [INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[WebServer] [INFO] argLine set to -javaagent:C:\\Users\\wdarshana\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.13\\org.jacoco.agent-0.8.13-runtime.jar=destfile=C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\jacoco.exec
+[WebServer] [INFO] 
+[WebServer] [INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[WebServer] [INFO] Node v22.11.0 is already installed.
+[WebServer] [INFO] 
+[WebServer] [INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[WebServer] [INFO] Running 'npm ci --no-audit --no-fund' in C:\Users\wdarshana\Downloads\PolicyForge\backend\..\frontend
+[WebServer] [INFO] npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+[WebServer] [INFO] npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[WebServer] [INFO] 
+[WebServer] [INFO] added 224 packages in 5s
+[WebServer] [INFO] 
+[WebServer] [INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[WebServer] [INFO] Running 'npm run build' in C:\Users\wdarshana\Downloads\PolicyForge\backend\..\frontend
+[WebServer] [INFO] 
+[WebServer] [INFO] > policyforge-frontend@0.1.0 build
+[WebServer] [INFO] > tsc --noEmit && vite build
+[WebServer] [INFO] 
+[WebServer] [INFO] vite v6.4.5 building for production...
+[WebServer] [INFO] transforming...
+[WebServer] [INFO] ? 35 modules transformed.[WebServer] 
+[WebServer] [INFO] rendering chunks...
+[WebServer] [INFO] computing gzip size...
+[WebServer] [INFO] dist/index.html                   0.40 kB ? gzip:  0.27 kB
+[WebServer] [INFO] dist/assets/index-D977R5rJ.css    2.51 kB ? gzip:  1.00 kB
+[WebServer] [INFO] dist/assets/index-jjCe7QqP.js   152.27 kB ? gzip: 49.18 kB
+[WebServer] [INFO] ? built in 510ms
+[WebServer] [INFO] 
+[WebServer] [INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[WebServer] [INFO] Copying 2 resources from src\main\resources to target\classes
+[WebServer] [INFO] Copying 9 resources from src\main\resources to target\classes[WebServer] 
+[WebServer] [INFO] 
+[WebServer] [INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[WebServer] [INFO] Copying 3 resources from ..\frontend\dist to target\classes\static
+[WebServer] [INFO] [WebServer] 
+[WebServer] [INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---[WebServer] 
+[WebServer] [INFO] Nothing to compile - all classes are up to date.
+[WebServer] [INFO] 
+[WebServer] [INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[WebServer] [INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[WebServer] [INFO] 
+[WebServer] [INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[WebServer] [INFO] Nothing to compile - all classes are up to date.
+[WebServer] [INFO] 
+[WebServer] [INFO] <<< spring-boot:3.5.6:run (default-cli) < test-compile @ policyforge <<<
+[WebServer] [INFO] 
+[WebServer] [INFO] 
+[WebServer] [INFO] --- spring-boot:3.5.6:run (default-cli) @ policyforge ---
+[WebServer] [INFO] Attaching agents: []
+[WebServer] 
+[WebServer]   .   ____          _            __ _ _
+[WebServer]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+[WebServer] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+[WebServer]  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+[WebServer]   '  |____| .__|_| |_|_| |_\__, | / / / /
+[WebServer]  =========|_|==============|___/=/_/_/_/
+[WebServer] 
+[WebServer]  :: Spring Boot ::                (v3.5.6)
+[WebServer] 
+[WebServer] {"@timestamp":"2026-10-28T12:33:25.8529128+05:30","@version":"1","message":"HV000001: Hibernate Validator 8.0.3.Final","logger_name":"org.hibernate.validator.internal.util.Version","thread_name":"background-preinit","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:25.8904972+05:30","@version":"1","message":"Starting PolicyForgeApplication using Java 21.0.12.1 with PID 42320 (C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend\\target\\classes started by wdarshana in C:\\Users\\wdarshana\\Downloads\\PolicyForge\\backend)","logger_name":"com.horizon.policyforge.PolicyForgeApplication","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:25.8904972+05:30","@version":"1","message":"No active profile set, falling back to 1 default profile: \"default\"","logger_name":"com.horizon.policyforge.PolicyForgeApplication","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:26.7794365+05:30","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:26.8336944+05:30","@version":"1","message":"Finished Spring Data repository scanning in 47 ms. Found 3 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3051993+05:30","@version":"1","message":"Tomcat initialized with port 8080 (http)","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3152134+05:30","@version":"1","message":"Initializing ProtocolHandler [\"http-nio-8080\"]","logger_name":"org.apache.coyote.http11.Http11NioProtocol","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3172066+05:30","@version":"1","message":"Starting service [Tomcat]","logger_name":"org.apache.catalina.core.StandardService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3172066+05:30","@version":"1","message":"Starting Servlet engine: [Apache Tomcat/10.1.46]","logger_name":"org.apache.catalina.core.StandardEngine","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3947354+05:30","@version":"1","message":"Initializing Spring embedded WebApplicationContext","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.3947354+05:30","@version":"1","message":"Root WebApplicationContext: initialization completed in 1469 ms","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.6813235+05:30","@version":"1","message":"HikariPool-1 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.8348466+05:30","@version":"1","message":"HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:cb57cc62-0320-41fc-93e7-210b3abf451a user=SA","logger_name":"com.zaxxer.hikari.pool.HikariPool","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.8378585+05:30","@version":"1","message":"HikariPool-1 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.8845625+05:30","@version":"1","message":"Database: jdbc:h2:mem:cb57cc62-0320-41fc-93e7-210b3abf451a (H2 2.3)","logger_name":"org.flywaydb.core.FlywayExecutor","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9130528+05:30","@version":"1","message":"Schema history table \"PUBLIC\".\"flyway_schema_history\" does not exist yet","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9150512+05:30","@version":"1","message":"Successfully validated 3 migrations (execution time 00:00.014s)","logger_name":"org.flywaydb.core.internal.command.DbValidate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9200525+05:30","@version":"1","message":"Creating Schema History table \"PUBLIC\".\"flyway_schema_history\" ...","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9480583+05:30","@version":"1","message":"Current version of schema \"PUBLIC\": << Empty Schema >>","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9560651+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"1 - rule set version\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9692361+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"2 - audit entry\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9760346+05:30","@version":"1","message":"Migrating schema \"PUBLIC\" to version \"3 - quote\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:27.9860361+05:30","@version":"1","message":"Successfully applied 3 migrations to schema \"PUBLIC\", now at version v3 (execution time 00:00.013s)","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:28.0494153+05:30","@version":"1","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.jpa.internal.util.LogHelper","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:28.0919693+05:30","@version":"1","message":"HHH000412: Hibernate ORM core version 6.6.29.Final","logger_name":"org.hibernate.Version","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:28.1155065+05:30","@version":"1","message":"HHH000026: Second-level cache disabled","logger_name":"org.hibernate.cache.internal.RegionFactoryInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:28.3483522+05:30","@version":"1","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:28.3995275+05:30","@version":"1","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']\n\tDatabase driver: undefined/unknown\n\tDatabase version: 2.3.232\n\tAutocommit mode: undefined/unknown\n\tIsolation level: undefined/unknown\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","logger_name":"org.hibernate.orm.connections.pooling","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:29.1202326+05:30","@version":"1","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:29.1425425+05:30","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:29.6202109+05:30","@version":"1","message":"Adding welcome page: class path resource [static/index.html]","logger_name":"org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:29.8138253+05:30","@version":"1","message":"Exposing 1 endpoint beneath base path '/actuator'","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:29.9707622+05:30","@version":"1","message":"Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3656743+05:30","@version":"1","message":"Starting ProtocolHandler [\"http-nio-8080\"]","logger_name":"org.apache.coyote.http11.Http11NioProtocol","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3876753+05:30","@version":"1","message":"Initializing Spring DispatcherServlet 'dispatcherServlet'","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3876753+05:30","@version":"1","message":"Initializing Servlet 'dispatcherServlet'","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3886776+05:30","@version":"1","message":"Completed initialization in 1 ms","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3896765+05:30","@version":"1","message":"Tomcat started on port 8080 (http) with context path '/'","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.3997364+05:30","@version":"1","message":"Started PolicyForgeApplication in 5.12 seconds (process running for 5.445)","logger_name":"com.horizon.policyforge.PolicyForgeApplication","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.5975382+05:30","@version":"1","message":"Rule set seeded productCode=TERM_LIFE version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.6093605+05:30","@version":"1","message":"Rule set seeded productCode=MOTOR version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.6143577+05:30","@version":"1","message":"Rule set seeded productCode=HOUSEHOLD version=1","logger_name":"com.horizon.policyforge.service.RuleSetService","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:30.6153588+05:30","@version":"1","message":"Rule set seed load finished inserted=3","logger_name":"com.horizon.policyforge.config.RuleSetSeedLoader","thread_name":"main","level":"INFO","level_value":20000,"app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:31.2462676+05:30","@version":"1","message":"request completed method=GET path=/actuator/health status=200 durationMs=87","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"correlationId":"71b98a91-acce-4450-affd-c9000e94a9a4","app":"policyforge"}
+
+Running 2 tests using 2 workers
+
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1146647+05:30","@version":"1","message":"request completed method=GET path=/ status=200 durationMs=21","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-5","level":"INFO","level_value":20000,"correlationId":"51cf0ee8-d57f-4243-a102-ea55d59e25e2","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1146647+05:30","@version":"1","message":"request completed method=GET path=/ status=200 durationMs=22","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-8","level":"INFO","level_value":20000,"correlationId":"6214289b-551c-47ec-8aa6-244570a1bba0","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1351831+05:30","@version":"1","message":"request completed method=GET path=/assets/index-D977R5rJ.css status=200 durationMs=12","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-6","level":"INFO","level_value":20000,"correlationId":"c1935840-9603-405c-83c5-3fca0f893ff6","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1351831+05:30","@version":"1","message":"request completed method=GET path=/assets/index-jjCe7QqP.js status=200 durationMs=13","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-2","level":"INFO","level_value":20000,"correlationId":"61e1448a-18e2-48c6-88bd-4c6741af2f75","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1369028+05:30","@version":"1","message":"request completed method=GET path=/assets/index-D977R5rJ.css status=200 durationMs=10","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-7","level":"INFO","level_value":20000,"correlationId":"019b3780-97c3-4992-9b24-7a3a47c02226","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1369028+05:30","@version":"1","message":"request completed method=GET path=/assets/index-jjCe7QqP.js status=200 durationMs=12","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-3","level":"INFO","level_value":20000,"correlationId":"735d0a77-a3ae-49a6-9b68-b25ecb44119c","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1821243+05:30","@version":"1","message":"request completed method=GET path=/api/products status=200 durationMs=29","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-9","level":"INFO","level_value":20000,"correlationId":"c5093ee7-ad56-4d44-8369-ef52b6ae9d59","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:32.1821243+05:30","@version":"1","message":"request completed method=GET path=/api/products status=200 durationMs=29","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000,"correlationId":"534ae18c-bf8d-48d0-a8f0-d95c4e8dd71d","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:33.8090141+05:30","@version":"1","message":"Quote created quoteId=Q-645c767e-f082-4ffd-a5da-ac4b46b74964 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"http-nio-8080-exec-10","level":"INFO","level_value":20000,"correlationId":"19fbdfd1-65b8-4c81-9fd9-462c5bb9263a","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:33.8090141+05:30","@version":"1","message":"Quote created quoteId=Q-79b44ec7-f358-4ef8-8de2-5255e812b696 productCode=TERM_LIFE ruleVersion=1","logger_name":"com.horizon.policyforge.service.QuoteService","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"correlationId":"f985eb9f-b306-4542-b6e9-8c3e3631cea7","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:33.8180148+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=49","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-10","level":"INFO","level_value":20000,"correlationId":"19fbdfd1-65b8-4c81-9fd9-462c5bb9263a","app":"policyforge"}
+[WebServer] {"@timestamp":"2026-10-28T12:33:33.8180148+05:30","@version":"1","message":"request completed method=POST path=/api/quotes status=201 durationMs=49","logger_name":"com.horizon.policyforge.config.CorrelationIdFilter","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"correlationId":"f985eb9f-b306-4542-b6e9-8c3e3631cea7","app":"policyforge"}
+  ok 1 [desktop-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (2.0s)
+  ok 2 [mobile-chromium] › e2e\quote.spec.ts:4:1 › AC-01.1: term life quote shows 6850.00 (2.0s)
+
+  2 passed (22.1s)

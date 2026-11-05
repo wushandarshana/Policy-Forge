@@ -1,0 +1,27 @@
+# FIX-S5d red: lift the AppArmor userns restriction on GitHub; GitLab header (expected failures)
+.............F..F.........................................................................................................................................................unknown gate(s): no-such-gate; known: ac-audit, redact-evidence, hook-tests, hook-line-endings, ci-script-tests, oracle-fixture, actionlint, ci-schema
+..........
+======================================================================
+FAIL: test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test (test_ci_config.BubblewrapInstallTests.test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test)
+NFR-09.7: Ubuntu 24.04 denies bwrap its uid map through kernel.apparmor_restrict_unprivileged_userns, so the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 856, in test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test
+    self.assertIsNotNone(guard, "the sysctl runs only when the /proc file exists and the value is echoed")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : the sysctl runs only when the /proc file exists and the value is echoed
+
+======================================================================
+FAIL: test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement (test_ci_config.BubblewrapInstallTests.test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement)
+NFR-09.7: the GitLab claude-review job runs no sysctl; the header says the runner must allow unprivileged
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 873, in test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement
+    self.assertIn(fragment, flat)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 'unprivileged user namespaces' not found in "GitLab CI for merge requests into dev or main and for pushes to them (NFR-09.1 to NFR-09.3, NFR-09.6, NFR-09.7). .github/workflows/ci.yml runs the same five jobs with the same commands. Every image is pinned to a tag and digest and every downloaded file to a SHA-256 (NFR-09.2). Nothing else starts a pipeline, so a branch with a merge request does not run twice. Project settings (docs/harness-setup.md): - ANTHROPIC_API_KEY: masked, environment scope claude-review, not protected (protected variables never reach merge request pipelines of unprotected branches). Make claude-review a protected environment with deployment approval by the owner (Settings, CI/CD, Protected environments), so the key reaches a job only after that approval. Do not protect the feature branches for this: that would hand every merge request the key and share the dev and main caches with feature branches. - PF_GITLAB_REVIEW_TOKEN (optional, posts the review as a merge request note): masked, environment scope claude-review-comment, which is also a protected environment with deployment approval. Minimum scope: a project access token with the Reporter role and the api scope (GitLab has no narrower scope that can write a note), and an expiry date. It never reaches claude-review or any job that runs the merge request's code. - Optional: PF_REVIEW_MAX_BUDGET_USD. - claude-review installs bubblewrap (bwrap), which the Claude Code CLI needs to scrub its subprocess environment. The runner must allow user namespaces for bwrap (or run the job in privileged mode); otherwise the bwrap smoke test, and with it the review, fails closed. - The required check is ci-gate (stage gate): it fails unless the five gate jobs each wrote their status file. Manual, never blocks the pipeline. Writes only the missing -linux baselines (NFR-09.5). Download the PNGs from the job artifacts, look at every image and commit them in their own commit. Posts the review as a merge request note (NFR-09.7). PF_GITLAB_REVIEW_TOKEN is scoped to this job's environment. It takes only the claude-review artifact and runs the comment code of the target branch, never the merge request's. The required check (NFR-09.7): it fails unless each gate job wrote its status file in this pipeline, so a skipped, failed or cancelled job never counts as passing."
+
+----------------------------------------------------------------------
+Ran 180 tests in 95.751s
+
+FAILED (failures=2)

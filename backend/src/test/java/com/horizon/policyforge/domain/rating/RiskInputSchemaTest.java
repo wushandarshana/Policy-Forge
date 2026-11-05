@@ -59,6 +59,24 @@ class RiskInputSchemaTest {
     }
 
     @Test
+    @DisplayName("AC-01.9: an undeclared key is named in the shared sanitised form: 64 characters at most, anything outside A-Z a-z 0-9 _ . - replaced by an underscore, and keys that sanitise alike named once")
+    void unknownKeysAreNamedSanitised() {
+        String longKey = "unknownKey" + "Q".repeat(4990);
+        Map<String, Object> inputs = new LinkedHashMap<>(termLifeAc011());
+        inputs.put(longKey, "x");
+        inputs.put("<a b=\"c\" d='e'>", "x");
+        inputs.put("a b", "x");
+        inputs.put("a<b", "x");
+        inputs.put("valid.Key-1_x", "x");
+
+        List<RiskInputViolation> violations = validator.validate(RatingFixtures.termLifeV1(), inputs);
+
+        assertThat(violations).extracting(RiskInputViolation::field).containsExactlyInAnyOrder(
+                longKey.substring(0, 64), "_a_b__c__d__e__", "a_b", "valid.Key-1_x");
+        assertThat(violations).allSatisfy(v -> assertThat(v.message()).isEqualTo("is not an accepted input"));
+    }
+
+    @Test
     @DisplayName("AC-01.9: a MOTOR or HOUSEHOLD request with an extra key is rejected naming that key")
     void unknownKeysOnOtherProducts() {
         Map<String, Object> motor = new LinkedHashMap<>(motorAc012());

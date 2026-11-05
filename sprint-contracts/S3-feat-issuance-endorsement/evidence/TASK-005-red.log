@@ -1,0 +1,329 @@
+# TASK-005 red run. Command: ./mvnw -o -Dskip.frontend=true -Djacoco.skip=true -Dmaven.test.failure.ignore=true -Dtest='EndorsementRequestParserTest,AppendOnlyArchTest' -Dit.test='Endorsement*IT,RoleBoundaryIT,PolicyBodyLimitIT' -Dsurefire.failIfNoSpecifiedTests=false verify
+# Only the Maven [INFO]/[ERROR]/[WARNING] lines are kept (the Spring DEBUG output of the log-capture tests was dropped); credentials redacted with scripts/redact_evidence.py.
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.horizon:policyforge >-----------------------
+[INFO] Building PolicyForge 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (prepare-agent) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] argLine set to empty
+[INFO] 
+[INFO] --- frontend:1.15.1:install-node-and-npm (install-node-and-npm) @ policyforge ---
+[INFO] testFailureIgnore property is ignored in non test phases
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-ci) @ policyforge ---
+[INFO] testFailureIgnore property is ignored in non test phases
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- frontend:1.15.1:npm (npm-build) @ policyforge ---
+[INFO] testFailureIgnore property is ignored in non test phases
+[INFO] Skipping execution.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ policyforge ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 14 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:copy-resources (copy-spa) @ policyforge ---
+[INFO] Skipping the execution.
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ policyforge ---
+[INFO] skip non existing resourceDirectory C:\Users\wdarshana\Downloads\PolicyForge\backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ policyforge ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[ERROR] Tests run: 30, Failures: 2, Errors: 1, Skipped: 0, Time elapsed: 2.337 s <<< FAILURE! -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[ERROR] com.horizon.policyforge.architecture.AppendOnlyArchTest.appendOnlyRulesCoverEndorsementsAndPolicyVersions -- Time elapsed: 0.009 s <<< ERROR!
+[ERROR] com.horizon.policyforge.architecture.AppendOnlyArchTest.endorsementRepositoryHasNoDelete -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.architecture.AppendOnlyArchTest.endorsementEntityIsImmutable -- Time elapsed: 0.003 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[ERROR] Tests run: 44, Failures: 37, Errors: 6, Skipped: 0, Time elapsed: 0.274 s <<< FAILURE! -- in com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.badPostcodePassesTheShapeCheck -- Time elapsed: 0.004 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.readsSumInsuredChanges -- Time elapsed: 0.002 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredKeysDependOnTheProduct -- Time elapsed: 0.044 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[1] -- Time elapsed: 0.024 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[2] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[3] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[4] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[5] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[6] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[7] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[8] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[9] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[10] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[11] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[12] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[13] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[14] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[15] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.addressShapeErrorsNameTheField(String, Map, List)[16] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.absentDateIsNoDate -- Time elapsed: 0.002 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[1] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[2] -- Time elapsed: 0.004 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[3] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[4] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[5] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[6] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField(String, Map, List)[7] -- Time elapsed: 0.001 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.readsANominee -- Time elapsed: 0.001 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[1] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[2] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[3] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[4] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[5] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[6] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[7] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[8] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[9] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[10] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[11] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[12] -- Time elapsed: 0.003 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.nomineeShapeErrorsNameTheField(String, Map, List)[13] -- Time elapsed: 0.002 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.businessValuesPassTheShapeCheck -- Time elapsed: 0.001 s <<< ERROR!
+[ERROR] com.horizon.policyforge.domain.endorsement.EndorsementRequestParserTest.readsAnAddressChange -- Time elapsed: 0.001 s <<< ERROR!
+[INFO] Running com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.475 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   AppendOnlyArchTest.endorsementEntityIsImmutable:292 Rule 'classes that have simple name 'EndorsementEntity' should reside in a package 'com.horizon..repository..' and should be annotated with @Entity and should be annotated with @Immutable, because NFR-02: EndorsementEntity is append-only, a new fact is a new row' failed to check any classes. This means either that no classes have been p
+[ERROR]   AppendOnlyArchTest.endorsementRepositoryHasNoDelete:303 Rule 'classes that have simple name 'EndorsementRepository' should reside in a package 'com.horizon..repository..' and should be interfaces and should be assignable to org.springframework.data.repository.Repository and should not be assignable to org.springframework.data.repository.CrudRepository and should not be assignable to org.
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.addressShapeErrorsNameTheField:145 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.nomineeShapeErrorsNameTheField:194 
+[ERROR]   EndorsementRequestParserTest.sumInsuredKeysDependOnTheProduct:265 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR]   EndorsementRequestParserTest.sumInsuredShapeErrorsNameTheField:243 
+[ERROR] Errors: 
+[ERROR]   AppendOnlyArchTest.appendOnlyRulesCoverEndorsementsAndPolicyVersions:314 » IllegalArgument JavaClasses do not contain JavaClass of type com.horizon.policyforge.repository.EndorsementEntity
+[ERROR]   EndorsementRequestParserTest.absentDateIsNoDate:73 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.effectiveDate()" because the return value of "com.horizon.policyforge.domain.endorsement.EndorsementRequestParser$Parsed.request()" is null
+[ERROR]   EndorsementRequestParserTest.badPostcodePassesTheShapeCheck:218 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.address()" because the return value of "com.horizon.policyforge.domain.endorsement.EndorsementRequestParser$Parsed.request()" is null
+[ERROR]   EndorsementRequestParserTest.businessValuesPassTheShapeCheck:207 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.nominee()" because the return value of "com.horizon.policyforge.domain.endorsement.EndorsementRequestParser$Parsed.request()" is null
+[ERROR]   EndorsementRequestParserTest.readsANominee:85 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.nominee()" because the return value of "com.horizon.policyforge.domain.endorsement.EndorsementRequestParser$Parsed.request()" is null
+[ERROR]   EndorsementRequestParserTest.readsAnAddressChange:61 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.type()" because "request" is null
+[ERROR]   EndorsementRequestParserTest.readsSumInsuredChanges:98 NullPointer Cannot invoke "com.horizon.policyforge.domain.endorsement.EndorsementRequest.newSumInsured()" because "single" is null
+[INFO] 
+[ERROR] Tests run: 79, Failures: 39, Errors: 7, Skipped: 0
+[INFO] 
+[ERROR] There are test failures.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ policyforge ---
+[INFO] Building jar: C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.6:repackage (repackage) @ policyforge ---
+[INFO] Replacing main artifact C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\wdarshana\Downloads\PolicyForge\backend\target\policyforge-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.4:integration-test (default) @ policyforge ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.horizon.policyforge.web.EndorsementAtomicityIT
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 9.104 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementAtomicityIT
+[ERROR] com.horizon.policyforge.web.EndorsementAtomicityIT.aFailureAfterTheEndorsementInsertRollsEverythingBack -- Time elapsed: 1.203 s <<< ERROR!
+[INFO] Running com.horizon.policyforge.web.EndorsementConflictIT
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 22.12 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementConflictIT
+[ERROR] com.horizon.policyforge.web.EndorsementConflictIT.concurrentEndorsementsNeverRepeatANumber -- Time elapsed: 0.408 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementConflictIT.theLoserOfARaceGetsAConflict -- Time elapsed: 20.22 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.EndorsementIT
+[ERROR] Tests run: 13, Failures: 8, Errors: 5, Skipped: 0, Time elapsed: 4.375 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementIT
+[ERROR] com.horizon.policyforge.web.EndorsementIT.shapeErrorsAreRefusedByName -- Time elapsed: 0.331 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.checksRunInTheDocumentedOrder -- Time elapsed: 0.227 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.otherProductsSumInsuredKeysAreRefused -- Time elapsed: 0.366 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.totalOfOneHundredIsAllowedAndRelationshipsAreChecked -- Time elapsed: 0.276 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.nomineeShareAndCountAreLimited -- Time elapsed: 0.273 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.badPostcodeIsRefused -- Time elapsed: 0.199 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.nomineeIsNotSupportedOnMotor -- Time elapsed: 0.176 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.threeEndorsementsAreNumberedAndLinked -- Time elapsed: 0.236 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.effectiveDateWindowIsChecked -- Time elapsed: 0.291 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.changeAddressAppendsVersionTwoAndEndorsesThePolicy -- Time elapsed: 0.285 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.endorsementsCannotBeChangedOrDeleted -- Time elapsed: 0.312 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.noMutatingVerbIsMappedUnderApi -- Time elapsed: 0.017 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementIT.versionTwoTakesTheEndorsementDate -- Time elapsed: 0.254 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.EndorsementLogCaptureIT
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 2.914 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementLogCaptureIT
+[ERROR] com.horizon.policyforge.web.EndorsementLogCaptureIT.rejectedRequestsLogNoSubmittedValues(CapturedOutput) -- Time elapsed: 1.153 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementLogCaptureIT.endorseAndPreviewLogIdsOnly(CapturedOutput) -- Time elapsed: 0.707 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.EndorsementPreviewIT
+[ERROR] Tests run: 5, Failures: 2, Errors: 3, Skipped: 0, Time elapsed: 1.321 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementPreviewIT
+[ERROR] com.horizon.policyforge.web.EndorsementPreviewIT.previewRunsTheSameChecks -- Time elapsed: 0.202 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementPreviewIT.previewMatchesTheConfirmedEndorsement -- Time elapsed: 0.185 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementPreviewIT.previewAtTheEndsOfTheTerm -- Time elapsed: 0.234 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementPreviewIT.previewOfOtherTypesDoesNotChangeThePremium -- Time elapsed: 0.190 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementPreviewIT.previewHonoursOwnership -- Time elapsed: 0.497 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.EndorsementRatingIT
+[ERROR] Tests run: 7, Failures: 5, Errors: 2, Skipped: 0, Time elapsed: 1.959 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementRatingIT
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.termLifeSumInsuredIncreaseIsReRatedAndProRated -- Time elapsed: 0.260 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.sumInsuredMustBeInRangeAndChange -- Time elapsed: 0.355 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.householdComponentsAreReplaced -- Time elapsed: 0.428 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.reverseChangeIsACreditAndTermStartIsTheFullDifference -- Time elapsed: 0.254 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.motorVehicleValueIsReplaced -- Time elapsed: 0.247 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.headersFollowTheCurrentVersion -- Time elapsed: 0.227 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementRatingIT.householdChecksUseTheComponentsAndTheirTotal -- Time elapsed: 0.173 s <<< ERROR!
+[INFO] Running com.horizon.policyforge.web.EndorsementRuleVersionIT
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.367 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementRuleVersionIT
+[ERROR] com.horizon.policyforge.web.EndorsementRuleVersionIT.endorsementUsesThePoliciesOwnRuleVersion -- Time elapsed: 0.405 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.EndorsementSecurityIT
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.505 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementSecurityIT
+[ERROR] com.horizon.policyforge.web.EndorsementSecurityIT.onlyTheOwningCustomerCanEndorseOrPreview -- Time elapsed: 0.171 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementSecurityIT.anonymousRequestsAreRefused -- Time elapsed: 0.157 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementSecurityIT.onlyJsonIsAccepted -- Time elapsed: 0.168 s <<< ERROR!
+[INFO] Running com.horizon.policyforge.web.EndorsementStateIT
+[ERROR] Tests run: 14, Failures: 11, Errors: 2, Skipped: 0, Time elapsed: 4.151 s <<< FAILURE! -- in com.horizon.policyforge.web.EndorsementStateIT
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.terminalPoliciesCannotBeEndorsed(PolicyStatus)[1] -- Time elapsed: 0.174 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.terminalPoliciesCannotBeEndorsed(PolicyStatus)[2] -- Time elapsed: 0.172 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.inForcePoliciesCanBeEndorsed(PolicyStatus)[1] -- Time elapsed: 0.233 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.inForcePoliciesCanBeEndorsed(PolicyStatus)[2] -- Time elapsed: 0.229 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.inForcePoliciesCanBeEndorsed(PolicyStatus)[3] -- Time elapsed: 0.231 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[2] -- Time elapsed: 0.295 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[3] -- Time elapsed: 0.313 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[4] -- Time elapsed: 0.316 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[5] -- Time elapsed: 0.309 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[6] -- Time elapsed: 0.522 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[7] -- Time elapsed: 0.342 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.statusFollowsTheLastTransition(String, List)[8] -- Time elapsed: 0.346 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.EndorsementStateIT.stateIsCheckedAfterShapeAndBeforeTheRules -- Time elapsed: 0.359 s <<< FAILURE!
+[INFO] Running com.horizon.policyforge.web.PolicyBodyLimitIT
+[ERROR] Tests run: 6, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 2.213 s <<< FAILURE! -- in com.horizon.policyforge.web.PolicyBodyLimitIT
+[ERROR] com.horizon.policyforge.web.PolicyBodyLimitIT.oversizedEndorseAndPreviewAreRefused -- Time elapsed: 0.112 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.PolicyBodyLimitIT.oversizedEndorseOnEncodedPathsIsRefused -- Time elapsed: 0.140 s <<< ERROR!
+[ERROR] com.horizon.policyforge.web.PolicyBodyLimitIT.chunkedOversizedEndorseIsRefused -- Time elapsed: 0.112 s <<< ERROR!
+[INFO] Running com.horizon.policyforge.web.RoleBoundaryIT
+[ERROR] Tests run: 48, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 5.501 s <<< FAILURE! -- in com.horizon.policyforge.web.RoleBoundaryIT
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.underwriterCannotCallCustomerEndpoints(Call)[5] -- Time elapsed: 0.075 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.underwriterCannotCallCustomerEndpoints(Call)[6] -- Time elapsed: 0.075 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.adminCannotCallCustomerEndpoints(Call)[5] -- Time elapsed: 0.070 s <<< FAILURE!
+[ERROR] com.horizon.policyforge.web.RoleBoundaryIT.adminCannotCallCustomerEndpoints(Call)[6] -- Time elapsed: 0.100 s <<< FAILURE!
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   EndorsementConflictIT.concurrentEndorsementsNeverRepeatANumber:150 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementConflictIT.theLoserOfARaceGetsAConflict:104 [the loser read the policy and reached its endorsement insert] 
+[ERROR]   EndorsementIT.changeAddressAppendsVersionTwoAndEndorsesThePolicy:77 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.effectiveDateWindowIsChecked:359 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.endorsementsCannotBeChangedOrDeleted:413 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.noMutatingVerbIsMappedUnderApi:406 [the endorse and preview POST mappings exist] 
+[ERROR]   EndorsementIT.nomineeShareAndCountAreLimited:269 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.threeEndorsementsAreNumberedAndLinked:323 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.totalOfOneHundredIsAllowedAndRelationshipsAreChecked:304 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementIT.versionTwoTakesTheEndorsementDate:134 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementLogCaptureIT.endorseAndPreviewLogIdsOnly:77 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementLogCaptureIT.rejectedRequestsLogNoSubmittedValues:116 
+[ERROR]   EndorsementPreviewIT.previewAtTheEndsOfTheTerm:67 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementPreviewIT.previewHonoursOwnership:141->EndorsementTestSupport.problem:102 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRatingIT.headersFollowTheCurrentVersion:177 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRatingIT.householdComponentsAreReplaced:110 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRatingIT.motorVehicleValueIsReplaced:91 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRatingIT.reverseChangeIsACreditAndTermStartIsTheFullDifference:70 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRatingIT.termLifeSumInsuredIncreaseIsReRatedAndProRated:39 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementRuleVersionIT.endorsementUsesThePoliciesOwnRuleVersion:77 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.inForcePoliciesCanBeEndorsed:96 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.inForcePoliciesCanBeEndorsed:96 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.inForcePoliciesCanBeEndorsed:96 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.stateIsCheckedAfterShapeAndBeforeTheRules:84->EndorsementTestSupport.problem:102 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   EndorsementStateIT.statusFollowsTheLastTransition:148 [{"type":"about:blank","title":"Not Found","status":404,"detail":"The requested resource was not found.","instance":"urn:policyforge:problem:not-found"}] 
+[ERROR]   RoleBoundaryIT.adminCannotCallCustomerEndpoints:176 
+[ERROR]   RoleBoundaryIT.adminCannotCallCustomerEndpoints:176 
+[ERROR]   RoleBoundaryIT.underwriterCannotCallCustomerEndpoints:170 
+[ERROR]   RoleBoundaryIT.underwriterCannotCallCustomerEndpoints:170 
+[ERROR] Errors: 
+[ERROR]   EndorsementAtomicityIT.aFailureAfterTheEndorsementInsertRollsEverythingBack:74->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementIT.badPostcodeIsRefused:157->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementIT.checksRunInTheDocumentedOrder:228->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementIT.nomineeIsNotSupportedOnMotor:253->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementIT.otherProductsSumInsuredKeysAreRefused:213->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementIT.shapeErrorsAreRefusedByName:173->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementPreviewIT.previewMatchesTheConfirmedEndorsement:34->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementPreviewIT.previewOfOtherTypesDoesNotChangeThePremium:82->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementPreviewIT.previewRunsTheSameChecks:104->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementRatingIT.householdChecksUseTheComponentsAndTheirTotal:158->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementRatingIT.sumInsuredMustBeInRangeAndChange:133->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementSecurityIT.anonymousRequestsAreRefused:53->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementSecurityIT.onlyJsonIsAccepted:71->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementSecurityIT.onlyTheOwningCustomerCanEndorseOrPreview:28->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementStateIT.terminalPoliciesCannotBeEndorsed:44->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   EndorsementStateIT.terminalPoliciesCannotBeEndorsed:44->EndorsementTestSupport.snapshot:90 » BadSqlGrammar StatementCallback; bad SQL grammar [select count(*) from endorsement]
+[ERROR]   PolicyBodyLimitIT.chunkedOversizedEndorseIsRefused:211->endorsementRows:110 » BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select count(*) from endorsement where policy_number = ?]
+[ERROR]   PolicyBodyLimitIT.oversizedEndorseAndPreviewAreRefused:170->endorsementRows:110 » BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select count(*) from endorsement where policy_number = ?]
+[ERROR]   PolicyBodyLimitIT.oversizedEndorseOnEncodedPathsIsRefused:195->endorsementRows:110 » BadSqlGrammar PreparedStatementCallback; bad SQL grammar [select count(*) from endorsement where policy_number = ?]
+[INFO] 
+[ERROR] Tests run: 102, Failures: 35, Errors: 19, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.4:verify (default) @ policyforge ---
+[ERROR] There are test failures.
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (report) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-overall) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] 
+[INFO] --- jacoco:0.8.13:check (check-domain) @ policyforge ---
+[INFO] Skipping JaCoCo execution because property jacoco.skip is set.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:04 min
+[INFO] Finished at: 2026-11-03T20:06:16+05:30
+[INFO] ------------------------------------------------------------------------
+
+=== Evidence summary (TASK-005 red) ===
+Red run: surefire 79 tests selected (EndorsementRequestParserTest, AppendOnlyArchTest), 39 failures and 7 errors; failsafe 102 tests selected, 35 failures and 19 errors.
+Surefire: AppendOnlyArchTest AC-06.7 existence checks fail while EndorsementEntity and EndorsementRepository are absent; EndorsementRequestParserTest fails against the compiling stub (it accepts nothing and returns no request). Failsafe: the endorse and preview endpoints answer 404 or 403 (assertion failures), the endorsement table does not exist (SQL errors on the row-count snapshots), the held-insert and failure-injection tests never reach the endorsement write, and the extended RoleBoundaryIT fails for underwriter1 and admin1 on endorse and preview.
+Failing tests cover AC-06.1 (address change, version 2, shape errors, check order, POSTCODE_INVALID), AC-06.2 (re-rating for TERM_LIFE, MOTOR and HOUSEHOLD, 9490.00 and 1330.85, rule version isolation, preview), AC-06.3 (atomic rollback with an injected failure), AC-06.4 (NOMINEE_NOT_SUPPORTED), AC-06.5 (NOMINEE_SHARE_EXCEEDED, NOMINEE_LIMIT_REACHED), AC-06.6 (sequence 1, 2, 3, versions 2, 3, 4, effective-date window, concurrent endorsements and POLICY_UPDATE_CONFLICT), AC-06.7 (append-only ArchUnit rules, no PUT, PATCH or DELETE), AC-10.2 (409 invalid-policy-state for CANCELLED and LAPSED), AC-10.4 (status equals the last transition over eight sequences), NFR-03.1 (log capture), NFR-04.1 (role boundary), NFR-04.3 (415) and NFR-04.4 (413, encoded paths, chunked).

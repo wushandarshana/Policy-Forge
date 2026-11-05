@@ -1,5 +1,8 @@
 package com.horizon.policyforge.web;
 
+import com.horizon.policyforge.domain.policy.InvalidPolicyStateException;
+import com.horizon.policyforge.domain.policy.PolicyNumberSequenceExhaustedException;
+import com.horizon.policyforge.service.ConflictException;
 import com.horizon.policyforge.service.ResourceNotFoundException;
 import com.horizon.policyforge.service.ValidationFailedException;
 import com.horizon.policyforge.service.ValidationFailedException.FieldViolation;
@@ -33,7 +36,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /**
  * Central mapping of every error to RFC 7807 {@code application/problem+json} (contract C3).
  * Validation failures are 400 with {@code errors[]} of {@code {field, message}}. Messages never echo submitted values
- * and unexpected errors never leak internals (NFR-03).
+ * and unexpected errors never leak internals (NFR-03). Every problem's {@code instance} is the fixed URN of its type,
+ * never the request path (NFR-04.1, contract C7), and a 401 carries no {@code WWW-Authenticate} header (KD-007).
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,9 +49,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     static final String NOT_FOUND_DETAIL = "The requested resource was not found.";
     static final String TOO_LARGE_DETAIL = "The request body is too large.";
+    static final String INVALID_POLICY_STATE_TYPE = "/problems/invalid-policy-state";
+    static final String INVALID_POLICY_STATE_CODE = "INVALID_POLICY_STATE";
+    static final String SEQUENCE_EXHAUSTED_TYPE = "/problems/policy-number-sequence-exhausted";
+    static final String SEQUENCE_EXHAUSTED_CODE = "POLICY_NUMBER_SEQUENCE_EXHAUSTED";
+    static final String SEQUENCE_EXHAUSTED_DETAIL = "No further policy numbers can be issued for this product at the moment.";
     private static final URI ABOUT_BLANK = URI.create("about:blank");
-    /** Spring fills a missing instance with the request path, so a 404 carries this fixed value instead (F-4). */
-    private static final URI NOT_FOUND_INSTANCE = URI.create("urn:policyforge:problem:not-found");
 
     /** One entry of the {@code errors[]} array. */
     public record ApiFieldError(String field, String message) {
@@ -55,18 +62,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Framework errors (415, 405, unreadable body, ...) get Spring's default problem body, whose detail can repeat the
-     * request's content type or method. Replace that detail with a fixed text per status (F-4).
+     * request's content type or method. Replace that detail with a fixed text per status (F-4). Spring also fills a
+     * missing {@code instance} with the request path, which can carry anything a caller typed, so every problem written
+     * here gets the fixed URN of its type instead (NFR-04.1, contract C7).
      */
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         ResponseEntity<Object> response = super.handleExceptionInternal(ex, body, headers, statusCode, request);
-        if (response != null && response.getBody() instanceof ProblemDetail problem
-                && ABOUT_BLANK.equals(problem.getType())) {
-            problem.setDetail(fixedDetail(response.getStatusCode()));
-            if (response.getStatusCode().value() == HttpStatus.NOT_FOUND.value()) {
-                problem.setInstance(NOT_FOUND_INSTANCE);
+        if (response != null && response.getBody() instanceof ProblemDetail problem) {
+            if (ABOUT_BLANK.equals(problem.getType())) {
+                problem.setDetail(fixedDetail(response.getStatusCode()));
             }
+            problem.setInstance(ProblemInstances.of(problem.getType(), response.getStatusCode()));
         }
         return response;
     }
@@ -108,43 +116,77 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ProblemDetail handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request) {
+    public ProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
         List<ApiFieldError> errors = ex.getConstraintViolations().stream()
                 .map(violation -> new ApiFieldError(lastNode(violation.getPropertyPath()), violation.getMessage()))
                 .toList();
-        return withInstance(validationProblem(errors), request);
+        return withInstance(validationProblem(errors));
     }
 
     @ExceptionHandler(ValidationFailedException.class)
-    public ProblemDetail handleValidationFailed(ValidationFailedException ex, HttpServletRequest request) {
+    public ProblemDetail handleValidationFailed(ValidationFailedException ex) {
         List<ApiFieldError> errors = ex.violations().stream()
                 .map((FieldViolation v) -> new ApiFieldError(v.field(), v.message()))
                 .toList();
-        return withInstance(validationProblem(errors), request);
+        ProblemDetail problem = validationProblem(errors);
+        if (ex.code() != null) {
+            problem.setProperty("code", ex.code());
+        }
+        return withInstance(problem);
+    }
+
+    /** 409 with the named business {@code code} and a fixed detail per code, never echoing input (contract C3). */
+    @ExceptionHandler(ConflictException.class)
+    public ProblemDetail handleConflict(ConflictException ex) {
+        ProblemDetail problem = problem(HttpStatus.CONFLICT, "Conflict", "/problems/conflict",
+                conflictDetail(ex.code()));
+        problem.setProperty("code", ex.code());
+        return withInstance(problem);
+    }
+
+    /**
+     * 409 for a move the policy lifecycle does not allow, for example endorsing a CANCELLED or LAPSED policy (AC-10.2).
+     * The detail is fixed: it never names the statuses, the policy or anything the caller sent.
+     */
+    @ExceptionHandler(InvalidPolicyStateException.class)
+    public ProblemDetail handleInvalidPolicyState(InvalidPolicyStateException ex) {
+        ProblemDetail problem = problem(HttpStatus.CONFLICT, "Invalid policy state", INVALID_POLICY_STATE_TYPE,
+                "The policy is not in a state that allows this action.");
+        problem.setProperty("code", INVALID_POLICY_STATE_CODE);
+        return withInstance(problem);
+    }
+
+    /**
+     * 503 when the 6-digit sequence of a product and issue year has handed out 999999 (AC-05.2). It is an availability
+     * condition, not a caller error. The issuing transaction has rolled back, so the application is still APPROVED and
+     * nothing was written. The detail is fixed: no counter value, SQL or constraint text.
+     */
+    @ExceptionHandler(PolicyNumberSequenceExhaustedException.class)
+    public ProblemDetail handleSequenceExhausted(PolicyNumberSequenceExhaustedException ex) {
+        ProblemDetail problem = problem(HttpStatus.SERVICE_UNAVAILABLE, "Policy numbers unavailable",
+                SEQUENCE_EXHAUSTED_TYPE, SEQUENCE_EXHAUSTED_DETAIL);
+        problem.setProperty("code", SEQUENCE_EXHAUSTED_CODE);
+        return withInstance(problem);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
         // Fixed detail and instance: the message and the path name the requested code (or a date), and a 404 never
         // echoes what was asked for (F-4).
-        ProblemDetail problem = problem(HttpStatus.NOT_FOUND, "Not found", "/problems/not-found", NOT_FOUND_DETAIL);
-        problem.setInstance(NOT_FOUND_INSTANCE);
-        return problem;
+        return withInstance(problem(HttpStatus.NOT_FOUND, "Not found", "/problems/not-found", NOT_FOUND_DETAIL));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ProblemDetail handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+    public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
         return withInstance(problem(HttpStatus.FORBIDDEN, "Forbidden", "/problems/forbidden",
-                "You do not have permission to perform this action."), request);
+                "You do not have permission to perform this action."));
     }
 
+    /** 401 with no {@code WWW-Authenticate} header: a Basic challenge would make a browser cache credentials (KD-007). */
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ProblemDetail> handleAuthentication(AuthenticationException ex, HttpServletRequest request) {
-        ProblemDetail body = withInstance(problem(HttpStatus.UNAUTHORIZED, "Unauthorized", "/problems/unauthorized",
-                "Authentication is required."), request);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .header(HttpHeaders.WWW_AUTHENTICATE, ProblemJsonSecurityHandler.CHALLENGE)
-                .body(body);
+    public ProblemDetail handleAuthentication(AuthenticationException ex) {
+        return withInstance(problem(HttpStatus.UNAUTHORIZED, "Unauthorized", "/problems/unauthorized",
+                "Authentication is required."));
     }
 
     @ExceptionHandler(Exception.class)
@@ -152,7 +194,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         // The correlationId is already on every log line through the MDC.
         LOG.error("Unhandled error method={} path={}", request.getMethod(), request.getRequestURI(), ex);
         return withInstance(problem(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error",
-                "/problems/internal-error", "An unexpected error occurred."), request);
+                "/problems/internal-error", "An unexpected error occurred."));
+    }
+
+    private static String conflictDetail(String code) {
+        return switch (code) {
+            case ConflictException.QUOTE_ALREADY_APPLIED -> "An application already exists for this quote.";
+            case ConflictException.INVALID_APPLICATION_STATE ->
+                    "The application is not in a state that allows this action.";
+            case ConflictException.POLICY_UPDATE_CONFLICT ->
+                    "The policy was changed by another request. Review it and try again.";
+            case ConflictException.NO_PENDING_RENEWAL -> "There is no renewal offer to pay for this policy.";
+            case ConflictException.RENEWAL_PAYMENT_WINDOW_CLOSED ->
+                    "The period in which this renewal can be paid has ended.";
+            default -> "The request conflicts with the current state of the resource.";
+        };
     }
 
     private static ProblemDetail validationProblem(List<ApiFieldError> errors) {
@@ -169,8 +225,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
-    private static ProblemDetail withInstance(ProblemDetail problem, HttpServletRequest request) {
-        problem.setInstance(URI.create(request.getRequestURI()));
+    /** Sets the fixed URN of the problem's type as its instance. It is never derived from the request (NFR-04.1). */
+    private static ProblemDetail withInstance(ProblemDetail problem) {
+        problem.setInstance(ProblemInstances.of(problem.getType(), HttpStatusCode.valueOf(problem.getStatus())));
         return problem;
     }
 

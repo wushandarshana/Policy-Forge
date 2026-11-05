@@ -126,7 +126,7 @@ class RuleSetPublishIT {
         assertThat(storedV1).as("v1 JSON byte for byte").isEqualTo(RuleSetFixtures.seedText("motor", 1));
 
         List<Map<String, Object>> audit = jdbc.queryForList(
-                "select actor_id, action, entity_type, entity_id from audit_entry order by id");
+                "select actor_id, action, entity_type, entity_id from audit_entry where entity_type = 'RuleSetVersion' order by id");
         assertThat(audit).hasSize(1);
         assertThat(audit.get(0).get("ACTOR_ID")).isEqualTo(PM_USER);
         assertThat(audit.get(0).get("ENTITY_TYPE")).isEqualTo("RuleSetVersion");
@@ -179,7 +179,7 @@ class RuleSetPublishIT {
         assertThat(fields).contains("sumInsured", "underwriting.rules[0].all[0].op", "underwriting.rules[1].code");
 
         assertThat(storedVersions("MOTOR")).as("nothing stored").isEqualTo(1);
-        assertThat(jdbc.queryForObject("select count(*) from audit_entry", Integer.class))
+        assertThat(jdbc.queryForObject("select count(*) from audit_entry where entity_type = 'RuleSetVersion'", Integer.class))
                 .as("a rejected publish is not audited as a publish").isZero();
     }
 

@@ -1,0 +1,142 @@
+# TASK-004 green run: ./mvnw verify -Dskip.frontend=true (full suite, JaCoCo on), real time 2m49s
+# surefire 455 tests, failsafe 466 tests: 0 failures, 0 errors, 0 skipped. ArchUnit green (AppendOnly, DomainPurity, Layered, MoneyPrecision, ControllerPlacement). BUILD SUCCESS
+# IDs covered: AC-07.1 AC-07.2 AC-07.3 AC-07.4 AC-07.5 AC-07.6 (renewal cycle, scheduler, pay, current paid term, V10 rule version), AC-10.4 (real sequences), NFR-03.1 (log capture of cycle and pay),
+#   NFR-04.1 (roles, ownership, no Basic challenge, sanitised keys), NFR-04.3 (415), NFR-04.4 (413 incl. percent-encoded path); V1-V9 byte-identical to 12f95c3
+
+== maven result lines ==
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.config.SchedulingConfigTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.domain.renewal.RenewalPolicyTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.repository.PolicyEntityTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.repository.PolicyTermEntityTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.repository.PolicyTermMigrationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.service.RenewalSchedulerTest
+[INFO] Tests run: 455, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.PolicyLifecycleSequenceIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.PolicyViewIT
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalBodyLimitIT
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalCurrentTermIT
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalCycleIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalIsolationIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalLogCaptureIT
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalPaymentIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalRaceIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalRuleVersionIT
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, -- in com.horizon.policyforge.web.RenewalSecurityIT
+[INFO] Tests run: 466, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Analyzed bundle 'PolicyForge' with 217 classes
+[INFO] Analyzed bundle 'policyforge' with 217 classes
+[INFO] All coverage checks have been met.
+[INFO] Analyzed bundle 'policyforge' with 88 classes
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+
+== oracle cross-check (premium_check.py, independent exact-decimal oracle) ==
+-- AC-07.1 TERM_LIFE renewal offer, AC-04.1 profile at v1 (expect 6850.00):
+6850.00  (factors: v1.json)
+-- AC-07.3 G-1 fixture (TERM_LIFE v1 with band 31-40 factor 1.30), AC-04.1 profile (expect 7400.00):
+AC-04.1 profile, TERM_LIFE v1.json -> 6850.00
+AC-04.1 profile, TERM_LIFE v2.json -> 7400.00
+-- AC-07.1 MOTOR renewal offer (AC-01.2 profile, expect 15150.00):
+15150.00  (factors: v1.json)
+-- AC-06.2 preview unchanged by an unpaid offer: 6850.00 to 9490.00 effective 2027-05-01 (expect 1330.85; 184 of 365 days):
+1330.85
+-- spec-examples:
+case                      expected      oracle  status
+AC-01.1                    6850.00     6850.00  PASS
+AC-01.2                   15150.00    15150.00  PASS
+AC-01.3                   11350.00    11350.00  PASS
+AC-01.6                   18150.00    18150.00  PASS
+AC-06.2 new premium        9490.00     9490.00  PASS
+AC-06.2 adjustment         1330.85     1330.85  PASS
+AC-08.1                    4473.29     4473.29  PASS
+AC-08.2                    6850.00     6850.00  PASS
+AC-08.3                       0.00        0.00  PASS
+
+== ac_audit.py --offline --no-write ==
+**Covered 81 / 81 ACs (100%)**   parent-only 0   not covered (incl. parent-only) 0
+
+== green summary: 921 tests in the reports, 0 failing ==
+AC-01.1: 3 passing, 0 failing
+AC-01.2: 2 passing, 0 failing
+AC-01.3: 2 passing, 0 failing
+AC-01.4: 1 passing, 0 failing
+AC-01.5: 2 passing, 0 failing
+AC-01.6: 2 passing, 0 failing
+AC-01.7: 16 passing, 0 failing
+AC-01.8: 3 passing, 0 failing
+AC-01.9: 11 passing, 0 failing
+AC-01.10: 8 passing, 0 failing
+AC-01.12: 4 passing, 0 failing
+AC-02: 2 passing, 0 failing
+AC-02.1: 3 passing, 0 failing
+AC-02.2: 3 passing, 0 failing
+AC-02.3: 2 passing, 0 failing
+AC-02.4: 5 passing, 0 failing
+AC-02.5: 16 passing, 0 failing
+AC-02.6: 7 passing, 0 failing
+AC-02.7: 1 passing, 0 failing
+AC-03.1: 22 passing, 0 failing
+AC-03.2: 41 passing, 0 failing
+AC-03.3: 3 passing, 0 failing
+AC-03.4: 9 passing, 0 failing
+AC-03.5: 5 passing, 0 failing
+AC-03.6: 2 passing, 0 failing
+AC-03.7: 1 passing, 0 failing
+AC-03.8: 1 passing, 0 failing
+AC-03.9: 5 passing, 0 failing
+AC-04.1: 3 passing, 0 failing
+AC-04.2: 2 passing, 0 failing
+AC-04.3: 2 passing, 0 failing
+AC-04.4: 5 passing, 0 failing
+AC-04.5: 2 passing, 0 failing
+AC-04.6: 2 passing, 0 failing
+AC-05.1: 22 passing, 0 failing
+AC-05.2: 5 passing, 0 failing
+AC-05.3: 4 passing, 0 failing
+AC-05.4: 3 passing, 0 failing
+AC-06.1: 21 passing, 0 failing
+AC-06.2: 28 passing, 0 failing
+AC-06.3: 1 passing, 0 failing
+AC-06.4: 1 passing, 0 failing
+AC-06.5: 7 passing, 0 failing
+AC-06.6: 7 passing, 0 failing
+AC-06.7: 5 passing, 0 failing
+AC-07.1: 19 passing, 0 failing
+AC-07.2: 3 passing, 0 failing
+AC-07.3: 4 passing, 0 failing
+AC-07.4: 8 passing, 0 failing
+AC-07.5: 14 passing, 0 failing
+AC-07.6: 3 passing, 0 failing
+AC-08.1: 9 passing, 0 failing
+AC-08.2: 4 passing, 0 failing
+AC-08.3: 1 passing, 0 failing
+AC-08.5: 1 passing, 0 failing
+AC-09.1: 12 passing, 0 failing
+AC-09.2: 7 passing, 0 failing
+AC-09.3: 6 passing, 0 failing
+AC-09.4: 26 passing, 0 failing
+AC-09.5: 14 passing, 0 failing
+AC-09.6: 14 passing, 0 failing
+AC-09.7: 9 passing, 0 failing
+AC-10.1: 2 passing, 0 failing
+AC-10.2: 4 passing, 0 failing
+AC-10.3: 2 passing, 0 failing
+AC-10.4: 5 passing, 0 failing
+AC-11.2: 3 passing, 0 failing
+AC-11.3: 4 passing, 0 failing
+AC-11.4: 2 passing, 0 failing
+NFR-01: 4 passing, 0 failing
+NFR-02: 20 passing, 0 failing
+NFR-03: 1 passing, 0 failing
+NFR-03.1: 11 passing, 0 failing
+NFR-04: 10 passing, 0 failing
+NFR-04.1: 24 passing, 0 failing
+NFR-04.2: 8 passing, 0 failing
+NFR-04.3: 9 passing, 0 failing
+NFR-04.4: 30 passing, 0 failing
+NFR-05: 4 passing, 0 failing
+NFR-06: 1 passing, 0 failing
+NFR-06.1: 1 passing, 0 failing
+NFR-06.2: 1 passing, 0 failing
+NFR-07.1: 1 passing, 0 failing
+NFR-08: 11 passing, 0 failing

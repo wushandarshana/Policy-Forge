@@ -1,0 +1,53 @@
+# TASK-001 green run: ./mvnw verify -Dskip.frontend=true  (BUILD SUCCESS, ArchUnit green, JaCoCo overall and domain checks met)
+# ACs proven: AC-05.1, AC-06.1, AC-07.1, AC-07.2, AC-07.4, AC-07.5, AC-07.6, AC-08.1, AC-08.2, AC-08.3, AC-08.5, AC-11.2, AC-11.3, AC-11.4 (AC-08.4 is TASK-005)
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.012 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.375 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.231 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.horizon.policyforge.domain.cancellation.CancellationDateRuleTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.horizon.policyforge.domain.cancellation.ProRataRefundCalculatorTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in com.horizon.policyforge.domain.cancellation.ProRataRefundPropertyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.horizon.policyforge.domain.cancellation.RefundPremiumBasisTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.horizon.policyforge.domain.EchoedKeySanitiserTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.horizon.policyforge.domain.portfolio.PortfolioRulesTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.horizon.policyforge.domain.renewal.GracePeriodPolicyTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.horizon.policyforge.domain.renewal.RenewalPolicyTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.506 s -- in com.horizon.policyforge.architecture.AppendOnlyArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.horizon.policyforge.architecture.ControllerPlacementArchTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.050 s -- in com.horizon.policyforge.architecture.DomainPurityArchTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 s -- in com.horizon.policyforge.architecture.LayeredArchitectureTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.horizon.policyforge.architecture.MoneyPrecisionArchTest
+[INFO] Tests run: 322, Failures: 0, Errors: 0, Skipped: 0
+[INFO] All coverage checks have been met.
+[INFO] All coverage checks have been met.
+[INFO] BUILD SUCCESS
+
+== oracle cross-check (premium_check.py) ==
+AC-08.1 TL 6850.00 fee 500.00 cancel 2027-02-09 (expect 4473.29):
+4473.29
+AC-08.1 MOTOR 15150.00 fee 250.00 (expect 10749.32):
+10749.32
+AC-08.1 HOUSEHOLD 11350.00 fee 200.00 (expect 8040.41):
+8040.41
+AC-08.2 pro-rata day 15 2026-11-16 (expect 6068.49):
+6068.49
+AC-08.2 renewal term cancel 2027-11-03 (expect 6312.57):
+6312.57
+AC-08.3 last day (expect 0.00):
+0.00
+AC-08.1 basis 8180.85 cancel 2027-06-01 (expect 2929.23):
+2929.23
+AC-06.2 adjustment (expect 1330.85):
+1330.85
+AC-11.2 sum: 10557.56 (expect 10557.56)
+case                      expected      oracle  status
+AC-01.1                    6850.00     6850.00  PASS
+AC-01.2                   15150.00    15150.00  PASS
+AC-01.3                   11350.00    11350.00  PASS
+AC-01.6                   18150.00    18150.00  PASS
+AC-06.2 new premium        9490.00     9490.00  PASS
+AC-06.2 adjustment         1330.85     1330.85  PASS
+AC-08.1                    4473.29     4473.29  PASS
+AC-08.2                    6850.00     6850.00  PASS
+AC-08.3                       0.00        0.00  PASS
