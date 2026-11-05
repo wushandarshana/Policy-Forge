@@ -196,6 +196,21 @@ def child_environment(env=None):
     return out
 
 
+def tool_environment(env=None):
+    """Red-step stub (NFR-09.7): the environment of git and the AC audit. Not yet key-free."""
+    return child_environment(env)
+
+
+def escaping_links(root, relatives=None):
+    """Red-step stub (NFR-09.7): the links under `root` that resolve outside it. Finds none yet."""
+    return []
+
+
+def cli_snapshot(cli):
+    """Red-step stub (NFR-09.7): SHA-256 digests of the CLI files. Hashes nothing yet."""
+    return {}
+
+
 def _is_within(path, folder):
     path, folder = path.rstrip("/") or "/", folder.rstrip("/") or "/"
     return path == folder or path.startswith(folder + "/") or folder == "/"
