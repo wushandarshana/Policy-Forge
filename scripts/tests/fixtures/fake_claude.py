@@ -10,7 +10,10 @@ file, not from environment variables. Keys of the config:
     test         scenario for the test-engineer pass (default approve)
     leak         a key-shaped string the leak_key scenario echoes to stdout and stderr
     echo_env_key true: the leak_key scenario also echoes the ANTHROPIC_API_KEY of this process
-    write        {"path": "<relative to the working directory>", "data": "<text>"}: the `write` scenario writes it
+    write        {"path": "<relative to the working directory, or absolute>", "data": "<text>"}, or a list of them:
+                 the `write` scenario appends each data (default text; "" creates an empty file)
+    delete       a list of paths (relative to the working directory) the `write` scenario deletes
+    then         the scenario that runs after `write` (default approve), e.g. exit1
 
 Scenarios: approve, blocker, major_minor, changes_no_blocker, minor_only, fenced, no_output, invalid_schema,
 missing_key, exit1, is_error, leak_key, write (writes a file, then approves).
@@ -118,11 +121,15 @@ def main(argv):
             sys.stderr.write(f"debug: and the process key {os.environ.get('ANTHROPIC_API_KEY', '')}\n")
             leak = leak + " " + os.environ.get("ANTHROPIC_API_KEY", "")
     if scenario == "write":
-        target = Path(config["write"]["path"])
-        target.parent.mkdir(parents=True, exist_ok=True)
-        with target.open("a", encoding="utf-8", newline="\n") as handle:
-            handle.write(config["write"].get("data", "written by the stub CLI\n"))
-        scenario = "approve"
+        writes = config.get("write") or []
+        for item in [writes] if isinstance(writes, dict) else writes:
+            target = Path(item["path"])
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.open("a", encoding="utf-8", newline="\n") as handle:
+                handle.write(item.get("data", "written by the stub CLI\n"))
+        for relative in config.get("delete") or []:
+            Path(relative).unlink()
+        scenario = config.get("then", "approve")
     if scenario == "exit1":
         sys.stderr.write("fake claude: the call failed\n")
         return 1

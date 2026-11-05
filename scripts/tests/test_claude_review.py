@@ -437,7 +437,9 @@ class ReviewInputTests(ReviewTestCase):
                 self.assertIn("head", log)
                 self.assertEqual((folder / "changed-files.txt").read_text(encoding="utf-8").splitlines(),
                                  ["src/a.txt", "src/b.txt"])
-                self.assertEqual(Path(call["cwd"]).resolve(), self.repo.resolve(), "the CLI runs in the checkout")
+                self.assertNotEqual(Path(call["cwd"]).resolve(), self.repo.resolve(),
+                                    "the CLI runs in a disposable worktree, not in the checkout")
+        self.assertFalse((self.repo / INPUT_DIR).exists(), "the input files go to the worktree, not the checkout")
 
     def test_a_stale_input_file_is_removed_before_the_review(self):
         """NFR-09.7: a file left in ci-out/review/input/ by an earlier run is not shown to the reviewer."""
@@ -480,10 +482,10 @@ class ToolSandboxTests(ReviewTestCase):
         """NFR-09.7: the deny rules cover /proc, /sys, /dev and /etc, and none of them is the checkout or one of its
         parent folders (a deny rule wins over the allow rule, so that would block the review)."""
         self.run_review()
-        repo = self.repo.resolve().as_posix()
         calls = pass_calls(self.log)
         self.assertEqual(len(calls), 2)
         for call in calls:
+            repo = Path(call["cwd"]).resolve().as_posix()  # the folder the CLI reads: the disposable worktree
             denied = values_after(call["argv"], "--disallowedTools")
             for root in ("proc", "sys", "dev", "etc"):
                 self.assertIn(f"Read(//{root}/**)", denied)
@@ -565,7 +567,8 @@ class EnvironmentAllowlistTests(ReviewTestCase):
 
 
 class UnchangedTreeTests(ReviewTestCase):
-    """NFR-09.7: after each pass the runner fails closed when the checkout changed outside ci-out/."""
+    """NFR-09.7: after each pass the runner fails closed when the real checkout changed outside ci-out/. The CLI runs
+    in a disposable worktree, so the stub writes into the real checkout by absolute path: a write that escapes."""
 
     def review_in_fresh_repo(self, write, before=None):
         holder, repo, base, head = fresh_review_repo()
@@ -573,8 +576,21 @@ class UnchangedTreeTests(ReviewTestCase):
         for relative, data in (before or {}).items():
             write_bytes(repo, relative, data)
         proc = self.run_review(repo=repo, base=base, head=head, security="write",
-                               fake={"write": {"path": write, "data": "print('payload')\n"}})
+                               fake={"write": {"path": str(Path(repo) / write), "data": "print('payload')\n"}})
         return proc, repo
+
+    def test_a_long_list_of_changed_paths_is_reported_in_full(self):
+        """NFR-09.7: when more than ten paths of the real checkout change, the error names every one of them, with
+        no "and N more"."""
+        holder, repo, base, head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        names = [f"src/escaped-{n:02d}.txt" for n in range(14)]
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": [{"path": str(Path(repo) / name), "data": "x\n"} for name in names]})
+        self.assert_failed_closed(proc, names[0])
+        for name in names:
+            self.assertIn(name, proc.stderr_text)
+        self.assertNotRegex(proc.stderr_text, r"and \d+ more")
 
     def assert_failed_closed(self, proc, path):
         self.assertEqual(proc.returncode, 2, proc.stderr_text)
@@ -619,6 +635,122 @@ class UnchangedTreeTests(ReviewTestCase):
                                                                          "notes.txt": b"draft\n"})
         self.assertEqual(proc.returncode, 0, proc.stderr_text)
         self.assertEqual(len(pass_calls(self.log)), 2)
+
+
+PLACEHOLDERS = [".env", ".env.development", ".env.development.local", ".env.local", ".env.production",
+                ".env.production.local", ".env.test", ".env.test.local", ".gitmodules", ".npmrc", ".yarnrc",
+                ".bashrc", ".profile"]
+
+
+def worktree_entries(repo):
+    """The worktrees git knows for `repo` (the main checkout included)."""
+    listing = git(repo, "worktree", "list", "--porcelain")
+    return [line[len("worktree "):] for line in listing.splitlines() if line.startswith("worktree ")]
+
+
+class DisposableWorktreeTests(ReviewTestCase):
+    """NFR-09.7: the CLI runs in a disposable detached worktree of HEAD outside the checkout. Its sandbox may drop
+    placeholder files there; a changed or deleted tracked file there fails closed; the worktree is always removed."""
+
+    def fresh(self):
+        holder, repo, base, head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        return repo, base, head
+
+    def assert_worktree_removed(self, repo):
+        cwds = {c["cwd"] for c in read_calls(self.log) if not c["version_call"]}
+        self.assertTrue(cwds, "the CLI ran at least once")
+        for cwd in cwds:
+            self.assertFalse(Path(cwd).exists(), f"the worktree {cwd} was not removed")
+        self.assertEqual(len(worktree_entries(repo)), 1, "git still lists the disposable worktree")
+
+    def test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout(self):
+        """NFR-09.7: each pass starts the CLI in the same worktree, which is not the checkout or inside it, holds the
+        head commit's files and the input files, and is removed after the run."""
+        repo, base, head = self.fresh()
+        proc = self.run_review(repo=repo, base=base, head=head)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        calls = pass_calls(self.log)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(len({c["cwd"] for c in calls}), 1, "one worktree for both passes")
+        cwd = Path(calls[0]["cwd"]).resolve()
+        real = Path(repo).resolve()
+        self.assertNotEqual(cwd, real)
+        self.assertNotIn(real, cwd.parents, "the worktree is outside the checkout")
+        for call in calls:
+            folder = self.log / f"pass-{call['n']}.input"
+            self.assertTrue((folder / "diff.patch").is_file(), "the input files are in the worktree")
+        self.assertFalse((Path(repo) / INPUT_DIR).exists())
+        self.assert_worktree_removed(repo)
+
+    def test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full(self):
+        """NFR-09.7: empty files the sandbox creates in the worktree (.env, .npmrc, .gitmodules and more than ten in
+        all) do not fail the run; every path is logged, with no "and N more", and their content is never logged."""
+        repo, base, head = self.fresh()
+        writes = [{"path": name, "data": f"secret-content-{n}\n" if name == ".npmrc" else ""}
+                  for n, name in enumerate(PLACEHOLDERS)]
+        proc = self.run_review(repo=repo, base=base, head=head, security="write", fake={"write": writes})
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 2)
+        for name in PLACEHOLDERS:
+            self.assertIn(name, proc.stderr_text)
+        self.assertIn("untracked", proc.stderr_text)
+        self.assertNotRegex(proc.stderr_text, r"and \d+ more")
+        self.assertNotIn("secret-content", self.all_outputs(proc))
+        for name in PLACEHOLDERS:
+            self.assertFalse((Path(repo) / name).exists(), f"{name} reached the real checkout")
+        self.assert_worktree_removed(repo)
+
+    def test_a_modified_tracked_file_in_the_worktree_fails_closed(self):
+        """NFR-09.4: a pass that modifies a tracked file of the worktree makes the run exit 2 before the second pass,
+        naming the file, and the worktree is still removed."""
+        repo, base, head = self.fresh()
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": {"path": "scripts/redact_evidence.py", "data": "PATTERNS = None\n"}})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 1)
+        self.assertIn("scripts/redact_evidence.py", proc.stderr_text)
+        self.assertIn("tracked", proc.stderr_text)
+        self.assertIn("GATE: FAIL", self.report().rstrip().splitlines()[-1])
+        self.assert_worktree_removed(repo)
+
+    def test_a_deleted_tracked_file_in_the_worktree_fails_closed(self):
+        """NFR-09.4: a pass that deletes a tracked file of the worktree makes the run exit 2, naming the file."""
+        repo, base, head = self.fresh()
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": [], "delete": ["CLAUDE.md"]})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertIn("CLAUDE.md", proc.stderr_text)
+        self.assertTrue((Path(repo) / "CLAUDE.md").exists())
+        self.assert_worktree_removed(repo)
+
+    def test_the_worktree_is_removed_when_the_cli_fails(self):
+        """NFR-09.4: when the CLI exits 1 after dropping a placeholder, the run exits 2 and the worktree is gone."""
+        repo, base, head = self.fresh()
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": {"path": ".env", "data": ""}, "then": "exit1"})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assert_worktree_removed(repo)
+
+    def test_the_worktree_is_created_without_running_repository_hooks(self):
+        """NFR-09.7: the worktree is added with core.hooksPath pointing at the null device (and core.fsmonitor off),
+        so a post-checkout hook in the checkout never runs."""
+        repo, base, head = self.fresh()
+        with tempfile.TemporaryDirectory() as folder:
+            marker = Path(folder) / "hook-ran"
+            hook = Path(repo) / ".git" / "hooks" / "post-checkout"
+            hook.parent.mkdir(parents=True, exist_ok=True)
+            hook.write_bytes(f"#!/bin/sh\necho ran > '{marker.as_posix()}'\n".encode())
+            hook.chmod(0o755)
+            probe = Path(folder) / "probe"
+            git(repo, "worktree", "add", "--detach", str(probe), "HEAD")
+            git(repo, "worktree", "remove", "--force", str(probe))
+            if not marker.exists():
+                self.skipTest("git runs no hooks on this machine, so the check would prove nothing")
+            marker.unlink()
+            proc = self.run_review(repo=repo, base=base, head=head)
+            self.assertEqual(proc.returncode, 0, proc.stderr_text)
+            self.assertFalse(marker.exists(), "the post-checkout hook ran when the worktree was added")
 
 
 class LockedCliTests(unittest.TestCase):
