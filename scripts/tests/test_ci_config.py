@@ -788,7 +788,8 @@ class CommentJobTests(CiConfigTestCase):
 
 
 BWRAP_INSTALL = "apt-get install -y --no-install-recommends bubblewrap"
-BWRAP_SMOKE = "bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true"
+BWRAP_SMOKE = "bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true"
+BWRAP_FAILED = "bwrap cannot create a sandbox on this runner"
 REVIEW_COMMAND = "claude_review.py run"
 
 
@@ -802,16 +803,18 @@ class BubblewrapInstallTests(CiConfigTestCase):
         self.assertLess(text.index("apt-get update"), text.index(BWRAP_INSTALL), where)
         self.assertIn("bwrap --version", text, where)
         self.assertIn("dpkg-query -W bubblewrap", text, where)
-        self.assertRegex(text, r"if ! " + re.escape(BWRAP_SMOKE) + r"; then\n[^\n]*user namespaces[^\n]*\n\s*exit 1",
+        self.assertRegex(text, r"if ! " + re.escape(BWRAP_SMOKE) + r"; then\n[^\n]*" + re.escape(BWRAP_FAILED) + r"[^\n]*\n\s*exit 1",
                          f"{where}: a failed smoke test stops the job with a message (fail closed)")
         self.assertNotRegex(text, r"bubblewrap=\S", f"{where}: the archive version is recorded, not pinned")
         self.assertNotIn("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0", text, where)
+        self.assertNotRegex(text, r"--unshare-all(?! --share-net)", f"{where}: the runner may not configure a "
+                            "loopback in a new network namespace, so the smoke test keeps the host network")
 
     def test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key(self):
         """NFR-09.7: the GitHub claude-review job has a step before the review step that runs sudo apt-get update,
         installs bubblewrap from the signed Ubuntu archive with --no-install-recommends, records its version with
-        dpkg-query (NFR-09.2), runs bwrap --version and a --unshare-all smoke test that fails closed with a message
-        about user namespaces; that step has no ANTHROPIC_API_KEY."""
+        dpkg-query (NFR-09.2), runs bwrap --version and a --unshare-all --share-net smoke test that fails closed with
+        the message "bwrap cannot create a sandbox on this runner"; that step has no ANTHROPIC_API_KEY."""
         steps = self.steps(self.workflow(GITHUB_CI)["jobs"]["claude-review"])
         installs = [i for i, s in enumerate(steps) if BWRAP_INSTALL in str(s.get("run"))]
         reviews = [i for i, s in enumerate(steps) if REVIEW_COMMAND in str(s.get("run"))]
@@ -830,8 +833,8 @@ class BubblewrapInstallTests(CiConfigTestCase):
 
     def test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review(self):
         """NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root),
-        records its version with dpkg-query (NFR-09.2), runs bwrap --version and the --unshare-all smoke test that
-        fails closed with a message before the review command, and the header says the runner must allow user
+        records its version with dpkg-query (NFR-09.2), runs bwrap --version and the --unshare-all --share-net smoke
+        test that fails closed with a message before the review command, and the header says the runner must allow user
         namespaces (or privileged mode) for bwrap."""
         job = self.gitlab()["_jobs"]["claude-review"]
         blocks = [str(line) for key in ("before_script", "script") for line in normalise_list(job.get(key))]
@@ -846,6 +849,52 @@ class BubblewrapInstallTests(CiConfigTestCase):
         header = "\n".join(line for line in self.read(GITLAB_CI).splitlines() if line.startswith("#"))
         for fragment in ("bubblewrap", "bwrap", "user namespaces", "privileged", "fails closed"):
             self.assertIn(fragment, header)
+
+
+class MissingReportTests(CiConfigTestCase):
+    """claude-review can fail before it uploads ci-out/review/. The comment job then has no report: it says so and
+    passes, and it never decides the gate (ci-gate does not need it)."""
+
+    def test_github_comment_job_tolerates_a_missing_review_artifact(self):
+        """NFR-09.7: in claude-review-comment the download step has an id and continue-on-error: true; the comment
+        step reads that step's outcome and, when the artifact was not downloaded or has no report, prints a
+        ::notice:: and exits 0 before it runs the comment code; ci-gate does not need claude-review-comment."""
+        jobs = self.workflow(GITHUB_CI)["jobs"]
+        steps = self.steps(self.job(jobs, "claude-review-comment"))
+        downloads = [s for s in steps if str(s.get("uses", "")).startswith("actions/download-artifact@")]
+        self.assertEqual(len(downloads), 1)
+        download = downloads[0]
+        self.assertIs(download.get("continue-on-error"), True)
+        step_id = download.get("id")
+        self.assertTrue(step_id, "the download step needs an id")
+        comments = [s for s in steps if "claude_review.py comment" in str(s.get("run"))]
+        self.assertEqual(len(comments), 1)
+        comment = comments[0]
+        outcome = "${{ steps.%s.outcome }}" % step_id
+        names = [name for name, value in (comment.get("env") or {}).items() if value == outcome]
+        self.assertEqual(len(names), 1, f"the comment step gets {outcome} through env")
+        script = comment["run"]
+        guard = re.search(r'if \[ "\$%s" != "success" \] \|\| \[ ! -f "\$REPORT" \]; then\n'
+                          r'[^\n]*::notice::[^\n]*\n\s*exit 0\n\s*fi' % re.escape(names[0]), script)
+        self.assertIsNotNone(guard, "a missing artifact or report ends the step with a notice and exit 0")
+        self.assertLess(guard.start(), script.index("claude_review.py comment"))
+        self.assertNotIn("claude-review-comment", normalise_list(self.job(jobs, "ci-gate").get("needs")))
+
+    def test_gitlab_comment_job_tolerates_a_missing_review_report(self):
+        """NFR-09.7: the GitLab claude-review-comment job prints a notice and exits 0 when
+        ci-out/review/claude-review.md is missing, before it fetches the target branch or runs the comment code;
+        it is allow_failure: true and ci-gate does not need it."""
+        jobs = self.gitlab()["_jobs"]
+        job = self.job(jobs, "claude-review-comment")
+        self.assertIs(job.get("allow_failure"), True)
+        script = self.gitlab_job_script(job)
+        guard = re.search(r'if \[ ! -f ci-out/review/claude-review\.md \]; then\n[^\n]*notice[^\n]*\n\s*exit 0'
+                          r'\n\s*fi', script)
+        self.assertIsNotNone(guard, "a missing report ends the job with a notice and exit 0")
+        self.assertLess(guard.start(), script.index("git fetch"))
+        self.assertLess(guard.start(), script.index("claude_review.py\" comment"))
+        needs = [n if isinstance(n, str) else n.get("job") for n in self.job(jobs, "ci-gate").get("needs")]
+        self.assertNotIn("claude-review-comment", needs)
 
 
 class GateJobTests(CiConfigTestCase):
