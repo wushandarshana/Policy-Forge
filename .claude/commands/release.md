@@ -36,6 +36,9 @@ Write `docs/releases/RELEASE-<version>.md` on a `chore/release-<version>` branch
 git push origin dev   # only if dev is ahead of origin/dev, which shouldn't happen when features land via GitHub PRs
 gh pr create --base main --head dev --title "Release <version>: <title>" --body-file docs/releases/RELEASE-<version>.md
 ```
+- Wait for CI with `gh pr checks <number> --watch`. Approve the `claude-review` deployment when GitHub asks. Every
+  job must pass (`ci-gate` green) before anyone merges. If `claude-review` reports a BLOCKER, fix it on the branch and
+  push again.
 - The user merges it on GitHub with **"Create a merge commit"**. If the user asks, run `gh pr merge <number> --merge`
   (never `--squash`, `--rebase` or `--admin`).
 - Then tag the **merge commit on `main`**, never a local-only commit:

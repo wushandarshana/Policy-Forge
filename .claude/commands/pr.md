@@ -48,6 +48,9 @@ branches.
 git push -u origin <branch>
 gh pr create --base dev --head <branch> --title "PR-NNN: <title>" --body-file docs/prs/PR-NNN.md
 ```
+- Wait for CI with `gh pr checks <number> --watch`. Approve the `claude-review` deployment when GitHub asks. Every
+  job must pass (`ci-gate` green) before anyone merges. If `claude-review` reports a BLOCKER, fix it on the branch and
+  push again.
 - Print the PR URL. The user reviews it and merges it on GitHub with **"Create a merge commit"**, which keeps the
   `--no-ff` history. Don't use squash or rebase merges.
 - If the user asks you to merge it: `gh pr merge <number> --merge` (never `--squash`, `--rebase` or `--admin`).

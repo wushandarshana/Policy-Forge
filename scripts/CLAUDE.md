@@ -14,9 +14,10 @@ Automation that drives Claude programmatically through the **Claude Agent SDK** 
   - `check_line_endings.py` checks hook line endings.
 
   They use the Python standard library only and run on Python 3.11 or later.
-- The CI review runs the pinned Claude Code CLI in `--bare` print mode with read-only tools. These are `Read`, `Grep`
-  and `Glob`, plus `Bash` limited to `git diff`, `git log`, `git show`, `git ls-files`, `grep` and `rg`. It never edits
-  files, never receives a GitHub or GitLab token, and fails closed.
+- The CI review runs the pinned Claude Code CLI (from `ci/claude-cli/package-lock.json`) in `--bare` print mode with
+  `Read`, `Grep` and `Glob` only, limited to the checkout, and no shell tool (NFR-09.7). It reads the diff and log
+  from `ci-out/review/input/`, gets an allowlisted environment, never receives a GitHub or GitLab token, and fails
+  closed if any file outside `ci-out/` changes. The PR or MR comment is a separate job that runs base-branch code.
 - Tests live in `scripts/tests/` and run with `python -m unittest discover -s scripts/tests -v`. Each test's docstring
   starts with the ID it proves (`NFR-09.4: …`), and `ac_audit.py` counts it.
 - `requirements-ci.txt` pins, with hashes, the packages that only the tests and gates need (PyYAML, check-jsonschema).
