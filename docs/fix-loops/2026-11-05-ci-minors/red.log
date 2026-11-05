@@ -1,0 +1,719 @@
+test_a_docstring_id_in_a_script_test_counts_as_exact_coverage (test_ac_audit_globs.AcAuditGlobTests.test_a_docstring_id_in_a_script_test_counts_as_exact_coverage)
+NFR-09.6: a test whose docstring starts with NFR-09.6 is reported as covering NFR-09.6. ... ok
+test_existing_globs_are_unchanged (test_ac_audit_globs.AcAuditGlobTests.test_existing_globs_are_unchanged)
+NFR-09.6: the five pre-existing globs are still there, in order, before the new one. ... ok
+test_fixtures_directory_is_not_scanned (test_ac_audit_globs.AcAuditGlobTests.test_fixtures_directory_is_not_scanned)
+NFR-09.6: the stub CLI under scripts/tests/fixtures/ is never counted as a test. ... ok
+test_test_globs_include_the_python_script_tests (test_ac_audit_globs.AcAuditGlobTests.test_test_globs_include_the_python_script_tests)
+NFR-09.6: ac_audit.py scans scripts/tests/test_*.py, so the CI script tests count towards coverage. ... ok
+test_a_pattern_that_matches_no_file_fails (test_check_line_endings.LineEndingCheckTests.test_a_pattern_that_matches_no_file_fails)
+NFR-09.6: a pattern with no matching tracked file fails closed, so a typo cannot disable the gate. ... ok
+test_cr_byte_only_in_the_working_tree_fails (test_check_line_endings.LineEndingCheckTests.test_cr_byte_only_in_the_working_tree_fails)
+NFR-09.6: a file that is LF in the index but has a CR byte in the working tree fails. ... ok
+test_crlf_in_the_index_fails_and_names_the_file (test_check_line_endings.LineEndingCheckTests.test_crlf_in_the_index_fails_and_names_the_file)
+NFR-09.6: a hook file that is CRLF in the index (i/crlf) fails and is listed. ... ok
+test_every_offending_file_is_listed (test_check_line_endings.LineEndingCheckTests.test_every_offending_file_is_listed)
+NFR-09.6: with several offenders the output lists each one, not just the first. ... ok
+test_files_outside_the_pattern_are_ignored (test_check_line_endings.LineEndingCheckTests.test_files_outside_the_pattern_are_ignored)
+NFR-09.6: a CRLF file that the pattern does not match does not fail the check. ... ok
+test_lf_only_hook_files_pass (test_check_line_endings.LineEndingCheckTests.test_lf_only_hook_files_pass)
+NFR-09.6: hook files with LF endings in the index and the working tree pass the check. ... ok
+test_mixed_endings_in_the_index_fail (test_check_line_endings.LineEndingCheckTests.test_mixed_endings_in_the_index_fail)
+NFR-09.6: a file that is mixed (i/mixed) in the index fails. ... ok
+test_real_hook_files_are_lf_only (test_check_line_endings.LineEndingCheckTests.test_real_hook_files_are_lf_only)
+NFR-09.6: the committed .claude/hooks/*.sh of this repository pass the check. ... ok
+test_env_scrubbing_is_never_turned_off_in_a_ci_file (test_ci_config.BubblewrapInstallTests.test_env_scrubbing_is_never_turned_off_in_a_ci_file)
+NFR-09.7: no CI file sets CLAUDE_CODE_SUBPROCESS_ENV_SCRUB to 0, in a script or in a variables or env map. ... ok
+test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test (test_ci_config.BubblewrapInstallTests.test_github_lifts_the_apparmor_userns_restriction_before_the_smoke_test)
+NFR-09.7: Ubuntu 24.04 denies bwrap its uid map through kernel.apparmor_restrict_unprivileged_userns, so the ... ok
+test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key (test_ci_config.BubblewrapInstallTests.test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key)
+NFR-09.7: the GitHub claude-review job has a step before the review step that runs sudo apt-get update, ... ok
+test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review (test_ci_config.BubblewrapInstallTests.test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review)
+NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root), ... ok
+test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement (test_ci_config.BubblewrapInstallTests.test_gitlab_sets_no_sysctl_and_documents_the_userns_requirement)
+NFR-09.7: the GitLab claude-review job runs no sysctl; the header says the runner must allow unprivileged ... ok
+test_codeowners_covers_the_ci_and_review_files (test_ci_config.CodeOwnersTests.test_codeowners_covers_the_ci_and_review_files)
+NFR-09.7: .github/CODEOWNERS gives @wushandarshana the CI definitions, the CI scripts, the redaction and ... ok
+test_github_comment_job_runs_the_base_branch_script_with_the_token_only (test_ci_config.CommentJobTests.test_github_comment_job_runs_the_base_branch_script_with_the_token_only)
+NFR-09.7: claude-review-comment needs claude-review, runs on pull requests even when the review failed, ... ok
+test_github_review_job_holds_the_key_only_and_uploads_the_report (test_ci_config.CommentJobTests.test_github_review_job_holds_the_key_only_and_uploads_the_report)
+NFR-09.7: the GitHub claude-review job runs in the environment claude-review, has no pull-requests ... ok
+test_gitlab_comment_job_uses_its_own_environment_and_the_target_branch_scripts (test_ci_config.CommentJobTests.test_gitlab_comment_job_uses_its_own_environment_and_the_target_branch_scripts)
+NFR-09.7: claude-review-comment runs only for merge request pipelines (also after a failed review), in the ... ok
+test_gitlab_header_documents_protected_environments_and_the_token_scope (test_ci_config.CommentJobTests.test_gitlab_header_documents_protected_environments_and_the_token_scope)
+NFR-09.7: the .gitlab-ci.yml header says to protect the environment claude-review (deployment approval) ... ok
+test_gitlab_review_job_has_no_review_token_and_no_comment (test_ci_config.CommentJobTests.test_gitlab_review_job_has_no_review_token_and_no_comment)
+NFR-09.7: the GitLab claude-review job runs in the protected environment claude-review, installs the CLI ... ok
+test_github_ci_gate_fails_unless_every_gate_job_succeeded (test_ci_config.GateJobTests.test_github_ci_gate_fails_unless_every_gate_job_succeeded)
+NFR-09.7: ci-gate needs the five gate jobs, runs always, and fails unless each needs.<job>.result is ... ok
+test_gitlab_gate_jobs_write_a_status_file_and_ci_gate_requires_all_five (test_ci_config.GateJobTests.test_gitlab_gate_jobs_write_a_status_file_and_ci_gate_requires_all_five)
+NFR-09.7: each GitLab gate job writes ci-out/status/<job>.ok as its last command and keeps it as an ... ok
+test_github_passes_the_pr_head_sha_through_step_env (test_ci_config.HeadCommitWiringTests.test_github_passes_the_pr_head_sha_through_step_env)
+NFR-09.7: the GitHub review step sets PF_REVIEW_HEAD_SHA to ${{ github.event.pull_request.head.sha }} in ... FAIL
+test_gitlab_uses_the_source_branch_sha_when_present (test_ci_config.HeadCommitWiringTests.test_gitlab_uses_the_source_branch_sha_when_present)
+NFR-09.7: in a merge request pipeline the GitLab review reviews up to CI_MERGE_REQUEST_SOURCE_BRANCH_SHA ... FAIL
+test_artifacts_of_the_five_jobs_are_published (test_ci_config.JobDefinitionTests.test_artifacts_of_the_five_jobs_are_published)
+NFR-09.1: the GitHub jobs upload the C4 artifacts with the right condition and retention, and the GitLab ... ok
+test_backend_mvnw_is_executable_in_the_index (test_ci_config.JobDefinitionTests.test_backend_mvnw_is_executable_in_the_index)
+NFR-09.1: backend/mvnw has mode 100755, so ./mvnw runs on a Linux runner. ... ok
+test_both_platforms_run_the_same_gate_commands (test_ci_config.JobDefinitionTests.test_both_platforms_run_the_same_gate_commands)
+NFR-09.1: each of the five jobs runs the plan C1 commands, with the same text on GitHub and on GitLab. ... ok
+test_claude_review_needs_the_other_four_jobs_and_cannot_fail (test_ci_config.JobDefinitionTests.test_claude_review_needs_the_other_four_jobs_and_cannot_fail)
+NFR-09.1: claude-review needs build, frontend-unit, e2e and quality-gates, and is never allowed to fail: ... ok
+test_concurrency_cancels_only_superseded_pull_request_runs (test_ci_config.JobDefinitionTests.test_concurrency_cancels_only_superseded_pull_request_runs)
+NFR-09.1: pull request runs of one ref share a concurrency group and cancel older runs; a push to dev or ... ok
+test_e2e_runs_the_packaged_jar_in_the_playwright_image (test_ci_config.JobDefinitionTests.test_e2e_runs_the_packaged_jar_in_the_playwright_image)
+NFR-09.1: e2e needs the build job's JAR and runs Playwright in the pinned Playwright image with a Temurin ... ok
+test_github_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_github_ci_defines_the_five_jobs)
+NFR-09.1: .github/workflows/ci.yml is named CI and defines build, frontend-unit, e2e, quality-gates and ... ok
+test_gitlab_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_gitlab_ci_defines_the_five_jobs)
+NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e, review and gate and the same five jobs, plus the ... ok
+test_triggers_are_pushes_and_pull_requests_into_dev_and_main (test_ci_config.JobDefinitionTests.test_triggers_are_pushes_and_pull_requests_into_dev_and_main)
+NFR-09.1: ci.yml runs for push to dev and main, pull_request into dev and main and manual dispatch; ... ok
+test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them (test_ci_config.LinuxSnapshotGeneratorTests.test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them)
+NFR-09.5: the Linux snapshots workflow runs on the update-linux-snapshots label or by hand, has no ... ok
+test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline (test_ci_config.LinuxSnapshotGeneratorTests.test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline)
+NFR-09.5: e2e-update-linux-snapshots is manual, may fail, runs the e2e server in update mode with ... ok
+test_ci_installs_from_the_lockfiles (test_ci_config.LockedInstallTests.test_ci_installs_from_the_lockfiles)
+NFR-09.7: both platforms install the CLI with npm ci --prefix scripts/ci/claude-cli and the Python packages ... ok
+test_requirements_ci_pins_every_package_with_hashes (test_ci_config.LockedInstallTests.test_requirements_ci_pins_every_package_with_hashes)
+NFR-09.7: scripts/requirements-ci.txt pins PyYAML 6.0.3, check-jsonschema 0.39.0 and all their transitive ... ok
+test_the_claude_cli_lockfile_pins_the_runner_version_with_integrity (test_ci_config.LockedInstallTests.test_the_claude_cli_lockfile_pins_the_runner_version_with_integrity)
+NFR-09.7: scripts/ci/claude-cli/package.json depends on exactly the runner's PINNED_VERSION, and the ... ok
+test_github_comment_job_tolerates_a_missing_review_artifact (test_ci_config.MissingReportTests.test_github_comment_job_tolerates_a_missing_review_artifact)
+NFR-09.7: in claude-review-comment the download step has an id and continue-on-error: true; the comment ... ok
+test_gitlab_comment_job_tolerates_a_missing_review_report (test_ci_config.MissingReportTests.test_gitlab_comment_job_tolerates_a_missing_review_report)
+NFR-09.7: the GitLab claude-review-comment job prints a notice and exits 0 when ... ok
+test_api_key_reaches_only_the_review_step_and_is_never_printed (test_ci_config.PermissionAndSecretTests.test_api_key_reaches_only_the_review_step_and_is_never_printed)
+NFR-09.3: ANTHROPIC_API_KEY is referenced in exactly one place, the env of the review step of the ... ok
+test_no_api_key_literal_is_tracked (test_ci_config.PermissionAndSecretTests.test_no_api_key_literal_is_tracked)
+NFR-09.3: git grep finds no sk-ant- literal of 20 or more characters in any tracked file. ... ok
+test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks (test_ci_config.PermissionAndSecretTests.test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks)
+NFR-09.3: no CI file has `set -x`, echoes ANTHROPIC_API_KEY, dumps the environment, turns on a debug ... ok
+test_no_pull_request_target_and_every_checkout_drops_credentials (test_ci_config.PermissionAndSecretTests.test_no_pull_request_target_and_every_checkout_drops_credentials)
+NFR-09.3: no workflow uses pull_request_target or workflow_run, and every actions/checkout sets ... ok
+test_no_run_script_interpolates_an_event_expression (test_ci_config.PermissionAndSecretTests.test_no_run_script_interpolates_an_event_expression)
+NFR-09.3: no `run:` script contains a ${{ github.event... }} expression (or another attacker-controlled ... ok
+test_permissions_are_read_only_except_for_claude_review (test_ci_config.PermissionAndSecretTests.test_permissions_are_read_only_except_for_claude_review)
+NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review-comment job of ... ok
+test_ci_node_version_equals_the_pom (test_ci_config.PinTests.test_ci_node_version_equals_the_pom)
+NFR-09.2: the Node version of setup-node and of the Node images equals frontend.node.version in ... ok
+test_every_action_is_pinned_to_a_full_sha_with_a_version_comment (test_ci_config.PinTests.test_every_action_is_pinned_to_a_full_sha_with_a_version_comment)
+NFR-09.2: every `uses:` is owner/repo@<40 hex> with a `# vX.Y.Z` comment and equals the verified C3 pin. ... ok
+test_every_downloaded_file_has_a_sha256_next_to_it (test_ci_config.PinTests.test_every_downloaded_file_has_a_sha256_next_to_it)
+NFR-09.2: every curl or wget download is followed by a sha256sum -c check of a 64-hex digest before the ... ok
+test_every_image_is_an_exact_tag_with_a_digest (test_ci_config.PinTests.test_every_image_is_an_exact_tag_with_a_digest)
+NFR-09.2: every container image is tag@sha256:<64 hex>, and each equals the verified C3 image. ... ok
+test_java_and_python_versions_are_exact_and_equal_on_both_platforms (test_ci_config.PinTests.test_java_and_python_versions_are_exact_and_equal_on_both_platforms)
+NFR-09.2: Temurin 21.0.13+9 and Python 3.14.10 are named exactly, and GitHub and GitLab use the same. ... ok
+test_nothing_uses_a_floating_reference (test_ci_config.PinTests.test_nothing_uses_a_floating_reference)
+NFR-09.2: the strings @latest, :latest and ubuntu-latest occur in none of the CI files or .mcp.json, ... ok
+test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact (test_ci_config.PinTests.test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact)
+NFR-09.2: the Claude Code CLI is @anthropic-ai/claude-code@2.1.311 (the runner's pinned version), ... ok
+test_playwright_image_equals_the_locked_playwright_version (test_ci_config.PinTests.test_playwright_image_equals_the_locked_playwright_version)
+NFR-09.2: the Playwright image tag is v + the @playwright/test version in package-lock.json, and ... ok
+test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate (test_ci_config.QualityGateWiringTests.test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate)
+NFR-09.6: the quality-gates job of GitHub and of GitLab installs scripts/requirements-ci.txt and runs ... ok
+test_the_quality_gates_report_is_kept_even_when_a_gate_fails (test_ci_config.QualityGateWiringTests.test_the_quality_gates_report_is_kept_even_when_a_gate_fails)
+NFR-09.6: the runner writes its report under ci-out/quality-gates/, and both platforms keep it as an ... ok
+test_ci_scripts_never_use_a_shell (test_ci_script_hygiene.CiScriptHygieneTests.test_ci_scripts_never_use_a_shell)
+NFR-09.4: no scripts/ci/*.py starts a command through a shell (shell=True, os.system, os.popen). ... ok
+test_every_ci_script_imports_only_the_standard_library (test_ci_script_hygiene.CiScriptHygieneTests.test_every_ci_script_imports_only_the_standard_library)
+NFR-09.4: no scripts/ci/*.py imports a third-party or repository module. ... ok
+test_every_ci_script_parses_as_python_3_11 (test_ci_script_hygiene.CiScriptHygieneTests.test_every_ci_script_parses_as_python_3_11)
+NFR-09.4: every scripts/ci/*.py parses with feature_version (3, 11), the GitLab review image's Python. ... ok
+test_the_expected_ci_scripts_exist (test_ci_script_hygiene.CiScriptHygieneTests.test_the_expected_ci_scripts_exist)
+NFR-09.4: the four CI entry points of plan C1 are present in scripts/ci/. ... ok
+test_bubblewrap_on_the_path_satisfies_the_check_and_the_cli_inherits_that_path (test_claude_review.BubblewrapTests.test_bubblewrap_on_the_path_satisfies_the_check_and_the_cli_inherits_that_path)
+NFR-09.7: with bwrap on PATH the review runs, and the CLI's allowlisted environment keeps that PATH (and ... ok
+test_missing_bubblewrap_fails_closed_without_calling_the_cli (test_claude_review.BubblewrapTests.test_missing_bubblewrap_fails_closed_without_calling_the_cli)
+NFR-09.4: with env scrubbing on and no bwrap on PATH the run exits 2 with a "bubblewrap missing" ... ok
+test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check)
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless ... ok
+test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass (test_claude_review.CliBinaryHashTests.test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: when the stub CLI file is modified during the security pass, the run exits 2 before the second ... FAIL
+test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files (test_claude_review.CliBinaryHashTests.test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files)
+NFR-09.7: cli_snapshot of the locked node_modules/.bin/claude holds SHA-256 digests of the real files of ... FAIL
+test_a_key_in_the_report_is_redacted_before_it_is_posted (test_claude_review.CommentTests.test_a_key_in_the_report_is_redacted_before_it_is_posted)
+NFR-09.3: a key-shaped string in the report never reaches the platform API. ... ok
+test_a_redirect_from_the_api_is_not_followed_so_the_token_is_never_resent (test_claude_review.CommentTests.test_a_redirect_from_the_api_is_not_followed_so_the_token_is_never_resent)
+NFR-09.3: a 307 answer is not followed, so the Authorization header never reaches another host. ... ok
+test_an_api_url_that_is_not_https_is_refused_before_any_request (test_claude_review.CommentTests.test_an_api_url_that_is_not_https_is_refused_before_any_request)
+NFR-09.7: GITHUB_API_URL or CI_API_V4_URL with http:// is refused, so the token is never sent in clear; ... ok
+test_github_api_failure_is_a_warning_and_never_prints_the_token (test_claude_review.CommentTests.test_github_api_failure_is_a_warning_and_never_prints_the_token)
+NFR-09.4: a failed comment call warns and exits 0 (the gate is the job, not the comment). ... ok
+test_github_creates_one_comment_carrying_the_marker_and_the_report (test_claude_review.CommentTests.test_github_creates_one_comment_carrying_the_marker_and_the_report)
+NFR-09.4: on a pull_request event the report is posted as a new PR comment with the marker. ... ok
+test_github_does_nothing_outside_a_pull_request_or_without_a_token (test_claude_review.CommentTests.test_github_does_nothing_outside_a_pull_request_or_without_a_token)
+NFR-09.4: on a push event or with no GH_TOKEN the comment step makes no request and exits 0. ... ok
+test_github_never_edits_a_marked_comment_of_another_author (test_claude_review.CommentTests.test_github_never_edits_a_marked_comment_of_another_author)
+NFR-09.7: a marked comment by a person or by another bot is left alone; a new comment is posted instead, ... ok
+test_github_updates_the_existing_marked_comment (test_claude_review.CommentTests.test_github_updates_the_existing_marked_comment)
+NFR-09.4: a second run edits the comment that carries the marker instead of adding another. ... ok
+test_gitlab_creates_a_merge_request_note_with_the_private_token_header (test_claude_review.CommentTests.test_gitlab_creates_a_merge_request_note_with_the_private_token_header)
+NFR-09.4: on GitLab the report is posted as an MR note, authenticated with PRIVATE-TOKEN. ... ok
+test_gitlab_does_nothing_without_a_token_or_a_merge_request (test_claude_review.CommentTests.test_gitlab_does_nothing_without_a_token_or_a_merge_request)
+NFR-09.4: without PF_GITLAB_REVIEW_TOKEN or CI_MERGE_REQUEST_IID nothing is posted and the exit is 0. ... ok
+test_gitlab_edits_only_a_note_written_by_the_token_user (test_claude_review.CommentTests.test_gitlab_edits_only_a_note_written_by_the_token_user)
+NFR-09.7: on GitLab the note to update is the marked note whose author id equals GET /user of the token; ... ok
+test_gitlab_posts_a_new_note_when_only_foreign_notes_carry_the_marker (test_claude_review.CommentTests.test_gitlab_posts_a_new_note_when_only_foreign_notes_carry_the_marker)
+NFR-09.7: when the only marked notes belong to other users, the runner adds its own note. ... ok
+test_gitlab_posts_nothing_when_the_token_user_is_unknown (test_claude_review.CommentTests.test_gitlab_posts_nothing_when_the_token_user_is_unknown)
+NFR-09.7: when GET /user fails, no note is posted or edited and the step only warns (exit 0). ... ok
+test_gitlab_updates_the_existing_marked_note (test_claude_review.CommentTests.test_gitlab_updates_the_existing_marked_note)
+NFR-09.4: a rerun on GitLab edits the note with the marker. ... ok
+test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base (test_claude_review.DiffRangeTests.test_auto_event_uses_the_range_when_base_is_an_ancestor_else_the_merge_base)
+NFR-09.4: with no event given, an ancestor base is used as is and any other base gives the merge base. ... ok
+test_manual_run_on_dev_or_main_reviews_the_head_commit_alone (test_claude_review.DiffRangeTests.test_manual_run_on_dev_or_main_reviews_the_head_commit_alone)
+NFR-09.4: when HEAD is origin/dev or origin/main a manual run reviews HEAD^1..HEAD. ... ok
+test_manual_run_uses_the_merge_base_with_origin_dev (test_claude_review.DiffRangeTests.test_manual_run_uses_the_merge_base_with_origin_dev)
+NFR-09.4: a manual run reviews merge-base(origin/dev, HEAD)..HEAD. ... ok
+test_manual_run_without_origin_dev_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_manual_run_without_origin_dev_falls_back_to_the_first_parent)
+NFR-09.4: with no origin/dev to compare with, a manual run reviews HEAD^1..HEAD. ... ok
+test_merge_request_is_an_alias_of_pull_request (test_claude_review.DiffRangeTests.test_merge_request_is_an_alias_of_pull_request)
+NFR-09.4: a GitLab merge request uses the same merge-base rule. ... ok
+test_pull_request_range_starts_at_the_merge_base (test_claude_review.DiffRangeTests.test_pull_request_range_starts_at_the_merge_base)
+NFR-09.4: a pull request reviews merge-base(base, head)..head, not the moved base tip. ... ok
+test_push_range_is_before_to_after (test_claude_review.DiffRangeTests.test_push_range_is_before_to_after)
+NFR-09.4: a push whose before is an ancestor of after reviews before..after. ... ok
+test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_a_non_ancestor_before_falls_back_to_the_first_parent)
+NFR-09.4: after a force push the old tip is not an ancestor, so the range is after^1..after. ... ok
+test_push_with_all_zero_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_all_zero_before_falls_back_to_the_first_parent)
+NFR-09.4: a push that creates a branch (before is all zeros) reviews after^1..after. ... ok
+test_push_with_an_unknown_before_falls_back_to_the_first_parent (test_claude_review.DiffRangeTests.test_push_with_an_unknown_before_falls_back_to_the_first_parent)
+NFR-09.4: a before commit that the checkout does not have falls back to the first parent. ... ok
+test_root_commit_is_compared_with_the_empty_tree (test_claude_review.DiffRangeTests.test_root_commit_is_compared_with_the_empty_tree)
+NFR-09.4: a commit without a parent is reviewed against the empty tree. ... ok
+test_unknown_head_is_an_error (test_claude_review.DiffRangeTests.test_unknown_head_is_an_error)
+NFR-09.4: a head that is not a commit stops the run instead of reviewing nothing. ... ok
+test_a_deleted_tracked_file_in_the_worktree_fails_closed (test_claude_review.DisposableWorktreeTests.test_a_deleted_tracked_file_in_the_worktree_fails_closed)
+NFR-09.4: a pass that deletes a tracked file of the worktree makes the run exit 2, naming the file. ... ok
+test_a_modified_tracked_file_in_the_worktree_fails_closed (test_claude_review.DisposableWorktreeTests.test_a_modified_tracked_file_in_the_worktree_fails_closed)
+NFR-09.4: a pass that modifies a tracked file of the worktree makes the run exit 2 before the second pass, ... ok
+test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full (test_claude_review.DisposableWorktreeTests.test_new_untracked_placeholder_files_in_the_worktree_are_tolerated_and_listed_in_full)
+NFR-09.7: empty files the sandbox creates in the worktree (.env, .npmrc, .gitmodules and more than ten in ... ok
+test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout (test_claude_review.DisposableWorktreeTests.test_the_cli_runs_in_a_detached_worktree_of_head_outside_the_checkout)
+NFR-09.7: each pass starts the CLI in the same worktree, which is not the checkout or inside it, holds the ... ok
+test_the_worktree_is_created_without_running_repository_hooks (test_claude_review.DisposableWorktreeTests.test_the_worktree_is_created_without_running_repository_hooks)
+NFR-09.7: the worktree is added with core.hooksPath pointing at the null device (and core.fsmonitor off), ... ok
+test_the_worktree_is_removed_when_the_cli_fails (test_claude_review.DisposableWorktreeTests.test_the_worktree_is_removed_when_the_cli_fails)
+NFR-09.4: when the CLI exits 1 after dropping a placeholder, the run exits 2 and the worktree is gone. ... ok
+test_child_environment_helper_keeps_only_the_allowlist (test_claude_review.EnvironmentAllowlistTests.test_child_environment_helper_keeps_only_the_allowlist)
+NFR-09.7: child_environment keeps PATH, HOME, LANG, LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ... ok
+test_the_docstring_describes_the_allowlist (test_claude_review.EnvironmentAllowlistTests.test_the_docstring_describes_the_allowlist)
+NFR-09.7: the module docstring describes the allowlist and no longer says only that the CLI never ... ok
+test_tokens_registry_passwords_and_token_urls_never_reach_the_cli (test_claude_review.EnvironmentAllowlistTests.test_tokens_registry_passwords_and_token_urls_never_reach_the_cli)
+NFR-09.7: CI_REPOSITORY_URL with a token, CI_REGISTRY_PASSWORD, GITHUB_TOKEN and a random variable are ... ok
+test_a_changed_git_config_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_changed_git_config_fails_closed)
+NFR-09.7: a pass that appends to .git/config of the real checkout makes the run exit 2 before the second ... FAIL
+test_a_changed_info_attributes_file_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_changed_info_attributes_file_fails_closed)
+NFR-09.7: a pass that writes .git/info/attributes of the real checkout makes the run exit 2, naming it. ... FAIL
+test_a_new_git_hook_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_new_git_hook_fails_closed)
+NFR-09.7: a pass that adds .git/hooks/pre-push to the real checkout makes the run exit 2, naming it. ... FAIL
+test_tree_snapshot_lists_the_git_metadata (test_claude_review.GitMetadataTreeTests.test_tree_snapshot_lists_the_git_metadata)
+NFR-09.7: tree_snapshot(repo) has entries for .git/config, each .git/hooks file and .git/info/attributes ... FAIL
+test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed (test_claude_review.HeadCommitTests.test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed)
+NFR-09.7: a PF_REVIEW_HEAD_SHA on a side branch, not an ancestor of the checkout's HEAD, makes the run ... FAIL
+test_a_head_sha_other_than_the_range_head_fails_closed (test_claude_review.HeadCommitTests.test_a_head_sha_other_than_the_range_head_fails_closed)
+NFR-09.7: a PF_REVIEW_HEAD_SHA that differs from the head of the reviewed range makes the run exit 2. ... FAIL
+test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it)
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI ... 
+  test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='abc123')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI ... FAIL
+  test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='gggggggggggggggggggggggggggggggggggggggg')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI ... FAIL
+  test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='CD51FD9D859DCB703EAD92C24ABC8DDA9C7C9D10')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI ... FAIL
+  test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='cd51fd9d859dcb703ead92c24abc8dda9c7c9d10; echo pwned-0042')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI ... FAIL
+test_an_unknown_head_sha_fails_closed (test_claude_review.HeadCommitTests.test_an_unknown_head_sha_fails_closed)
+NFR-09.7: a well-formed PF_REVIEW_HEAD_SHA that is no commit of the checkout makes the run exit 2 and ... FAIL
+test_the_docstring_documents_the_head_variable_links_and_hashes (test_claude_review.HeadCommitTests.test_the_docstring_documents_the_head_variable_links_and_hashes)
+NFR-09.7: the module docstring names PF_REVIEW_HEAD_SHA, the link check, the .git metadata snapshot, the ... FAIL
+test_the_worktree_holds_the_pr_head_and_not_the_merge_commit (test_claude_review.HeadCommitTests.test_the_worktree_holds_the_pr_head_and_not_the_merge_commit)
+NFR-09.7: with PF_REVIEW_HEAD_SHA set to the pull request head, both passes see the head's files and not ... FAIL
+test_without_the_variable_the_worktree_is_the_head_of_the_range (test_claude_review.HeadCommitTests.test_without_the_variable_the_worktree_is_the_head_of_the_range)
+NFR-09.7: without PF_REVIEW_HEAD_SHA the worktree is still created at the head of the reviewed range. ... FAIL
+test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key (test_claude_review.KeyFreeChildTests.test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key)
+NFR-09.7: in a whole run every subprocess.run call for git or ac_audit.py gets an environment without ... FAIL
+test_the_ac_audit_child_never_sees_the_key (test_claude_review.KeyFreeChildTests.test_the_ac_audit_child_never_sees_the_key)
+NFR-09.7: a stub scripts/ac_audit.py in the reviewed repository records its environment: it has no ... FAIL
+test_tool_environment_drops_the_key_and_every_claude_variable (test_claude_review.KeyFreeChildTests.test_tool_environment_drops_the_key_and_every_claude_variable)
+NFR-09.7: tool_environment keeps the allowlist minus ANTHROPIC_API_KEY and CLAUDE_*, whatever the case. ... FAIL
+test_the_locked_cli_is_the_default (test_claude_review.LockedCliTests.test_the_locked_cli_is_the_default)
+NFR-09.7: cli_command() returns scripts/ci/claude-cli/node_modules/.bin/claude (claude.cmd on Windows) ... ok
+test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass (test_claude_review.ReviewInputHashTests.test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: a file added to ci-out/review/input/ during a pass makes the run exit 2 before the next pass. ... FAIL
+test_an_input_file_changed_during_the_first_pass_stops_the_second_pass (test_claude_review.ReviewInputHashTests.test_an_input_file_changed_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: when ci-out/review/input/diff.patch of the worktree is changed during the security pass, the run ... FAIL
+test_a_stale_input_file_is_removed_before_the_review (test_claude_review.ReviewInputTests.test_a_stale_input_file_is_removed_before_the_review)
+NFR-09.7: a file left in ci-out/review/input/ by an earlier run is not shown to the reviewer. ... ok
+test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder (test_claude_review.ReviewInputTests.test_each_pass_finds_the_diff_the_log_and_the_file_list_in_the_input_folder)
+NFR-09.7: before each pass ci-out/review/input/ holds diff.patch (git diff base head), log.txt (the commit ... ok
+test_blank_cap_variables_use_the_defaults (test_claude_review.ReviewPromptTests.test_blank_cap_variables_use_the_defaults)
+NFR-09.4: an unset repository variable reaches the job as an empty string and means the default. ... ok
+test_caps_can_be_set_through_the_environment (test_claude_review.ReviewPromptTests.test_caps_can_be_set_through_the_environment)
+NFR-09.4: PF_REVIEW_MAX_TURNS and PF_REVIEW_MAX_BUDGET_USD set the caps of every pass. ... ok
+test_command_line_matches_the_contract (test_claude_review.ReviewPromptTests.test_command_line_matches_the_contract)
+NFR-09.4: the CLI argv has the exact flag set, the frontmatter model and both caps for each pass. ... ok
+test_each_pass_receives_the_agent_body_byte_for_byte (test_claude_review.ReviewPromptTests.test_each_pass_receives_the_agent_body_byte_for_byte)
+NFR-09.4: each pass sends the agent file body, unchanged, on stdin and never on the command line. ... ok
+test_malformed_caps_fail_before_the_cli_is_started (test_claude_review.ReviewPromptTests.test_malformed_caps_fail_before_the_cli_is_started)
+NFR-09.4: a cap that is not a number fails closed instead of being passed to the CLI. ... ok
+test_models_come_from_the_agent_frontmatter (test_claude_review.ReviewPromptTests.test_models_come_from_the_agent_frontmatter)
+NFR-09.4: security-reviewer runs on its frontmatter model and test-engineer on its own. ... ok
+test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary (test_claude_review.ReviewPromptTests.test_only_the_test_engineer_pass_gets_the_offline_ac_audit_summary)
+NFR-09.4: the test-engineer prompt carries the offline AC-audit summary line, the other does not. ... ok
+test_permissions_are_never_skipped (test_claude_review.ReviewPromptTests.test_permissions_are_never_skipped)
+NFR-09.4: no pass uses --dangerously-skip-permissions or a bypass permission mode. ... ok
+test_preamble_points_at_the_input_files_and_offers_no_shell (test_claude_review.ReviewPromptTests.test_preamble_points_at_the_input_files_and_offers_no_shell)
+NFR-09.7: the preamble tells the model to Read the diff, the log and the file list from ... ok
+test_preamble_states_the_range_the_rules_and_the_changed_files (test_claude_review.ReviewPromptTests.test_preamble_states_the_range_the_rules_and_the_changed_files)
+NFR-09.4: the preamble names the diff range and files, says read-only, and marks the diff untrusted. ... ok
+test_a_failed_pass_stops_the_review_before_the_second_pass (test_claude_review.ReviewVerdictTests.test_a_failed_pass_stops_the_review_before_the_second_pass)
+NFR-09.4: when the first pass fails the second is not started, so no more API money is spent. ... ok
+test_blank_api_key_counts_as_missing (test_claude_review.ReviewVerdictTests.test_blank_api_key_counts_as_missing)
+NFR-09.4: an empty ANTHROPIC_API_KEY (an unset GitHub secret renders as empty) is a missing key. ... ok
+test_blockers_from_both_passes_are_counted (test_claude_review.ReviewVerdictTests.test_blockers_from_both_passes_are_counted)
+NFR-09.4: BLOCKER findings of both passes count towards the gate. ... ok
+test_changes_requested_without_blocker_exits_zero_with_a_warning (test_claude_review.ReviewVerdictTests.test_changes_requested_without_blocker_exits_zero_with_a_warning)
+NFR-09.4: CHANGES_REQUESTED with no BLOCKER passes (plan G-4) but warns in the log and the report. ... ok
+test_cli_exit_status_one_fails (test_claude_review.ReviewVerdictTests.test_cli_exit_status_one_fails)
+NFR-09.4: a CLI that exits with status 1 fails the job with a non-zero exit. ... ok
+test_cli_reported_error_fails (test_claude_review.ReviewVerdictTests.test_cli_reported_error_fails)
+NFR-09.4: a result flagged is_error (for example a hit turn cap) has no verdict, so the job fails. ... ok
+test_empty_diff_passes_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_empty_diff_passes_without_calling_the_cli)
+NFR-09.4: an empty diff writes a no-changes report, exits 0 and never starts the CLI. ... ok
+test_last_fenced_json_block_is_used_when_structured_output_is_absent (test_claude_review.ReviewVerdictTests.test_last_fenced_json_block_is_used_when_structured_output_is_absent)
+NFR-09.4: without structured_output the last fenced json block of the result is the verdict. ... ok
+test_major_and_minor_findings_alone_exit_zero_and_are_published (test_claude_review.ReviewVerdictTests.test_major_and_minor_findings_alone_exit_zero_and_are_published)
+NFR-09.4: MAJOR and MINOR findings do not fail the job, and every one appears in claude-review.md. ... ok
+test_missing_api_key_fails_without_calling_the_cli (test_claude_review.ReviewVerdictTests.test_missing_api_key_fails_without_calling_the_cli)
+NFR-09.4: with ANTHROPIC_API_KEY unset the run exits 2 with a fixed message and never starts the CLI. ... ok
+test_missing_required_key_in_the_verdict_fails (test_claude_review.ReviewVerdictTests.test_missing_required_key_in_the_verdict_fails)
+NFR-09.4: a verdict that lacks a required key (summary) exits 2. ... ok
+test_no_structured_output_and_no_fenced_json_fails (test_claude_review.ReviewVerdictTests.test_no_structured_output_and_no_fenced_json_fails)
+NFR-09.4: a pass with neither structured_output nor a fenced JSON block fails closed (exit 2). ... ok
+test_one_blocker_exits_one (test_claude_review.ReviewVerdictTests.test_one_blocker_exits_one)
+NFR-09.4: a single BLOCKER finding fails the job with exit 1 and names the finding in the report. ... ok
+test_repository_defaults_to_the_working_directory (test_claude_review.ReviewVerdictTests.test_repository_defaults_to_the_working_directory)
+NFR-09.4: without --repo the runner reviews the repository it is started in, as the CI jobs do. ... ok
+test_schema_invalid_output_fails (test_claude_review.ReviewVerdictTests.test_schema_invalid_output_fails)
+NFR-09.4: output that fails the verdict schema (a verdict outside the enum) exits 2. ... ok
+test_two_approve_passes_exit_zero (test_claude_review.ReviewVerdictTests.test_two_approve_passes_exit_zero)
+NFR-09.4: two APPROVE passes exit 0, write both verdicts and a report ending in GATE: PASS. ... ok
+test_version_match_is_exact (test_claude_review.ReviewVerdictTests.test_version_match_is_exact)
+NFR-09.4: 2.1.3110 and 12.1.311 do not satisfy the 2.1.311 pin. ... ok
+test_version_other_than_the_pinned_one_fails_before_any_pass (test_claude_review.ReviewVerdictTests.test_version_other_than_the_pinned_one_fails_before_any_pass)
+NFR-09.4: a CLI that is not 2.1.311 fails closed and no prompt is ever sent to it. ... ok
+test_child_environment_helper_removes_tokens_in_any_case (test_claude_review.SecretHandlingTests.test_child_environment_helper_removes_tokens_in_any_case)
+NFR-09.3: child_environment drops the token variables and sets the scrub flag. ... ok
+test_cli_child_environment_lacks_the_platform_tokens (test_claude_review.SecretHandlingTests.test_cli_child_environment_lacks_the_platform_tokens)
+NFR-09.3: the CLI child environment has none of GITHUB_TOKEN, GH_TOKEN, CI_JOB_TOKEN, GitLab token. ... ok
+test_fake_key_never_appears_in_stdout_stderr_or_any_output_file (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_in_stdout_stderr_or_any_output_file)
+NFR-09.3: after a normal run the API key is in no stream and no file the run produced. ... ok
+test_fake_key_never_appears_when_the_run_fails (test_claude_review.SecretHandlingTests.test_fake_key_never_appears_when_the_run_fails)
+NFR-09.3: the failure paths (a CLI error, a missing verdict) do not print the key either. ... ok
+test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output (test_claude_review.SecretHandlingTests.test_key_shaped_string_echoed_by_the_cli_is_redacted_in_every_output)
+NFR-09.3: a key-shaped string that the CLI echoes is replaced by a marker in stdout, stderr and files. ... ok
+test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped (test_claude_review.SecretHandlingTests.test_the_exact_key_value_is_redacted_even_when_it_is_not_key_shaped)
+NFR-09.3: the literal ANTHROPIC_API_KEY value is redacted wherever the CLI echoes it. ... ok
+test_a_link_inside_the_checkout_is_allowed (test_claude_review.SymlinkTests.test_a_link_inside_the_checkout_is_allowed)
+NFR-09.7: a link in the checkout that resolves to a folder inside it does not stop the review; both passes ... ok
+test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts (test_claude_review.SymlinkTests.test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts)
+NFR-09.7: an untracked link in the checkout to a temporary file outside it makes the run exit 2; the ... FAIL
+test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git (test_claude_review.SymlinkTests.test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git)
+NFR-09.7: escaping_links(root) walks a folder without following links and returns, sorted, every link ... FAIL
+test_deny_rules_for_a_github_and_a_gitlab_runner_layout (test_claude_review.ToolSandboxTests.test_deny_rules_for_a_github_and_a_gitlab_runner_layout)
+NFR-09.7: read_deny_rules keeps the ancestors of the checkout readable and denies every other system root, ... ok
+test_reads_outside_the_checkout_are_denied_but_the_checkout_is_not (test_claude_review.ToolSandboxTests.test_reads_outside_the_checkout_are_denied_but_the_checkout_is_not)
+NFR-09.7: the deny rules cover /proc, /sys, /dev and /etc, and none of them is the checkout or one of its ... ok
+test_the_cli_gets_no_bash_tool_and_no_shell_rule (test_claude_review.ToolSandboxTests.test_the_cli_gets_no_bash_tool_and_no_shell_rule)
+NFR-09.7: --tools is Read,Grep,Glob, Bash is denied, and no argument grants Bash, PowerShell, rg or git. ... ok
+test_a_change_to_an_untracked_file_that_existed_before_fails_closed (test_claude_review.UnchangedTreeTests.test_a_change_to_an_untracked_file_that_existed_before_fails_closed)
+NFR-09.7: an untracked file that was present before the pass and changes during it fails the run. ... ok
+test_a_long_list_of_changed_paths_is_reported_in_full (test_claude_review.UnchangedTreeTests.test_a_long_list_of_changed_paths_is_reported_in_full)
+NFR-09.7: when more than ten paths of the real checkout change, the error names every one of them, with ... ok
+test_a_modified_tracked_file_fails_closed_before_any_later_step (test_claude_review.UnchangedTreeTests.test_a_modified_tracked_file_fails_closed_before_any_later_step)
+NFR-09.7: a pass that modifies scripts/redact_evidence.py makes the runner exit 2 before the second pass. ... ok
+test_a_new_ignored_file_fails_closed (test_claude_review.UnchangedTreeTests.test_a_new_ignored_file_fails_closed)
+NFR-09.7: a pass that creates a new git-ignored file outside ci-out/ makes the runner exit 2. ... ok
+test_a_new_untracked_file_fails_closed (test_claude_review.UnchangedTreeTests.test_a_new_untracked_file_fails_closed)
+NFR-09.7: a pass that creates an untracked file outside ci-out/ makes the runner exit 2. ... ok
+test_ignored_paths_that_existed_before_the_pass_are_not_a_change (test_claude_review.UnchangedTreeTests.test_ignored_paths_that_existed_before_the_pass_are_not_a_change)
+NFR-09.7: ignored files already present before the pass (.venv, .ci-tools, node_modules) do not fail the ... ok
+test_writes_under_ci_out_are_allowed (test_claude_review.UnchangedTreeTests.test_writes_under_ci_out_are_allowed)
+NFR-09.7: a file written under ci-out/ is not a change of the checkout; both passes run and the exit is 0. ... ok
+test_missing_extra_and_mistyped_keys_are_rejected (test_claude_review.VerdictSchemaTests.test_missing_extra_and_mistyped_keys_are_rejected)
+NFR-09.4: a missing key, an extra key, a bad enum and a wrong type each produce an error. ... ok
+test_non_object_verdicts_are_rejected (test_claude_review.VerdictSchemaTests.test_non_object_verdicts_are_rejected)
+NFR-09.4: a list, a string or null is never a verdict. ... ok
+test_schema_file_defines_the_c6_shape (test_claude_review.VerdictSchemaTests.test_schema_file_defines_the_c6_shape)
+NFR-09.4: the schema requires every key, allows no others, and fixes the enums of C6. ... ok
+test_valid_verdict_has_no_errors (test_claude_review.VerdictSchemaTests.test_valid_verdict_has_no_errors)
+NFR-09.4: a complete verdict validates, including a null line number. ... ok
+test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing (test_fetch_tools.FetchBehaviourTests.test_a_checksum_mismatch_exits_non_zero_deletes_the_download_and_extracts_nothing)
+NFR-09.6: a wrong SHA-256 fails the run, removes the download and never reaches extraction. ... ok
+test_a_tampered_copy_is_replaced_by_a_fresh_verified_download (test_fetch_tools.FetchBehaviourTests.test_a_tampered_copy_is_replaced_by_a_fresh_verified_download)
+NFR-09.6: if the extracted tool changed after verification, it is downloaded and verified again. ... ok
+test_a_verified_copy_is_reused_without_downloading_again (test_fetch_tools.FetchBehaviourTests.test_a_verified_copy_is_reused_without_downloading_again)
+NFR-09.6: a second run finds the verified copy and does not download. ... ok
+test_a_verified_download_is_extracted_and_its_path_is_printed (test_fetch_tools.FetchBehaviourTests.test_a_verified_download_is_extracted_and_its_path_is_printed)
+NFR-09.6: a download whose SHA-256 matches is extracted into the destination and the path is printed. ... ok
+test_an_archive_without_the_executable_fails_and_leaves_nothing (test_fetch_tools.FetchBehaviourTests.test_an_archive_without_the_executable_fails_and_leaves_nothing)
+NFR-09.6: a checksum-valid archive that lacks the tool is an error, and nothing is left behind. ... ok
+test_path_traversal_members_are_never_written (test_fetch_tools.FetchBehaviourTests.test_path_traversal_members_are_never_written)
+NFR-09.6: members with .. or absolute names are ignored; only the named executable is extracted. ... ok
+test_unknown_tool_and_unknown_platform_are_usage_errors (test_fetch_tools.FetchBehaviourTests.test_unknown_tool_and_unknown_platform_are_usage_errors)
+NFR-09.6: asking for a tool or platform that is not in the manifest exits 2 without downloading. ... ok
+test_zip_and_nested_tar_xz_archives_are_supported (test_fetch_tools.FetchBehaviourTests.test_zip_and_nested_tar_xz_archives_are_supported)
+NFR-09.6: the Windows zip and the nested shellcheck tar.xz layouts both yield the executable. ... ok
+test_manifest_holds_the_c3_urls_and_sha256_values (test_fetch_tools.ManifestTests.test_manifest_holds_the_c3_urls_and_sha256_values)
+NFR-09.6: the manifest pins actionlint 1.7.12 and shellcheck v0.11.0 for linux and windows, with SHA-256. ... ok
+test_platform_names_are_detected_for_the_ci_machines (test_fetch_tools.ManifestTests.test_platform_names_are_detected_for_the_ci_machines)
+NFR-09.6: Linux x86_64 and Windows AMD64 map to the manifest's platform keys; others are rejected. ... ok
+test_the_default_downloader_passes_the_verifying_context_to_urlopen (test_fetch_tools.TransportTests.test_the_default_downloader_passes_the_verifying_context_to_urlopen)
+NFR-09.6: download_file hands the verifying SSL context to urlopen and writes what it reads. ... ok
+test_the_default_downloader_refuses_plain_http (test_fetch_tools.TransportTests.test_the_default_downloader_refuses_plain_http)
+NFR-09.6: only https URLs are downloaded. ... ok
+test_tls_verification_is_on (test_fetch_tools.TransportTests.test_tls_verification_is_on)
+NFR-09.6: the SSL context requires a valid certificate and host name, and nothing disables it. ... ok
+test_actionlint_gate_uses_the_fetched_tools_on_the_workflows (test_quality_gates.GateDefinitionTests.test_actionlint_gate_uses_the_fetched_tools_on_the_workflows)
+NFR-09.6: actionlint runs with the fetched shellcheck on every file under .github/workflows/. ... ok
+test_actionlint_gate_without_workflows_is_unavailable (test_quality_gates.GateDefinitionTests.test_actionlint_gate_without_workflows_is_unavailable)
+NFR-09.6: with no workflow file to lint the actionlint gate fails instead of passing vacuously. ... ok
+test_gate_list_and_order_equal_c11 (test_quality_gates.GateDefinitionTests.test_gate_list_and_order_equal_c11)
+NFR-09.6: the quality gates are the eight of plan C11, in that order. ... ok
+test_schema_gate_checks_both_platforms_with_the_c11_schemas (test_quality_gates.GateDefinitionTests.test_schema_gate_checks_both_platforms_with_the_c11_schemas)
+NFR-09.6: ci-schema runs check-jsonschema on the GitHub workflows and on .gitlab-ci.yml. ... ok
+test_schema_gate_without_check_jsonschema_is_unavailable (test_quality_gates.GateDefinitionTests.test_schema_gate_without_check_jsonschema_is_unavailable)
+NFR-09.6: an environment without check-jsonschema fails the gate instead of skipping it. ... ok
+test_static_gate_commands_equal_c11 (test_quality_gates.GateDefinitionTests.test_static_gate_commands_equal_c11)
+NFR-09.6: each static gate runs the C11 command with the current interpreter. ... ok
+test_a_gate_with_several_commands_fails_if_any_command_fails (test_quality_gates.GateRunTests.test_a_gate_with_several_commands_fails_if_any_command_fails)
+NFR-09.6: a gate made of two commands runs both and fails when either exits non-zero. ... ok
+test_a_missing_tool_fails_the_gate_and_the_run (test_quality_gates.GateRunTests.test_a_missing_tool_fails_the_gate_and_the_run)
+NFR-09.6: a tool that cannot be resolved is a failure, never a skip, and later gates still run. ... ok
+test_a_single_failure_exits_one_after_every_later_gate_has_run (test_quality_gates.GateRunTests.test_a_single_failure_exits_one_after_every_later_gate_has_run)
+NFR-09.6: a failing gate never stops the run; later gates still execute and are reported. ... ok
+test_all_gates_passing_exits_zero_and_runs_every_gate_in_order (test_quality_gates.GateRunTests.test_all_gates_passing_exits_zero_and_runs_every_gate_in_order)
+NFR-09.6: with every gate passing the exit code is 0 and all eight gates ran, in the C11 order. ... ok
+test_api_key_is_not_passed_to_the_gates (test_quality_gates.GateRunTests.test_api_key_is_not_passed_to_the_gates)
+NFR-09.6: the gate subprocesses run without ANTHROPIC_API_KEY, which only the review step may see. ... ok
+test_command_line_entry_point_lists_the_gates (test_quality_gates.GateRunTests.test_command_line_entry_point_lists_the_gates)
+NFR-09.6: `python scripts/ci/quality_gates.py --list` works as a program and exits 0. ... ok
+test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code (test_quality_gates.GateRunTests.test_every_gate_is_reported_in_a_summary_table_with_command_and_exit_code)
+NFR-09.6: the summary table has the columns gate, command, exit and result for every gate. ... ok
+test_list_prints_the_gates_without_running_them (test_quality_gates.GateRunTests.test_list_prints_the_gates_without_running_them)
+NFR-09.6: --list prints every gate name in order and runs nothing. ... ok
+test_only_runs_the_named_gates (test_quality_gates.GateRunTests.test_only_runs_the_named_gates)
+NFR-09.6: --only selects gates by name and unknown names are a usage error (exit 2). ... unknown gate(s): no-such-gate; known: ac-audit, redact-evidence, hook-tests, hook-line-endings, ci-script-tests, oracle-fixture, actionlint, ci-schema
+ok
+test_real_subprocess_exit_codes_are_captured (test_quality_gates.GateRunTests.test_real_subprocess_exit_codes_are_captured)
+NFR-09.6: with the default runner a command's real exit status and output reach the table. ... ok
+test_report_file_holds_the_summary_table (test_quality_gates.GateRunTests.test_report_file_holds_the_summary_table)
+NFR-09.6: --report writes the same table to a file, for the quality-gates-report artifact. ... ok
+test_check_reports_the_key_and_exits_one_without_changing_the_file (test_redact_evidence.RedactApiKeyTests.test_check_reports_the_key_and_exits_one_without_changing_the_file)
+NFR-09.3: --check finds the key, exits 1 and leaves the file untouched. ... ok
+test_committed_evidence_directories_are_still_clean (test_redact_evidence.RedactApiKeyTests.test_committed_evidence_directories_are_still_clean)
+NFR-09.3: --check over sprint-contracts, specs/reviews and docs/fix-loops exits 0. ... ok
+test_every_key_in_a_file_is_counted (test_redact_evidence.RedactApiKeyTests.test_every_key_in_a_file_is_counted)
+NFR-09.3: two keys in one file are both found and counted. ... ok
+test_existing_patterns_keep_their_behaviour (test_redact_evidence.RedactApiKeyTests.test_existing_patterns_keep_their_behaviour)
+NFR-09.3: Basic, Bearer and generated-password redaction are unchanged by the new pattern. ... ok
+test_keys_in_json_and_markdown_reports_are_covered (test_redact_evidence.RedactApiKeyTests.test_keys_in_json_and_markdown_reports_are_covered)
+NFR-09.3: the review outputs (.json verdicts and the .md report) are scanned as well as .log files. ... ok
+test_redact_replaces_an_anthropic_key_with_a_marker (test_redact_evidence.RedactApiKeyTests.test_redact_replaces_an_anthropic_key_with_a_marker)
+NFR-09.3: redact_evidence.py rewrites a sk-ant- key as <redacted-api-key> and exits 0. ... ok
+test_short_look_alikes_are_not_keys (test_redact_evidence.RedactApiKeyTests.test_short_look_alikes_are_not_keys)
+NFR-09.3: sk-ant- followed by fewer than 20 key characters is prose, not a key. ... ok
+
+======================================================================
+FAIL: test_github_passes_the_pr_head_sha_through_step_env (test_ci_config.HeadCommitWiringTests.test_github_passes_the_pr_head_sha_through_step_env)
+NFR-09.7: the GitHub review step sets PF_REVIEW_HEAD_SHA to ${{ github.event.pull_request.head.sha }} in
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 1092, in test_github_passes_the_pr_head_sha_through_step_env
+    self.assertEqual(steps[0].get("env", {}).get("PF_REVIEW_HEAD_SHA"),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "${{ github.event.pull_request.head.sha }}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != '${{ github.event.pull_request.head.sha }}'
+
+======================================================================
+FAIL: test_gitlab_uses_the_source_branch_sha_when_present (test_ci_config.HeadCommitWiringTests.test_gitlab_uses_the_source_branch_sha_when_present)
+NFR-09.7: in a merge request pipeline the GitLab review reviews up to CI_MERGE_REQUEST_SOURCE_BRANCH_SHA
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 1105, in test_gitlab_uses_the_source_branch_sha_when_present
+    self.assertIn('head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"', script)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"' not found in 'git remote set-url origin "${CI_PROJECT_URL}.git"\nnpm ci --prefix scripts/ci/claude-cli\napt-get update\napt-get install -y --no-install-recommends bubblewrap\ndpkg-query -W bubblewrap\nbwrap --version\nif ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true; then\n  echo "ERROR: bwrap cannot create a sandbox on this runner (allow user namespaces or privileged mode). The Claude review fails closed."\n  exit 1\nfi\n\ncase "$CI_PIPELINE_SOURCE" in\n  merge_request_event)\n    event=merge_request\n    base="$CI_MERGE_REQUEST_DIFF_BASE_SHA"\n    ;;\n  push)\n    event=push\n    base="$CI_COMMIT_BEFORE_SHA"\n    ;;\n  *)\n    event=manual\n    base=""\n    ;;\nesac\npython3 scripts/ci/claude_review.py run --base "$base" --head "$CI_COMMIT_SHA" --event "$event" --out ci-out/review\n\nmkdir -p "$CI_PROJECT_DIR/ci-out/status" && echo "$CI_PIPELINE_ID" > "$CI_PROJECT_DIR/ci-out/status/claude-review.ok"'
+
+======================================================================
+FAIL: test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass (test_claude_review.CliBinaryHashTests.test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: when the stub CLI file is modified during the security pass, the run exits 2 before the second
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1505, in test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files (test_claude_review.CliBinaryHashTests.test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files)
+NFR-09.7: cli_snapshot of the locked node_modules/.bin/claude holds SHA-256 digests of the real files of
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1533, in test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files
+    self.assertIn(entry.resolve(), resolved)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WindowsPath('C:/Users/wdarshana/AppData/Local/Temp/tmp_sj2a_1d/node_modules/@anthropic-ai/claude-code/cli.js') not found in set()
+
+======================================================================
+FAIL: test_a_changed_git_config_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_changed_git_config_fails_closed)
+NFR-09.7: a pass that appends to .git/config of the real checkout makes the run exit 2 before the second
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1466, in test_a_changed_git_config_fails_closed
+    self.assert_failed_closed(proc, ".git/config")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 600, in assert_failed_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_changed_info_attributes_file_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_changed_info_attributes_file_fails_closed)
+NFR-09.7: a pass that writes .git/info/attributes of the real checkout makes the run exit 2, naming it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1476, in test_a_changed_info_attributes_file_fails_closed
+    self.assert_failed_closed(proc, ".git/info/attributes")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 600, in assert_failed_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_new_git_hook_fails_closed (test_claude_review.GitMetadataTreeTests.test_a_new_git_hook_fails_closed)
+NFR-09.7: a pass that adds .git/hooks/pre-push to the real checkout makes the run exit 2, naming it.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1471, in test_a_new_git_hook_fails_closed
+    self.assert_failed_closed(proc, ".git/hooks/pre-push")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 600, in assert_failed_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_tree_snapshot_lists_the_git_metadata (test_claude_review.GitMetadataTreeTests.test_tree_snapshot_lists_the_git_metadata)
+NFR-09.7: tree_snapshot(repo) has entries for .git/config, each .git/hooks file and .git/info/attributes
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1488, in test_tree_snapshot_lists_the_git_metadata
+    self.assertIn(key, snapshot)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: '.git/config' not found in {}
+
+======================================================================
+FAIL: test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed (test_claude_review.HeadCommitTests.test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed)
+NFR-09.7: a PF_REVIEW_HEAD_SHA on a side branch, not an ancestor of the checkout's HEAD, makes the run
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1724, in test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_head_sha_other_than_the_range_head_fails_closed (test_claude_review.HeadCommitTests.test_a_head_sha_other_than_the_range_head_fails_closed)
+NFR-09.7: a PF_REVIEW_HEAD_SHA that differs from the head of the reviewed range makes the run exit 2.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1731, in test_a_head_sha_other_than_the_range_head_fails_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='abc123')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1701, in test_a_malformed_head_sha_fails_closed_without_echoing_it
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='gggggggggggggggggggggggggggggggggggggggg')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1701, in test_a_malformed_head_sha_fails_closed_without_echoing_it
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='CD51FD9D859DCB703EAD92C24ABC8DDA9C7C9D10')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1701, in test_a_malformed_head_sha_fails_closed_without_echoing_it
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_malformed_head_sha_fails_closed_without_echoing_it (test_claude_review.HeadCommitTests.test_a_malformed_head_sha_fails_closed_without_echoing_it) (value='cd51fd9d859dcb703ead92c24abc8dda9c7c9d10; echo pwned-0042')
+NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1701, in test_a_malformed_head_sha_fails_closed_without_echoing_it
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_an_unknown_head_sha_fails_closed (test_claude_review.HeadCommitTests.test_an_unknown_head_sha_fails_closed)
+NFR-09.7: a well-formed PF_REVIEW_HEAD_SHA that is no commit of the checkout makes the run exit 2 and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1710, in test_an_unknown_head_sha_fails_closed
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_the_docstring_documents_the_head_variable_links_and_hashes (test_claude_review.HeadCommitTests.test_the_docstring_documents_the_head_variable_links_and_hashes)
+NFR-09.7: the module docstring names PF_REVIEW_HEAD_SHA, the link check, the .git metadata snapshot, the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1741, in test_the_docstring_documents_the_head_variable_links_and_hashes
+    self.assertIn(fragment, doc)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 'PF_REVIEW_HEAD_SHA' not found in "The required Claude Code review of a CI run (NFR-09.4, plan C5 and C6).\n\n    claude_review.py run --base <sha> --head <sha> --out <dir> [--event pull_request|merge_request|push|manual|auto]\n    claude_review.py comment --platform github|gitlab --report <file>\n\n`run` reviews the commit range twice with the pinned Claude Code CLI in bare, read-only print mode, once with the\nbody of `.claude/agents/security-reviewer.md` and once with `.claude/agents/test-engineer.md` as the instructions\n(each agent body is sent on stdin, byte for byte, behind a fixed CI preamble). Each pass must return a verdict that\npasses `review-verdict.schema.json`. The run writes `<out>/security-reviewer.json`, `<out>/test-engineer.json` and\n`<out>/claude-review.md`, whose last line is `GATE: PASS|FAIL (...)`.\n\nExit status:  0  no BLOCKER finding in either pass (MAJOR and MINOR findings are published, not gating)\n              1  at least one BLOCKER finding\n              2  the review could not run or returned nothing usable: ANTHROPIC_API_KEY unset, bubblewrap missing,\n                 a CLI that is not the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output.\n                 The gate fails closed.\n\nAn empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7):\n- the CLI runs in a disposable detached worktree of HEAD outside the checkout (under RUNNER_TEMP, TMPDIR or the\n  system temp folder), added with core.fsmonitor off and no hooks, and removed after the run whatever happens;\n- the CLI has the Read, Grep and Glob tools only, with no Bash. Before the first pass the runner writes the diff, the\n  commit log and the changed-file list to the worktree's ci-out/review/input/, and the prompt tells the model to Read\n  them. Read (which also governs Grep and Glob) is allowed inside the worktree only; /proc, /sys, /dev, /etc, the\n  other system roots and the home folder's credential files are denied, and the checkout's .claude settings are not\n  loaded;\n- the environment of the CLI, and of every git and Python child, is built from an allowlist (PATH, HOME, LANG,\n  LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable,\n  token, registry password or token-bearing URL reaches it;\n- the CLI scrubs the environment of its own subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1, always set), which\n  needs bubblewrap: without `bwrap` on the CLI's PATH the run fails closed (exit 2) before the CLI is started;\n- after each pass the run fails closed (exit 2) when `git status --ignored` of the real checkout shows any change\n  outside ci-out/, or when a tracked file of the worktree changed or was deleted. New untracked files in the\n  worktree (the placeholders the CLI's bubblewrap sandbox creates) are tolerated, and every path is logged;\n- every output is redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key\n  is never printed.\n`comment` runs in a separate job, from the base branch's checkout: it edits only a comment of its own bot user and\nrefuses any API URL that is not https://.\n\nEnvironment: ANTHROPIC_API_KEY (required), PF_CLAUDE_CLI (replace the CLI, for tests; by default the CLI that\n`npm ci --prefix scripts/ci/claude-cli` installs), PF_REVIEW_MAX_TURNS (default 40), PF_REVIEW_MAX_BUDGET_USD\n(default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080). PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 lets the tests' local fake\nAPI use http:// on a loopback host; nothing else may use plain http. PF_REVIEW_SKIP_BWRAP_CHECK=1 skips the bubblewrap\ncheck for the tests' stub CLI, and only when PF_CLAUDE_CLI is also set; the real CLI is always checked.\n\nStandard library only; runs on Python 3.11 or later.\n"
+
+======================================================================
+FAIL: test_the_worktree_holds_the_pr_head_and_not_the_merge_commit (test_claude_review.HeadCommitTests.test_the_worktree_holds_the_pr_head_and_not_the_merge_commit)
+NFR-09.7: with PF_REVIEW_HEAD_SHA set to the pull request head, both passes see the head's files and not
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1681, in test_the_worktree_holds_the_pr_head_and_not_the_merge_commit
+    self.assertIsNone(seen["merge-only.txt"], "the worktree is the merge commit, not the PR head")
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'only in the merge commit\n' is not None : the worktree is the merge commit, not the PR head
+
+======================================================================
+FAIL: test_without_the_variable_the_worktree_is_the_head_of_the_range (test_claude_review.HeadCommitTests.test_without_the_variable_the_worktree_is_the_head_of_the_range)
+NFR-09.7: without PF_REVIEW_HEAD_SHA the worktree is still created at the head of the reviewed range.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1692, in test_without_the_variable_the_worktree_is_the_head_of_the_range
+    self.assertIsNone(seen["merge-only.txt"])
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'only in the merge commit\n' is not None
+
+======================================================================
+FAIL: test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key (test_claude_review.KeyFreeChildTests.test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key)
+NFR-09.7: in a whole run every subprocess.run call for git or ac_audit.py gets an environment without
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1636, in test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key
+    self.assertNotIn("ANTHROPIC_API_KEY", names)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ANTHROPIC_API_KEY' unexpectedly found in {'PATH', 'ANTHROPIC_API_KEY', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB', 'HOME', 'GIT_TERMINAL_PROMPT', 'TEMP', 'SYSTEMROOT', 'TMP'}
+
+======================================================================
+FAIL: test_the_ac_audit_child_never_sees_the_key (test_claude_review.KeyFreeChildTests.test_the_ac_audit_child_never_sees_the_key)
+NFR-09.7: a stub scripts/ac_audit.py in the reviewed repository records its environment: it has no
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1598, in test_the_ac_audit_child_never_sees_the_key
+    self.assertNotIn("ANTHROPIC_API_KEY", {k.upper() for k in env})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ANTHROPIC_API_KEY' unexpectedly found in {'PATH', 'ANTHROPIC_API_KEY', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB', 'PYTHONUTF8', 'HOME', 'TEMP', 'SYSTEMROOT', 'TMP'}
+
+======================================================================
+FAIL: test_tool_environment_drops_the_key_and_every_claude_variable (test_claude_review.KeyFreeChildTests.test_tool_environment_drops_the_key_and_every_claude_variable)
+NFR-09.7: tool_environment keeps the allowlist minus ANTHROPIC_API_KEY and CLAUDE_*, whatever the case.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1584, in test_tool_environment_drops_the_key_and_every_claude_variable
+    self.assertEqual(sorted(env), ["HOME", "LANG", "PATH"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['ANTHROPIC_API_KEY', 'CLAUDE_CODE_OAUTH_TO[81 chars]key'] != ['HOME', 'LANG', 'PATH']
+
+First differing element 0:
+'ANTHROPIC_API_KEY'
+'HOME'
+
+First list contains 4 additional elements.
+First extra element 3:
+'HOME'
+
++ ['HOME', 'LANG', 'PATH']
+- ['ANTHROPIC_API_KEY',
+-  'CLAUDE_CODE_OAUTH_TOKEN',
+-  'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB',
+-  'HOME',
+-  'LANG',
+-  'PATH',
+-  'anthropic_api_key']
+
+======================================================================
+FAIL: test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass (test_claude_review.ReviewInputHashTests.test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: a file added to ci-out/review/input/ during a pass makes the run exit 2 before the next pass.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1562, in test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_an_input_file_changed_during_the_first_pass_stops_the_second_pass (test_claude_review.ReviewInputHashTests.test_an_input_file_changed_during_the_first_pass_stops_the_second_pass)
+NFR-09.7: when ci-out/review/input/diff.patch of the worktree is changed during the security pass, the run
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1553, in test_an_input_file_changed_during_the_first_pass_stops_the_second_pass
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts (test_claude_review.SymlinkTests.test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts)
+NFR-09.7: an untracked link in the checkout to a temporary file outside it makes the run exit 2; the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1413, in test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git (test_claude_review.SymlinkTests.test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git)
+NFR-09.7: escaping_links(root) walks a folder without following links and returns, sorted, every link
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1445, in test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git
+    self.assertEqual(review.escaping_links(root), ["deep/er/out", "gitdir"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['deep/er/out', 'gitdir']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'deep/er/out'
+
+- []
++ ['deep/er/out', 'gitdir']
+
+----------------------------------------------------------------------
+Ran 210 tests in 205.747s
+
+FAILED (failures=25)

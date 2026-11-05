@@ -75,3 +75,6 @@ Log: [`green.log`](2026-11-03-s3-review-fixes/green.log).
 ## Lesson
 A credential the app does not hold can still be sent by the browser. Making `credentials: 'omit'` the default in the
 single fetch helper closes this for every current and future API call.
+
+## Pull request
+Landed in [PR-009](../prs/PR-009.md) = GitHub [#3](https://github.com/wushandarshana/Policy-Forge/pull/3) (`feat/issuance-endorsement` → `dev`), merge commit `12f95c3`.

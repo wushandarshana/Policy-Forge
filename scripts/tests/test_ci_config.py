@@ -1078,5 +1078,40 @@ class LockedInstallTests(CiConfigTestCase):
         self.assertEqual(cache[0]["with"].get("cache-dependency-path"), "scripts/requirements-ci.txt")
 
 
+
+class HeadCommitWiringTests(CiConfigTestCase):
+    """NFR-09.7 (SEC-MINOR-2): on a pull or merge request the review worktree is the head of the change, not the merge
+    commit. The CI files hand the head SHA to the runner as PF_REVIEW_HEAD_SHA, never inline in a script."""
+
+    def test_github_passes_the_pr_head_sha_through_step_env(self):
+        """NFR-09.7: the GitHub review step sets PF_REVIEW_HEAD_SHA to ${{ github.event.pull_request.head.sha }} in
+        its env, its run script has no ${{ }} expression, and the checkout has the full history (fetch-depth 0)."""
+        job = self.workflow(GITHUB_CI)["jobs"]["claude-review"]
+        steps = [s for s in self.steps(job) if REVIEW_COMMAND in str(s.get("run"))]
+        self.assertEqual(len(steps), 1)
+        self.assertEqual(steps[0].get("env", {}).get("PF_REVIEW_HEAD_SHA"),
+                         "${{ github.event.pull_request.head.sha }}")
+        self.assertNotIn("${{", steps[0]["run"])
+        checkout = [s for s in self.steps(job) if str(s.get("uses", "")).startswith("actions/checkout@")]
+        self.assertEqual(checkout[0]["with"].get("fetch-depth"), 0, "the head SHA must be reachable in the checkout")
+
+    def test_gitlab_uses_the_source_branch_sha_when_present(self):
+        """NFR-09.7: in a merge request pipeline the GitLab review reviews up to CI_MERGE_REQUEST_SOURCE_BRANCH_SHA
+        when it is set (merged results), exports it as PF_REVIEW_HEAD_SHA, falls back to CI_COMMIT_SHA, passes
+        --head "$head", and clones the full history (GIT_DEPTH 0)."""
+        job = self.gitlab()["_jobs"]["claude-review"]
+        blocks = [b for b in self.gitlab_script_blocks(job)]
+        script = "\n".join(blocks)
+        self.assertIn('head="${CI_MERGE_REQUEST_SOURCE_BRANCH_SHA:-$CI_COMMIT_SHA}"', script)
+        self.assertRegex(script, r'if \[ -n "\$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA" \]; then\s+'
+                                 r'export PF_REVIEW_HEAD_SHA="\$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA"')
+        start = script.index("merge_request_event)")
+        export = script.index("export PF_REVIEW_HEAD_SHA")
+        self.assertLess(start, export)
+        self.assertLess(export, script.index("push)"), "only merge request pipelines set the head SHA")
+        self.assertIn('--head "$head"', script)
+        self.assertNotIn('--head "$CI_COMMIT_SHA"', script)
+        self.assertEqual(str((job.get("variables") or {}).get("GIT_DEPTH")), "0")
+
 if __name__ == "__main__":
     unittest.main()

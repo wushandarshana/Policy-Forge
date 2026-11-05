@@ -14,6 +14,8 @@ file, not from environment variables. Keys of the config:
                  the `write` scenario appends each data (default text; "" creates an empty file)
     delete       a list of paths (relative to the working directory) the `write` scenario deletes
     then         the scenario that runs after `write` (default approve), e.g. exit1
+    probe        a list of paths (relative to the working directory): each pass records in pass-N.probe.json the
+                 text of each one, or null when it does not exist
 
 Scenarios: approve, blocker, major_minor, changes_no_blocker, minor_only, fenced, no_output, invalid_schema,
 missing_key, exit1, is_error, leak_key, write (writes a file, then approves).
@@ -96,6 +98,16 @@ def record(log_dir, argv, stdin, env):
             shutil.copytree(INPUT_DIR, log / f"pass-{number}.input")
 
 
+def record_probe(log_dir, paths):
+    """pass-N.probe.json: {path: text or None} of the given paths in the working directory of the latest pass."""
+    if not log_dir or not paths:
+        return
+    log = Path(log_dir)
+    number = len((log / "calls.jsonl").read_text(encoding="utf-8").splitlines())
+    seen = {path: Path(path).read_text(encoding="utf-8") if Path(path).is_file() else None for path in paths}
+    (log / f"pass-{number}.probe.json").write_text(json.dumps(seen), encoding="utf-8")
+
+
 def load_config(argv):
     """(config, remaining argv). The runner puts `--fake-config <file>` first, from PF_CLAUDE_CLI."""
     if len(argv) >= 2 and argv[0] == "--fake-config":
@@ -112,6 +124,7 @@ def main(argv):
         return 0
     stdin = sys.stdin.buffer.read()
     record(log_dir, argv, stdin, dict(os.environ))
+    record_probe(log_dir, config.get("probe"))
     agent = "security-reviewer" if b"**security reviewer**" in stdin else "test-engineer"
     scenario = config.get("security" if agent == "security-reviewer" else "test", "approve")
     leak = config.get("leak", "")

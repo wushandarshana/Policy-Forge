@@ -13,25 +13,36 @@ passes `review-verdict.schema.json`. The run writes `<out>/security-reviewer.jso
 Exit status:  0  no BLOCKER finding in either pass (MAJOR and MINOR findings are published, not gating)
               1  at least one BLOCKER finding
               2  the review could not run or returned nothing usable: ANTHROPIC_API_KEY unset, bubblewrap missing,
-                 a CLI that is not the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output.
-                 The gate fails closed.
+                 a CLI that is not the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output,
+                 an escaping link, a changed CLI or input file, a bad PF_REVIEW_HEAD_SHA. The gate fails closed.
 
 An empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7):
-- the CLI runs in a disposable detached worktree of HEAD outside the checkout (under RUNNER_TEMP, TMPDIR or the
-  system temp folder), added with core.fsmonitor off and no hooks, and removed after the run whatever happens;
+- the CLI runs in a disposable detached worktree of the head of the reviewed range (not the merge commit HEAD of a
+  pull or merge request run) outside the checkout (under RUNNER_TEMP, TMPDIR or the system temp folder), added with
+  core.fsmonitor off and no hooks, and removed after the run whatever happens. PF_REVIEW_HEAD_SHA, when set (the PR
+  head SHA on GitHub, CI_MERGE_REQUEST_SOURCE_BRANCH_SHA on GitLab), must be 40 lowercase hex characters, a commit
+  reachable from HEAD of the checkout, and the head of the range; anything else fails closed;
+- before the CLI is started, the tracked and untracked files of the checkout and every path of the worktree are
+  checked for symbolic links and junctions: a link that resolves outside its root (or into .git) fails closed (exit 2)
+  and only the link paths are printed;
 - the CLI has the Read, Grep and Glob tools only, with no Bash. Before the first pass the runner writes the diff, the
   commit log and the changed-file list to the worktree's ci-out/review/input/, and the prompt tells the model to Read
   them. Read (which also governs Grep and Glob) is allowed inside the worktree only; /proc, /sys, /dev, /etc, the
   other system roots and the home folder's credential files are denied, and the checkout's .claude settings are not
   loaded;
-- the environment of the CLI, and of every git and Python child, is built from an allowlist (PATH, HOME, LANG,
-  LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable,
-  token, registry password or token-bearing URL reaches it;
+- the environment of the CLI is built from an allowlist (PATH, HOME, LANG, LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT,
+  ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable, token, registry password or token-bearing
+  URL reaches it. git and the offline AC audit get a key-free environment: the same allowlist without
+  ANTHROPIC_API_KEY and without CLAUDE_*. Only the CLI's version check and its passes receive the key;
 - the CLI scrubs the environment of its own subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1, always set), which
   needs bubblewrap: without `bwrap` on the CLI's PATH the run fails closed (exit 2) before the CLI is started;
 - after each pass the run fails closed (exit 2) when `git status --ignored` of the real checkout shows any change
-  outside ci-out/, or when a tracked file of the worktree changed or was deleted. New untracked files in the
+  outside ci-out/, when .git/config, a file of .git/hooks/ (name and hash) or .git/info/attributes of the real
+  checkout changed, or when a tracked file of the worktree changed or was deleted. New untracked files in the
   worktree (the placeholders the CLI's bubblewrap sandbox creates) are tolerated, and every path is logged;
+- the CLI files (the file behind node_modules/.bin/claude and the installed @anthropic-ai package files) and the
+  review input files are hashed before the first pass and verified before each pass, so a change made during pass 1
+  never reaches pass 2;
 - every output is redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key
   is never printed.
 `comment` runs in a separate job, from the base branch's checkout: it edits only a comment of its own bot user and
@@ -39,7 +50,8 @@ refuses any API URL that is not https://.
 
 Environment: ANTHROPIC_API_KEY (required), PF_CLAUDE_CLI (replace the CLI, for tests; by default the CLI that
 `npm ci --prefix scripts/ci/claude-cli` installs), PF_REVIEW_MAX_TURNS (default 40), PF_REVIEW_MAX_BUDGET_USD
-(default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080). PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 lets the tests' local fake
+(default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080), PF_REVIEW_HEAD_SHA (the head commit the worktree must
+be, optional). PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 lets the tests' local fake
 API use http:// on a loopback host; nothing else may use plain http. PF_REVIEW_SKIP_BWRAP_CHECK=1 skips the bubblewrap
 check for the tests' stub CLI, and only when PF_CLAUDE_CLI is also set; the real CLI is always checked.
 
@@ -89,6 +101,10 @@ CI_OUT_PREFIX = "ci-out/"
 LOCKED_CLI_DIR = Path(__file__).resolve().with_name("claude-cli")
 # Every git call: no fsmonitor command and no repository hooks (a post-checkout hook would run on `worktree add`).
 GIT_HARDENING = ("-c", "core.fsmonitor=false", "-c", f"core.hooksPath={os.devnull}")
+# NFR-09.7: the git metadata of the real checkout that the tree snapshot also covers (besides every file of hooks/).
+GIT_METADATA_FILES = ("config", "info/attributes")
+HEAD_SHA_VAR = "PF_REVIEW_HEAD_SHA"
+FULL_SHA = re.compile(r"[0-9a-f]{40}")
 GITHUB_BOT = "github-actions[bot]"
 DEFAULT_TURNS = "40"
 DEFAULT_BUDGET = "5.00"
@@ -196,6 +212,145 @@ def child_environment(env=None):
     return out
 
 
+def tool_environment(env=None):
+    """The key-free environment of git and of the offline AC audit (NFR-09.7): the allowlist without
+    ANTHROPIC_API_KEY and without any CLAUDE_* variable. Only the CLI receives the key."""
+    source = os.environ if env is None else env
+    return {k: v for k, v in source.items() if k.upper() in ENV_ALLOWLIST and k.upper() != "ANTHROPIC_API_KEY"}
+
+
+def _digest(path):
+    """SHA-256 of a file's content, None when it is missing, "unreadable" when it cannot be read."""
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    except FileNotFoundError:
+        return None
+    except OSError:
+        return "unreadable"
+
+
+def _is_link(path):
+    """A symbolic link, or a Windows directory junction (which escapes a folder the same way)."""
+    isjunction = getattr(os.path, "isjunction", None)
+    return os.path.islink(path) or bool(isjunction and isjunction(path))
+
+
+def _inside(path, root):
+    path, root = os.path.normcase(path), os.path.normcase(root)
+    return path == root or path.startswith(root.rstrip("\\/") + os.sep)
+
+
+def _link_paths(root):
+    """Every link under `root` ('/'-separated, relative), found without following links; .git is not entered."""
+    found, pending = [], [""]
+    while pending:
+        relative = pending.pop()
+        try:
+            with os.scandir(os.path.join(root, relative) if relative else root) as entries:
+                entries = list(entries)
+        except OSError:
+            continue
+        for entry in entries:
+            child = f"{relative}/{entry.name}" if relative else entry.name
+            if _is_link(entry.path):
+                found.append(child)
+            elif child != ".git" and entry.is_dir(follow_symlinks=False):
+                pending.append(child)
+    return found
+
+
+def escaping_links(root, relatives=None):
+    """The links (sorted, relative to `root`) that resolve outside `root` or into its .git folder (NFR-09.7).
+
+    `relatives` lists the paths to check, each prefix included, so a file listed below a linked folder reports the
+    link; by default every path under `root` is walked without following links. Targets are never read."""
+    real_root = os.path.realpath(root)
+    git_dir = os.path.join(real_root, ".git")
+    bad, verdicts = set(), {}
+    for relative in (_link_paths(root) if relatives is None else relatives):
+        parts = [part for part in str(relative).replace("\\", "/").split("/") if part]
+        for depth in range(1, len(parts) + 1):
+            prefix = "/".join(parts[:depth])
+            if prefix not in verdicts:
+                full = os.path.join(root, *parts[:depth])
+                escapes = False
+                if _is_link(full):
+                    target = os.path.realpath(full)
+                    escapes = not _inside(target, real_root) or _inside(target, git_dir)
+                verdicts[prefix] = escapes
+            if verdicts[prefix]:
+                bad.add(prefix)
+                break
+    return sorted(bad)
+
+
+def check_links(root, relatives, where):
+    """Fail closed when a link under `root` escapes it; the error names the link paths only, never a target."""
+    bad = escaping_links(root, relatives)
+    if bad:
+        raise ReviewError(f"{len(bad)} symbolic link(s) or junction(s) in {where} resolve outside it or into its .git "
+                          f"folder ({', '.join(bad)}); the review fails closed and the CLI is not started")
+
+
+def checkout_files(repo):
+    """The tracked and untracked (not ignored) paths of the real checkout."""
+    proc = run_git(repo, "ls-files", "-z", "--cached", "--others", "--exclude-standard")
+    if proc.returncode != 0:
+        raise ReviewError("git ls-files failed: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    return [path for path in proc.stdout.decode("utf-8", "surrogateescape").split("\0") if path]
+
+
+def cli_snapshot(cli):
+    """{resolved path: SHA-256} of the files that make up the CLI (NFR-09.7): every argv element that is a file (the
+    first one also looked up on PATH), each resolved through its links, and, for the locked CLI, every file of the
+    installed @anthropic-ai packages (the JavaScript entry and the platform binary)."""
+    files = []
+    for index, part in enumerate(cli):
+        candidate = Path(part)
+        if index == 0 and not candidate.is_file():
+            found = shutil.which(part)
+            candidate = Path(found) if found else candidate
+        if candidate.is_file():
+            files.append(candidate)
+    locked = locked_cli()
+    if locked is not None and any(Path(os.path.realpath(f)) == Path(os.path.realpath(locked)) for f in files):
+        packages = LOCKED_CLI_DIR / "node_modules" / "@anthropic-ai"
+        if packages.is_dir():
+            files += sorted(path for path in packages.rglob("*") if path.is_file())
+    if not files:
+        raise ReviewError("the Claude Code CLI files could not be found, so they cannot be hashed (fail closed)")
+    return {os.path.realpath(path): _digest(os.path.realpath(path)) for path in files}
+
+
+def folder_snapshot(folder):
+    """{relative path: SHA-256} of every file under `folder`."""
+    folder = Path(folder)
+    if not folder.is_dir():
+        return {}
+    return {path.relative_to(folder).as_posix(): _digest(path)
+            for path in sorted(folder.rglob("*")) if path.is_file() or path.is_symlink()}
+
+
+def pinned_head(repo, settings=None):
+    """The validated PF_REVIEW_HEAD_SHA, or None when it is unset (NFR-09.7).
+
+    It must be 40 lowercase hex characters (a malformed value is never printed), a commit of the checkout and
+    reachable from its HEAD (a pull request's head is a parent of the merge commit GitHub checks out)."""
+    settings = os.environ if settings is None else settings
+    value = settings.get(HEAD_SHA_VAR, "").strip()
+    if not value:
+        return None
+    if not FULL_SHA.fullmatch(value):
+        raise ReviewError(f"{HEAD_SHA_VAR} must be a full 40-character lowercase hexadecimal commit SHA (the value is "
+                          "not shown); the review fails closed")
+    if _rev(repo, value) != value:
+        raise ReviewError(f"{HEAD_SHA_VAR} {value} is not a commit of this checkout; fetch the full history "
+                          "(fetch-depth: 0, GIT_DEPTH: 0)")
+    if not _is_ancestor(repo, value, "HEAD"):
+        raise ReviewError(f"{HEAD_SHA_VAR} {value} is not reachable from HEAD of this checkout; the review fails closed")
+    return value
+
+
 def _is_within(path, folder):
     path, folder = path.rstrip("/") or "/", folder.rstrip("/") or "/"
     return path == folder or path.startswith(folder + "/") or folder == "/"
@@ -222,8 +377,9 @@ def read_deny_rules(repo, home):
 
 
 def run_git(repo, *args):
-    """Run git in `repo` and return the CompletedProcess (bytes). Never raises for a non-zero status."""
-    env = child_environment()
+    """Run git in `repo` with the key-free environment and return the CompletedProcess (bytes). Never raises for a
+    non-zero status."""
+    env = tool_environment()
     env["GIT_TERMINAL_PROMPT"] = "0"
     try:
         return subprocess.run(["git", "-C", str(repo), *GIT_HARDENING, "-c", "core.quotepath=off", *args],
@@ -351,7 +507,24 @@ def tree_snapshot(repo):
             except OSError:
                 digest = "unreadable"
         snapshot[path] = (status, digest)
+    snapshot.update(git_metadata_snapshot(repo))
     return snapshot
+
+
+def git_metadata_snapshot(repo):
+    """{".git/<name>": ("git", digest)} of .git/config, .git/info/attributes and every file of .git/hooks/ of the
+    real checkout (NFR-09.7). A missing file has the digest None."""
+    proc = run_git(repo, "rev-parse", "--path-format=absolute", "--git-common-dir")
+    if proc.returncode != 0:
+        raise ReviewError("git rev-parse --git-common-dir failed: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    common = Path(proc.stdout.decode("utf-8", "surrogateescape").strip())
+    entries = {f".git/{name}": ("git", _digest(common / name)) for name in GIT_METADATA_FILES}
+    hooks = common / "hooks"
+    if hooks.is_dir():
+        for path in sorted(hooks.rglob("*")):
+            if path.is_file() or path.is_symlink():
+                entries[".git/hooks/" + path.relative_to(hooks).as_posix()] = ("git", _digest(path))
+    return entries
 
 
 def tree_changes(before, after):
@@ -359,8 +532,8 @@ def tree_changes(before, after):
     return sorted(path for path in set(before) | set(after) if before.get(path) != after.get(path))
 
 
-def create_worktree(repo):
-    """A detached worktree of HEAD in a new folder outside `repo` (under RUNNER_TEMP, TMPDIR or the system temp
+def create_worktree(repo, commit="HEAD"):
+    """A detached worktree of `commit` (the head of the reviewed range) in a new folder outside `repo` (under RUNNER_TEMP, TMPDIR or the system temp
     folder), where the CLI runs (NFR-09.7). Its bubblewrap sandbox drops placeholder files in its working folder;
     here they never touch the real checkout. Returns (holder folder, worktree path)."""
     parent = next((p for p in (os.environ.get("RUNNER_TEMP", "").strip(), os.environ.get("TMPDIR", "").strip())
@@ -371,7 +544,7 @@ def create_worktree(repo):
     if worktree == real or real in worktree.parents:
         shutil.rmtree(holder, ignore_errors=True)
         raise ReviewError("the disposable worktree would be inside the checkout; set RUNNER_TEMP or TMPDIR elsewhere")
-    proc = run_git(repo, "worktree", "add", "--detach", str(worktree), "HEAD")
+    proc = run_git(repo, "worktree", "add", "--detach", str(worktree), commit)
     if proc.returncode != 0:
         shutil.rmtree(holder, ignore_errors=True)
         raise ReviewError("git worktree add failed: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
@@ -433,7 +606,7 @@ def ac_audit_summary(repo):
     script = Path(repo) / "scripts" / "ac_audit.py"
     if not script.is_file():
         return None
-    env = child_environment()
+    env = tool_environment()
     env["PYTHONUTF8"] = "1"
     try:
         proc = subprocess.run([sys.executable, str(script), "--offline", "--no-write"], capture_output=True, cwd=str(repo),
@@ -780,6 +953,10 @@ def run(args):
     try:
         limits = read_limits()
         base, head = resolve_range(args.event, args.base, args.head, repo)
+        pinned = pinned_head(repo)
+        if pinned is not None and pinned != head:
+            raise ReviewError(f"the reviewed range ends at {head}, which does not match {HEAD_SHA_VAR} {pinned}; the "
+                              "review fails closed")
         files = changed_files(repo, base, head)
         file_count = len(files)
         if not files:
@@ -793,15 +970,29 @@ def run(args):
         cli = cli_command()
         env = child_environment()
         check_bubblewrap(env)
-        check_version(cli, env)
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         stat = diff_stat(repo, base, head)
         ac_summary = ac_audit_summary(repo)
         agents = [(name, *read_agent(repo, name)) for name in AGENTS]
-        holder, worktree = create_worktree(repo)
+        check_links(repo, checkout_files(repo), "the checkout")
+        holder, worktree = create_worktree(repo, head)
         try:
             write_review_input(repo, base, head, files, target=worktree)
+            check_links(worktree, None, "the disposable worktree")
+            inputs = folder_snapshot(worktree / INPUT_DIR)
+            cli_files = cli_snapshot(cli)
+            check_version(cli, env)
             for name, model, body in agents:
+                # Verified before every pass, so a change made during pass 1 never reaches pass 2.
+                altered = tree_changes(cli_files, cli_snapshot(cli))
+                if altered:
+                    raise ReviewError(f"{name}: the Claude Code CLI files changed before the pass ({', '.join(altered)}); "
+                                      "the review fails closed")
+                altered = tree_changes(inputs, folder_snapshot(worktree / INPUT_DIR))
+                if altered:
+                    raise ReviewError(f"{name}: the review input files changed before the pass ("
+                                      + ", ".join((INPUT_DIR / path).as_posix() for path in altered)
+                                      + "); the review fails closed")
                 preamble = build_preamble(name, base, head, files, stat, ac_summary)
                 before = tree_snapshot(repo)
                 tracked_before = tracked_snapshot(worktree)

@@ -146,3 +146,6 @@ way Tomcat does.
 ## Known residual (accepted, recorded in NFR-04.4)
 The 64 KB publish allowance is decided before authentication, from whether an `Authorization` header is present. A
 request with invalid credentials can therefore send up to 64 KB before getting 401, and nothing is stored.
+
+## Pull request
+Landed with Sprint 1 in [PR-002](../prs/PR-002.md) (`feat/catalog-quote` → `dev`, local `--no-ff` merge `1eb6dc7`; GitHub PRs began with PR-007), then released in v0.1.0 (`8e265d6`).

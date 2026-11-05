@@ -15,7 +15,8 @@ Index only. Rules live in the linked files.
 - [`frontend/CLAUDE.md`](frontend/CLAUDE.md): React UI conventions
   - [`frontend/e2e/CLAUDE.md`](frontend/e2e/CLAUDE.md): Playwright E2E and snapshots
 - [`specs/CLAUDE.md`](specs/CLAUDE.md): how to write and change specs
-- [`scripts/CLAUDE.md`](scripts/CLAUDE.md): Agent SDK automation
+- [`scripts/CLAUDE.md`](scripts/CLAUDE.md): Agent SDK automation and CI scripts
+- [`.claude/hooks/CLAUDE.md`](.claude/hooks/CLAUDE.md): guardrail hooks and their regression suite
 
 ## Specifications
 - [`specs/app_spec.md`](specs/app_spec.md): root spec
