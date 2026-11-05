@@ -1,6 +1,15 @@
-# CI for pushes to dev and main and for pull requests into them (NFR-09.1 to NFR-09.3, NFR-09.6).
+# CI for pushes to dev and main and for pull requests into them (NFR-09.1 to NFR-09.3, NFR-09.6, NFR-09.7).
 # .gitlab-ci.yml runs the same five jobs with the same commands. Every action is pinned to a full commit SHA, every
 # image to a tag and digest (NFR-09.2). Job names equal their IDs so that the check names stay stable.
+#
+# Repository settings (docs/harness-setup.md):
+# - ANTHROPIC_API_KEY is a secret of the GitHub Environment claude-review, which has the owner as required reviewer,
+#   so every review run waits for the owner's approval. No repository-level copy of the key exists.
+# - The required status check is ci-gate. It fails unless the five gate jobs succeeded, so a skipped review never
+#   counts as passing.
+# - .github/CODEOWNERS with "Require review from Code Owners" covers the CI definitions and the review scripts.
+# - A pull request from a fork never receives the key, so its review fails closed. A maintainer pushes the branch to
+#   origin and opens the pull request from there to review it.
 name: CI
 
 on:
@@ -10,7 +19,7 @@ on:
     branches: [dev, main]
   workflow_dispatch:
 
-# Read-only by default. Only claude-review widens this, on its own job.
+# Read-only by default. Only claude-review-comment widens this, on its own job, which holds no key.
 permissions:
   contents: read
 
@@ -196,8 +205,8 @@ jobs:
           python-version: 3.14.10
           cache: pip
           cache-dependency-path: scripts/requirements-ci.txt
-      - name: Install the gate tools
-        run: pip install -r scripts/requirements-ci.txt
+      - name: Install the gate tools from the hashed requirements
+        run: pip install --require-hashes -r scripts/requirements-ci.txt
       - name: Run every quality gate
         run: python scripts/ci/quality_gates.py --report ci-out/quality-gates/report.md
       - name: Upload the quality gates report
@@ -214,10 +223,9 @@ jobs:
     needs: [build, frontend-unit, e2e, quality-gates]
     runs-on: ubuntu-24.04
     timeout-minutes: 40
-    # The only job that may write to the pull request, and only to post the review comment.
-    permissions:
-      contents: read
-      pull-requests: write
+    # The key is a secret of this environment, which needs the owner's approval. This job has no write permission and
+    # no GitHub token in any step; the comment is posted by claude-review-comment from the uploaded report.
+    environment: claude-review
     steps:
       - name: Check out the repository with its full history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -228,10 +236,10 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22.11.0
-      - name: Install the pinned Claude Code CLI
-        run: npm install -g @anthropic-ai/claude-code@2.1.311
-      # The key is in the environment of this step only. A GitHub token is never given to it. Event values arrive
-      # through env, never as an expression inside the script.
+      - name: Install the pinned Claude Code CLI from its lockfile
+        run: npm ci --prefix scripts/ci/claude-cli
+      # The key is in the environment of this step only. Event values arrive through env, never as an expression
+      # inside the script. The runner gives the CLI an allowlisted environment and no shell (NFR-09.7).
       - name: Claude review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -259,11 +267,6 @@ jobs:
               ;;
           esac
           python3 scripts/ci/claude_review.py run --base "$base" --head "$head" --event "$event" --out ci-out/review
-      - name: Comment on the pull request
-        if: always() && github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/ci/claude_review.py comment --platform github --report ci-out/review/claude-review.md
       - name: Upload the review report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -272,3 +275,68 @@ jobs:
           path: ci-out/review/
           if-no-files-found: ignore
           retention-days: 14
+
+  # Posts the report as a pull request comment (NFR-09.7). It holds the token and no key, takes only the report
+  # artifact, and runs the comment code of the base branch, never the code under review.
+  claude-review-comment:
+    name: claude-review-comment
+    needs: claude-review
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Check out the base branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.base_ref }}
+          persist-credentials: false
+      - name: Download the review report
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: claude-review
+          path: ${{ runner.temp }}/claude-review
+      - name: Comment on the pull request with the base branch's script
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT: ${{ runner.temp }}/claude-review/claude-review.md
+        run: |
+          if [ ! -f scripts/ci/claude_review.py ]; then
+            echo "::notice::The base branch has no scripts/ci/claude_review.py yet, so no comment is posted. The review report is in the claude-review artifact."
+            exit 0
+          fi
+          python3 -I scripts/ci/claude_review.py comment --platform github --report "$REPORT"
+
+  # The one required check (NFR-09.7): it fails unless every gate job succeeded, so a skipped or cancelled job never
+  # passes the branch protection.
+  ci-gate:
+    name: ci-gate
+    needs: [build, frontend-unit, e2e, quality-gates, claude-review]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every gate job to have succeeded
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          FRONTEND_UNIT_RESULT: ${{ needs.frontend-unit.result }}
+          E2E_RESULT: ${{ needs.e2e.result }}
+          QUALITY_GATES_RESULT: ${{ needs.quality-gates.result }}
+          CLAUDE_REVIEW_RESULT: ${{ needs.claude-review.result }}
+        run: |
+          status=0
+          for pair in "build=$BUILD_RESULT" "frontend-unit=$FRONTEND_UNIT_RESULT" "e2e=$E2E_RESULT" \
+                      "quality-gates=$QUALITY_GATES_RESULT" "claude-review=$CLAUDE_REVIEW_RESULT"; do
+            name="${pair%%=*}"
+            result="${pair#*=}"
+            echo "$name: ${result:-missing}"
+            if [ "$result" != success ]; then
+              status=1
+            fi
+          done
+          if [ "$status" -ne 0 ]; then
+            echo "ci-gate: a gate job did not succeed"
+          fi
+          exit "$status"
