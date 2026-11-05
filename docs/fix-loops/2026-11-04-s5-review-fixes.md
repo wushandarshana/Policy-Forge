@@ -171,3 +171,20 @@ Open question: we can't tell from here which namespaces the pinned CLI 2.1.311 a
 subprocess environments. If it unshares the network as well, the CLI hits the same loopback error, and the next real
 run shows it as a CLI failure, not a smoke-test failure. `--share-net` proves only that user, mount, PID, IPC and UTS
 namespaces work on the runner.
+
+## Round 4: third real CI run (2026-11-05)
+GitHub Actions run 41979264606 got past the loopback problem. The `--unshare-all --share-net` smoke test then failed
+with `bwrap: setting up uid map: Permission denied`. That is Ubuntu 24.04's AppArmor restriction on unprivileged user
+namespaces (`kernel.apparmor_restrict_unprivileged_userns=1`), and the profile from the bubblewrap package did not lift
+it on the runner. The user decided to lift the restriction on the GitHub-hosted runner and keep the full sandbox.
+Scrubbing stays on.
+
+| Commit | What |
+|---|---|
+| `1cc8956` test(red) | GitHub: the bubblewrap step runs `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0` only when `/proc/sys/kernel/apparmor_restrict_unprivileged_userns` exists, echoes the resulting value before the smoke test, documents the ephemeral VM and has no key. GitLab: no sysctl, and the header names the executor options. Neither file sets `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` to 0 |
+| `ffa72a5` ci | The guarded sysctl and its echo in the GitHub step, with the ephemeral-VM comment. The GitLab header says to use a shell or VM executor with the sysctl at 0, or a privileged Docker executor; otherwise the review fails closed by design |
+
+Why it is acceptable on GitHub: the hosted runner is a fresh VM for each job and is destroyed afterwards, so the
+change lasts only for this run. Still to
+prove on the next real run: the smoke test passes, and the CLI's own bwrap use, whose namespace set is unknown,
+works with it.
