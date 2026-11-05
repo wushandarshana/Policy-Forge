@@ -152,3 +152,22 @@ available instead of turning scrubbing off.
 Validated: `unittest discover -s scripts/tests` 175/175 OK, `quality_gates.py` 8/8 (actionlint included),
 `ac_audit.py --offline --no-write` 93/93, 0 not covered. Still to prove on the next real run: the bwrap smoke test under
 Ubuntu 24.04's AppArmor user-namespace restriction, and that the CLI's own sandboxed subprocesses work under bwrap.
+
+## Round 3: second real CI run (2026-11-05)
+GitHub Actions run 41973681887 installed bubblewrap 0.9.0-1ubuntu0.3 (recorded by `dpkg-query`), but the smoke test
+`bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true` failed with `bwrap: loopback: Failed RTM_NEWADDR:
+Operation not permitted`. `--unshare-all` also creates a network namespace, and the runner does not let bwrap set up
+its loopback there. That is a network-namespace limit, not proof that user namespaces are missing. `claude-review`
+then failed before it uploaded a report, and `claude-review-comment` failed at `actions/download-artifact` with
+"Artifact not found".
+
+| Commit | What |
+|---|---|
+| `5a5a596` test(red) | `BubblewrapInstallTests` expect `--unshare-all --share-net` and the message "bwrap cannot create a sandbox on this runner". `MissingReportTests`: the GitHub download step has an id and `continue-on-error: true`, and the comment step exits 0 with a `::notice::` when `steps.download.outcome` is not `success` or the report is missing. On GitLab the comment job exits 0 with a notice when `ci-out/review/claude-review.md` is missing, before `git fetch`, and is `allow_failure: true`. `ci-gate` needs neither comment job |
+| `cce144b` test(red) | The NFR-09.1 rule "no continue-on-error" now applies to every job except one: it is allowed only on the report download of `claude-review-comment`. GitLab still has none |
+| `1167f9e` ci | Both smoke tests use `--share-net`, and the fail-closed messages are corrected. The comment jobs tolerate a missing report |
+
+Open question: we can't tell from here which namespaces the pinned CLI 2.1.311 asks bwrap for when it scrubs
+subprocess environments. If it unshares the network as well, the CLI hits the same loopback error, and the next real
+run shows it as a CLI failure, not a smoke-test failure. `--share-net` proves only that user, mount, PID, IPC and UTS
+namespaces work on the runner.
