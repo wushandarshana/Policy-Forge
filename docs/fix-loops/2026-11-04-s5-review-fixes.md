@@ -136,3 +136,19 @@ Log: [`green.log`](2026-11-04-s5-review-fixes/green.log).
 ## Lesson
 A tool allowlist by command prefix is not a sandbox: flags such as `--output` and `--pre` turn read commands into
 writes and execs. Give the model data, not a shell, and check the outcome (the tree) instead of trusting the rules.
+
+## Round 2: first real CI run (2026-11-05)
+GitHub Actions run 41960130498 on PR #5 passed build, frontend-unit, e2e and quality-gates. `claude-review` then
+failed closed: the pinned CLI 2.1.311 exited 1 at start-up with `bubblewrap is required for subprocess env scrubbing
+and isolation`. The runner always sets `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1`, and that stays: the fix makes bubblewrap
+available instead of turning scrubbing off.
+
+| Commit | What |
+|---|---|
+| `a337a5f` test(red) | Config tests: both `claude-review` jobs install bubblewrap (`apt-get update`, then `apt-get install -y --no-install-recommends bubblewrap`), record the version with `dpkg-query -W bubblewrap` (NFR-09.2: distro archive, not a pinned string), run `bwrap --version` and the `--unshare-all` smoke test that fails closed with a user-namespace message, all before the review command; the GitHub step has no `ANTHROPIC_API_KEY`; the GitLab header names the user-namespace requirement. Runner tests: no `bwrap` on PATH means exit 2 with "bubblewrap missing" and no CLI call; a `bwrap` on PATH reaches the CLI through the allowlisted PATH; the test switch counts only with `PF_CLAUDE_CLI` |
+| `ca63794` fix(green) | `check_bubblewrap()` runs before the version check. `PF_REVIEW_SKIP_BWRAP_CHECK=1` skips it only together with `PF_CLAUDE_CLI` (the stub tests, which also run on Windows); the real CLI is always checked |
+| `3ea7249` ci | GitHub: a step "Install and smoke-test bubblewrap" before the review step. GitLab: the same script before the review command, plus the header note (allow user namespaces or privileged mode, otherwise the review fails closed) |
+
+Validated: `unittest discover -s scripts/tests` 175/175 OK, `quality_gates.py` 8/8 (actionlint included),
+`ac_audit.py --offline --no-write` 93/93, 0 not covered. Still to prove on the next real run: the bwrap smoke test under
+Ubuntu 24.04's AppArmor user-namespace restriction, and that the CLI's own sandboxed subprocesses work under bwrap.
