@@ -146,8 +146,14 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   - the Claude Code CLI and the CI Python packages are installed from committed lockfiles with integrity hashes
     (`npm ci`, `pip install --require-hashes`);
   - a final required job fails unless every gate job succeeded, so a skipped review never counts as passing;
-  - changes to `.github/**`, `.gitlab-ci.yml`, `scripts/ci/**`, `scripts/redact_evidence.py`, `scripts/ac_audit.py`
-    and `.claude/agents/**` need the code owner's review (`CODEOWNERS`).
+  - `.github/CODEOWNERS` names the owner of `.github/**`, `.gitlab-ci.yml`, `scripts/ci/**`,
+    `scripts/redact_evidence.py`, `scripts/ac_audit.py` and `.claude/agents/**`. While the repository has a single
+    owner, code-owner review is not enforced (it would block the owner's own PRs). The owner's approval of the
+    `claude-review` environment is the enforced control, and the approver checks changes to those paths first.
+  **Accepted v1 limitation (Sprint 5 security re-review, user decision 2026-11-04).** On a same-repository PR the
+  workflow file comes from the PR, so a writer can change the jobs. The key is still released only after the
+  owner approves the `claude-review` environment, and the comment job's token adds no right a writer lacks. Treat
+  the Claude review as defence in depth, not as the merge authority.
   A PR from a fork never receives the key, so its review fails closed. A maintainer re-pushes the branch to `origin`
   to review it.
 
