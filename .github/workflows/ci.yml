@@ -240,15 +240,17 @@ jobs:
         run: npm ci --prefix scripts/ci/claude-cli
       # The CLI scrubs the environment of its subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1), which needs
       # bubblewrap. It comes from the runner's signed Ubuntu archive, so the installed version is recorded, not pinned
-      # (NFR-09.2). Ubuntu's package ships the AppArmor profile that lets bwrap create user namespaces on 24.04.
+      # (NFR-09.2). Ubuntu's package ships the AppArmor profile that lets bwrap create user namespaces on 24.04. The
+      # smoke test keeps the host network (--share-net): the runner may not configure a loopback in a new network
+      # namespace, which says nothing about user namespaces.
       - name: Install and smoke-test bubblewrap
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends bubblewrap
           dpkg-query -W bubblewrap
           bwrap --version
-          if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then
-            echo "::error::bwrap cannot create a sandbox: the runner restricts unprivileged user namespaces. The Claude review fails closed."
+          if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true; then
+            echo "::error::bwrap cannot create a sandbox on this runner (user namespaces unavailable or restricted). The Claude review fails closed."
             exit 1
           fi
       # The key is in the environment of this step only. Event values arrive through env, never as an expression
@@ -306,7 +308,11 @@ jobs:
         with:
           ref: ${{ github.base_ref }}
           persist-credentials: false
+      # claude-review may fail before it uploads a report. A missing artifact is then not an error of this job, which
+      # never decides the gate (ci-gate does not need it).
       - name: Download the review report
+        id: download
+        continue-on-error: true
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: claude-review
@@ -315,7 +321,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPORT: ${{ runner.temp }}/claude-review/claude-review.md
+          DOWNLOAD_OUTCOME: ${{ steps.download.outcome }}
         run: |
+          if [ "$DOWNLOAD_OUTCOME" != "success" ] || [ ! -f "$REPORT" ]; then
+            echo "::notice::claude-review uploaded no report (it failed before writing one), so no comment is posted. See the claude-review job log."
+            exit 0
+          fi
           if [ ! -f scripts/ci/claude_review.py ]; then
             echo "::notice::The base branch has no scripts/ci/claude_review.py yet, so no comment is posted. The review report is in the claude-review artifact."
             exit 0

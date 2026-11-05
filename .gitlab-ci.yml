@@ -211,8 +211,8 @@ claude-review:
       apt-get install -y --no-install-recommends bubblewrap
       dpkg-query -W bubblewrap
       bwrap --version
-      if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then
-        echo "ERROR: bwrap cannot create a sandbox: the runner does not allow user namespaces (or privileged mode). The Claude review fails closed."
+      if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all --share-net true; then
+        echo "ERROR: bwrap cannot create a sandbox on this runner (allow user namespaces or privileged mode). The Claude review fails closed."
         exit 1
       fi
     - |
@@ -253,7 +253,15 @@ claude-review-comment:
   timeout: 10 minutes
   environment:
     name: claude-review-comment
+  # It never decides the gate: ci-gate does not need it, and a failed note does not fail the pipeline.
+  allow_failure: true
   script:
+    # claude-review may fail before it writes a report; then there is nothing to post.
+    - |
+      if [ ! -f ci-out/review/claude-review.md ]; then
+        echo "notice: claude-review wrote no report (it failed before writing one), so no note is posted. See the claude-review job log."
+        exit 0
+      fi
     - git fetch --depth 1 origin "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     - git worktree add --detach /tmp/pf-review-base FETCH_HEAD
     - |
