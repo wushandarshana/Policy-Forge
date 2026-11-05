@@ -14,6 +14,9 @@
 #   access token with the Reporter role and the api scope (GitLab has no narrower scope that can write a note), and an
 #   expiry date. It never reaches claude-review or any job that runs the merge request's code.
 # - Optional: PF_REVIEW_MAX_BUDGET_USD.
+# - claude-review installs bubblewrap (bwrap), which the Claude Code CLI needs to scrub its subprocess environment.
+#   The runner must allow user namespaces for bwrap (or run the job in privileged mode); otherwise the bwrap smoke test,
+#   and with it the review, fails closed.
 # - The required check is ci-gate (stage gate): it fails unless the five gate jobs each wrote their status file.
 
 workflow:
@@ -201,6 +204,17 @@ claude-review:
     # The clone URL may carry the job token. The review reads files, so it must not be able to find a token in .git/config.
     - git remote set-url origin "${CI_PROJECT_URL}.git"
     - npm ci --prefix scripts/ci/claude-cli
+    # bubblewrap for the CLI's subprocess env scrubbing, from the image's signed Debian archive; the installed version
+    # is recorded, not pinned (NFR-09.2). The runner must allow user namespaces (see the header).
+    - |
+      apt-get update
+      apt-get install -y --no-install-recommends bubblewrap
+      dpkg-query -W bubblewrap
+      bwrap --version
+      if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then
+        echo "ERROR: bwrap cannot create a sandbox: the runner does not allow user namespaces (or privileged mode). The Claude review fails closed."
+        exit 1
+      fi
     - |
       case "$CI_PIPELINE_SOURCE" in
         merge_request_event)

@@ -238,6 +238,19 @@ jobs:
           node-version: 22.11.0
       - name: Install the pinned Claude Code CLI from its lockfile
         run: npm ci --prefix scripts/ci/claude-cli
+      # The CLI scrubs the environment of its subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1), which needs
+      # bubblewrap. It comes from the runner's signed Ubuntu archive, so the installed version is recorded, not pinned
+      # (NFR-09.2). Ubuntu's package ships the AppArmor profile that lets bwrap create user namespaces on 24.04.
+      - name: Install and smoke-test bubblewrap
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bubblewrap
+          dpkg-query -W bubblewrap
+          bwrap --version
+          if ! bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true; then
+            echo "::error::bwrap cannot create a sandbox: the runner restricts unprivileged user namespaces. The Claude review fails closed."
+            exit 1
+          fi
       # The key is in the environment of this step only. Event values arrive through env, never as an expression
       # inside the script. The runner gives the CLI an allowlisted environment and no shell (NFR-09.7).
       - name: Claude review
