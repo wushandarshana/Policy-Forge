@@ -12,8 +12,8 @@ passes `review-verdict.schema.json`. The run writes `<out>/security-reviewer.jso
 
 Exit status:  0  no BLOCKER finding in either pass (MAJOR and MINOR findings are published, not gating)
               1  at least one BLOCKER finding
-              2  the review could not run or returned nothing usable: ANTHROPIC_API_KEY unset, a CLI that is not
-                 the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output.
+              2  the review could not run or returned nothing usable: ANTHROPIC_API_KEY unset, bubblewrap missing,
+                 a CLI that is not the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output.
                  The gate fails closed.
 
 An empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7):
@@ -24,6 +24,8 @@ An empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7
 - the environment of the CLI, and of every git and Python child, is built from an allowlist (PATH, HOME, LANG,
   LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable,
   token, registry password or token-bearing URL reaches it;
+- the CLI scrubs the environment of its own subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1, always set), which
+  needs bubblewrap: without `bwrap` on the CLI's PATH the run fails closed (exit 2) before the CLI is started;
 - after each pass the run fails closed (exit 2) when `git status --ignored` shows any change outside ci-out/;
 - every output is redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key
   is never printed.
@@ -33,7 +35,8 @@ refuses any API URL that is not https://.
 Environment: ANTHROPIC_API_KEY (required), PF_CLAUDE_CLI (replace the CLI, for tests; by default the CLI that
 `npm ci --prefix scripts/ci/claude-cli` installs), PF_REVIEW_MAX_TURNS (default 40), PF_REVIEW_MAX_BUDGET_USD
 (default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080). PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 lets the tests' local fake
-API use http:// on a loopback host; nothing else may use plain http.
+API use http:// on a loopback host; nothing else may use plain http. PF_REVIEW_SKIP_BWRAP_CHECK=1 skips the bubblewrap
+check for the tests' stub CLI, and only when PF_CLAUDE_CLI is also set; the real CLI is always checked.
 
 Standard library only; runs on Python 3.11 or later.
 """
@@ -392,6 +395,29 @@ def read_agent(repo, name):
     return model, match.group(2)
 
 
+BWRAP_MISSING = ("bubblewrap missing: CLAUDE_CODE_SUBPROCESS_ENV_SCRUB is on and no `bwrap` is on PATH, so the Claude "
+                 "Code CLI cannot isolate its subprocesses. Install it (apt-get install -y --no-install-recommends "
+                 "bubblewrap) before the review; scrubbing stays on and the review fails closed.")
+
+
+def check_bubblewrap(env, settings=None):
+    """Fail closed when the CLI would need bubblewrap and cannot find it (NFR-09.7).
+
+    `env` is the CLI's environment: with CLAUDE_CODE_SUBPROCESS_ENV_SCRUB other than 0, `bwrap` must be on its PATH.
+    `settings` (default os.environ) may skip the check for a test stub: PF_REVIEW_SKIP_BWRAP_CHECK=1 counts only
+    together with a non-blank PF_CLAUDE_CLI, so the production default stays strict."""
+    settings = os.environ if settings is None else settings
+    if env.get("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB", "").strip() == "0":
+        return None
+    if settings.get("PF_REVIEW_SKIP_BWRAP_CHECK", "").strip() == "1" and settings.get("PF_CLAUDE_CLI", "").strip():
+        return None
+    path = next((value for name, value in env.items() if name.upper() == "PATH"), "")
+    found = shutil.which("bwrap", path=path) if path else None
+    if not found:
+        raise ReviewError(BWRAP_MISSING)
+    return found
+
+
 def locked_cli():
     """The CLI that `npm ci --prefix scripts/ci/claude-cli` installs, or None when it is not installed."""
     path = LOCKED_CLI_DIR / "node_modules" / ".bin" / ("claude.cmd" if os.name == "nt" else "claude")
@@ -693,6 +719,7 @@ def run(args):
             return 0
         cli = cli_command()
         env = child_environment()
+        check_bubblewrap(env)
         check_version(cli, env)
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         stat = diff_stat(repo, base, head)
