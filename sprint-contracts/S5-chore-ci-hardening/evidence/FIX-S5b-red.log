@@ -1,0 +1,87 @@
+# FIX-S5b red: bubblewrap install and fail-closed check (expected failures)
+............FF...........................................FEEEEE..........................................................................................................unknown gate(s): no-such-gate; known: ac-audit, redact-evidence, hook-tests, hook-line-endings, ci-script-tests, oracle-fixture, actionlint, ci-schema
+..........
+======================================================================
+ERROR: test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check) (settings={})
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1223, in test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check
+    review.check_bubblewrap(scrubbed, settings)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'pf_ci_claude_review' has no attribute 'check_bubblewrap'
+
+======================================================================
+ERROR: test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check) (settings={'PF_REVIEW_SKIP_BWRAP_CHECK': '1'})
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1223, in test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check
+    review.check_bubblewrap(scrubbed, settings)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'pf_ci_claude_review' has no attribute 'check_bubblewrap'
+
+======================================================================
+ERROR: test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check) (settings={'PF_CLAUDE_CLI': 'stub.py'})
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1223, in test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check
+    review.check_bubblewrap(scrubbed, settings)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'pf_ci_claude_review' has no attribute 'check_bubblewrap'
+
+======================================================================
+ERROR: test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check) (settings={'PF_CLAUDE_CLI': '  ', 'PF_REVIEW_SKIP_BWRAP_CHECK': '1'})
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1223, in test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check
+    review.check_bubblewrap(scrubbed, settings)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'pf_ci_claude_review' has no attribute 'check_bubblewrap'
+
+======================================================================
+ERROR: test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check (test_claude_review.BubblewrapTests.test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check)
+NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1225, in test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check
+    review.check_bubblewrap(scrubbed, {"PF_CLAUDE_CLI": "stub.py", "PF_REVIEW_SKIP_BWRAP_CHECK": "1"})
+    ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'pf_ci_claude_review' has no attribute 'check_bubblewrap'
+
+======================================================================
+FAIL: test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key (test_ci_config.BubblewrapInstallTests.test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key)
+NFR-09.7: the GitHub claude-review job has a step before the review step that runs sudo apt-get update,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 818, in test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key
+    self.assertEqual(len(installs), 1, "one step installs bubblewrap")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : one step installs bubblewrap
+
+======================================================================
+FAIL: test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review (test_ci_config.BubblewrapInstallTests.test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review)
+NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root),
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 840, in test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review
+    self.assertEqual(len(installs), 1, "one script entry installs bubblewrap")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : one script entry installs bubblewrap
+
+======================================================================
+FAIL: test_missing_bubblewrap_fails_closed_without_calling_the_cli (test_claude_review.BubblewrapTests.test_missing_bubblewrap_fails_closed_without_calling_the_cli)
+NFR-09.4: with env scrubbing on and no bwrap on PATH the run exits 2 with a "bubblewrap missing"
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_claude_review.py", line 1189, in test_missing_bubblewrap_fails_closed_without_calling_the_cli
+    self.assertEqual(proc.returncode, 2, proc.stderr_text)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 175 tests in 99.697s
+
+FAILED (failures=3, errors=5)
