@@ -188,3 +188,23 @@ Why it is acceptable on GitHub: the hosted runner is a fresh VM for each job and
 change lasts only for this run. Still to
 prove on the next real run: the smoke test passes, and the CLI's own bwrap use, whose namespace set is unknown,
 works with it.
+
+## Round 5: fourth real CI run (2026-11-05)
+GitHub Actions run 41981193751 got past bubblewrap. The sysctl reported `kernel.apparmor_restrict_unprivileged_userns
+= 0`, the smoke test passed, and the security-reviewer pass ran for about 90 s. The unchanged-tree check then failed
+closed: `.env`, `.env.development`, `.env.development.local`, `.env.local`, `.env.production`,
+`.env.production.local`, `.env.test`, `.env.test.local`, `.gitmodules`, `.npmrc` "and 7 more" had appeared in the
+checkout. These are almost certainly the empty placeholder files the CLI's bubblewrap sandbox creates in its working
+folder so it can mount over sensitive paths, not writes by the model. The check worked as designed, but the CLI must
+not run in the real checkout.
+
+| Commit | What |
+|---|---|
+| `ea25943` test(red) | The stub CLI accepts a list of writes, deletes and a follow-up scenario. New `DisposableWorktreeTests`: the CLI's cwd is a worktree outside the checkout and holds the input files; the placeholders (13 of them) are tolerated and every path is logged, with no contents; a modified or deleted tracked file in the worktree exits 2; the worktree is removed after success and after failure; a post-checkout hook in the checkout does not run. `UnchangedTreeTests` now write into the real checkout by absolute path (a write that escapes the worktree), and a 14-path change is listed in full |
+| `c7a709d` fix(green) | `claude_review.py`: `create_worktree` adds a detached worktree of HEAD under `RUNNER_TEMP`, `TMPDIR` or the system temp folder (refusing a location inside the checkout). Every git call runs with `-c core.fsmonitor=false -c core.hooksPath=<null device>`. The input files go to the worktree, and each pass runs with the worktree as cwd, so `Read(./**)` and the deny rules are computed for the copy. Around each pass, the unchanged-tree check of the real checkout is unchanged, a SHA-256 snapshot of the worktree's tracked files fails closed on any change or deletion, and new untracked or ignored worktree paths are printed in full (paths only, redacted). A `finally` runs `git worktree remove --force`, removes the folder and runs `git worktree prune`. Tree-change errors list every path. The redactor is still loaded from the real checkout before any pass |
+
+What still holds: anything the CLI writes outside the worktree that lands in the real checkout fails the job, and the
+real checkout is what later steps run code from. The worktree is thrown away, so placeholders there cannot reach
+another step. Still to prove on the next real run: the CLI works from a worktree under `RUNNER_TEMP`
+(`/home/runner/work/_temp`, inside the home folder, so the home credential files are denied one by one), and both
+passes finish.
