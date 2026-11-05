@@ -29,3 +29,6 @@ ruleset on `dev` and `main` requires a PR, the `ci-gate` check, and merge commit
 | (PR-011 follow-up) | [#6](https://github.com/wushandarshana/Policy-Forge/pull/6) | `chore/ci-hardening` → `dev` | `943359a` | GitHub PR (`-linux` baselines, KD-016..033) |
 | [PR-012](PR-012.md) | [#7](https://github.com/wushandarshana/Policy-Forge/pull/7) | `chore/release-v1.0.0` → `dev` | `a461f3a` | GitHub PR (release record) |
 | Release v1.0.0 | [#8](https://github.com/wushandarshana/Policy-Forge/pull/8) | `dev` → `main` | `7433e43` | GitHub PR, tag `v1.0.0` ([record](../releases/RELEASE-v1.0.0.md)) |
+| [PR-013](PR-013.md) | [#9](https://github.com/wushandarshana/Policy-Forge/pull/9) | `chore/fine-tuning` → `dev` | `8e59663` | GitHub PR (rubric fixes, live SDK audit, CI minors) |
+| [PR-014](PR-014.md) | (pending) | `chore/release-v1.0.1` → `dev` | (pending) | GitHub PR (release record v1.0.1) |
+| Release v1.0.1 | (pending) | `dev` → `main` | (pending) | GitHub PR, tag `v1.0.1` ([record](../releases/RELEASE-v1.0.1.md)) |
