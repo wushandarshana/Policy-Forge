@@ -251,7 +251,8 @@ class JobDefinitionTests(CiConfigTestCase):
 
     def test_claude_review_needs_the_other_four_jobs_and_cannot_fail(self):
         """NFR-09.1: claude-review needs build, frontend-unit, e2e and quality-gates, and is never allowed to fail:
-        GitHub has no continue-on-error and no `|| true`, GitLab sets allow_failure: false."""
+        GitHub has no continue-on-error and no `|| true`, GitLab sets allow_failure: false. The one exception is the
+        report download of claude-review-comment, which is not a gate job (ci-gate does not need it)."""
         others = sorted(set(JOBS) - {"claude-review"})
         github = self.workflow(GITHUB_CI)["jobs"]
         self.assertEqual(sorted(normalise_list(github["claude-review"].get("needs"))), others)
@@ -263,9 +264,17 @@ class JobDefinitionTests(CiConfigTestCase):
         for name in JOBS:
             self.assertIsNot(gitlab[name].get("allow_failure"), True, name)
             self.assertNotIn("rules", gitlab[name], f"{name} must run in every pipeline")
+        for rel in WORKFLOWS:
+            for name, job in self.workflow(rel)["jobs"].items():
+                with self.subTest(file=rel, job=name):
+                    self.assertNotIn("continue-on-error", job)
+                    for step in self.steps(job):
+                        if "continue-on-error" in step:
+                            self.assertEqual((rel, name), (GITHUB_CI, "claude-review-comment"))
+                            self.assertTrue(str(step.get("uses", "")).startswith("actions/download-artifact@"))
+        self.assertNotIn("continue-on-error", self.read(GITLAB_CI))
         for rel, text in self.ci_text().items():
             with self.subTest(file=rel):
-                self.assertNotIn("continue-on-error", text)
                 self.assertNotIn("|| true", text)
                 self.assertNotIn("!reference", text)
         self.assertNotIn("python3 scripts/ci/claude_review.py comment", self.github_job_script(github["claude-review"]),
