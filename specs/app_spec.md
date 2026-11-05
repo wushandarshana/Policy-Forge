@@ -133,11 +133,14 @@ Each AC is detailed in its feature spec. Every AC must have at least one test ta
   index or the working tree, when the AC-08.5 oracle fixture differs from a fresh generation, or when actionlint or
   the CI schema checks report an error. It runs every gate and reports each result before it fails.
 - **NFR-09.7** Given a Claude review run (Sprint 5 security review, user decision 2026-11-04), then:
-  - the CLI gets no Bash tool. It receives the diff and the commit log as files it may `Read`, and `Read`, `Grep` and
-    `Glob` are limited to the checkout (no `/proc`, no path outside the repository);
+  - the CLI gets no Bash tool and runs in a disposable `git worktree` copy of the checkout, outside the repository,
+    which is removed afterwards. It receives the diff and the commit log as files it may `Read`, and `Read`, `Grep`
+    and `Glob` are limited to that copy (no `/proc`, no other path). New untracked files the CLI's sandbox creates in
+    the copy are tolerated and logged, but a changed tracked file in the copy fails the job;
   - the CLI's environment is built from an allowlist (`PATH`, `HOME`, `LANG`, `TMPDIR`, `ANTHROPIC_API_KEY`,
     `CLAUDE_*`), so no GitHub or GitLab token, registry password or token-bearing URL reaches it;
-  - after each pass the job fails closed if any tracked or untracked file outside `ci-out/` changed;
+  - after each pass the job fails closed if any tracked or untracked file outside `ci-out/` changed in the real
+    checkout;
   - the PR or MR comment is posted by a separate job that holds the platform token, downloads only the report
     artifact, and runs the comment code from the base branch, never from the code under review. It edits only a
     comment written by its own bot user, and refuses any API URL that is not `https://`;
