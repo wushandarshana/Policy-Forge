@@ -16,15 +16,29 @@ Exit status:  0  no BLOCKER finding in either pass (MAJOR and MINOR findings are
                  the pinned version, a CLI error, a hit turn or budget cap, missing or schema-invalid output.
                  The gate fails closed.
 
-An empty diff passes without starting the CLI. The CLI never receives a GitHub or GitLab token, every output is
-redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key is never printed.
+An empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7):
+- the CLI has the Read, Grep and Glob tools only, with no Bash. Before each pass the runner writes the diff, the
+  commit log and the changed-file list to ci-out/review/input/, and the prompt tells the model to Read them. Read
+  (which also governs Grep and Glob) is allowed inside the checkout only; /proc, /sys, /dev, /etc, the other system
+  roots and the home folder's credential files are denied, and the checkout's own .claude settings are not loaded;
+- the environment of the CLI, and of every git and Python child, is built from an allowlist (PATH, HOME, LANG,
+  LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable,
+  token, registry password or token-bearing URL reaches it;
+- after each pass the run fails closed (exit 2) when `git status --ignored` shows any change outside ci-out/;
+- every output is redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key
+  is never printed.
+`comment` runs in a separate job, from the base branch's checkout: it edits only a comment of its own bot user and
+refuses any API URL that is not https://.
 
-Environment: ANTHROPIC_API_KEY (required), PF_CLAUDE_CLI (replace the `claude` executable, for tests),
-PF_REVIEW_MAX_TURNS (default 40), PF_REVIEW_MAX_BUDGET_USD (default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080).
+Environment: ANTHROPIC_API_KEY (required), PF_CLAUDE_CLI (replace the CLI, for tests; by default the CLI that
+`npm ci --prefix scripts/ci/claude-cli` installs), PF_REVIEW_MAX_TURNS (default 40), PF_REVIEW_MAX_BUDGET_USD
+(default 5.00), PF_REVIEW_TIMEOUT_SECONDS (default 1080). PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 lets the tests' local fake
+API use http:// on a loopback host; nothing else may use plain http.
 
 Standard library only; runs on Python 3.11 or later.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -34,6 +48,7 @@ import ssl
 import subprocess
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from decimal import Decimal
 from pathlib import Path
@@ -45,11 +60,25 @@ SCHEMA_PATH = Path(__file__).resolve().with_name("review-verdict.schema.json")
 REDACT_PATH = Path(__file__).resolve().parents[1] / "redact_evidence.py"
 EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbd0f2d"
 EVENTS = ("pull_request", "merge_request", "push", "manual", "auto")
+# Secrets the comment step redacts from what it posts.
 TOKEN_VARS = ("GITHUB_TOKEN", "GH_TOKEN", "CI_JOB_TOKEN", "PF_GITLAB_REVIEW_TOKEN")
-TOOLS = "Read,Grep,Glob,Bash"
-ALLOWED_TOOLS = ["Read", "Grep", "Glob", "Bash(git diff *)", "Bash(git log *)", "Bash(git show *)",
-                 "Bash(git ls-files *)", "Bash(grep *)", "Bash(rg *)"]
-DISALLOWED_TOOLS = ["Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch"]
+# NFR-09.7: the only variables a child process receives (names compared in upper case), plus CLAUDE_*.
+ENV_ALLOWLIST = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TEMP", "TMP", "SYSTEMROOT", "ANTHROPIC_API_KEY")
+ENV_ALLOWED_PREFIXES = ("CLAUDE_",)
+# NFR-09.7: no Bash. Read rules also govern Grep and Glob; dontAsk denies every read the rules do not allow.
+TOOLS = "Read,Grep,Glob"
+ALLOWED_TOOLS = ["Read(./**)"]
+DISALLOWED_TOOLS = ["Bash", "Edit", "Write", "NotebookEdit", "WebFetch", "WebSearch", "Read(./.git/**)"]
+# System roots denied unless the checkout is inside one of them (a deny rule wins over the allow rule).
+SYSTEM_ROOTS = ("proc", "sys", "dev", "etc", "root", "run", "var", "tmp", "opt", "usr", "boot", "mnt", "media",
+                "srv", "snap", "home", "builds", "__w", "github", "lib", "lib64", "bin", "sbin")
+# When the checkout is inside the home folder, these are denied instead of the whole home folder.
+HOME_SECRETS = (".ssh/**", ".aws/**", ".azure/**", ".config/**", ".docker/**", ".kube/**", ".gnupg/**", ".claude/**",
+                ".claude.json", ".npmrc", ".pypirc", ".netrc", ".gitconfig", ".git-credentials", ".bash_history")
+INPUT_DIR = Path("ci-out") / "review" / "input"
+CI_OUT_PREFIX = "ci-out/"
+LOCKED_CLI_DIR = Path(__file__).resolve().with_name("claude-cli")
+GITHUB_BOT = "github-actions[bot]"
 DEFAULT_TURNS = "40"
 DEFAULT_BUDGET = "5.00"
 DEFAULT_TIMEOUT = 1080
@@ -146,17 +175,39 @@ def validate(instance, schema, path="$"):
 # ---------------------------------------------------------------------------------------------------- git
 
 def child_environment(env=None):
-    """The environment of a child process: the caller's, minus every platform token, with env scrubbing on."""
+    """The environment of a child process, built from ENV_ALLOWLIST and CLAUDE_* (NFR-09.7), with env scrubbing on.
+
+    Nothing else passes: no CI_*, GITHUB_* or GH_* variable, no token, registry password or token-bearing clone URL."""
     source = os.environ if env is None else env
-    blocked = {name.upper() for name in TOKEN_VARS}
-    out = {k: v for k, v in source.items() if k.upper() not in blocked}
+    out = {k: v for k, v in source.items()
+           if k.upper() in ENV_ALLOWLIST or k.upper().startswith(ENV_ALLOWED_PREFIXES)}
     out["CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"] = "1"
     return out
 
 
+def _is_within(path, folder):
+    path, folder = path.rstrip("/") or "/", folder.rstrip("/") or "/"
+    return path == folder or path.startswith(folder + "/") or folder == "/"
+
+
 def read_deny_rules(repo, home):
-    """NFR-09.7 red stub: the Read deny rules for paths outside the checkout."""
-    return []
+    """The Read deny rules for paths outside the checkout (NFR-09.7), for POSIX paths `repo` and `home`.
+
+    Every system root that does not hold the checkout is denied, /proc always. The home folder is denied as a whole
+    when the checkout is outside it; otherwise (a GitHub runner checks out under /home/runner) its credential files
+    are denied one by one. Everything else outside the checkout is denied by dontAsk, because only Read(./**) is
+    allowed.
+    """
+    rules = []
+    for root in SYSTEM_ROOTS:
+        if root == "proc" or not _is_within(repo, "/" + root):
+            rules.append(f"Read(//{root}/**)")
+    if home and home.startswith("/") and home != "/":
+        if _is_within(repo, home):
+            rules += [f"Read(~/{name})" for name in HOME_SECRETS]
+        else:
+            rules.append("Read(~/**)")
+    return list(dict.fromkeys(rules))
 
 
 def run_git(repo, *args):
@@ -246,6 +297,56 @@ def changed_files(repo, base, head):
     return [name for name in proc.stdout.decode("utf-8", "replace").split("\0") if name]
 
 
+def write_review_input(repo, base, head, files):
+    """Write the diff, the commit log and the changed-file list to ci-out/review/input/ of `repo` (NFR-09.7).
+
+    The folder is emptied first. The reviewer reads these files instead of running git."""
+    folder = Path(repo) / INPUT_DIR
+    shutil.rmtree(folder, ignore_errors=True)
+    folder.mkdir(parents=True, exist_ok=True)
+    diff = run_git(repo, "diff", "--no-color", "--no-ext-diff", "--no-textconv", base, head)
+    if diff.returncode != 0:
+        raise ReviewError("git diff failed: " + diff.stderr.decode("utf-8", "replace").strip()[:300])
+    (folder / "diff.patch").write_bytes(diff.stdout)
+    revs = [head, "--max-count=200"] if base == EMPTY_TREE else [f"{base}..{head}"]
+    log = run_git(repo, "log", "--no-color", "--format=fuller", "--stat=100", *revs)
+    if log.returncode != 0:
+        raise ReviewError("git log failed: " + log.stderr.decode("utf-8", "replace").strip()[:300])
+    (folder / "log.txt").write_bytes(log.stdout)
+    (folder / "changed-files.txt").write_text("".join(f"{name}\n" for name in files), encoding="utf-8", newline="\n")
+    return folder
+
+
+def tree_snapshot(repo):
+    """{path: (status, digest)} of every changed, untracked or ignored path of `repo` outside ci-out/ (NFR-09.7).
+
+    The digest (SHA-256 of the content) is kept for changed and untracked files, so a further change to a file that
+    was already dirty is seen too; ignored paths are compared by presence only."""
+    proc = run_git(repo, "status", "--porcelain=v1", "-z", "--no-renames", "--untracked-files=all", "--ignored")
+    if proc.returncode != 0:
+        raise ReviewError("git status failed: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    snapshot = {}
+    for entry in proc.stdout.decode("utf-8", "surrogateescape").split("\0"):
+        if len(entry) < 4:
+            continue
+        status, path = entry[:2], entry[3:]
+        if path.startswith(CI_OUT_PREFIX) or path.rstrip("/") == CI_OUT_PREFIX.rstrip("/"):
+            continue
+        digest = None
+        if status != "!!":
+            try:
+                digest = hashlib.sha256((Path(repo) / path).read_bytes()).hexdigest()
+            except OSError:
+                digest = "unreadable"
+        snapshot[path] = (status, digest)
+    return snapshot
+
+
+def tree_changes(before, after):
+    """The paths whose status or content differs between two snapshots, sorted."""
+    return sorted(path for path in set(before) | set(after) if before.get(path) != after.get(path))
+
+
 def diff_stat(repo, base, head):
     proc = run_git(repo, "diff", "--stat=100", "--no-color", "--no-ext-diff", base, head)
     return proc.stdout.decode("utf-8", "replace").strip() if proc.returncode == 0 else ""
@@ -291,8 +392,15 @@ def read_agent(repo, name):
     return model, match.group(2)
 
 
+def locked_cli():
+    """The CLI that `npm ci --prefix scripts/ci/claude-cli` installs, or None when it is not installed."""
+    path = LOCKED_CLI_DIR / "node_modules" / ".bin" / ("claude.cmd" if os.name == "nt" else "claude")
+    return path if path.is_file() else None
+
+
 def cli_command():
-    """The argv prefix that starts the Claude Code CLI. PF_CLAUDE_CLI replaces it (a path, a .py file or a JSON list)."""
+    """The argv prefix that starts the Claude Code CLI: PF_CLAUDE_CLI (a path, a .py file or a JSON list), else the
+    locked CLI of scripts/ci/claude-cli, else `claude` on PATH. The version check rejects anything but the pin."""
     override = os.environ.get("PF_CLAUDE_CLI", "").strip()
     if override:
         if override.startswith("["):
@@ -306,6 +414,9 @@ def cli_command():
         if override.lower().endswith(".py"):
             return [sys.executable, override]
         return [override]
+    locked = locked_cli()
+    if locked is not None:
+        return [str(locked)]
     return [shutil.which("claude") or "claude"]
 
 
@@ -342,11 +453,15 @@ def build_preamble(agent, base, head, files, stat, ac_summary):
         f"You are the {agent} agent, running as an automated, read-only review inside a CI job.",
         "",
         "Rules for this run:",
-        "- This is a read-only CI run. You can read the repository (Read, Grep, Glob, and the git diff, git log, "
-        "git show, git ls-files, grep and rg commands). You cannot edit files and you must not try to write any, "
-        "including the review file that your instructions below describe.",
+        "- This is a read-only CI run. Your only tools are Read, Grep and Glob, inside this checkout. There is no shell: "
+        "you cannot run git, grep, rg, a build or any other command. You cannot edit files and you must not try to "
+        "write any, including the review file that your instructions below describe.",
         f"- The change under review is the commit range {base}..{head} ({len(files)} changed file(s)). "
-        f"Inspect it with `git diff {base} {head}`. Use this range wherever your instructions say `git diff main...HEAD`.",
+        f"Read ci-out/review/input/diff.patch (the output of `git diff {base} {head}`), "
+        "ci-out/review/input/log.txt (the commit log of the range, with each commit's files) and "
+        "ci-out/review/input/changed-files.txt (one changed path per line). Read a large file in parts with offset and "
+        "limit. Use these files wherever your instructions say to run git diff, git log or git show (for example "
+        "`git diff main...HEAD`).",
         "- The build, the unit and integration tests, the end-to-end tests and the quality gates have already passed "
         "in earlier CI jobs. Do not build and do not run tests.",
         "- Read CLAUDE.md in the repository root first, then the files it points to for the code that changed.",
@@ -419,12 +534,20 @@ class ReviewFailure(ReviewError):
         self.stderr = stderr
 
 
+def cli_arguments(repo, env, model, schema, limits):
+    """The CLI flags of a pass (plan C5, NFR-09.7). Never a skip-permissions flag."""
+    turns, budget, _timeout = limits
+    home = (env.get("HOME") or "").replace("\\", "/")
+    denied = DISALLOWED_TOOLS + read_deny_rules(Path(repo).resolve().as_posix(), home)
+    return ["--bare", "-p", "--output-format", "json", "--json-schema", json.dumps(schema, separators=(",", ":")),
+            "--model", model, "--tools", TOOLS, "--allowedTools", *ALLOWED_TOOLS, "--disallowedTools", *denied,
+            "--setting-sources", "user", "--permission-mode", "dontAsk", "--max-turns", turns, "--max-budget-usd",
+            budget, "--no-session-persistence", "--strict-mcp-config"]
+
+
 def run_pass(cli, env, repo, agent, model, prompt, schema, limits):
-    turns, budget, timeout = limits
-    argv = [*cli, "--bare", "-p", "--output-format", "json", "--json-schema",
-            json.dumps(schema, separators=(",", ":")), "--model", model, "--tools", TOOLS,
-            "--allowedTools", *ALLOWED_TOOLS, "--disallowedTools", *DISALLOWED_TOOLS, "--permission-mode", "dontAsk",
-            "--max-turns", turns, "--max-budget-usd", budget, "--no-session-persistence", "--strict-mcp-config"]
+    timeout = limits[2]
+    argv = [*cli, *cli_arguments(repo, env, model, schema, limits)]
     try:
         proc = subprocess.run(argv, input=prompt, capture_output=True, cwd=str(repo), env=env, check=False,
                               timeout=timeout)
@@ -575,9 +698,19 @@ def run(args):
         stat = diff_stat(repo, base, head)
         ac_summary = ac_audit_summary(repo)
         agents = [(name, *read_agent(repo, name)) for name in AGENTS]
+        write_review_input(repo, base, head, files)
         for name, model, body in agents:
             preamble = build_preamble(name, base, head, files, stat, ac_summary)
-            verdict, meta = run_pass(cli, env, repo, name, model, build_prompt(name, preamble, body), schema, limits)
+            before = tree_snapshot(repo)
+            try:
+                verdict, meta = run_pass(cli, env, repo, name, model, build_prompt(name, preamble, body), schema,
+                                         limits)
+            finally:
+                changed = tree_changes(before, tree_snapshot(repo))
+                if changed:
+                    shown = ", ".join(changed[:10]) + (f" and {len(changed) - 10} more" if len(changed) > 10 else "")
+                    raise ReviewError(f"{name}: the working tree changed during the pass ({shown}); the review "
+                                      "fails closed and no later step runs")
             if verdict["agent"] != name:
                 warnings.append(f"WARNING: the {name} pass labelled its verdict {verdict['agent']}; it is reported as {name}.")
                 verdict["agent"] = name
@@ -646,9 +779,32 @@ def _comment_body(report_path, redact):
     return body
 
 
-def _upsert(existing, create, update):
-    marked = next((c for c in existing if isinstance(c, dict) and MARKER in str(c.get("body", ""))), None)
+def _upsert(existing, is_ours, create, update):
+    """Update the first marked comment that `is_ours` accepts, or create one. A foreign marked comment is ignored."""
+    marked = next((c for c in existing
+                   if isinstance(c, dict) and MARKER in str(c.get("body", "")) and is_ours(c)), None)
     return update(marked["id"]) if marked else create()
+
+
+def _github_bot_comment(comment):
+    user = comment.get("user")
+    return isinstance(user, dict) and user.get("type") == "Bot" and user.get("login") == GITHUB_BOT
+
+
+def safe_api_url(url):
+    """`url` without a trailing slash when it is https:// (NFR-09.7), else None.
+
+    PF_REVIEW_ALLOW_HTTP_LOOPBACK=1 also admits http:// on a loopback host, for the tests' local fake API."""
+    try:
+        parts = urllib.parse.urlsplit(url)
+    except ValueError:
+        return None
+    if parts.scheme == "https" and parts.hostname:
+        return url.rstrip("/")
+    if (parts.scheme == "http" and os.environ.get("PF_REVIEW_ALLOW_HTTP_LOOPBACK") == "1"
+            and parts.hostname in ("127.0.0.1", "localhost", "::1")):
+        return url.rstrip("/")
+    return None
 
 
 def comment_github(report_path, redact):
@@ -669,7 +825,11 @@ def comment_github(report_path, redact):
         print("WARNING: claude_review comment: the pull request number could not be read from the event file",
               file=sys.stderr)
         return 0
-    api = os.environ.get("GITHUB_API_URL", "https://api.github.com").rstrip("/")
+    api = safe_api_url(os.environ.get("GITHUB_API_URL", "").strip() or "https://api.github.com")
+    if api is None:
+        print("WARNING: claude_review comment: GITHUB_API_URL is not an https:// URL; no comment posted",
+              file=sys.stderr)
+        return 0
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
                "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "policyforge-claude-review",
                "Content-Type": "application/json"}
@@ -677,7 +837,7 @@ def comment_github(report_path, redact):
     base = f"{api}/repos/{repository}/issues"
     try:
         existing = _list_pages(f"{base}/{number}/comments", headers)
-        _upsert(existing,
+        _upsert(existing, _github_bot_comment,
                 lambda: _http_json("POST", f"{base}/{number}/comments", headers, body),
                 lambda cid: _http_json("PATCH", f"{base}/comments/{cid}", headers, body))
     except urllib.error.HTTPError as exc:
@@ -694,20 +854,28 @@ def comment_github(report_path, redact):
 def comment_gitlab(report_path, redact):
     token = os.environ.get("PF_GITLAB_REVIEW_TOKEN", "").strip()
     iid = os.environ.get("CI_MERGE_REQUEST_IID", "").strip()
-    api = os.environ.get("CI_API_V4_URL", "").strip().rstrip("/")
+    api_url = os.environ.get("CI_API_V4_URL", "").strip()
     project = os.environ.get("CI_PROJECT_ID", "").strip()
-    if not (token and iid and api and project):
+    if not (token and iid and api_url and project):
         print("claude_review comment: no PF_GITLAB_REVIEW_TOKEN or merge request context, no note posted")
         return 0
     if not (iid.isdigit() and project.isdigit()):
         print("WARNING: claude_review comment: unusable merge request or project id; no note posted", file=sys.stderr)
         return 0
+    api = safe_api_url(api_url)
+    if api is None:
+        print("WARNING: claude_review comment: CI_API_V4_URL is not an https:// URL; no note posted", file=sys.stderr)
+        return 0
     headers = {"PRIVATE-TOKEN": token, "User-Agent": "policyforge-claude-review", "Content-Type": "application/json"}
     body = {"body": _comment_body(report_path, redact)}
     base = f"{api}/projects/{project}/merge_requests/{iid}/notes"
     try:
+        me = _http_json("GET", f"{api}/user", headers)
+        if not isinstance(me, dict) or not isinstance(me.get("id"), int) or isinstance(me.get("id"), bool):
+            raise ValueError("GET /user returned no user id")
+        my_id = me["id"]
         existing = _list_pages(base, headers)
-        _upsert(existing,
+        _upsert(existing, lambda note: isinstance(note.get("author"), dict) and note["author"].get("id") == my_id,
                 lambda: _http_json("POST", base, headers, body),
                 lambda nid: _http_json("PUT", f"{base}/{nid}", headers, body))
     except urllib.error.HTTPError as exc:

@@ -6,7 +6,7 @@
 | `redact_evidence.py` | Redacts Basic and Bearer credentials, Spring's generated passwords and Anthropic API keys (`sk-ant-…`) from evidence files; `--check` only reports and exits 1 | none |
 | `gen_refund_oracle_cases.py` | Writes the AC-08.5 refund oracle fixture from `premium_check.py`; `--check` exits 1 when the committed CSV differs from a fresh generation | none |
 | `ci/quality_gates.py` | Runs the eight CI quality gates, never stops early, prints a summary table and exits 1 if any gate failed | none |
-| `ci/claude_review.py` | The required CI review: two read-only passes (`security-reviewer`, `test-engineer`) with the pinned Claude Code CLI; `comment` posts the report to the PR or MR | **Claude Code CLI 2.1.311** in `--bare -p` mode (CI only) |
+| `ci/claude_review.py` | The required CI review: two sandboxed passes (`security-reviewer`, `test-engineer`) with the pinned Claude Code CLI; `comment` posts the report to the PR or MR from a separate job | **Claude Code CLI 2.1.311** in `--bare -p` mode (CI only), installed from `ci/claude-cli/package-lock.json` |
 | `ci/fetch_tools.py` | Downloads actionlint and shellcheck at pinned versions, verifies their SHA-256 and prints the executable path | none |
 | `ci/check_line_endings.py` | Fails when a matched tracked file has a CR in the index or the working tree | none |
 
@@ -15,14 +15,20 @@ The `ci/` scripts use the Python standard library only and run on Python 3.11 or
 
 ## Set up
 
+**Precondition for the script tests and the quality gates:** install the CI packages first. Without them the CI
+config tests and the `ci-schema` gate fail closed with a message that names this command.
+
 ```bash
 pip install -r scripts/requirements.txt       # ac_audit.py full audit (Claude Agent SDK)
 python -m venv .venv                          # the tests and gates need PyYAML and check-jsonschema
-.venv/Scripts/python -m pip install -r scripts/requirements-ci.txt   # Linux/macOS: .venv/bin/python
+.venv/Scripts/python -m pip install --require-hashes -r scripts/requirements-ci.txt   # Linux/macOS: .venv/bin/python
+npm ci --prefix scripts/ci/claude-cli         # only to run the real review locally: the pinned CLI 2.1.311
 ```
 
-`requirements-ci.txt` pins `PyYAML==6.0.3` and `check-jsonschema==0.39.0`. Only the direct packages are pinned, not
-their dependencies.
+`requirements-ci.txt` pins `PyYAML==6.0.3`, `check-jsonschema==0.39.0` and every transitive dependency, each with the
+sha256 of every file of its PyPI release, so `pip install --require-hashes` works on Linux and Windows. The Claude
+Code CLI is pinned by `ci/claude-cli/package.json` and its committed `package-lock.json` (integrity hashes, every
+platform package); CI installs it with `npm ci --prefix scripts/ci/claude-cli` (NFR-09.7).
 
 ## Run
 
@@ -65,9 +71,22 @@ python scripts/ci/claude_review.py run --base <sha> --head <sha> --event pull_re
 python scripts/ci/claude_review.py comment --platform github --report ci-out/review/claude-review.md
 ```
 
-`run` needs `ANTHROPIC_API_KEY` and the Claude Code CLI **2.1.311** (any other version exits 2). It reviews the range
-twice, once per agent file in `.claude/agents/`, each pass on the agent's frontmatter `model`, and writes
-`security-reviewer.json`, `test-engineer.json` and `claude-review.md` to `--out`.
+`run` needs `ANTHROPIC_API_KEY` and the Claude Code CLI **2.1.311** (any other version exits 2). By default it starts
+`ci/claude-cli/node_modules/.bin/claude`, then `claude` on `PATH`. It reviews the range twice, once per agent file in
+`.claude/agents/`, each pass on the agent's frontmatter `model`, and writes `security-reviewer.json`,
+`test-engineer.json` and `claude-review.md` to `--out`.
+
+The review is sandboxed (NFR-09.7):
+- The CLI has `Read`, `Grep` and `Glob` only, no Bash. Before each pass the runner writes `ci-out/review/input/diff.patch`,
+  `log.txt` and `changed-files.txt`, and the prompt tells the model to read them. `Read(./**)` is the only allow rule;
+  `/proc`, `/sys`, `/dev`, `/etc`, the other system roots, the home folder (or its credential files when the checkout
+  is inside it) and `.git/` are denied, `--setting-sources user` keeps the checkout's `.claude/settings.json` out, and
+  `--permission-mode dontAsk` denies anything else.
+- Every child process gets an allowlisted environment: `PATH`, `HOME`, `LANG`, `LC_ALL`, `TMPDIR`, `TEMP`, `TMP`,
+  `SYSTEMROOT`, `ANTHROPIC_API_KEY` and `CLAUDE_*`. No `CI_*`, `GITHUB_*` or `GH_*` variable reaches it.
+- After each pass, `git status --porcelain --untracked-files=all --ignored` must show no change outside `ci-out/`
+  (ignored paths that existed before, such as `.venv` or `node_modules`, are compared by presence); otherwise the run
+  exits 2 before any later pass.
 
 | `--event` | Reviewed range |
 |---|---|
@@ -84,10 +103,16 @@ twice, once per agent file in `.claude/agents/`, each pass on the agent's frontm
 
 Variables: `PF_REVIEW_MAX_TURNS` (default 40), `PF_REVIEW_MAX_BUDGET_USD` (default 5.00) and
 `PF_REVIEW_TIMEOUT_SECONDS` (default 1080) apply to each pass; `PF_CLAUDE_CLI` replaces the `claude` executable and
-exists for the tests, which use the stub `tests/fixtures/fake_claude.py`. The CLI runs with read-only tools, without
-`GITHUB_TOKEN`, `GH_TOKEN`, `CI_JOB_TOKEN` and `PF_GITLAB_REVIEW_TOKEN`, and every output is redacted. `comment`
-needs `GH_TOKEN` on a GitHub `pull_request` event, or `PF_GITLAB_REVIEW_TOKEN` and `CI_MERGE_REQUEST_IID` on GitLab;
-otherwise it does nothing.
+exists for the tests, which use the stub `tests/fixtures/fake_claude.py` (configured by a file on its command line,
+because the CLI environment is allowlisted). Every output is redacted.
+
+`comment` runs in its own job (`claude-review-comment`), which holds the platform token and no key, downloads only the
+`claude-review` artifact and runs this script from the base branch's checkout. When the base branch has no
+`scripts/ci/claude_review.py` yet, the job prints a notice and the report stays an artifact. It needs `GH_TOKEN` on a
+GitHub `pull_request` event, or `PF_GITLAB_REVIEW_TOKEN` and `CI_MERGE_REQUEST_IID` on GitLab; otherwise it does
+nothing. It edits only a marked comment of its own bot user (`github-actions[bot]` of type `Bot`, or on GitLab the
+note author whose id equals `GET /user` of the token) and refuses any API URL that is not `https://`
+(`PF_REVIEW_ALLOW_HTTP_LOOPBACK=1` admits `http://` on a loopback host, for the tests only).
 
 ## Tests
 
