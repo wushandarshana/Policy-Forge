@@ -116,3 +116,6 @@ Log: [`green.log`](2026-11-04-s4-review-fixes/green.log).
 A date the client chooses is an input like a money amount: bound it against the server's clock, not only against the
 record's own range. And a writer that changes no column of an aggregate still needs that aggregate's lock if its row
 only makes sense while the aggregate is unchanged.
+
+## Pull request
+Landed in [PR-010](../prs/PR-010.md) = GitHub [#4](https://github.com/wushandarshana/Policy-Forge/pull/4) (`feat/renewal-cancellation` → `dev`), merge commit `d9a5694`, after the security re-review APPROVE.

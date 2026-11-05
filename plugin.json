@@ -1,12 +1,25 @@
 {
   "name": "policyforge-substrate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "AI-native engineering substrate for policy administration (quote → underwriting → issuance → endorsement → renewal/cancellation): domain agents, insurance-specific skills, guardrail hooks (BigDecimal money, append-only records, PII-free logs, PR-only merge), traceability commands and Playwright MCP.",
-  "author": { "name": "wushandarshana", "email": "info@capricon.lk" },
+  "author": {
+    "name": "wushandarshana",
+    "email": "info@capricon.lk"
+  },
   "license": "MIT",
-  "keywords": ["insurance", "policy-administration", "underwriting", "ai-native", "harness", "tdd", "archunit"],
+  "keywords": [
+    "insurance",
+    "policy-administration",
+    "underwriting",
+    "ai-native",
+    "harness",
+    "tdd",
+    "archunit"
+  ],
   "requires": {
-    "plugins": ["agent-harness@agent-harness"]
+    "plugins": [
+      "agent-harness@agent-harness"
+    ]
   },
   "commands": "./.claude/commands/",
   "agents": [
@@ -32,10 +45,30 @@
       "./CLAUDE.md",
       "./backend/CLAUDE.md",
       "./frontend/CLAUDE.md",
+      "./scripts/CLAUDE.md",
       "./specs/CLAUDE.md",
-      "./scripts/CLAUDE.md"
+      "./.claude/hooks/CLAUDE.md",
+      "./frontend/e2e/CLAUDE.md",
+      "./backend/src/main/resources/rules/CLAUDE.md",
+      "./backend/src/main/resources/db/migration/CLAUDE.md",
+      "./backend/src/main/java/com/horizon/policyforge/domain/CLAUDE.md",
+      "./backend/src/main/java/com/horizon/policyforge/repository/CLAUDE.md",
+      "./backend/src/main/java/com/horizon/policyforge/service/CLAUDE.md",
+      "./backend/src/main/java/com/horizon/policyforge/web/CLAUDE.md",
+      "./backend/src/test/java/com/horizon/policyforge/architecture/CLAUDE.md"
     ],
-    "agentSdkScripts": ["./scripts/ac_audit.py"],
-    "evidence": ["./sprint-contracts/", "./specs/reviews/", "./docs/prs/", "./docs/fix-loops/", "./docs/post-mortems/"]
+    "agentSdkScripts": [
+      "./scripts/ac_audit.py"
+    ],
+    "evidence": [
+      "./sprint-contracts/",
+      "./specs/reviews/",
+      "./docs/prs/",
+      "./docs/fix-loops/",
+      "./docs/post-mortems/",
+      "./docs/releases/",
+      "./docs/knowledge-deposits.md",
+      "./coverage/"
+    ]
   }
 }

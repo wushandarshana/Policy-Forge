@@ -1,8 +1,11 @@
 {
   "name": "policyforge-substrate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "PolicyForge policy-administration substrate: domain agents, insurance skills, guardrail hooks and traceability commands. Canonical manifest is /plugin.json at the repository root.",
-  "author": { "name": "wushandarshana", "email": "info@capricon.lk" },
+  "author": {
+    "name": "wushandarshana",
+    "email": "info@capricon.lk"
+  },
   "license": "MIT",
   "commands": "./.claude/commands/",
   "agents": [

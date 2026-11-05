@@ -3,6 +3,8 @@
 They drive the real entry point with a stub CLI (scripts/tests/fixtures/fake_claude.py, selected through
 PF_CLAUDE_CLI), so no API is ever called and no real credential is read (plan P-15).
 """
+import contextlib
+import io
 import json
 import os
 import re
@@ -14,6 +16,7 @@ import threading
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ci_test_support import (CI_DIR, FAKE_API_KEY, FAKE_CLAUDE, FAKE_LEAK_KEY, ROOT, SCHEMA_PATH, agent_files,  # noqa: E402
@@ -99,7 +102,7 @@ class ReviewTestCase(unittest.TestCase):
         self.log = Path(work.name) / "log"
 
     def run_review(self, security="approve", test="approve", env=None, version=None, key=FAKE_API_KEY,
-                   base=None, head=None, event="pull_request", repo_flag=True, fake=None, repo=None):
+                   base=None, head=None, event="pull_request", repo_flag=True, fake=None, repo=None, cli_script=None):
         """Run the runner against `repo` (default: the class repository) with the stub CLI.
 
         The stub reads its scenario from a config file named on its command line (PF_CLAUDE_CLI), because the runner
@@ -111,7 +114,8 @@ class ReviewTestCase(unittest.TestCase):
         config_file = self.log.parent / "fake-config.json"
         config_file.write_text(json.dumps(config), encoding="utf-8")
         values = {
-            "PF_CLAUDE_CLI": json.dumps([sys.executable, str(FAKE_CLAUDE), "--fake-config", str(config_file)]),
+            "PF_CLAUDE_CLI": json.dumps([sys.executable, str(cli_script or FAKE_CLAUDE), "--fake-config",
+                                         str(config_file)]),
             "GITHUB_TOKEN": FAKE_TOKEN_VALUE,
             "GH_TOKEN": FAKE_TOKEN_VALUE,
             "CI_JOB_TOKEN": FAKE_TOKEN_VALUE,
@@ -1359,6 +1363,382 @@ class BubblewrapTests(ReviewTestCase):
             self.assertEqual(review.child_environment({"PATH": empty})["CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"], "1",
                              "the runner always turns scrubbing on, so production always checks for bwrap")
 
+
+
+# ------------------------------------------------------------------- NFR-09.7 follow-up (2026-11-05 CI minors)
+
+def make_link(test, link, target):
+    """A symbolic link at `link` to `target`. On Windows without the symlink privilege, a directory junction to
+    `target` (or to the folder holding it, when it is a file), which escapes the checkout the same way. Skips the test
+    when neither can be made."""
+    link, target = Path(link), Path(target)
+    link.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        os.symlink(target, link, target_is_directory=target.is_dir())
+        return link
+    except (OSError, NotImplementedError):
+        pass
+    if os.name == "nt":
+        import _winapi
+        try:
+            _winapi.CreateJunction(str(target if target.is_dir() else target.parent), str(link))
+            return link
+        except OSError:
+            pass
+    test.skipTest("this machine can create neither a symbolic link nor a junction")
+
+
+class SymlinkTests(ReviewTestCase):
+    """NFR-09.7 (NEW-MINOR-1): before the first pass the runner looks for links in the real checkout (tracked and
+    untracked files) and in the disposable worktree. A link that resolves outside the root fails the run closed
+    (exit 2) with the link paths only, and the CLI is never started."""
+
+    def fresh(self):
+        holder, repo, base, head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        return repo, base, head
+
+    def outside_file(self):
+        folder = tempfile.TemporaryDirectory(prefix="pf-outside-")
+        self.addCleanup(folder.cleanup)
+        return write_bytes(Path(folder.name), "environ", b"OUTSIDE-SECRET-CONTENT-0042\n")
+
+    def test_a_link_to_a_file_outside_the_checkout_fails_closed_before_the_cli_starts(self):
+        """NFR-09.7: an untracked link in the checkout to a temporary file outside it makes the run exit 2; the
+        error and the report name the link but never the target's content, the CLI is never started (not even for
+        --version) and no worktree is left behind."""
+        repo, base, head = self.fresh()
+        make_link(self, Path(repo) / "src" / "peek", self.outside_file())
+        proc = self.run_review(repo=repo, base=base, head=head)
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(read_calls(self.log), [], "the CLI must not be started")
+        self.assertIn("src/peek", proc.stderr_text)
+        self.assertIn("link", proc.stderr_text)
+        self.assertIn("outside", proc.stderr_text)
+        report = self.report()
+        self.assertIn("GATE: FAIL", report.rstrip().splitlines()[-1])
+        self.assertIn("src/peek", report)
+        self.assertNotIn("OUTSIDE-SECRET-CONTENT", self.all_outputs(proc))
+        self.assertEqual(len(worktree_entries(repo)), 1)
+
+    def test_a_link_inside_the_checkout_is_allowed(self):
+        """NFR-09.7: a link in the checkout that resolves to a folder inside it does not stop the review; both passes
+        run and the exit is 0."""
+        repo, base, head = self.fresh()
+        make_link(self, Path(repo) / "docs-link", Path(repo) / "src")
+        proc = self.run_review(repo=repo, base=base, head=head)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 2)
+
+    def test_the_worktree_scan_finds_nested_links_that_escape_or_point_into_git(self):
+        """NFR-09.7: escaping_links(root) walks a folder without following links and returns, sorted, every link
+        that resolves outside the root or into its .git folder; links to paths inside the root are not listed."""
+        review = load_script("claude_review")
+        with tempfile.TemporaryDirectory() as outside, tempfile.TemporaryDirectory() as holder:
+            root = Path(holder) / "checkout"
+            write_bytes(root, "src/a.txt", b"one\n")
+            write_bytes(root, ".git/config", b"[core]\n")
+            write_bytes(Path(outside), "environ", b"x\n")
+            make_link(self, root / "deep" / "er" / "out", Path(outside))
+            make_link(self, root / "deep" / "in", root / "src")
+            make_link(self, root / "gitdir", root / ".git")
+            self.assertEqual(review.escaping_links(root), ["deep/er/out", "gitdir"])
+            self.assertEqual(review.escaping_links(root, ["src/a.txt", "deep/in/a.txt", "deep/er/out/environ"]),
+                             ["deep/er/out"], "a listed path below an escaping link reports the link")
+
+
+class GitMetadataTreeTests(ReviewTestCase):
+    """NFR-09.7 (NEW-MINOR-2a): the before and after snapshot of the real checkout also holds .git/config, every file
+    of .git/hooks/ (name and hash) and .git/info/attributes. A change there fails closed."""
+
+    review_in_fresh_repo = UnchangedTreeTests.review_in_fresh_repo
+    assert_failed_closed = UnchangedTreeTests.assert_failed_closed
+
+    def test_a_changed_git_config_fails_closed(self):
+        """NFR-09.7: a pass that appends to .git/config of the real checkout makes the run exit 2 before the second
+        pass, naming .git/config."""
+        holder, repo, base, head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        # Valid config, so git keeps working and only the snapshot can see the change.
+        proc = self.run_review(repo=repo, base=base, head=head, security="write",
+                               fake={"write": {"path": str(Path(repo) / ".git" / "config"),
+                                               "data": "[pf]\n\tprobe = injected\n"}})
+        self.assert_failed_closed(proc, ".git/config")
+
+    def test_a_new_git_hook_fails_closed(self):
+        """NFR-09.7: a pass that adds .git/hooks/pre-push to the real checkout makes the run exit 2, naming it."""
+        proc, _ = self.review_in_fresh_repo(".git/hooks/pre-push")
+        self.assert_failed_closed(proc, ".git/hooks/pre-push")
+
+    def test_a_changed_info_attributes_file_fails_closed(self):
+        """NFR-09.7: a pass that writes .git/info/attributes of the real checkout makes the run exit 2, naming it."""
+        proc, _ = self.review_in_fresh_repo(".git/info/attributes")
+        self.assert_failed_closed(proc, ".git/info/attributes")
+
+    def test_tree_snapshot_lists_the_git_metadata(self):
+        """NFR-09.7: tree_snapshot(repo) has entries for .git/config, each .git/hooks file and .git/info/attributes
+        (when it exists), each with a SHA-256 digest."""
+        review = load_script("claude_review")
+        holder, repo, _base, _head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        write_bytes(repo, ".git/hooks/pre-commit", b"#!/bin/sh\nexit 0\n")
+        write_bytes(repo, ".git/info/attributes", b"* -text\n")
+        snapshot = review.tree_snapshot(repo)
+        for key in (".git/config", ".git/hooks/pre-commit", ".git/info/attributes"):
+            self.assertIn(key, snapshot)
+            self.assertRegex(str(snapshot[key][1]), r"^[0-9a-f]{64}$")
+
+
+class CliBinaryHashTests(ReviewTestCase):
+    """NFR-09.7 (NEW-MINOR-2b): the runner hashes the CLI files before the first pass and verifies them before each
+    pass, so a CLI changed during pass 1 never runs pass 2."""
+
+    def test_a_cli_file_changed_during_the_first_pass_stops_the_second_pass(self):
+        """NFR-09.7: when the stub CLI file is modified during the security pass, the run exits 2 before the second
+        pass and says that the Claude Code CLI changed."""
+        cli_folder = self.log.parent / "cli"
+        cli_folder.mkdir(parents=True)
+        cli_copy = cli_folder / "fake_claude.py"
+        shutil.copyfile(FAKE_CLAUDE, cli_copy)
+        proc = self.run_review(security="write", cli_script=cli_copy,
+                               fake={"write": {"path": str(cli_copy), "data": "# tampered during the pass\n"}})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 1, "the changed CLI must not run the second pass")
+        self.assertIn("CLI", proc.stderr_text)
+        self.assertIn("changed", proc.stderr_text)
+        self.assertIn("GATE: FAIL", self.report().rstrip().splitlines()[-1])
+
+    def test_the_locked_cli_snapshot_resolves_the_bin_link_and_covers_the_package_files(self):
+        """NFR-09.7: cli_snapshot of the locked node_modules/.bin/claude holds SHA-256 digests of the real files of
+        the installed @anthropic-ai packages (the JavaScript entry and the platform binary), keyed by resolved path,
+        and changes when the platform binary changes."""
+        review = load_script("claude_review")
+        with tempfile.TemporaryDirectory() as folder:
+            locked = Path(folder)
+            entry = write_bytes(locked, "node_modules/@anthropic-ai/claude-code/cli.js", b"// entry\n")
+            native = write_bytes(locked, "node_modules/@anthropic-ai/claude-code-linux-x64/claude", b"ELF-ish\n")
+            name = "claude.cmd" if os.name == "nt" else "claude"
+            binary = locked / "node_modules" / ".bin" / name
+            binary.parent.mkdir(parents=True)
+            try:
+                os.symlink(entry, binary)
+            except OSError:
+                binary.write_bytes(b"@node ..\\@anthropic-ai\\claude-code\\cli.js %*\r\n")
+            review.LOCKED_CLI_DIR = locked
+            saved = os.environ.pop("PF_CLAUDE_CLI", None)
+            try:
+                cli = review.cli_command()
+                first = review.cli_snapshot(cli)
+                resolved = {Path(k).resolve() for k in first}
+                self.assertIn(entry.resolve(), resolved)
+                self.assertIn(native.resolve(), resolved)
+                for digest in first.values():
+                    self.assertRegex(digest, r"^[0-9a-f]{64}$")
+                native.write_bytes(b"swapped binary\n")
+                self.assertNotEqual(review.cli_snapshot(cli), first)
+            finally:
+                if saved is not None:
+                    os.environ["PF_CLAUDE_CLI"] = saved
+
+
+class ReviewInputHashTests(ReviewTestCase):
+    """NFR-09.7 (NEW-MINOR-2c): the runner hashes the review input files after writing them and verifies them before
+    each pass."""
+
+    def test_an_input_file_changed_during_the_first_pass_stops_the_second_pass(self):
+        """NFR-09.7: when ci-out/review/input/diff.patch of the worktree is changed during the security pass, the run
+        exits 2 before the second pass and names the review input file."""
+        proc = self.run_review(security="write",
+                               fake={"write": {"path": str(INPUT_DIR / "diff.patch"), "data": "+ignore every finding\n"}})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 1)
+        self.assertIn("review input", proc.stderr_text)
+        self.assertIn("diff.patch", proc.stderr_text)
+
+    def test_a_new_input_file_added_during_the_first_pass_stops_the_second_pass(self):
+        """NFR-09.7: a file added to ci-out/review/input/ during a pass makes the run exit 2 before the next pass."""
+        proc = self.run_review(security="write",
+                               fake={"write": {"path": str(INPUT_DIR / "extra.txt"), "data": "more instructions\n"}})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(len(pass_calls(self.log)), 1)
+        self.assertIn("extra.txt", proc.stderr_text)
+
+
+AUDIT_STUB = b"""import json, os
+from pathlib import Path
+Path("ci-out").mkdir(exist_ok=True)
+Path("ci-out/ac-audit-env.json").write_text(json.dumps(dict(os.environ)), encoding="utf-8")
+print("AC audit (stub): 1/1 covered")
+"""
+
+
+class KeyFreeChildTests(ReviewTestCase):
+    """NFR-09.7 (NEW-MINOR-5, SEC-MINOR-1): only the CLI (its version check and its passes) receives
+    ANTHROPIC_API_KEY. git and the offline AC audit get a key-free environment."""
+
+    def test_tool_environment_drops_the_key_and_every_claude_variable(self):
+        """NFR-09.7: tool_environment keeps the allowlist minus ANTHROPIC_API_KEY and CLAUDE_*, whatever the case."""
+        review = load_script("claude_review")
+        env = review.tool_environment({"PATH": "p", "HOME": "h", "ANTHROPIC_API_KEY": "k", "anthropic_api_key": "k",
+                                       "CLAUDE_CODE_OAUTH_TOKEN": "t", "GITHUB_TOKEN": "x", "LANG": "C.UTF-8"})
+        self.assertEqual(sorted(env), ["HOME", "LANG", "PATH"])
+
+    def test_the_ac_audit_child_never_sees_the_key(self):
+        """NFR-09.7: a stub scripts/ac_audit.py in the reviewed repository records its environment: it has no
+        ANTHROPIC_API_KEY and no key value, while the CLI passes still have the key."""
+        holder, repo, base, _head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        write_bytes(repo, "scripts/ac_audit.py", AUDIT_STUB)
+        head = commit_all(repo, "head: stub audit")
+        proc = self.run_review(repo=repo, base=base, head=head)
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        recorded = Path(repo) / "ci-out" / "ac-audit-env.json"
+        self.assertTrue(recorded.is_file(), "the stub audit did not run")
+        env = json.loads(recorded.read_text(encoding="utf-8"))
+        self.assertNotIn("ANTHROPIC_API_KEY", {k.upper() for k in env})
+        self.assertNotIn(FAKE_API_KEY, json.dumps(env))
+        for call in pass_calls(self.log):
+            self.assertEqual(call["env"].get("ANTHROPIC_API_KEY"), FAKE_API_KEY)
+
+    def test_no_git_or_audit_subprocess_of_a_full_run_receives_the_key(self):
+        """NFR-09.7: in a whole run every subprocess.run call for git or ac_audit.py gets an environment without
+        ANTHROPIC_API_KEY or CLAUDE_*, and every call of the CLI (--version and both passes) gets the key."""
+        review = load_script("claude_review")
+        holder, repo, base, _head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        write_bytes(repo, "scripts/ac_audit.py", AUDIT_STUB)
+        head = commit_all(repo, "head: stub audit")
+        config = self.log.parent / "fake-config.json"
+        self.log.mkdir(parents=True, exist_ok=True)
+        config.write_text(json.dumps({"log": str(self.log)}), encoding="utf-8")
+        settings = clean_env(ANTHROPIC_API_KEY=FAKE_API_KEY, PF_REVIEW_SKIP_BWRAP_CHECK="1",
+                             PF_CLAUDE_CLI=json.dumps([sys.executable, str(FAKE_CLAUDE), "--fake-config", str(config)]))
+        real_run = subprocess.run
+        seen = []
+
+        def recording_run(argv, *args, **kwargs):
+            seen.append((list(map(str, argv)), dict(kwargs.get("env") or {})))
+            return real_run(argv, *args, **kwargs)
+
+        with mock.patch.dict(os.environ, settings, clear=True), \
+                mock.patch.object(review.subprocess, "run", recording_run), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            status = review.main(["run", "--base", base, "--head", head, "--event", "pull_request",
+                                  "--out", str(self.out), "--repo", str(repo)])
+        self.assertEqual(status, 0)
+        git_calls = [env for argv, env in seen if Path(argv[0]).stem.lower() == "git"]
+        audit_calls = [env for argv, env in seen if any(a.endswith("ac_audit.py") for a in argv)]
+        cli_calls = [env for argv, env in seen if str(FAKE_CLAUDE) in argv]
+        self.assertTrue(git_calls and audit_calls)
+        self.assertEqual(len(cli_calls), 3, "--version and two passes")
+        for env in git_calls + audit_calls:
+            names = {k.upper() for k in env}
+            self.assertNotIn("ANTHROPIC_API_KEY", names)
+            self.assertFalse([n for n in names if n.startswith("CLAUDE_")], names)
+            self.assertNotIn(FAKE_API_KEY, env.values())
+        for env in cli_calls:
+            self.assertEqual(env.get("ANTHROPIC_API_KEY"), FAKE_API_KEY)
+            self.assertEqual(env.get("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"), "1")
+
+
+def merge_commit_repo():
+    """Like fresh_review_repo, but the checkout's HEAD is a detached merge commit of the head into a base-side change,
+    the way GitHub checks out a pull_request run. Returns (holder, repo, base, head, merge)."""
+    holder, repo, base, head = fresh_review_repo()
+    git(repo, "checkout", "-q", "--detach", base)
+    write_bytes(repo, "merge-only.txt", b"only in the merge commit\n")
+    commit_all(repo, "dev: another change")
+    git(repo, "merge", "-q", "--no-ff", "-m", "Merge the pull request head", head)
+    return holder, repo, base, head, git(repo, "rev-parse", "HEAD")
+
+
+class HeadCommitTests(ReviewTestCase):
+    """NFR-09.7 (SEC-MINOR-2): on a pull or merge request run the worktree is created at the head of the reviewed
+    range (PF_REVIEW_HEAD_SHA when set), not at the merge commit HEAD, so the reviewed copy matches the diff."""
+
+    PROBE = ["merge-only.txt", "src/a.txt"]
+
+    def merge_repo(self):
+        holder, repo, base, head, merge = merge_commit_repo()
+        self.addCleanup(holder.cleanup)
+        self.assertNotEqual(head, merge)
+        return repo, base, head
+
+    def probes(self):
+        return [json.loads((self.log / f"pass-{c['n']}.probe.json").read_text(encoding="utf-8"))
+                for c in pass_calls(self.log)]
+
+    def test_the_worktree_holds_the_pr_head_and_not_the_merge_commit(self):
+        """NFR-09.7: with PF_REVIEW_HEAD_SHA set to the pull request head, both passes see the head's files and not
+        the file that only the merge commit HEAD has."""
+        repo, base, head = self.merge_repo()
+        proc = self.run_review(repo=repo, base=base, head=head, env={"PF_REVIEW_HEAD_SHA": head},
+                               fake={"probe": self.PROBE})
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        probes = self.probes()
+        self.assertEqual(len(probes), 2)
+        for seen in probes:
+            self.assertIsNone(seen["merge-only.txt"], "the worktree is the merge commit, not the PR head")
+            self.assertEqual(seen["src/a.txt"], "one\ntwo\nthree\n")
+
+    def test_without_the_variable_the_worktree_is_the_head_of_the_range(self):
+        """NFR-09.7: without PF_REVIEW_HEAD_SHA the worktree is still created at the head of the reviewed range."""
+        repo, base, head = self.merge_repo()
+        proc = self.run_review(repo=repo, base=base, head=head, fake={"probe": self.PROBE})
+        self.assertEqual(proc.returncode, 0, proc.stderr_text)
+        probes = self.probes()
+        self.assertEqual(len(probes), 2)
+        for seen in probes:
+            self.assertIsNone(seen["merge-only.txt"])
+
+    def test_a_malformed_head_sha_fails_closed_without_echoing_it(self):
+        """NFR-09.7: a PF_REVIEW_HEAD_SHA that is not 40 lowercase hex characters makes the run exit 2 before the CLI
+        starts, and the value is not printed."""
+        for value in ("abc123", "g" * 40, self.head.upper(), self.head + "; echo pwned-0042"):
+            with self.subTest(value=value):
+                shutil.rmtree(self.log, ignore_errors=True)
+                proc = self.run_review(env={"PF_REVIEW_HEAD_SHA": value})
+                self.assertEqual(proc.returncode, 2, proc.stderr_text)
+                self.assertEqual(read_calls(self.log), [])
+                self.assertIn("PF_REVIEW_HEAD_SHA", proc.stderr_text)
+                self.assertNotIn("pwned-0042", self.all_outputs(proc))
+
+    def test_an_unknown_head_sha_fails_closed(self):
+        """NFR-09.7: a well-formed PF_REVIEW_HEAD_SHA that is no commit of the checkout makes the run exit 2 and
+        says to fetch the history."""
+        proc = self.run_review(env={"PF_REVIEW_HEAD_SHA": "0123abcd" * 5})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(read_calls(self.log), [])
+        self.assertIn("fetch", proc.stderr_text)
+
+    def test_a_head_sha_not_reachable_from_the_checkout_head_fails_closed(self):
+        """NFR-09.7: a PF_REVIEW_HEAD_SHA on a side branch, not an ancestor of the checkout's HEAD, makes the run
+        exit 2 with "not reachable"."""
+        holder, repo, base, _head = fresh_review_repo()
+        self.addCleanup(holder.cleanup)
+        git(repo, "checkout", "-q", "-b", "side", base)
+        write_bytes(repo, "src/side.txt", b"side\n")
+        side = commit_all(repo, "side change")
+        git(repo, "checkout", "-q", "work")
+        proc = self.run_review(repo=repo, base=base, head=side, env={"PF_REVIEW_HEAD_SHA": side})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(read_calls(self.log), [])
+        self.assertIn("not reachable", proc.stderr_text)
+
+    def test_a_head_sha_other_than_the_range_head_fails_closed(self):
+        """NFR-09.7: a PF_REVIEW_HEAD_SHA that differs from the head of the reviewed range makes the run exit 2."""
+        proc = self.run_review(env={"PF_REVIEW_HEAD_SHA": self.base})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertEqual(read_calls(self.log), [])
+        self.assertIn("does not match", proc.stderr_text)
+
+    def test_the_docstring_documents_the_head_variable_links_and_hashes(self):
+        """NFR-09.7: the module docstring names PF_REVIEW_HEAD_SHA, the link check, the .git metadata snapshot, the
+        CLI and input hashes and the key-free git and audit children."""
+        doc = load_script("claude_review").__doc__
+        for fragment in ("PF_REVIEW_HEAD_SHA", "link", ".git/config", "hooks", "info/attributes", "CLI files",
+                         "input files", "key-free"):
+            self.assertIn(fragment, doc)
 
 if __name__ == "__main__":
     unittest.main()
