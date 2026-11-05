@@ -1,0 +1,514 @@
+# TASK-004 red: scripts/tests/test_ci_config.py against a tree with no CI files (NFR-09.1, NFR-09.2, NFR-09.3, NFR-09.5, NFR-09.6)
+# command: .venv/Scripts/python.exe -m unittest discover -s scripts/tests -p test_ci_config.py -v
+# git HEAD: 59420aa  backend/mvnw index entry: 100644
+test_artifacts_of_the_five_jobs_are_published (test_ci_config.JobDefinitionTests.test_artifacts_of_the_five_jobs_are_published)
+NFR-09.1: the GitHub jobs upload the C4 artifacts with the right condition and retention, and the GitLab ... FAIL
+test_backend_mvnw_is_executable_in_the_index (test_ci_config.JobDefinitionTests.test_backend_mvnw_is_executable_in_the_index)
+NFR-09.1: backend/mvnw has mode 100755, so ./mvnw runs on a Linux runner. ... FAIL
+test_both_platforms_run_the_same_gate_commands (test_ci_config.JobDefinitionTests.test_both_platforms_run_the_same_gate_commands)
+NFR-09.1: each of the five jobs runs the plan C1 commands, with the same text on GitHub and on GitLab. ... FAIL
+test_claude_review_needs_the_other_four_jobs_and_cannot_fail (test_ci_config.JobDefinitionTests.test_claude_review_needs_the_other_four_jobs_and_cannot_fail)
+NFR-09.1: claude-review needs build, frontend-unit, e2e and quality-gates, and is never allowed to fail: ... FAIL
+test_concurrency_cancels_only_superseded_pull_request_runs (test_ci_config.JobDefinitionTests.test_concurrency_cancels_only_superseded_pull_request_runs)
+NFR-09.1: pull request runs of one ref share a concurrency group and cancel older runs; a push to dev or ... FAIL
+test_e2e_runs_the_packaged_jar_in_the_playwright_image (test_ci_config.JobDefinitionTests.test_e2e_runs_the_packaged_jar_in_the_playwright_image)
+NFR-09.1: e2e needs the build job's JAR and runs Playwright in the pinned Playwright image with a Temurin ... FAIL
+test_github_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_github_ci_defines_the_five_jobs)
+NFR-09.1: .github/workflows/ci.yml is named CI and defines exactly build, frontend-unit, e2e, ... FAIL
+test_gitlab_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_gitlab_ci_defines_the_five_jobs)
+NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e and review and the same five jobs, plus the ... FAIL
+test_triggers_are_pushes_and_pull_requests_into_dev_and_main (test_ci_config.JobDefinitionTests.test_triggers_are_pushes_and_pull_requests_into_dev_and_main)
+NFR-09.1: ci.yml runs for push to dev and main, pull_request into dev and main and manual dispatch; ... FAIL
+test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them (test_ci_config.LinuxSnapshotGeneratorTests.test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them)
+NFR-09.5: the Linux snapshots workflow runs on the update-linux-snapshots label or by hand, has no ... FAIL
+test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline (test_ci_config.LinuxSnapshotGeneratorTests.test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline)
+NFR-09.5: e2e-update-linux-snapshots is manual, may fail, runs the e2e server in update mode with ... FAIL
+test_api_key_reaches_only_the_review_step_and_is_never_printed (test_ci_config.PermissionAndSecretTests.test_api_key_reaches_only_the_review_step_and_is_never_printed)
+NFR-09.3: ANTHROPIC_API_KEY is referenced in exactly one place, the env of the review step of the ... FAIL
+test_no_api_key_literal_is_tracked (test_ci_config.PermissionAndSecretTests.test_no_api_key_literal_is_tracked)
+NFR-09.3: git grep finds no sk-ant- literal of 20 or more characters in any tracked file. ... ok
+test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks (test_ci_config.PermissionAndSecretTests.test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks)
+NFR-09.3: no CI file has `set -x`, echoes ANTHROPIC_API_KEY, dumps the environment, turns on a debug ... FAIL
+test_no_pull_request_target_and_every_checkout_drops_credentials (test_ci_config.PermissionAndSecretTests.test_no_pull_request_target_and_every_checkout_drops_credentials)
+NFR-09.3: no workflow uses pull_request_target or workflow_run, and every actions/checkout sets ... FAIL
+test_no_run_script_interpolates_an_event_expression (test_ci_config.PermissionAndSecretTests.test_no_run_script_interpolates_an_event_expression)
+NFR-09.3: no `run:` script contains a ${{ github.event... }} expression (or another attacker-controlled ... FAIL
+test_permissions_are_read_only_except_for_claude_review (test_ci_config.PermissionAndSecretTests.test_permissions_are_read_only_except_for_claude_review)
+NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review job of ci.yml ... FAIL
+test_ci_node_version_equals_the_pom (test_ci_config.PinTests.test_ci_node_version_equals_the_pom)
+NFR-09.2: the Node version of setup-node and of the Node images equals frontend.node.version in ... FAIL
+test_every_action_is_pinned_to_a_full_sha_with_a_version_comment (test_ci_config.PinTests.test_every_action_is_pinned_to_a_full_sha_with_a_version_comment)
+NFR-09.2: every `uses:` is owner/repo@<40 hex> with a `# vX.Y.Z` comment and equals the verified C3 pin. ... FAIL
+test_every_downloaded_file_has_a_sha256_next_to_it (test_ci_config.PinTests.test_every_downloaded_file_has_a_sha256_next_to_it)
+NFR-09.2: every curl or wget download is followed by a sha256sum -c check of a 64-hex digest before the ... FAIL
+test_every_image_is_an_exact_tag_with_a_digest (test_ci_config.PinTests.test_every_image_is_an_exact_tag_with_a_digest)
+NFR-09.2: every container image is tag@sha256:<64 hex>, and each equals the verified C3 image. ... FAIL
+test_java_and_python_versions_are_exact_and_equal_on_both_platforms (test_ci_config.PinTests.test_java_and_python_versions_are_exact_and_equal_on_both_platforms)
+NFR-09.2: Temurin 21.0.13+9 and Python 3.14.10 are named exactly, and GitHub and GitLab use the same. ... FAIL
+test_nothing_uses_a_floating_reference (test_ci_config.PinTests.test_nothing_uses_a_floating_reference)
+NFR-09.2: the strings @latest, :latest and ubuntu-latest occur in none of the CI files or .mcp.json, ... FAIL
+test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact (test_ci_config.PinTests.test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact)
+NFR-09.2: the Claude Code CLI is @anthropic-ai/claude-code@2.1.311 (the runner's pinned version), ... FAIL
+test_playwright_image_equals_the_locked_playwright_version (test_ci_config.PinTests.test_playwright_image_equals_the_locked_playwright_version)
+NFR-09.2: the Playwright image tag is v + the @playwright/test version in package-lock.json, and ... FAIL
+test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate (test_ci_config.QualityGateWiringTests.test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate)
+NFR-09.6: the quality-gates job of GitHub and of GitLab installs scripts/requirements-ci.txt and runs ... FAIL
+test_the_quality_gates_report_is_kept_even_when_a_gate_fails (test_ci_config.QualityGateWiringTests.test_the_quality_gates_report_is_kept_even_when_a_gate_fails)
+NFR-09.6: the runner writes its report under ci-out/quality-gates/, and both platforms keep it as an ... FAIL
+
+======================================================================
+FAIL: test_artifacts_of_the_five_jobs_are_published (test_ci_config.JobDefinitionTests.test_artifacts_of_the_five_jobs_are_published)
+NFR-09.1: the GitHub jobs upload the C4 artifacts with the right condition and retention, and the GitLab
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 299, in test_artifacts_of_the_five_jobs_are_published
+    for job in self.workflow(GITHUB_CI)["jobs"].values():
+               ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_backend_mvnw_is_executable_in_the_index (test_ci_config.JobDefinitionTests.test_backend_mvnw_is_executable_in_the_index)
+NFR-09.1: backend/mvnw has mode 100755, so ./mvnw runs on a Linux runner.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 260, in test_backend_mvnw_is_executable_in_the_index
+    self.assertTrue(entry.startswith("100755 "), f"git ls-files -s backend/mvnw: {entry!r}")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : git ls-files -s backend/mvnw: '100644 19529ddf8c6eaa08c5c75ff80652d21ce4b72f8c 0\tbackend/mvnw'
+
+======================================================================
+FAIL: test_both_platforms_run_the_same_gate_commands (test_ci_config.JobDefinitionTests.test_both_platforms_run_the_same_gate_commands)
+NFR-09.1: each of the five jobs runs the plan C1 commands, with the same text on GitHub and on GitLab.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 200, in test_both_platforms_run_the_same_gate_commands
+    github = self.workflow(GITHUB_CI)["jobs"]
+             ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_claude_review_needs_the_other_four_jobs_and_cannot_fail (test_ci_config.JobDefinitionTests.test_claude_review_needs_the_other_four_jobs_and_cannot_fail)
+NFR-09.1: claude-review needs build, frontend-unit, e2e and quality-gates, and is never allowed to fail:
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 241, in test_claude_review_needs_the_other_four_jobs_and_cannot_fail
+    github = self.workflow(GITHUB_CI)["jobs"]
+             ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_concurrency_cancels_only_superseded_pull_request_runs (test_ci_config.JobDefinitionTests.test_concurrency_cancels_only_superseded_pull_request_runs)
+NFR-09.1: pull request runs of one ref share a concurrency group and cancel older runs; a push to dev or
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 229, in test_concurrency_cancels_only_superseded_pull_request_runs
+    concurrency = self.workflow(GITHUB_CI).get("concurrency")
+                  ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_e2e_runs_the_packaged_jar_in_the_playwright_image (test_ci_config.JobDefinitionTests.test_e2e_runs_the_packaged_jar_in_the_playwright_image)
+NFR-09.1: e2e needs the build job's JAR and runs Playwright in the pinned Playwright image with a Temurin
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 265, in test_e2e_runs_the_packaged_jar_in_the_playwright_image
+    job = self.workflow(GITHUB_CI)["jobs"]["e2e"]
+          ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_github_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_github_ci_defines_the_five_jobs)
+NFR-09.1: .github/workflows/ci.yml is named CI and defines exactly build, frontend-unit, e2e,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 173, in test_github_ci_defines_the_five_jobs
+    wf = self.workflow(GITHUB_CI)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_gitlab_ci_defines_the_five_jobs (test_ci_config.JobDefinitionTests.test_gitlab_ci_defines_the_five_jobs)
+NFR-09.1: .gitlab-ci.yml has the stages build, test, e2e and review and the same five jobs, plus the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 185, in test_gitlab_ci_defines_the_five_jobs
+    data = self.gitlab()
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 108, in gitlab
+    data = self.load_yaml(GITLAB_CI)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .gitlab-ci.yml does not exist
+
+======================================================================
+FAIL: test_triggers_are_pushes_and_pull_requests_into_dev_and_main (test_ci_config.JobDefinitionTests.test_triggers_are_pushes_and_pull_requests_into_dev_and_main)
+NFR-09.1: ci.yml runs for push to dev and main, pull_request into dev and main and manual dispatch;
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 211, in test_triggers_are_pushes_and_pull_requests_into_dev_and_main
+    on = self.workflow(GITHUB_CI)["on"]
+         ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them (test_ci_config.LinuxSnapshotGeneratorTests.test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them)
+NFR-09.5: the Linux snapshots workflow runs on the update-linux-snapshots label or by hand, has no
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 619, in test_github_workflow_writes_only_missing_linux_baselines_and_uploads_them
+    wf = self.workflow(GITHUB_SNAPSHOTS)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/linux-snapshots.yml does not exist
+
+======================================================================
+FAIL: test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline (test_ci_config.LinuxSnapshotGeneratorTests.test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline)
+NFR-09.5: e2e-update-linux-snapshots is manual, may fail, runs the e2e server in update mode with
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 652, in test_gitlab_manual_job_generates_linux_baselines_without_blocking_the_pipeline
+    job = self.gitlab()["_jobs"]["e2e-update-linux-snapshots"]
+          ~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 108, in gitlab
+    data = self.load_yaml(GITLAB_CI)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .gitlab-ci.yml does not exist
+
+======================================================================
+FAIL: test_api_key_reaches_only_the_review_step_and_is_never_printed (test_ci_config.PermissionAndSecretTests.test_api_key_reaches_only_the_review_step_and_is_never_printed)
+NFR-09.3: ANTHROPIC_API_KEY is referenced in exactly one place, the env of the review step of the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 532, in test_api_key_reaches_only_the_review_step_and_is_never_printed
+    wf = self.workflow(rel)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks (test_ci_config.PermissionAndSecretTests.test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks)
+NFR-09.3: no CI file has `set -x`, echoes ANTHROPIC_API_KEY, dumps the environment, turns on a debug
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 568, in test_no_ci_file_traces_commands_dumps_the_environment_or_disables_tls_checks
+    for rel, text in self.ci_text().items():
+                     ~~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 150, in ci_text
+    return {rel: self.read(rel) for rel in CI_FILES}
+                 ~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_no_pull_request_target_and_every_checkout_drops_credentials (test_ci_config.PermissionAndSecretTests.test_no_pull_request_target_and_every_checkout_drops_credentials)
+NFR-09.3: no workflow uses pull_request_target or workflow_run, and every actions/checkout sets
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 498, in test_no_pull_request_target_and_every_checkout_drops_credentials
+    wf = self.workflow(rel)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_no_run_script_interpolates_an_event_expression (test_ci_config.PermissionAndSecretTests.test_no_run_script_interpolates_an_event_expression)
+NFR-09.3: no `run:` script contains a ${{ github.event... }} expression (or another attacker-controlled
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 514, in test_no_run_script_interpolates_an_event_expression
+    for name, job in self.workflow(rel)["jobs"].items():
+                     ~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_permissions_are_read_only_except_for_claude_review (test_ci_config.PermissionAndSecretTests.test_permissions_are_read_only_except_for_claude_review)
+NFR-09.3: every workflow has top-level permissions contents: read; only the claude-review job of ci.yml
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 483, in test_permissions_are_read_only_except_for_claude_review
+    wf = self.workflow(rel)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_ci_node_version_equals_the_pom (test_ci_config.PinTests.test_ci_node_version_equals_the_pom)
+NFR-09.2: the Node version of setup-node and of the Node images equals frontend.node.version in
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 393, in test_ci_node_version_equals_the_pom
+    setups = [step["with"]["node-version"] for rel in WORKFLOWS for job in self.workflow(rel)["jobs"].values()
+                                                                           ~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_every_action_is_pinned_to_a_full_sha_with_a_version_comment (test_ci_config.PinTests.test_every_action_is_pinned_to_a_full_sha_with_a_version_comment)
+NFR-09.2: every `uses:` is owner/repo@<40 hex> with a `# vX.Y.Z` comment and equals the verified C3 pin.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 334, in test_every_action_is_pinned_to_a_full_sha_with_a_version_comment
+    for number, line in enumerate(self.read(rel).splitlines(), 1):
+                                  ~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_every_downloaded_file_has_a_sha256_next_to_it (test_ci_config.PinTests.test_every_downloaded_file_has_a_sha256_next_to_it)
+NFR-09.2: every curl or wget download is followed by a sha256sum -c check of a 64-hex digest before the
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 456, in test_every_downloaded_file_has_a_sha256_next_to_it
+    for rel, job, text in self.all_script_blocks():
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 143, in all_script_blocks
+    for name, job in self.workflow(rel)["jobs"].items():
+                     ~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_every_image_is_an_exact_tag_with_a_digest (test_ci_config.PinTests.test_every_image_is_an_exact_tag_with_a_digest)
+NFR-09.2: every container image is tag@sha256:<64 hex>, and each equals the verified C3 image.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 352, in test_every_image_is_an_exact_tag_with_a_digest
+    for name, job in self.workflow(rel)["jobs"].items():
+                     ~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_java_and_python_versions_are_exact_and_equal_on_both_platforms (test_ci_config.PinTests.test_java_and_python_versions_are_exact_and_equal_on_both_platforms)
+NFR-09.2: Temurin 21.0.13+9 and Python 3.14.10 are named exactly, and GitHub and GitLab use the same.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 406, in test_java_and_python_versions_are_exact_and_equal_on_both_platforms
+    github = self.workflow(GITHUB_CI)["jobs"]
+             ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_nothing_uses_a_floating_reference (test_ci_config.PinTests.test_nothing_uses_a_floating_reference)
+NFR-09.2: the strings @latest, :latest and ubuntu-latest occur in none of the CI files or .mcp.json,
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 444, in test_nothing_uses_a_floating_reference
+    texts = {**self.ci_text(), ".mcp.json": self.read(".mcp.json")}
+               ~~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 150, in ci_text
+    return {rel: self.read(rel) for rel in CI_FILES}
+                 ~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact (test_ci_config.PinTests.test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact)
+NFR-09.2: the Claude Code CLI is @anthropic-ai/claude-code@2.1.311 (the runner's pinned version),
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 430, in test_npm_and_pip_packages_run_by_ci_or_mcp_are_exact
+    scripts = [text for _, _, text in self.all_script_blocks()]
+                                      ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 143, in all_script_blocks
+    for name, job in self.workflow(rel)["jobs"].items():
+                     ~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_playwright_image_equals_the_locked_playwright_version (test_ci_config.PinTests.test_playwright_image_equals_the_locked_playwright_version)
+NFR-09.2: the Playwright image tag is v + the @playwright/test version in package-lock.json, and
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 379, in test_playwright_image_equals_the_locked_playwright_version
+    github = self.workflow(GITHUB_CI)["jobs"]["e2e"]
+             ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate (test_ci_config.QualityGateWiringTests.test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate)
+NFR-09.6: the quality-gates job of GitHub and of GitLab installs scripts/requirements-ci.txt and runs
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 585, in test_both_platforms_run_the_quality_gates_runner_and_cannot_skip_a_gate
+    github = self.github_job_script(self.workflow(GITHUB_CI)["jobs"]["quality-gates"])
+                                    ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+======================================================================
+FAIL: test_the_quality_gates_report_is_kept_even_when_a_gate_fails (test_ci_config.QualityGateWiringTests.test_the_quality_gates_report_is_kept_even_when_a_gate_fails)
+NFR-09.6: the runner writes its report under ci-out/quality-gates/, and both platforms keep it as an
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 604, in test_the_quality_gates_report_is_kept_even_when_a_gate_fails
+    for where, script in (("GitHub", self.github_job_script(self.workflow(GITHUB_CI)["jobs"]["quality-gates"])),
+                                                            ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 100, in workflow
+    data = self.load_yaml(relative)
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 94, in load_yaml
+    data = yaml.safe_load(self.read(relative))
+                          ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\wdarshana\Downloads\PolicyForge\scripts\tests\test_ci_config.py", line 88, in read
+    self.fail(f"{relative} does not exist")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: .github/workflows/ci.yml does not exist
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.173s
+
+FAILED (failures=26)
+# exit: 1
