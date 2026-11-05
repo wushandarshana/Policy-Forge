@@ -116,6 +116,9 @@ class ReviewTestCase(unittest.TestCase):
             "GH_TOKEN": FAKE_TOKEN_VALUE,
             "CI_JOB_TOKEN": FAKE_TOKEN_VALUE,
             "PF_GITLAB_REVIEW_TOKEN": FAKE_TOKEN_VALUE,
+            # The stub CLI needs no sandbox, and Windows has no bubblewrap. The runner honours this switch only
+            # together with PF_CLAUDE_CLI; BubblewrapTests turn it off.
+            "PF_REVIEW_SKIP_BWRAP_CHECK": "1",
         }
         if key is not None:
             values["ANTHROPIC_API_KEY"] = key
@@ -124,7 +127,11 @@ class ReviewTestCase(unittest.TestCase):
                 "--event", event, "--out", self.out]
         if repo_flag:
             args += ["--repo", repo]
-        proc = run_python(args, env=clean_env(**values), cwd=repo)
+        child = clean_env(**values)
+        if "PATH" in values:  # Windows spells it Path: drop the other spelling so the override is the only one
+            for name in [k for k in child if k.upper() == "PATH" and k != "PATH"]:
+                del child[name]
+        proc = run_python(args, env=child, cwd=repo)
         return proc
 
     def report(self):
@@ -1135,6 +1142,90 @@ class SecretHandlingTests(ReviewTestCase):
                                         "PF_GITLAB_REVIEW_TOKEN": "w", "ANTHROPIC_API_KEY": "k", "PATH": "p"})
         self.assertEqual(sorted(env), ["ANTHROPIC_API_KEY", "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB", "PATH"])
         self.assertEqual(env["CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"], "1")
+
+
+def git_only_path(folder):
+    """A PATH on which git is found and bwrap is not: a folder with a link to git (POSIX) or git's own folder
+    (Windows, where git ships no bwrap). None when that folder holds a bwrap after all."""
+    real = shutil.which("git")
+    if real is None:
+        return None
+    if os.name == "nt":
+        directory = Path(real).parent
+    else:
+        directory = Path(folder) / "git-only"
+        directory.mkdir()
+        (directory / "git").symlink_to(real)
+    if shutil.which("bwrap", path=str(directory)):
+        return None
+    return str(directory)
+
+
+def fake_bwrap_dir(folder):
+    """A folder holding an executable named bwrap (bwrap.bat on Windows). The runner only looks it up."""
+    directory = Path(folder) / "fake-bwrap"
+    directory.mkdir()
+    if os.name == "nt":
+        (directory / "bwrap.bat").write_bytes(b"@exit /b 0\r\n")
+    else:
+        script = directory / "bwrap"
+        script.write_bytes(b"#!/bin/sh\nexit 0\n")
+        script.chmod(0o755)
+    return str(directory)
+
+
+class BubblewrapTests(ReviewTestCase):
+    """NFR-09.7: the pinned CLI scrubs its subprocess environment (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1), which needs
+    bubblewrap. Without bwrap on PATH the runner fails closed before it starts the CLI."""
+
+    def test_missing_bubblewrap_fails_closed_without_calling_the_cli(self):
+        """NFR-09.4: with env scrubbing on and no bwrap on PATH the run exits 2 with a "bubblewrap missing"
+        diagnostic, writes a failing report and never starts the CLI, not even for --version."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = git_only_path(folder)
+            if path is None:
+                self.skipTest("no PATH with git and without bwrap can be built here")
+            proc = self.run_review(env={"PATH": path, "PF_REVIEW_SKIP_BWRAP_CHECK": ""})
+        self.assertEqual(proc.returncode, 2, proc.stderr_text)
+        self.assertIn("bubblewrap missing", proc.stderr_text)
+        self.assertIn("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB", proc.stderr_text)
+        self.assertEqual(read_calls(self.log), [])
+        self.assertTrue(self.report().rstrip().splitlines()[-1].startswith("GATE: FAIL"))
+
+    def test_bubblewrap_on_the_path_satisfies_the_check_and_the_cli_inherits_that_path(self):
+        """NFR-09.7: with bwrap on PATH the review runs, and the CLI's allowlisted environment keeps that PATH (and
+        CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1), so the CLI finds bwrap where the runner found it."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = git_only_path(folder)
+            if path is None:
+                self.skipTest("no PATH with git and without bwrap can be built here")
+            bwrap_dir = fake_bwrap_dir(folder)
+            proc = self.run_review(env={"PATH": os.pathsep.join([bwrap_dir, path]), "PF_REVIEW_SKIP_BWRAP_CHECK": ""})
+            self.assertEqual(proc.returncode, 0, proc.stderr_text)
+            calls = pass_calls(self.log)
+            self.assertEqual(len(calls), 2)
+            for call in calls:
+                child_path = next(v for k, v in call["env"].items() if k.upper() == "PATH")
+                self.assertIn(bwrap_dir, child_path.split(os.pathsep))
+                self.assertEqual(call["env"].get("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"), "1")
+
+    def test_the_test_switch_needs_a_cli_override_and_scrub_zero_skips_the_check(self):
+        """NFR-09.4: check_bubblewrap fails closed when bwrap is missing, also with PF_REVIEW_SKIP_BWRAP_CHECK=1 unless
+        PF_CLAUDE_CLI replaces the CLI (production stays strict); it passes only with the switch plus an override, or
+        when the child environment has CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0."""
+        review = load_script("claude_review")
+        with tempfile.TemporaryDirectory() as empty:
+            scrubbed = {"PATH": empty, "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"}
+            for settings in ({}, {"PF_REVIEW_SKIP_BWRAP_CHECK": "1"}, {"PF_CLAUDE_CLI": "stub.py"},
+                             {"PF_CLAUDE_CLI": "  ", "PF_REVIEW_SKIP_BWRAP_CHECK": "1"}):
+                with self.subTest(settings=settings):
+                    with self.assertRaises(review.ReviewError) as caught:
+                        review.check_bubblewrap(scrubbed, settings)
+                    self.assertIn("bubblewrap missing", str(caught.exception))
+            review.check_bubblewrap(scrubbed, {"PF_CLAUDE_CLI": "stub.py", "PF_REVIEW_SKIP_BWRAP_CHECK": "1"})
+            review.check_bubblewrap({"Path": empty, "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "0"}, {})
+            self.assertEqual(review.child_environment({"PATH": empty})["CLAUDE_CODE_SUBPROCESS_ENV_SCRUB"], "1",
+                             "the runner always turns scrubbing on, so production always checks for bwrap")
 
 
 if __name__ == "__main__":

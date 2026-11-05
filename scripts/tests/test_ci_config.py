@@ -787,6 +787,67 @@ class CommentJobTests(CiConfigTestCase):
         self.assertNotRegex(header, r"feat/\*", "protected feature branches would hand every MR the key")
 
 
+BWRAP_INSTALL = "apt-get install -y --no-install-recommends bubblewrap"
+BWRAP_SMOKE = "bwrap --ro-bind / / --dev /dev --proc /proc --unshare-all true"
+REVIEW_COMMAND = "claude_review.py run"
+
+
+class BubblewrapInstallTests(CiConfigTestCase):
+    """The pinned CLI scrubs its subprocess environment (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1) and exits at start-up
+    without bubblewrap, so both claude-review jobs install bwrap and prove it can build a sandbox first."""
+
+    def assert_bwrap_script(self, text, where):
+        self.assertIn("apt-get update", text, where)
+        self.assertIn(BWRAP_INSTALL, text, where)
+        self.assertLess(text.index("apt-get update"), text.index(BWRAP_INSTALL), where)
+        self.assertIn("bwrap --version", text, where)
+        self.assertIn("dpkg-query -W bubblewrap", text, where)
+        self.assertRegex(text, r"if ! " + re.escape(BWRAP_SMOKE) + r"; then\n[^\n]*user namespaces[^\n]*\n\s*exit 1",
+                         f"{where}: a failed smoke test stops the job with a message (fail closed)")
+        self.assertNotRegex(text, r"bubblewrap=\S", f"{where}: the archive version is recorded, not pinned")
+        self.assertNotIn("CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0", text, where)
+
+    def test_github_review_job_installs_and_smoke_tests_bubblewrap_before_the_review_without_the_key(self):
+        """NFR-09.7: the GitHub claude-review job has a step before the review step that runs sudo apt-get update,
+        installs bubblewrap from the signed Ubuntu archive with --no-install-recommends, records its version with
+        dpkg-query (NFR-09.2), runs bwrap --version and a --unshare-all smoke test that fails closed with a message
+        about user namespaces; that step has no ANTHROPIC_API_KEY."""
+        steps = self.steps(self.workflow(GITHUB_CI)["jobs"]["claude-review"])
+        installs = [i for i, s in enumerate(steps) if BWRAP_INSTALL in str(s.get("run"))]
+        reviews = [i for i, s in enumerate(steps) if REVIEW_COMMAND in str(s.get("run"))]
+        self.assertEqual(len(installs), 1, "one step installs bubblewrap")
+        self.assertEqual(len(reviews), 1)
+        self.assertLess(installs[0], reviews[0], "bubblewrap is installed before the review step")
+        step = steps[installs[0]]
+        text = step["run"]
+        self.assert_bwrap_script(text, GITHUB_CI)
+        self.assertIn("sudo apt-get update", text)
+        self.assertIn("sudo " + BWRAP_INSTALL, text)
+        self.assertIn("::error::", text)
+        self.assertNotIn("ANTHROPIC_API_KEY", json.dumps(step))
+        self.assertNotIn("secrets.", json.dumps(step))
+        self.assertNotIn(REVIEW_COMMAND, text)
+
+    def test_gitlab_review_job_installs_and_smoke_tests_bubblewrap_before_the_review(self):
+        """NFR-09.7: the GitLab claude-review job installs bubblewrap with apt-get (the node image runs as root),
+        records its version with dpkg-query (NFR-09.2), runs bwrap --version and the --unshare-all smoke test that
+        fails closed with a message before the review command, and the header says the runner must allow user
+        namespaces (or privileged mode) for bwrap."""
+        job = self.gitlab()["_jobs"]["claude-review"]
+        blocks = [str(line) for key in ("before_script", "script") for line in normalise_list(job.get(key))]
+        installs = [i for i, b in enumerate(blocks) if BWRAP_INSTALL in b]
+        reviews = [i for i, b in enumerate(blocks) if REVIEW_COMMAND in b]
+        self.assertEqual(len(installs), 1, "one script entry installs bubblewrap")
+        self.assertEqual(len(reviews), 1)
+        self.assertLess(installs[0], reviews[0], "bubblewrap is installed before the review command")
+        text = blocks[installs[0]]
+        self.assert_bwrap_script(text, GITLAB_CI)
+        self.assertNotIn(REVIEW_COMMAND, text)
+        header = "\n".join(line for line in self.read(GITLAB_CI).splitlines() if line.startswith("#"))
+        for fragment in ("bubblewrap", "bwrap", "user namespaces", "privileged", "fails closed"):
+            self.assertIn(fragment, header)
+
+
 class GateJobTests(CiConfigTestCase):
     def test_github_ci_gate_fails_unless_every_gate_job_succeeded(self):
         """NFR-09.7: ci-gate needs the five gate jobs, runs always, and fails unless each needs.<job>.result is
