@@ -17,16 +17,21 @@ Exit status:  0  no BLOCKER finding in either pass (MAJOR and MINOR findings are
                  The gate fails closed.
 
 An empty diff passes without starting the CLI. The review is sandboxed (NFR-09.7):
-- the CLI has the Read, Grep and Glob tools only, with no Bash. Before each pass the runner writes the diff, the
-  commit log and the changed-file list to ci-out/review/input/, and the prompt tells the model to Read them. Read
-  (which also governs Grep and Glob) is allowed inside the checkout only; /proc, /sys, /dev, /etc, the other system
-  roots and the home folder's credential files are denied, and the checkout's own .claude settings are not loaded;
+- the CLI runs in a disposable detached worktree of HEAD outside the checkout (under RUNNER_TEMP, TMPDIR or the
+  system temp folder), added with core.fsmonitor off and no hooks, and removed after the run whatever happens;
+- the CLI has the Read, Grep and Glob tools only, with no Bash. Before the first pass the runner writes the diff, the
+  commit log and the changed-file list to the worktree's ci-out/review/input/, and the prompt tells the model to Read
+  them. Read (which also governs Grep and Glob) is allowed inside the worktree only; /proc, /sys, /dev, /etc, the
+  other system roots and the home folder's credential files are denied, and the checkout's .claude settings are not
+  loaded;
 - the environment of the CLI, and of every git and Python child, is built from an allowlist (PATH, HOME, LANG,
   LC_ALL, TMPDIR, TEMP, TMP, SYSTEMROOT, ANTHROPIC_API_KEY and CLAUDE_*), so no CI_*, GITHUB_* or GH_* variable,
   token, registry password or token-bearing URL reaches it;
 - the CLI scrubs the environment of its own subprocesses (CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1, always set), which
   needs bubblewrap: without `bwrap` on the CLI's PATH the run fails closed (exit 2) before the CLI is started;
-- after each pass the run fails closed (exit 2) when `git status --ignored` shows any change outside ci-out/;
+- after each pass the run fails closed (exit 2) when `git status --ignored` of the real checkout shows any change
+  outside ci-out/, or when a tracked file of the worktree changed or was deleted. New untracked files in the
+  worktree (the placeholders the CLI's bubblewrap sandbox creates) are tolerated, and every path is logged;
 - every output is redacted with the patterns of scripts/redact_evidence.py (and the literal API key), and the key
   is never printed.
 `comment` runs in a separate job, from the base branch's checkout: it edits only a comment of its own bot user and
@@ -50,6 +55,7 @@ import shutil
 import ssl
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -81,6 +87,8 @@ HOME_SECRETS = (".ssh/**", ".aws/**", ".azure/**", ".config/**", ".docker/**", "
 INPUT_DIR = Path("ci-out") / "review" / "input"
 CI_OUT_PREFIX = "ci-out/"
 LOCKED_CLI_DIR = Path(__file__).resolve().with_name("claude-cli")
+# Every git call: no fsmonitor command and no repository hooks (a post-checkout hook would run on `worktree add`).
+GIT_HARDENING = ("-c", "core.fsmonitor=false", "-c", f"core.hooksPath={os.devnull}")
 GITHUB_BOT = "github-actions[bot]"
 DEFAULT_TURNS = "40"
 DEFAULT_BUDGET = "5.00"
@@ -218,8 +226,8 @@ def run_git(repo, *args):
     env = child_environment()
     env["GIT_TERMINAL_PROMPT"] = "0"
     try:
-        return subprocess.run(["git", "-C", str(repo), "-c", "core.quotepath=off", *args], capture_output=True,
-                              env=env, check=False, timeout=300)
+        return subprocess.run(["git", "-C", str(repo), *GIT_HARDENING, "-c", "core.quotepath=off", *args],
+                              capture_output=True, env=env, check=False, timeout=300)
     except (OSError, subprocess.SubprocessError) as exc:
         raise ReviewError(f"git could not be run: {type(exc).__name__}") from exc
 
@@ -300,11 +308,12 @@ def changed_files(repo, base, head):
     return [name for name in proc.stdout.decode("utf-8", "replace").split("\0") if name]
 
 
-def write_review_input(repo, base, head, files):
-    """Write the diff, the commit log and the changed-file list to ci-out/review/input/ of `repo` (NFR-09.7).
+def write_review_input(repo, base, head, files, target=None):
+    """Write the diff, the commit log and the changed-file list of `repo` to ci-out/review/input/ of `target` (the
+    disposable worktree; default `repo`) (NFR-09.7).
 
     The folder is emptied first. The reviewer reads these files instead of running git."""
-    folder = Path(repo) / INPUT_DIR
+    folder = Path(target if target is not None else repo) / INPUT_DIR
     shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True, exist_ok=True)
     diff = run_git(repo, "diff", "--no-color", "--no-ext-diff", "--no-textconv", base, head)
@@ -348,6 +357,70 @@ def tree_snapshot(repo):
 def tree_changes(before, after):
     """The paths whose status or content differs between two snapshots, sorted."""
     return sorted(path for path in set(before) | set(after) if before.get(path) != after.get(path))
+
+
+def create_worktree(repo):
+    """A detached worktree of HEAD in a new folder outside `repo` (under RUNNER_TEMP, TMPDIR or the system temp
+    folder), where the CLI runs (NFR-09.7). Its bubblewrap sandbox drops placeholder files in its working folder;
+    here they never touch the real checkout. Returns (holder folder, worktree path)."""
+    parent = next((p for p in (os.environ.get("RUNNER_TEMP", "").strip(), os.environ.get("TMPDIR", "").strip())
+                   if p and Path(p).is_dir()), None)
+    holder = Path(tempfile.mkdtemp(prefix="pf-review-", dir=parent)).resolve()
+    worktree = holder / "checkout"
+    real = Path(repo).resolve()
+    if worktree == real or real in worktree.parents:
+        shutil.rmtree(holder, ignore_errors=True)
+        raise ReviewError("the disposable worktree would be inside the checkout; set RUNNER_TEMP or TMPDIR elsewhere")
+    proc = run_git(repo, "worktree", "add", "--detach", str(worktree), "HEAD")
+    if proc.returncode != 0:
+        shutil.rmtree(holder, ignore_errors=True)
+        raise ReviewError("git worktree add failed: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    return holder, worktree
+
+
+def remove_worktree(repo, holder, worktree):
+    """Remove the disposable worktree and its folder, then prune git's record of it. Never raises."""
+    try:
+        run_git(repo, "worktree", "remove", "--force", str(worktree))
+    except ReviewError:
+        pass
+    shutil.rmtree(holder, ignore_errors=True)
+    try:
+        run_git(repo, "worktree", "prune")
+    except ReviewError:
+        pass
+
+
+def tracked_snapshot(worktree):
+    """{path: SHA-256 or None when missing} of every tracked file of the worktree."""
+    proc = run_git(worktree, "ls-files", "-z")
+    if proc.returncode != 0:
+        raise ReviewError("git ls-files failed in the worktree: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    snapshot = {}
+    for path in proc.stdout.decode("utf-8", "surrogateescape").split("\0"):
+        if not path:
+            continue
+        try:
+            snapshot[path] = hashlib.sha256((Path(worktree) / path).read_bytes()).hexdigest()
+        except FileNotFoundError:
+            snapshot[path] = None
+        except OSError:
+            snapshot[path] = "unreadable"
+    return snapshot
+
+
+def untracked_paths(worktree):
+    """The untracked and ignored paths of the worktree outside ci-out/, as a set."""
+    proc = run_git(worktree, "status", "--porcelain=v1", "-z", "--no-renames", "--untracked-files=all", "--ignored")
+    if proc.returncode != 0:
+        raise ReviewError("git status failed in the worktree: " + proc.stderr.decode("utf-8", "replace").strip()[:300])
+    paths = set()
+    for entry in proc.stdout.decode("utf-8", "surrogateescape").split("\0"):
+        if len(entry) >= 4 and entry[:2] in ("??", "!!"):
+            path = entry[3:]
+            if not (path.startswith(CI_OUT_PREFIX) or path.rstrip("/") == CI_OUT_PREFIX.rstrip("/")):
+                paths.add(path)
+    return paths
 
 
 def diff_stat(repo, base, head):
@@ -725,23 +798,40 @@ def run(args):
         stat = diff_stat(repo, base, head)
         ac_summary = ac_audit_summary(repo)
         agents = [(name, *read_agent(repo, name)) for name in AGENTS]
-        write_review_input(repo, base, head, files)
-        for name, model, body in agents:
-            preamble = build_preamble(name, base, head, files, stat, ac_summary)
-            before = tree_snapshot(repo)
-            try:
-                verdict, meta = run_pass(cli, env, repo, name, model, build_prompt(name, preamble, body), schema,
-                                         limits)
-            finally:
-                changed = tree_changes(before, tree_snapshot(repo))
-                if changed:
-                    shown = ", ".join(changed[:10]) + (f" and {len(changed) - 10} more" if len(changed) > 10 else "")
-                    raise ReviewError(f"{name}: the working tree changed during the pass ({shown}); the review "
-                                      "fails closed and no later step runs")
-            if verdict["agent"] != name:
-                warnings.append(f"WARNING: the {name} pass labelled its verdict {verdict['agent']}; it is reported as {name}.")
-                verdict["agent"] = name
-            passes.append((name, model, verdict, meta))
+        holder, worktree = create_worktree(repo)
+        try:
+            write_review_input(repo, base, head, files, target=worktree)
+            for name, model, body in agents:
+                preamble = build_preamble(name, base, head, files, stat, ac_summary)
+                before = tree_snapshot(repo)
+                tracked_before = tracked_snapshot(worktree)
+                untracked_before = untracked_paths(worktree)
+                try:
+                    verdict, meta = run_pass(cli, env, worktree, name, model, build_prompt(name, preamble, body),
+                                             schema, limits)
+                finally:
+                    # The real checkout: later steps run its code, so any write that escapes fails closed.
+                    changed = tree_changes(before, tree_snapshot(repo))
+                    if changed:
+                        raise ReviewError(f"{name}: the working tree changed during the pass ({', '.join(changed)}); "
+                                          "the review fails closed and no later step runs")
+                    # The worktree: new untracked files are the sandbox's placeholders; a tracked change is not.
+                    altered = tree_changes(tracked_before, tracked_snapshot(worktree))
+                    if altered:
+                        raise ReviewError(f"{name}: a tracked file of the disposable worktree changed or was deleted "
+                                          f"during the pass ({', '.join(altered)}); the review fails closed")
+                    created = sorted(untracked_paths(worktree) - untracked_before)
+                    if created:
+                        print(redact(f"NOTICE: {name}: {len(created)} new untracked path(s) in the disposable "
+                                     f"worktree, tolerated as sandbox placeholders: {', '.join(created)}"),
+                              file=sys.stderr)
+                if verdict["agent"] != name:
+                    warnings.append(f"WARNING: the {name} pass labelled its verdict {verdict['agent']}; it is reported "
+                                    f"as {name}.")
+                    verdict["agent"] = name
+                passes.append((name, model, verdict, meta))
+        finally:
+            remove_worktree(repo, holder, worktree)
     except ReviewError as error:
         return fail(error)
     except (OSError, ValueError) as error:
